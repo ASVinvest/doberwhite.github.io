@@ -1,79 +1,97 @@
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
     font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #101010;
-    color: #f4f4f4;
+    background: #0d0d0d;
+    color: #f8f8f8;
+    line-height: 1.6;
 }
 
 .hero {
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
     text-align: center;
-    background-color: #000000;
-    padding: 3em 1em;
-}
-
-.logo-container {
-    margin-bottom: 1em;
+    padding: 5em 2em;
 }
 
 .logo {
-    height: 100px;
-    width: auto;
+    max-width: 120px;
+    margin-bottom: 1em;
 }
 
 .tagline {
     font-size: 1.2em;
-    color: #cccccc;
+    color: #ccc;
+    margin-bottom: 1.5em;
 }
 
-nav {
-    background-color: #1b1b1b;
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    color: #0d0d0d;
+    background: #77ff88;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #55dd66;
+}
+
+.navbar {
+    background: #121212;
     text-align: center;
     padding: 1em 0;
 }
 
-nav ul {
+.navbar ul {
     list-style: none;
-    padding: 0;
 }
 
-nav ul li {
+.navbar ul li {
     display: inline;
     margin: 0 20px;
 }
 
-nav ul li a {
-    color: #f4f4f4;
+.navbar ul li a {
+    color: #f8f8f8;
     text-decoration: none;
     font-weight: bold;
 }
 
-nav ul li a:hover {
+.navbar ul li a:hover {
     color: #77ff88;
 }
 
 main {
     padding: 2em 5%;
-    max-width: 1000px;
-    margin: auto;
 }
 
-section {
-    margin-bottom: 3em;
+.section {
+    padding: 3em 0;
+    border-bottom: 1px solid #222;
+}
+
+.section.dark {
+    background-color: #181818;
+}
+
+.section.highlight {
+    background: #101f10;
+    text-align: center;
 }
 
 h2 {
-    color: #77ff88;
-    border-bottom: 1px solid #333;
-    padding-bottom: 0.2em;
     margin-bottom: 1em;
+    color: #77ff88;
 }
 
 footer {
+    background: #000;
     text-align: center;
     padding: 1.5em;
-    background-color: #000000;
     font-size: 0.9em;
-    color: #888;
+    color: #777;
 }
