@@ -1,97 +1,86 @@
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #0d0d0d;
-    color: #f8f8f8;
-    line-height: 1.6;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0d0d0d;
+  color: #f8f8f8;
+  line-height: 1.6;
 }
-
-.hero {
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-    text-align: center;
-    padding: 5em 2em;
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2em;
 }
-
-.logo {
-    max-width: 120px;
-    margin-bottom: 1em;
+header.hero {
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  padding: 4em 1em;
+  text-align: center;
 }
-
-.tagline {
-    font-size: 1.2em;
-    color: #ccc;
-    margin-bottom: 1.5em;
+.hero .logo {
+  width: 90px;
+  margin-bottom: 1em;
 }
-
-.btn {
-    display: inline-block;
-    padding: 12px 24px;
-    color: #0d0d0d;
-    background: #77ff88;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s ease;
+.hero h1 {
+  font-size: 2.8em;
+  margin-bottom: 0.5em;
 }
-
-.btn:hover {
-    background: #55dd66;
+.hero p {
+  color: #ccc;
+  margin-bottom: 1.5em;
 }
-
+.cta {
+  background: #77ff88;
+  color: #000;
+  padding: 0.8em 1.8em;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.cta:hover {
+  background: #55dd66;
+}
 .navbar {
-    background: #121212;
-    text-align: center;
-    padding: 1em 0;
+  background: #1b1b1b;
+  padding: 1em 0;
+  text-align: center;
 }
-
 .navbar ul {
-    list-style: none;
+  list-style: none;
 }
-
 .navbar ul li {
-    display: inline;
-    margin: 0 20px;
+  display: inline;
+  margin: 0 15px;
 }
-
 .navbar ul li a {
-    color: #f8f8f8;
-    text-decoration: none;
-    font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
 }
-
 .navbar ul li a:hover {
-    color: #77ff88;
+  color: #77ff88;
 }
-
-main {
-    padding: 2em 5%;
+section {
+  padding: 3em 0;
 }
-
-.section {
-    padding: 3em 0;
-    border-bottom: 1px solid #222;
+section.alt {
+  background: #151515;
 }
-
-.section.dark {
-    background-color: #181818;
+.cta-section {
+  background: #101f10;
+  text-align: center;
 }
-
-.section.highlight {
-    background: #101f10;
-    text-align: center;
-}
-
 h2 {
-    margin-bottom: 1em;
-    color: #77ff88;
+  color: #77ff88;
+  margin-bottom: 1em;
 }
-
 footer {
-    background: #000;
-    text-align: center;
-    padding: 1.5em;
-    font-size: 0.9em;
-    color: #777;
+  background: #000;
+  text-align: center;
+  padding: 1.5em;
+  font-size: 0.9em;
+  color: #aaa;
 }
