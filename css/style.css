@@ -1,29 +1,42 @@
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  font-family: 'Montserrat', sans-serif;
   background: #fff;
-  color: #111;
+  color: #333;
 }
 
-header#hero {
+.hero {
   background: #000;
   color: #00c853;
-  padding: 80px 20px;
   text-align: center;
+  padding: 100px 20px;
+}
+
+.hero .inner {
+  max-width: 800px;
+  margin: auto;
 }
 
 .btn {
   background: #00c853;
   color: white;
-  padding: 12px 20px;
+  padding: 15px 25px;
   text-decoration: none;
-  display: inline-block;
+  font-weight: bold;
   margin-top: 20px;
+  display: inline-block;
 }
 
 section {
-  padding: 40px 20px;
+  padding: 60px 20px;
+}
+
+section .inner {
   max-width: 800px;
   margin: auto;
+}
+
+a {
+  color: #00c853;
+  text-decoration: none;
 }
