@@ -3380,7 +3380,7 @@ input, select, textarea {
 		-webkit-align-items: center;
 		-ms-align-items: center;
 		align-items: center;
-		/*background-image: url("../../images/doberwhite.png");*/
+		background-image: url("../../images/doberwhite.png");
 		display: -moz-flex;
 		display: -webkit-flex;
 		display: -ms-flex;
@@ -3390,7 +3390,7 @@ input, select, textarea {
 		background-position: center;
 		background-repeat: no-repeat;
 		background-size: cover;
-		background-color: 	#000000;
+		/*background-color: 	#000000;*/
 		border-bottom: 0 !important;
 		cursor: default;
 		height: 60vh;
