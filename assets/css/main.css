@@ -3389,7 +3389,7 @@ input, select, textarea {
 		background-attachment: fixed;
 		background-position: center;
 		background-repeat: no-repeat;
-		background-size: cover;
+		background-size: contain;
 		/*background-color: 	#000000;*/
 		border-bottom: 0 !important;
 		cursor: default;
