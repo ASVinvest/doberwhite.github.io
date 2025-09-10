@@ -1,5 +1,5 @@
 /* =========================================================
-   DoberWhite — MONOCHROME + TILES (Forty) RESTAURADO
+   DoberWhite — MONOCHROME + TILES (Forty-safe)
    ========================================================= */
 
 /* Paleta */
@@ -15,29 +15,28 @@
 
 /* Base monocromo */
 html,body{background:var(--bg) !important;color:var(--text)}
-.muted,.disclaimer{color:var(--muted)}
-
 a{color:var(--white);text-decoration:none;border-bottom:1px solid transparent;transition:all .2s}
 a:hover{color:var(--white);background:transparent !important;border-bottom-color:var(--white)}
 a:focus{outline:2px dashed var(--white);outline-offset:2px}
+.muted,.disclaimer{color:var(--muted)}
 
 /* Header/Menu/Footer */
 #header{background:rgba(0,0,0,.55) !important;border-bottom:1px solid var(--line)}
 #menu{background:#0c0f15 !important}
 #footer{border-top:1px solid var(--line)}
 
-/* HERO: mantiene imagen de fondo + overlay oscuro para legibilidad */
+/* HERO (mantiene imagen de fondo del tema) */
 #banner, #banner.major{position:relative;background-color:transparent !important}
 #banner:before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.55);pointer-events:none}
 #banner .inner{background:transparent !important;box-shadow:none !important}
 
-/* Secciones negras */
+/* Secciones */
 .wrapper, .wrapper.style1, .wrapper.style2, .wrapper.style3,
 #main, .inner, section, #one, #two, #three, #four, #contact{
   background:var(--bg) !important;
 }
 
-/* Botones B/N */
+/* Botones */
 .button{background:var(--white);color:var(--black);border:1px solid var(--white)}
 .button:hover{background:transparent;color:var(--white)}
 .button.primary{background:var(--white);color:var(--black)}
@@ -52,17 +51,18 @@ input:focus,textarea:focus,select:focus{
 }
 
 /* =========================================================
-   TILES — volver al comportamiento nativo y sólo filtrar imagen
+   TILES (Forty) — sólo filtros de imagen y sombras;
+   NO tocar ::before de .image, para no romper el alto.
    ========================================================= */
 
-/* Caja del artículo */
+/* Caja y borde sutil */
 .tiles article{
   background:var(--elev) !important;
   border:1px solid var(--line);
   overflow:hidden;
 }
 
-/* Imagen visible SIEMPRE (no fondos raros) */
+/* Imagen siempre visible; gris → color al hover */
 .tiles article .image{display:block;position:relative;overflow:hidden;background:transparent !important}
 .tiles article .image img{
   display:block;width:100%;height:100%;object-fit:cover;
@@ -71,25 +71,17 @@ input:focus,textarea:focus,select:focus{
 }
 .tiles article:hover .image img{filter:none;transform:translateY(-2px)}
 
-/* Enlace overlay nativo de Forty: RELATIVE (no absolute) y sin fondo blanco */
+/* Overlay del enlace (nativo de Forty): mantenerlo, pero oscuro en B/N */
 .tiles article > a{
-  position:relative !important;      /* << volvemos al default del tema */
-  z-index:2; display:flex; align-items:flex-end; justify-content:center;
-  color:inherit; background:transparent !important; border:0;
+  position:relative !important;   /* volver al default del tema */
+  z-index:2; color:inherit; background:transparent !important; border:0;
 }
-/* Overlay de Forty (oscuro, nunca blanco) */
 .tiles article > a:before{
-  content:""; position:absolute; inset:0;
-  background:rgba(0,0,0,.25) !important;       /* sombra ligera por defecto */
+  /* NO eliminar este pseudo; sólo ajustar el color */
+  background:rgba(0,0,0,.25) !important;
   transition:background .35s ease;
 }
 .tiles article:hover > a:before{ background:rgba(0,0,0,.05) !important; }
 
-/* Quitar cualquier reset anterior que haya dejado fondos claros */
-.tiles article:before,
-.tiles article:after,
-.tiles article .image:before,
-.tiles article .image:after{ background:transparent !important; box-shadow:none !important; }
-
-/* Nunca heredar fondos blancos desde hover global */
+/* No heredar fondos blancos en hover global */
 a:hover{background:transparent !important}
