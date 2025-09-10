@@ -32,6 +32,7 @@
   <!-- Banner -->
   <section id="banner" class="style2">
     <div class="inner">
+      <span class="image"><img src="images/performance.png" alt="" /></span>
       <header class="major"><h1>Agenda una reunión</h1></header>
       <div class="content"><p>Cuéntanos tu caso. Respondemos en 24–48h hábiles.</p></div>
     </div>
@@ -42,28 +43,41 @@
     <section>
       <div class="inner">
         <div class="split">
+          <!-- FORMULARIO FUNCIONAL -->
           <section>
-            <form method="post" action="#">
+            <form action="https://formsubmit.co/Asvglobalinvest@gmail.com" method="POST">
               <div class="fields">
                 <div class="field half">
                   <label for="name">Nombre</label>
-                  <input type="text" name="name" id="name" />
+                  <input type="text" name="name" id="name" required />
                 </div>
                 <div class="field half">
                   <label for="email">Email</label>
-                  <input type="email" name="email" id="email" />
+                  <input type="email" name="email" id="email" required />
                 </div>
                 <div class="field">
                   <label for="message">Mensaje</label>
-                  <textarea name="message" id="message" rows="6" placeholder="Interés: institucional/particular/cursos. Capital estimado. Objetivo."></textarea>
+                  <textarea name="message" id="message" rows="6" placeholder="Interés: institucional/particular/cursos. Capital estimado. Objetivo." required></textarea>
                 </div>
               </div>
+
+              <!-- Config FormSubmit -->
+              <input type="hidden" name="_subject" value="Nuevo mensaje desde DoberWhite.com">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_next" value="https://www.doberwhite.com/gracias.html">
+              <input type="hidden" name="_autoresponse" value="Hola, hemos recibido tu mensaje en DoberWhite Capital. Te contactaremos pronto.">
+              <!-- Honeypot anti-spam -->
+              <input type="text" name="_honey" style="display:none">
+
               <ul class="actions">
                 <li><input type="submit" value="Enviar" class="primary" /></li>
                 <li><input type="reset" value="Limpiar" /></li>
               </ul>
             </form>
           </section>
+
+          <!-- Datos de contacto -->
           <section>
             <div class="contact-method">
               <span class="icon solid alt fa-envelope"></span>
@@ -90,23 +104,21 @@
   <!-- Footer -->
   <footer id="footer">
     <div class="inner">
-      <ul class="icons">
-        <li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-        <li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-      </ul>
       <ul class="copyright">
-        <li>&copy; DoberWhite 2025</li><li>Design: Ariel Salazar</li>
+        <li>&copy; DoberWhite 2025</li><li>All rights reserved</li>
       </ul>
     </div>
   </footer>
 
 </div>
+
+<!-- Scripts (corregido: ya NO falta el "<") -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery.scrolly.min.js"></script>
 <script src="assets/js/jquery.scrollex.min.js"></script>
 <script src="assets/js/browser.min.js"></script>
 <script src="assets/js/breakpoints.min.js"></script>
-script src="assets/js/util.js"></script>
+<script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>
