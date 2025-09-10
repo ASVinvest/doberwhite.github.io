@@ -9,7 +9,7 @@
   <style>
     .badge{display:inline-block;padding:.2rem .5rem;border:1px solid #999;border-radius:.5rem;font-size:.8rem}
     #viewer iframe{width:100%;height:70vh;border:0;border-radius:8px}
-    .muted{opacity:.7}
+    .muted{opacity:.75}
     .grid{display:grid;gap:1rem}
     @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
   </style>
@@ -17,7 +17,7 @@
 <body class="is-preload">
 <div id="wrapper">
 
-  <!-- Header básico -->
+  <!-- Header -->
   <header id="header">
     <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
     <nav><a href="#menu">Menú</a></nav>
@@ -50,8 +50,9 @@
   <div id="main">
     <section>
       <div class="inner grid">
-        <!-- Panel izquierdo: login / upload / lista -->
+        <!-- Izquierda: login, subida y lista -->
         <div>
+          <!-- Auth -->
           <div id="authBox">
             <p class="muted">Acceso con Google</p>
             <button id="btnLogin" class="button primary small">Entrar con Google</button>
@@ -62,12 +63,11 @@
             <button id="btnLogout" class="button small">Salir</button>
           </div>
 
-          <hr />
+          <hr/>
 
           <!-- Subida -->
           <div id="uploadBox" style="display:none;">
             <header class="major"><h3>Subir informe</h3></header>
-            <p class="muted">Nómbralo como deseas que se muestre (ej: <em>Informe 1 Julio 2025</em>).</p>
             <form id="uploadForm">
               <div class="fields">
                 <div class="field">
@@ -86,22 +86,20 @@
             </form>
           </div>
 
-          <hr />
+          <hr/>
 
           <!-- Lista -->
           <header class="major"><h3>Informes</h3></header>
           <div class="table-wrapper">
             <table id="filesTable">
-              <thead>
-                <tr><th>Título / Archivo</th><th>Fecha</th><th></th></tr>
-              </thead>
+              <thead><tr><th>Título / Archivo</th><th>Fecha</th><th></th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
           <p id="emptyMsg" class="muted" style="display:none;">Aún no hay informes.</p>
         </div>
 
-        <!-- Panel derecho: visor -->
+        <!-- Derecha: visor -->
         <div id="viewer">
           <header class="major"><h3>Visor</h3></header>
           <p class="muted">Selecciona un informe para visualizarlo aquí.</p>
@@ -124,175 +122,136 @@
 <!-- Supabase JS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // === CONFIGURA TUS CLAVES ===
-  const SUPABASE_URL  = 'https://TU-PROJECT-URL.supabase.co';   // <- pega tu Project URL
-  const SUPABASE_ANON = 'TU-ANON-KEY';                          // <- pega tu anon key
+  // ===== CONFIG SUPABASE =====
+  const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
   const BUCKET = 'informes';
-
-  // Gmail permitidos (allowlist). Agrega/borra los que quieras.
-  const ALLOWLIST = [
-    'asvglobalinvest@gmail.com',  // ejemplo
-    'tucorreo1@gmail.com',
-    'tucorreo2@gmail.com'
-  ];
+  // Correos permitidos (minúsculas):
+  const ALLOWLIST = ['asvglobalinvest@gmail.com'];
 
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+  // UI refs
   const authBox = document.getElementById('authBox');
   const userBox = document.getElementById('userBox');
   const userEmail = document.getElementById('userEmail');
   const btnLogin = document.getElementById('btnLogin');
   const btnLogout = document.getElementById('btnLogout');
-
   const uploadBox = document.getElementById('uploadBox');
   const uploadForm = document.getElementById('uploadForm');
   const uploadStatus = document.getElementById('uploadStatus');
-
   const filesTableBody = document.querySelector('#filesTable tbody');
   const emptyMsg = document.getElementById('emptyMsg');
   const preview = document.getElementById('preview');
 
-  // ---- Helpers ----
-  function formatDate(iso){
-    const d = new Date(iso);
-    return d.toLocaleString('es-CL', {dateStyle:'medium', timeStyle:'short'});
-  }
-  function sanitizeName(name){
-    return name.replace(/[^\w\-\. ]+/g,'').replace(/\s+/g,' ');
-  }
-  function extOf(name){
-    return (name.split('.').pop() || '').toLowerCase();
-  }
+  // Helpers
+  const fmt = iso => new Date(iso || Date.now()).toLocaleString('es-CL',{dateStyle:'medium',timeStyle:'short'});
+  const ext = n => (n.split('.').pop()||'').toLowerCase();
+  const sanitize = s => (s||'').replace(/[^\w\-\. ]+/g,'').replace(/\s+/g,' ').trim();
 
-  async function refreshList(){
-    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 100 });
-    if(error){ console.error(error); return; }
-    filesTableBody.innerHTML = '';
-    if(!data || data.length===0){ emptyMsg.style.display='block'; return; }
-    emptyMsg.style.display='none';
-
-    // Ordenar por updated_at desc
-    data.sort((a,b)=> new Date(b.updated_at) - new Date(a.updated_at));
-
-    for(const obj of data){
-      const tr = document.createElement('tr');
-      const title = obj.metadata?.name || obj.name; // usamos filename como "título"
-      tr.innerHTML = `
-        <td>${title}</td>
-        <td class="muted">${formatDate(obj.updated_at || obj.created_at)}</td>
-        <td><button class="button small" data-path="${obj.name}">Ver</button></td>
-      `;
-      filesTableBody.appendChild(tr);
-    }
-  }
-
-  async function showFile(path){
-    // Firmar URL
-    const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 600); // 10 min
-    if(error){ alert('No se pudo abrir el archivo'); return; }
-    const url = data.signedUrl;
-    const extension = extOf(path);
-
-    let viewerURL = '';
-    if(['ppt','pptx'].includes(extension)){
-      // Office online viewer para PPT/PPTX
-      viewerURL = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(url);
-    } else if(['pdf'].includes(extension)) {
-      // Mostrar PDF directo
-      viewerURL = url + '#toolbar=1';
-    } else {
-      alert('Formato no soportado para visor. Descargando...');
-      window.open(url, '_blank');
-      return;
-    }
-
-    preview.src = viewerURL;
-    preview.style.display = 'block';
-  }
-
-  // ---- Auth flow ----
   async function onAuthChanged(){
     const { data: { session } } = await supabaseClient.auth.getSession();
     const user = session?.user || null;
 
     if(!user){
-      authBox.style.display = 'block';
-      userBox.style.display = 'none';
-      uploadBox.style.display = 'none';
+      authBox.style.display='block';
+      userBox.style.display='none';
+      uploadBox.style.display='none';
       return;
     }
-
     const email = (user.email || '').toLowerCase();
     if(!ALLOWLIST.includes(email)){
       alert('Tu email no está autorizado. Contacta a DoberWhite.');
       await supabaseClient.auth.signOut();
       return;
     }
-
-    authBox.style.display = 'none';
-    userBox.style.display = 'block';
+    authBox.style.display='none';
+    userBox.style.display='block';
+    uploadBox.style.display='block';
     userEmail.textContent = email;
-    uploadBox.style.display = 'block';
   }
 
-  // ---- Eventos UI ----
+  async function refreshList(){
+    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1000 });
+    if(error){ console.error('List error:', error.message); return; }
+    filesTableBody.innerHTML='';
+    if(!data || data.length===0){ emptyMsg.style.display='block'; return; }
+    emptyMsg.style.display='none';
+    data.sort((a,b)=> new Date(b.updated_at||b.created_at) - new Date(a.updated_at||a.created_at));
+    for(const o of data){
+      const tr=document.createElement('tr');
+      tr.innerHTML = `
+        <td>${o.metadata?.name || o.name}</td>
+        <td class="muted">${fmt(o.updated_at||o.created_at)}</td>
+        <td><button class="button small" data-path="${o.name}">Ver</button></td>
+      `;
+      filesTableBody.appendChild(tr);
+    }
+  }
+
+  async function showFile(path){
+    const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 600);
+    if(error){ alert('No se pudo abrir el archivo'); return; }
+    const url = data.signedUrl;
+    const e = ext(path);
+    let viewer = '';
+    if(e === 'pdf'){
+      viewer = url + '#toolbar=1';
+    } else if(e === 'ppt' || e === 'pptx'){
+      viewer = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(url);
+    } else {
+      window.open(url, '_blank'); return;
+    }
+    preview.src = viewer;
+    preview.style.display='block';
+  }
+
+  // Eventos
   btnLogin?.addEventListener('click', async ()=>{
     await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.href }
+      options: { redirectTo: location.origin + '/informes.html' }
     });
   });
 
   btnLogout?.addEventListener('click', async ()=>{
     await supabaseClient.auth.signOut();
-    preview.style.display='none';
-    preview.src='';
+    preview.src=''; preview.style.display='none';
     await onAuthChanged();
   });
 
-  // Subir archivo
   uploadForm?.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const fileInput = document.getElementById('file');
-    const titleInput = document.getElementById('title');
-    const file = fileInput.files[0];
-    if(!file){ return; }
+    const f = document.getElementById('file').files[0];
+    if(!f) return;
+    const title = sanitize(document.getElementById('title').value) || f.name.replace(/\.[^.]+$/,'');
+    const filename = `${title}.${ext(f.name)}`;
 
-    const title = sanitizeName(titleInput.value.trim() || file.name.replace(/\.[^.]+$/,''));
-    const ext = file.name.split('.').pop();
-    const filename = `${title}.${ext}`;
-    const path = filename; // raíz del bucket
-
-    uploadStatus.textContent = 'Subiendo...';
-    const { error } = await supabaseClient.storage.from(BUCKET).upload(path, file, {
-      cacheControl: '3600',
-      upsert: true,
-      contentType: file.type
+    uploadStatus.textContent='Subiendo...';
+    const { error } = await supabaseClient.storage.from(BUCKET).upload(filename, f, {
+      cacheControl:'3600', upsert:true, contentType:f.type
     });
-
-    if(error){
-      uploadStatus.textContent = 'Error al subir: ' + error.message;
-      return;
-    }
-    uploadStatus.textContent = 'Subido ✔';
-    fileInput.value=''; titleInput.value='';
+    if(error){ uploadStatus.textContent='Error: '+error.message; return; }
+    uploadStatus.textContent='Subido ✔';
+    document.getElementById('file').value=''; document.getElementById('title').value='';
     await refreshList();
   });
 
-  // Click en "Ver"
   filesTableBody.addEventListener('click', async (e)=>{
-    const btn = e.target.closest('button[data-path]');
-    if(!btn) return;
-    await showFile(btn.getAttribute('data-path'));
+    const b = e.target.closest('button[data-path]');
+    if(!b) return;
+    await showFile(b.getAttribute('data-path'));
   });
 
-  // Inicializar
-  (async function init(){
-    // Limpia hash OAuth si viene
-    if(window.location.hash && window.location.hash.includes('access_token')){
-      history.replaceState(null, '', window.location.pathname);
-    }
+  // Init
+  (async function(){
+    // Limpia fragmentos OAuth si vienen en la URL
+    if(location.hash.includes('access_token')) history.replaceState(null,'',location.pathname);
     await onAuthChanged();
+
+    // Verifica acceso al bucket y lista
+    const { error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1 });
+    if(error){ console.error('Bucket error:', error.message); }
     await refreshList();
 
     // Suscripción a cambios de sesión
