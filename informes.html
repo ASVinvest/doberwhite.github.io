@@ -7,23 +7,24 @@
   <link rel="stylesheet" href="assets/css/main.css" />
   <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
   <style>
-    .badge{display:inline-block;padding:.2rem .5rem;border:1px solid #999;border-radius:.5rem;font-size:.8rem}
-    #viewer iframe{width:100%;height:70vh;border:0;border-radius:8px}
     .muted{opacity:.75}
-    .grid{display:grid;gap:1rem}
-    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+    .grid-2{display:grid;gap:1.25rem}
+    @media(min-width:1100px){.grid-2{grid-template-columns:1.1fr .9fr}}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+    .card{background:#1f2330;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1rem}
+    .row{display:flex;align-items:center;gap:.6rem}
+    .icon{width:36px;height:36px;border-radius:10px;background:#2a3042;display:grid;place-items:center;font-weight:700}
+    #viewer iframe{width:100%;height:72vh;border:0;border-radius:12px;background:#0e111a}
   </style>
 </head>
 <body class="is-preload">
 <div id="wrapper">
 
-  <!-- Header -->
   <header id="header">
     <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
     <nav><a href="#menu">Menú</a></nav>
   </header>
 
-  <!-- Menu -->
   <nav id="menu">
     <ul class="links">
       <li><a href="index.html">Inicio</a></li>
@@ -37,225 +38,175 @@
     </ul>
   </nav>
 
-  <!-- Banner -->
   <section id="banner" class="style2">
     <div class="inner">
       <span class="image"><img src="images/performance.png" alt="Informes" loading="lazy" decoding="async"></span>
-      <header class="major"><h1>Repositorio de Informes</h1></header>
-      <div class="content"><p>Acceso privado para clientes validados. Sube y visualiza PDF/PPTX.</p></div>
+      <header class="major"><h1>Informes</h1></header>
+      <div class="content"><p>Visualización privada (sin descarga visible).</p></div>
     </div>
   </section>
 
-  <!-- Main -->
   <div id="main">
     <section>
-      <div class="inner grid">
-        <!-- Izquierda: login, subida y lista -->
+      <div class="inner grid-2">
+        <!-- IZQUIERDA -->
         <div>
-          <!-- Auth -->
           <div id="authBox">
-            <p class="muted">Acceso con Google</p>
             <button id="btnLogin" class="button primary small">Entrar con Google</button>
+            <p class="muted" style="margin:.4rem 0 1rem">Solo correos autorizados.</p>
           </div>
 
-          <div id="userBox" style="display:none;">
-            <p>Conectado como <span id="userEmail" class="badge"></span></p>
-            <button id="btnLogout" class="button small">Salir</button>
+          <div id="userBox" style="display:none; margin-bottom:.5rem;">
+            <span class="muted" id="userEmail">-</span>
+            <button id="btnLogout" class="button small" style="margin-left:.5rem">Salir</button>
           </div>
 
-          <hr/>
-
-          <!-- Subida -->
-          <div id="uploadBox" style="display:none;">
-            <header class="major"><h3>Subir informe</h3></header>
-            <form id="uploadForm">
-              <div class="fields">
-                <div class="field">
-                  <label for="title">Título</label>
-                  <input type="text" id="title" placeholder="Informe 1 Julio 2025" />
-                </div>
-                <div class="field">
-                  <label for="file">Archivo (PDF o PPTX)</label>
-                  <input type="file" id="file" accept=".pdf,.ppt,.pptx,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" required />
-                </div>
-              </div>
-              <ul class="actions">
-                <li><button class="button primary" type="submit">Subir</button></li>
-              </ul>
-              <p id="uploadStatus" class="muted"></p>
-            </form>
-          </div>
-
-          <hr/>
-
-          <!-- Lista -->
-          <header class="major"><h3>Informes</h3></header>
-          <div class="table-wrapper">
-            <table id="filesTable">
-              <thead><tr><th>Título / Archivo</th><th>Fecha</th><th></th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <p id="emptyMsg" class="muted" style="display:none;">Aún no hay informes.</p>
+          <div id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</div>
+          <div class="cards" id="cards"></div>
         </div>
 
-        <!-- Derecha: visor -->
+        <!-- DERECHA -->
         <div id="viewer">
           <header class="major"><h3>Visor</h3></header>
-          <p class="muted">Selecciona un informe para visualizarlo aquí.</p>
-          <iframe id="preview" src="" style="display:none;"></iframe>
+          <p class="muted" id="hint">Selecciona un informe para visualizarlo aquí.</p>
+          <iframe id="preview" src="" style="display:none;" sandbox="allow-scripts allow-same-origin"></iframe>
         </div>
       </div>
     </section>
   </div>
 
-  <!-- Footer -->
   <footer id="footer">
     <div class="inner">
-      <p class="disclaimer">Contenido privado para clientes autorizados. No compartir sin permiso.</p>
+      <p class="disclaimer">Contenido privado. URLs expiran automáticamente.</p>
       <ul class="copyright"><li>&copy; DoberWhite 2025</li></ul>
     </div>
   </footer>
 
 </div>
 
-<!-- Supabase JS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ===== CONFIG SUPABASE =====
+  // === SUPABASE ===
   const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
-  const BUCKET = 'informes';
-  // Correos permitidos (minúsculas):
-  const ALLOWLIST = ['asvglobalinvest@gmail.com'];
+  const BUCKET = 'informes'; // debe ser minúsculas
+  const ALLOWLIST = ['asvglobalinvest@gmail.com']; // en minúsculas
 
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  // UI refs
+  // UI
   const authBox = document.getElementById('authBox');
   const userBox = document.getElementById('userBox');
   const userEmail = document.getElementById('userEmail');
   const btnLogin = document.getElementById('btnLogin');
   const btnLogout = document.getElementById('btnLogout');
-  const uploadBox = document.getElementById('uploadBox');
-  const uploadForm = document.getElementById('uploadForm');
-  const uploadStatus = document.getElementById('uploadStatus');
-  const filesTableBody = document.querySelector('#filesTable tbody');
+  const cards = document.getElementById('cards');
   const emptyMsg = document.getElementById('emptyMsg');
   const preview = document.getElementById('preview');
+  const hint = document.getElementById('hint');
 
-  // Helpers
-  const fmt = iso => new Date(iso || Date.now()).toLocaleString('es-CL',{dateStyle:'medium',timeStyle:'short'});
+  const fmt = iso => new Date(iso||Date.now()).toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'2-digit'});
   const ext = n => (n.split('.').pop()||'').toLowerCase();
-  const sanitize = s => (s||'').replace(/[^\w\-\. ]+/g,'').replace(/\s+/g,' ').trim();
+  const nice = n => n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
 
-  async function onAuthChanged(){
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    const user = session?.user || null;
+  let allFiles = [];
 
-    if(!user){
-      authBox.style.display='block';
-      userBox.style.display='none';
-      uploadBox.style.display='none';
-      return;
-    }
-    const email = (user.email || '').toLowerCase();
-    if(!ALLOWLIST.includes(email)){
-      alert('Tu email no está autorizado. Contacta a DoberWhite.');
-      await supabaseClient.auth.signOut();
-      return;
-    }
-    authBox.style.display='none';
-    userBox.style.display='block';
-    uploadBox.style.display='block';
-    userEmail.textContent = email;
+  function render(list){
+    cards.innerHTML = '';
+    if(!list.length){ emptyMsg.style.display='block'; return; }
+    emptyMsg.style.display='none';
+    list.forEach(o=>{
+      const e = ext(o.name);
+      const ic = e==='pdf' ? 'PDF' : (e==='ppt'||e==='pptx' ? 'PPT' : 'FILE');
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        <div class="row">
+          <div class="icon">${ic}</div>
+          <div>
+            <h4>${nice(o.name)}</h4>
+            <div class="muted" style="font-size:.9rem">${fmt(o.updated_at||o.created_at)}</div>
+          </div>
+        </div>
+        <button class="button small" data-path="${o.name}" style="margin-top:.6rem">Ver</button>
+      `;
+      cards.appendChild(card);
+    });
   }
 
-  async function refreshList(){
-    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1000 });
-    if(error){ console.error('List error:', error.message); return; }
-    filesTableBody.innerHTML='';
-    if(!data || data.length===0){ emptyMsg.style.display='block'; return; }
-    emptyMsg.style.display='none';
-    data.sort((a,b)=> new Date(b.updated_at||b.created_at) - new Date(a.updated_at||a.created_at));
-    for(const o of data){
-      const tr=document.createElement('tr');
-      tr.innerHTML = `
-        <td>${o.metadata?.name || o.name}</td>
-        <td class="muted">${fmt(o.updated_at||o.created_at)}</td>
-        <td><button class="button small" data-path="${o.name}">Ver</button></td>
-      `;
-      filesTableBody.appendChild(tr);
-    }
+  async function loadList(){
+    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', {
+      limit: 1000,
+      sortBy: { column: 'updated_at', order: 'desc' }
+    });
+    if(error){ console.error('List error:', error.message); emptyMsg.style.display='block'; return; }
+    allFiles = data || [];
+    render(allFiles);
   }
 
   async function showFile(path){
-    const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 600);
-    if(error){ alert('No se pudo abrir el archivo'); return; }
+    const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 180);
+    if(error){ alert('No se pudo abrir el informe'); console.error(error.message); return; }
     const url = data.signedUrl;
     const e = ext(path);
     let viewer = '';
-    if(e === 'pdf'){
-      viewer = url + '#toolbar=1';
-    } else if(e === 'ppt' || e === 'pptx'){
-      viewer = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(url);
+    if(e==='pdf'){
+      viewer = url + '#toolbar=0&navpanes=0&scrollbar=0';
+    } else if(e==='ppt' || e==='pptx'){
+      viewer = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(url) + '&wdDownloadButton=False&wdPrint=0';
     } else {
-      window.open(url, '_blank'); return;
+      // Si no es PDF/PPTX, mostramos aviso
+      alert('Formato no soportado para visor: ' + e);
+      return;
     }
+    hint.style.display='none';
     preview.src = viewer;
     preview.style.display='block';
   }
 
+  // Auth
+  async function onAuthChanged(){
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const user = session?.user || null;
+    if(!user){
+      authBox.style.display='block';
+      userBox.style.display='none';
+      cards.innerHTML=''; emptyMsg.style.display='block';
+      preview.src=''; preview.style.display='none'; hint.style.display='block';
+      return;
+    }
+    const email = (user.email||'').toLowerCase();
+    if(!ALLOWLIST.includes(email)){
+      alert('Tu email no está autorizado.'); await supabaseClient.auth.signOut(); return;
+    }
+    authBox.style.display='none';
+    userBox.style.display='block';
+    userEmail.textContent = email;
+    await loadList();
+  }
+
   // Eventos
-  btnLogin?.addEventListener('click', async ()=>{
+  btnLogin.addEventListener('click', async ()=>{
     await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: location.origin + '/informes.html' }
     });
   });
-
-  btnLogout?.addEventListener('click', async ()=>{
+  btnLogout.addEventListener('click', async ()=>{
     await supabaseClient.auth.signOut();
-    preview.src=''; preview.style.display='none';
     await onAuthChanged();
   });
-
-  uploadForm?.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const f = document.getElementById('file').files[0];
-    if(!f) return;
-    const title = sanitize(document.getElementById('title').value) || f.name.replace(/\.[^.]+$/,'');
-    const filename = `${title}.${ext(f.name)}`;
-
-    uploadStatus.textContent='Subiendo...';
-    const { error } = await supabaseClient.storage.from(BUCKET).upload(filename, f, {
-      cacheControl:'3600', upsert:true, contentType:f.type
-    });
-    if(error){ uploadStatus.textContent='Error: '+error.message; return; }
-    uploadStatus.textContent='Subido ✔';
-    document.getElementById('file').value=''; document.getElementById('title').value='';
-    await refreshList();
-  });
-
-  filesTableBody.addEventListener('click', async (e)=>{
+  cards.addEventListener('click', (e)=>{
     const b = e.target.closest('button[data-path]');
     if(!b) return;
-    await showFile(b.getAttribute('data-path'));
+    showFile(b.getAttribute('data-path'));
   });
 
   // Init
   (async function(){
-    // Limpia fragmentos OAuth si vienen en la URL
     if(location.hash.includes('access_token')) history.replaceState(null,'',location.pathname);
     await onAuthChanged();
-
-    // Verifica acceso al bucket y lista
-    const { error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1 });
-    if(error){ console.error('Bucket error:', error.message); }
-    await refreshList();
-
-    // Suscripción a cambios de sesión
-    supabaseClient.auth.onAuthStateChange(async ()=>{ await onAuthChanged(); });
+    supabaseClient.auth.onAuthStateChange(onAuthChanged);
   })();
 </script>
 </body>
