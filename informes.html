@@ -54,6 +54,7 @@
         <div id="diag"></div>
 
         <div class="grid-2">
+          <!-- IZQUIERDA -->
           <div>
             <div id="authBox">
               <button id="btnLogin" class="button primary small">Entrar con Google</button>
@@ -69,6 +70,7 @@
             <div class="cards" id="cards"></div>
           </div>
 
+          <!-- DERECHA -->
           <div id="viewer">
             <header class="major"><h3>Visor</h3></header>
             <p class="muted" id="hint">Selecciona un informe para visualizarlo aquí.</p>
@@ -96,7 +98,15 @@
   const BUCKET = 'informes';
   const ALLOWLIST = ['asvglobalinvest@gmail.com']; // minúsculas
 
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  // Configura el cliente para gestionar automáticamente el intercambio del "code"
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,   // <— clave para que cierre el flujo OAuth al volver
+      flowType: 'pkce'
+    }
+  });
 
   // UI refs
   const diag = document.getElementById('diag');
@@ -175,41 +185,33 @@
   }
 
   // Auth
-  async function completeOAuthIfNeeded(){
-    // Si Google devolvió ?code=…, completar el intercambio
-    const hasCode = /[?&]code=/.test(location.href);
-    if(hasCode){
-      log('Completando sesión OAuth…','warn');
-      const { error } = await supabaseClient.auth.exchangeCodeForSession(location.href);
-      if(error){ log('Error al completar login: '+error.message,'err'); }
-      // limpia la URL
-      const clean = location.origin + location.pathname;
-      history.replaceState({}, '', clean);
-    }
-    // Caso viejo (#access_token) — limpiar hash
-    if(location.hash.includes('access_token')) history.replaceState({},'',location.pathname);
-  }
-
-  async function onAuthChanged(){
+  async function refreshUI(){
     const { data:{ session } } = await supabaseClient.auth.getSession();
     const user = session?.user || null;
+
     if(!user){
-      log('No hay sesión. Haz clic en “Entrar con Google”.', 'warn');
       authBox.style.display='block';
       userBox.style.display='none';
       cards.innerHTML=''; emptyMsg.style.display='block';
       preview.src=''; preview.style.display='none'; hint.style.display='block';
+      log('No hay sesión. Haz clic en “Entrar con Google”.', 'warn');
       return;
     }
+
     const email = (user.email||'').toLowerCase();
     log('Autenticado como: '+email, 'ok');
-    if(!['asvglobalinvest@gmail.com'].includes(email)){
+
+    if(!ALLOWLIST.includes(email)){
       log('Email autenticado NO está en allowlist del front.', 'err');
-      alert('Tu email no está autorizado.'); await supabaseClient.auth.signOut(); return;
+      alert('Tu email no está autorizado.');
+      await supabaseClient.auth.signOut();
+      return;
     }
+
     authBox.style.display='none';
     userBox.style.display='block';
     userEmail.textContent = email;
+
     await ensureBucket();
     await loadList();
   }
@@ -219,14 +221,19 @@
     log('Redirigiendo a Google OAuth…','warn');
     await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: location.origin + '/informes.html' }
+      options: {
+        redirectTo: location.origin + '/informes.html',
+        queryParams: { access_type: 'offline', prompt: 'consent' } // refresh token estable
+      }
     });
   });
+
   btnLogout.addEventListener('click', async ()=>{
     await supabaseClient.auth.signOut();
     preview.src=''; preview.style.display='none';
-    await onAuthChanged();
+    await refreshUI();
   });
+
   cards.addEventListener('click', (e)=>{
     const b = e.target.closest('button[data-path]');
     if(!b) return;
@@ -237,9 +244,16 @@
   (async function(){
     log('SUPABASE_URL: '+SUPABASE_URL, 'ok');
     log('BUCKET: '+BUCKET, 'ok');
-    await completeOAuthIfNeeded();
-    await onAuthChanged();
-    supabaseClient.auth.onAuthStateChange(onAuthChanged);
+
+    // Si Google nos devolvió ?code=… o #access_token, supabase-js lo gestionará
+    // gracias a detectSessionInUrl:true. Damos un pequeño tiempo y refrescamos UI.
+    await new Promise(r=>setTimeout(r, 50));
+    await refreshUI();
+
+    // Mantén UI sincronizada con cambios de sesión
+    supabaseClient.auth.onAuthStateChange(async (_event, _session)=>{
+      await refreshUI();
+    });
   })();
 </script>
 </body>
