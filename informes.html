@@ -15,12 +15,8 @@
     .row{display:flex;align-items:center;gap:.6rem}
     .icon{width:36px;height:36px;border-radius:10px;background:#2a3042;display:grid;place-items:center;font-weight:700}
     #viewer iframe{width:100%;height:72vh;border:0;border-radius:12px;background:#0e111a}
-    /* Callouts de diagnóstico */
-    #diag{margin:8px 0}
-    .call{padding:.6rem .8rem;border-radius:.5rem;margin:.35rem 0;font-size:.9rem}
-    .ok{background:#16361a;border:1px solid #1f7a1f}
-    .warn{background:#3a2c10;border:1px solid #b36b00}
-    .err{background:#3a1616;border:1px solid #a43a3a}
+    #diag{margin:8px 0}.call{padding:.6rem .8rem;border-radius:.5rem;margin:.35rem 0;font-size:.9rem}
+    .ok{background:#16361a;border:1px solid #1f7a1f}.warn{background:#3a2c10;border:1px solid #b36b00}.err{background:#3a1616;border:1px solid #a43a3a}
   </style>
 </head>
 <body class="is-preload">
@@ -55,10 +51,9 @@
   <div id="main">
     <section>
       <div class="inner">
-        <div id="diag"></div> <!-- Diagnóstico -->
+        <div id="diag"></div>
 
         <div class="grid-2">
-          <!-- IZQUIERDA -->
           <div>
             <div id="authBox">
               <button id="btnLogin" class="button primary small">Entrar con Google</button>
@@ -74,7 +69,6 @@
             <div class="cards" id="cards"></div>
           </div>
 
-          <!-- DERECHA -->
           <div id="viewer">
             <header class="major"><h3>Visor</h3></header>
             <p class="muted" id="hint">Selecciona un informe para visualizarlo aquí.</p>
@@ -181,8 +175,23 @@
   }
 
   // Auth
+  async function completeOAuthIfNeeded(){
+    // Si Google devolvió ?code=…, completar el intercambio
+    const hasCode = /[?&]code=/.test(location.href);
+    if(hasCode){
+      log('Completando sesión OAuth…','warn');
+      const { error } = await supabaseClient.auth.exchangeCodeForSession(location.href);
+      if(error){ log('Error al completar login: '+error.message,'err'); }
+      // limpia la URL
+      const clean = location.origin + location.pathname;
+      history.replaceState({}, '', clean);
+    }
+    // Caso viejo (#access_token) — limpiar hash
+    if(location.hash.includes('access_token')) history.replaceState({},'',location.pathname);
+  }
+
   async function onAuthChanged(){
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    const { data:{ session } } = await supabaseClient.auth.getSession();
     const user = session?.user || null;
     if(!user){
       log('No hay sesión. Haz clic en “Entrar con Google”.', 'warn');
@@ -228,7 +237,7 @@
   (async function(){
     log('SUPABASE_URL: '+SUPABASE_URL, 'ok');
     log('BUCKET: '+BUCKET, 'ok');
-    if(location.hash.includes('access_token')) history.replaceState(null,'',location.pathname);
+    await completeOAuthIfNeeded();
     await onAuthChanged();
     supabaseClient.auth.onAuthStateChange(onAuthChanged);
   })();
