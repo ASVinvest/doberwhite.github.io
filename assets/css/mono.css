@@ -44,3 +44,43 @@
 
 /* Enlaces globales: nunca pintar fondo (evita parche blanco) */
 a:hover{ background: transparent !important; }
+
+/* ===== DoberWhite – Tiles fix definitivo (v7) ===== */
+
+/* Nunca pintes fondo en enlaces globales (evita “parche blanco”) */
+a:hover { background: transparent !important; }
+
+/* Contenedor de imagen de la tile: sin fondos ni overlays */
+.tiles article .image,
+.tiles article .image:before,
+.tiles article .image:after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Imagen: gris por defecto, color al hover del artículo */
+.tiles article .image img {
+  display: block; width: 100%; height: auto; object-fit: cover;
+  filter: grayscale(100%) contrast(1.05) brightness(0.95);
+  transition: filter .3s ease, transform .3s ease;
+}
+.tiles article:hover .image img { filter: none; transform: translateY(-2px); }
+
+/* El enlace-overlay nativo de Forty: transparente siempre */
+.tiles article > a,
+.tiles article > a.tile-link,
+.tiles article > a:before,
+.tiles article > a:after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Por si el tema añade pseudo-overlays extra al hacer hover */
+.tiles article:hover > a:before,
+.tiles article:hover > a:after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Mantén la tarjeta monocroma (borde sutil) */
+.tiles article { background: #12151c !important; border: 1px solid rgba(255,255,255,.08); }
