@@ -9,14 +9,26 @@
   <style>
     .muted{opacity:.75}
     .grid-2{display:grid;gap:1.25rem}
-    @media(min-width:1100px){.grid-2{grid-template-columns:1.1fr .9fr}}
+    @media(min-width:1100px){.grid-2{grid-template-columns:1.15fr .85fr}}
+
+    .toolbar{display:flex;gap:.75rem;align-items:center;margin:.25rem 0 1rem}
+    .toolbar input[type="search"], .toolbar select{height:2.6rem}
+    .count{font-size:.9rem;opacity:.8}
+
+    .group{margin:1.2rem 0 .6rem}
+    .group h4{margin:0 0 .4rem}
+
     .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
     .card{background:#1f2330;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1rem}
     .row{display:flex;align-items:center;gap:.6rem}
     .icon{width:36px;height:36px;border-radius:10px;background:#2a3042;display:grid;place-items:center;font-weight:700}
+    .title{margin:.4rem 0 .2rem;font-weight:700;line-height:1.25}
+    .date{font-size:.9rem;opacity:.9}
+    .card .button{margin-top:.6rem}
+
     #viewer iframe{width:100%;height:72vh;border:0;border-radius:12px;background:#0e111a}
-    #diag{margin:8px 0}.call{padding:.6rem .8rem;border-radius:.5rem;margin:.35rem 0;font-size:.9rem}
-    .ok{background:#16361a;border:1px solid #1f7a1f}.warn{background:#3a2c10;border:1px solid #b36b00}.err{background:#3a1616;border:1px solid #a43a3a}
+    .skeleton{height:110px;border-radius:14px;background:linear-gradient(90deg,#222533,#2a2f43 50%,#222533 100%);background-size:200% 100%;animation:sh 1.2s linear infinite}
+    @keyframes sh{to{background-position:-200% 0}}
   </style>
 </head>
 <body class="is-preload">
@@ -44,39 +56,49 @@
     <div class="inner">
       <span class="image"><img src="images/performance.png" alt="Informes" loading="lazy" decoding="async"></span>
       <header class="major"><h1>Informes</h1></header>
-      <div class="content"><p>Visualización privada (sin descarga visible).</p></div>
+      <div class="content"><p>Repositorio privado de reportes. Visualización embebida sin descarga.</p></div>
     </div>
   </section>
 
   <div id="main">
     <section>
-      <div class="inner">
-        <div id="diag"></div>
+      <div class="inner grid-2">
 
-        <div class="grid-2">
-          <!-- IZQUIERDA -->
-          <div>
-            <div id="authBox">
-              <button id="btnLogin" class="button primary small">Entrar con Google</button>
-              <p class="muted" style="margin:.4rem 0 1rem">Solo correos autorizados.</p>
-            </div>
-
-            <div id="userBox" style="display:none; margin-bottom:.5rem;">
-              <span class="muted" id="userEmail">-</span>
-              <button id="btnLogout" class="button small" style="margin-left:.5rem">Salir</button>
-            </div>
-
-            <div id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</div>
-            <div class="cards" id="cards"></div>
+        <!-- IZQUIERDA -->
+        <div>
+          <div id="authBox">
+            <button id="btnLogin" class="button primary small">Entrar con Google</button>
+            <p class="muted" style="margin:.4rem 0 1rem">Solo correos autorizados.</p>
           </div>
 
-          <!-- DERECHA -->
-          <div id="viewer">
-            <header class="major"><h3>Visor</h3></header>
-            <p class="muted" id="hint">Selecciona un informe para visualizarlo aquí.</p>
-            <iframe id="preview" src="" style="display:none;" sandbox="allow-scripts allow-same-origin"></iframe>
+          <div id="userBox" style="display:none; margin-bottom:.5rem;display:flex;gap:.5rem;align-items:center">
+            <span class="muted" id="userEmail">-</span>
+            <button id="btnLogout" class="button small">Salir</button>
           </div>
+
+          <div id="tools" class="toolbar" style="display:none">
+            <input id="q" type="search" placeholder="Buscar informe..." style="flex:1">
+            <select id="order">
+              <option value="desc">Más recientes</option>
+              <option value="asc">Más antiguos</option>
+            </select>
+            <span id="count" class="count"></span>
+          </div>
+
+          <div id="list">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+          <div id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</div>
         </div>
+
+        <!-- DERECHA -->
+        <div id="viewer">
+          <header class="major"><h3>Visor</h3></header>
+          <p class="muted" id="hint">Selecciona un informe para visualizarlo aquí.</p>
+          <iframe id="preview" src="" style="display:none;" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+
       </div>
     </section>
   </div>
@@ -96,172 +118,159 @@
   const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
   const BUCKET = 'informes';
-  const ALLOWLIST = ['asvglobalinvest@gmail.com']; // minúsculas
+  const ALLOWLIST = ['asvglobalinvest@gmail.com']; // en minúsculas
 
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-      flowType: 'pkce'
-    }
+    auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, flowType:'pkce' }
   });
 
   // UI refs
-  const diag = document.getElementById('diag');
-  const authBox = document.getElementById('authBox');
-  const userBox = document.getElementById('userBox');
-  const userEmail = document.getElementById('userEmail');
+  const authBox  = document.getElementById('authBox');
+  const userBox  = document.getElementById('userBox');
+  const userEmail= document.getElementById('userEmail');
   const btnLogin = document.getElementById('btnLogin');
-  const btnLogout = document.getElementById('btnLogout');
-  const cards = document.getElementById('cards');
+  const btnLogout= document.getElementById('btnLogout');
+  const listBox  = document.getElementById('list');
   const emptyMsg = document.getElementById('emptyMsg');
-  const preview = document.getElementById('preview');
-  const hint = document.getElementById('hint');
-
-  function log(msg, cls='ok'){ const d=document.createElement('div'); d.className='call '+cls; d.textContent=msg; diag.appendChild(d); console.log('[INF]', msg); }
+  const preview  = document.getElementById('preview');
+  const hint     = document.getElementById('hint');
+  const tools    = document.getElementById('tools');
+  const q        = document.getElementById('q');
+  const orderSel = document.getElementById('order');
+  const countEl  = document.getElementById('count');
 
   const fmt = iso => new Date(iso||Date.now()).toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'2-digit'});
   const ext = n => (n.split('.').pop()||'').toLowerCase();
-  const nice = n => n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+  const nice= n => n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
 
-  let allFiles = [];
+  let allFiles = [], filtered = [];
 
-  function render(list){
-    cards.innerHTML = '';
-    if(!list.length){ emptyMsg.style.display='block'; return; }
+  function groupByMonth(items){
+    const map = {};
+    items.forEach(o=>{
+      const d = new Date(o.updated_at||o.created_at||Date.now());
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      (map[key] = map[key] || []).push(o);
+    });
+    // ordenar grupos desc por clave
+    return Object.entries(map).sort((a,b)=> a[0] < b[0] ? 1 : -1);
+  }
+
+  function render(){
+    listBox.innerHTML='';
+    if(!filtered.length){ emptyMsg.style.display='block'; countEl.textContent=''; return; }
     emptyMsg.style.display='none';
-    list.forEach(o=>{
-      const e = ext(o.name);
-      const ic = e==='pdf' ? 'PDF' : (e==='ppt'||e==='pptx' ? 'PPT' : 'FILE');
-      const card = document.createElement('div');
-      card.className='card';
-      card.innerHTML = `
-        <div class="row">
-          <div class="icon">${ic}</div>
-          <div>
-            <h4>${nice(o.name)}</h4>
-            <div class="muted" style="font-size:.9rem">${fmt(o.updated_at||o.created_at)}</div>
+    countEl.textContent = `${filtered.length} informes`;
+    // Agrupar
+    const groups = groupByMonth(filtered);
+    groups.forEach(([key,items])=>{
+      const [y,m] = key.split('-');
+      const header = document.createElement('div');
+      header.className='group';
+      header.innerHTML = `<h4>${y} — ${new Date(+y, +m-1, 1).toLocaleDateString('es-CL',{month:'long'}).replace(/^./,c=>c.toUpperCase())}</h4>`;
+      listBox.appendChild(header);
+
+      const wrap = document.createElement('div');
+      wrap.className='cards';
+      listBox.appendChild(wrap);
+
+      items.forEach(o=>{
+        const icon = ext(o.name)==='pdf' ? 'PDF' : (['ppt','pptx'].includes(ext(o.name)) ? 'PPT' : 'FILE');
+        const card = document.createElement('div');
+        card.className='card';
+        card.innerHTML = `
+          <div class="row">
+            <div class="icon">${icon}</div>
+            <div style="min-width:0">
+              <div class="title">${nice(o.name)}</div>
+              <div class="date">${fmt(o.updated_at||o.created_at)}</div>
+            </div>
           </div>
-        </div>
-        <button class="button small" data-path="${o.name}" style="margin-top:.6rem">Ver</button>
-      `;
-      cards.appendChild(card);
+          <button class="button small" data-path="${o.name}">Ver</button>
+        `;
+        wrap.appendChild(card);
+      });
     });
   }
 
-  async function ensureBucket(){
-    log('Verificando acceso al bucket…');
-    const { error } = await supabaseClient.storage.from(BUCKET).list('', { limit:1 });
-    if(error){ log(`No se pudo acceder al bucket '${BUCKET}': `+error.message, 'err'); throw error; }
-    log('Acceso al bucket OK.', 'ok');
+  function applyFilters(){
+    const dir = orderSel.value==='asc' ? 1 : -1;
+    filtered = allFiles.slice().sort((a,b)=> (new Date(a.updated_at||a.created_at) - new Date(b.updated_at||b.created_at)) * dir);
+    const qv = q.value.trim().toLowerCase();
+    if(qv) filtered = filtered.filter(o => nice(o.name).toLowerCase().includes(qv));
+    render();
   }
 
   async function loadList(){
-    log(`Listando bucket '${BUCKET}'…`);
-    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1000 });
-    if(error){ log('Error al listar: '+error.message, 'err'); return; }
-    if(!data || data.length===0){ log('Bucket vacío (no hay objetos en la raíz).', 'warn'); }
-    allFiles = (data||[]).sort((a,b)=> new Date(b.updated_at||b.created_at) - new Date(a.updated_at||a.created_at));
-    render(allFiles);
-    log(`OK: ${allFiles.length} archivos visibles.`, 'ok');
+    listBox.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit:1000 });
+    if(error){ listBox.innerHTML=''; emptyMsg.style.display='block'; return; }
+    allFiles = data || [];
+    applyFilters();
   }
 
   async function showFile(path){
     const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 180);
-    if(error){ log('No se pudo firmar URL: '+error.message, 'err'); alert('No se pudo abrir el informe'); return; }
+    if(error){ alert('No se pudo abrir el informe'); return; }
     const url = data.signedUrl;
     const e = ext(path);
     let viewer = '';
     if(e==='pdf'){
       viewer = url + '#toolbar=0&navpanes=0&scrollbar=0';
     } else if(e==='ppt' || e==='pptx'){
-      viewer = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(url) + '&wdDownloadButton=False&wdPrint=0';
-    } else { alert('Formato no soportado: '+e); return; }
+      viewer = 'https://view.officeapps.live.com/op/embed.aspx?src='+encodeURIComponent(url)+'&wdDownloadButton=False&wdPrint=0';
+    } else {
+      alert('Formato no soportado para visor: '+e); return;
+    }
     hint.style.display='none';
     preview.src = viewer;
     preview.style.display='block';
   }
 
-  // --- AUTH ---
-  async function completeOAuthIfNeeded(){
-    // 1) Con PKCE vuelve con ?code=...
-    if (/[?&]code=/.test(location.href)) {
-      log('Recibí ?code, intercambiando por sesión…','warn');
-      const { error } = await supabaseClient.auth.exchangeCodeForSession(location.href);
-      if (error) { log('Error exchangeCodeForSession: '+error.message,'err'); }
-      // limpiar URL
-      history.replaceState({}, '', location.origin + location.pathname);
-    }
-    // 2) Flujo hash (#access_token) – por compatibilidad
-    if (location.hash.includes('access_token')) {
-      log('Recibí #access_token, limpiando URL…','warn');
-      history.replaceState({}, '', location.origin + location.pathname);
-    }
-  }
-
+  // Auth
   async function refreshUI(){
     const { data:{ session } } = await supabaseClient.auth.getSession();
     const user = session?.user || null;
-
     if(!user){
-      authBox.style.display='block';
-      userBox.style.display='none';
-      cards.innerHTML=''; emptyMsg.style.display='block';
+      authBox.style.display='block'; userBox.style.display='none'; tools.style.display='none';
+      listBox.innerHTML=''; emptyMsg.style.display='block';
       preview.src=''; preview.style.display='none'; hint.style.display='block';
-      log('No hay sesión. Haz clic en “Entrar con Google”.', 'warn');
       return;
     }
-
     const email = (user.email||'').toLowerCase();
-    log('Autenticado como: '+email, 'ok');
-
-    if(!ALLOWLIST.includes(email)){
-      log('Email autenticado NO está en allowlist del front.', 'err');
-      alert('Tu email no está autorizado.');
-      await supabaseClient.auth.signOut();
-      return;
-    }
-
-    authBox.style.display='none';
-    userBox.style.display='block';
+    if(!ALLOWLIST.includes(email)){ alert('Email no autorizado'); await supabaseClient.auth.signOut(); return; }
+    authBox.style.display='none'; userBox.style.display='flex'; tools.style.display='flex';
     userEmail.textContent = email;
-
-    await ensureBucket();
     await loadList();
   }
 
   // Eventos
+  document.getElementById('list').addEventListener('click', (e)=>{
+    const b = e.target.closest('button[data-path]'); if(!b) return;
+    showFile(b.getAttribute('data-path'));
+  });
+  q.addEventListener('input', applyFilters);
+  orderSel.addEventListener('change', applyFilters);
+
   btnLogin.addEventListener('click', async ()=>{
-    log('Redirigiendo a Google OAuth…','warn');
     await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
-      options: {
-        redirectTo: location.origin + location.pathname, // vuelve exactamente a esta página (www o no-www)
-        queryParams: { access_type: 'offline', prompt: 'consent' }
-      }
+      options:{ redirectTo: location.origin + location.pathname, queryParams:{ access_type:'offline', prompt:'consent' } }
     });
   });
-
   btnLogout.addEventListener('click', async ()=>{
-    await supabaseClient.auth.signOut();
-    preview.src=''; preview.style.display='none';
-    await refreshUI();
-  });
-
-  cards.addEventListener('click', (e)=>{
-    const b = e.target.closest('button[data-path]');
-    if(!b) return;
-    showFile(b.getAttribute('data-path'));
+    await supabaseClient.auth.signOut(); await refreshUI();
   });
 
   // Init
   (async function(){
-    log('SUPABASE_URL: '+SUPABASE_URL, 'ok');
-    log('BUCKET: '+BUCKET, 'ok');
-    await completeOAuthIfNeeded();   // <— Cierra el flujo si volvimos de Google
+    if (/[?&]code=/.test(location.href)) {
+      await supabaseClient.auth.exchangeCodeForSession(location.href);
+      history.replaceState({}, '', location.origin + location.pathname);
+    }
+    if(location.hash.includes('access_token')) history.replaceState({},'',location.pathname);
     await refreshUI();
-    supabaseClient.auth.onAuthStateChange(async ()=>{ await refreshUI(); });
+    supabaseClient.auth.onAuthStateChange(refreshUI);
   })();
 </script>
 </body>
