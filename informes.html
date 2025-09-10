@@ -98,12 +98,11 @@
   const BUCKET = 'informes';
   const ALLOWLIST = ['asvglobalinvest@gmail.com']; // minúsculas
 
-  // Configura el cliente para gestionar automáticamente el intercambio del "code"
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
-      detectSessionInUrl: true,   // <— clave para que cierre el flujo OAuth al volver
+      detectSessionInUrl: true,
       flowType: 'pkce'
     }
   });
@@ -184,7 +183,23 @@
     preview.style.display='block';
   }
 
-  // Auth
+  // --- AUTH ---
+  async function completeOAuthIfNeeded(){
+    // 1) Con PKCE vuelve con ?code=...
+    if (/[?&]code=/.test(location.href)) {
+      log('Recibí ?code, intercambiando por sesión…','warn');
+      const { error } = await supabaseClient.auth.exchangeCodeForSession(location.href);
+      if (error) { log('Error exchangeCodeForSession: '+error.message,'err'); }
+      // limpiar URL
+      history.replaceState({}, '', location.origin + location.pathname);
+    }
+    // 2) Flujo hash (#access_token) – por compatibilidad
+    if (location.hash.includes('access_token')) {
+      log('Recibí #access_token, limpiando URL…','warn');
+      history.replaceState({}, '', location.origin + location.pathname);
+    }
+  }
+
   async function refreshUI(){
     const { data:{ session } } = await supabaseClient.auth.getSession();
     const user = session?.user || null;
@@ -222,8 +237,8 @@
     await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: location.origin + '/informes.html',
-        queryParams: { access_type: 'offline', prompt: 'consent' } // refresh token estable
+        redirectTo: location.origin + location.pathname, // vuelve exactamente a esta página (www o no-www)
+        queryParams: { access_type: 'offline', prompt: 'consent' }
       }
     });
   });
@@ -244,16 +259,9 @@
   (async function(){
     log('SUPABASE_URL: '+SUPABASE_URL, 'ok');
     log('BUCKET: '+BUCKET, 'ok');
-
-    // Si Google nos devolvió ?code=… o #access_token, supabase-js lo gestionará
-    // gracias a detectSessionInUrl:true. Damos un pequeño tiempo y refrescamos UI.
-    await new Promise(r=>setTimeout(r, 50));
+    await completeOAuthIfNeeded();   // <— Cierra el flujo si volvimos de Google
     await refreshUI();
-
-    // Mantén UI sincronizada con cambios de sesión
-    supabaseClient.auth.onAuthStateChange(async (_event, _session)=>{
-      await refreshUI();
-    });
+    supabaseClient.auth.onAuthStateChange(async ()=>{ await refreshUI(); });
   })();
 </script>
 </body>
