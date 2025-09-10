@@ -118,3 +118,41 @@
   /* Nada de fondos blancos al hover global */
   a:hover{ background:transparent !important; }
   
+  /* === BN global === */
+body, #wrapper, #main { background: #0b0d10; }
+#header { background: #0b0d10; }
+#footer { background: #0b0d10; }
+.inner { color: #e7e9ee; }
+a { color: #e7e9ee; }
+a.button, .button { border-color:#e7e9ee; color:#0b0d10; background:#e7e9ee; }
+a.button:hover, .button:hover { background:#ffffff; color:#0b0d10; }
+
+/* Banner oscuro sin lila */
+#banner.style2:before { background: rgba(0,0,0,.55); }
+
+/* === SPOTLIGHTS como la demo (imagen grande + texto al lado) === */
+.spotlights > section {
+  background:#0f1115 !important;
+  display:flex; align-items:center; gap:0;
+}
+.spotlights > section:nth-child(2n) { background:#0f1115 !important; }
+
+/* Columna imagen */
+.spotlights .image {
+  display:block; width:45%; min-height:24rem; position:relative;
+}
+.spotlights .image img {
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+/* Columna texto */
+.spotlights .content { width:55%; }
+.spotlights .content .inner { padding:3rem 3rem; }
+
+/* Responsive */
+@media screen and (max-width: 980px) {
+  .spotlights > section { display:block; }
+  .spotlights .image, .spotlights .content { width:100%; }
+  .spotlights .image { min-height:16rem; }
+  .spotlights .content .inner { padding:2rem 1.75rem; }
+}
