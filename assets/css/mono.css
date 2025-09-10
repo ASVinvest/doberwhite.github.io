@@ -4,91 +4,117 @@
 
 /* Paleta */
 :root{
-  --bg:#0a0c10;         /* fondo general */
-  --panel:#12151a;      /* cajas/tiles */
-  --line:rgba(255,255,255,.08);
-  --text:#f5f7fa;       /* texto principal */
-  --muted:#aab2bd;      /* texto atenuado */
-  --accent:#ffffff;     /* enlaces/botones */
-  --black:#000000;
-}
-
-/* Base monocroma */
-html,body{
-  background:var(--bg) !important;
-  color:var(--text);
-}
-a{
-  color:var(--accent);
-  text-decoration:none;
-  border-bottom:1px solid transparent;
-  transition:all .2s ease;
-}
-a:hover{
-  color:var(--accent);
-  background:transparent !important;
-  border-bottom-color:var(--accent);
-}
-.muted,.disclaimer{ color:var(--muted) }
-
-/* Header / Menu / Footer */
-#header{
-  background:rgba(0,0,0,.55) !important;
-  border-bottom:1px solid var(--line);
-}
-#menu{ background:#0d1117 !important; }
-#footer{ border-top:1px solid var(--line); }
-
-/* Contenedores (NO tocar #banner para no ocultar su background-image) */
-.wrapper,
-.wrapper.style1,
-.wrapper.style2,
-.wrapper.style3,
-#main{
-  background-color:var(--bg) !important;
-}
-.inner{ background-color:transparent !important; }
-
-/* Botones */
-.button{
-  background:var(--accent);
-  color:var(--black);
-  border:1px solid var(--accent);
-}
-.button:hover{
-  background:transparent;
-  color:var(--accent);
-}
-
-/* Formularios */
-input[type="text"], input[type="email"], textarea, select{
-  background:#0f1318;
-  color:var(--text);
-  border:1px solid var(--line);
-}
-input:focus, textarea:focus, select:focus{
-  border-color:#ffffff99;
-  outline:0;
-  box-shadow:0 0 0 3px #ffffff1f;
-}
-
-/* =========================================================
-   TILES (imagen gris por defecto → color al hover)
-   NO cambiamos estructura del tema.
-   ========================================================= */
-.tiles article{
-  background:var(--panel) !important;
-  border:1px solid var(--line);
-}
-
-/* Solo filtro a la imagen; no tocar posiciones/alturas */
-.tiles article .image img{
-  filter:grayscale(100%) contrast(1.05) brightness(0.95);
-  transition:filter .3s ease;
-}
-.tiles article:hover .image img{
-  filter:none;
-}
-
-/* Nada de fondos blancos al hover global */
-a:hover{ background:transparent !important; }
+    --bg:#0a0c10;         /* fondo general */
+    --panel:#12151a;      /* cajas/tiles */
+    --line:rgba(255,255,255,.08);
+    --text:#f5f7fa;       /* texto principal */
+    --muted:#aab2bd;      /* texto atenuado */
+    --accent:#ffffff;     /* enlaces/botones */
+    --black:#000000;
+  }
+  
+  /* Base monocroma */
+  html,body{
+    background:var(--bg) !important;
+    color:var(--text);
+  }
+  a{
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+    transition:all .2s ease;
+  }
+  a:hover{
+    color:var(--accent);
+    background:transparent !important;
+    border-bottom-color:var(--accent);
+  }
+  .muted,.disclaimer{ color:var(--muted) }
+  
+  /* Header / Menu / Footer */
+  #header{
+    background:rgba(0,0,0,.55) !important;
+    border-bottom:1px solid var(--line);
+  }
+  #menu{ background:#0d1117 !important; }
+  #footer{ border-top:1px solid var(--line); }
+  
+  /* Contenedores (NO tocar #banner para no ocultar su background-image) */
+  .wrapper,
+  .wrapper.style1,
+  .wrapper.style2,
+  .wrapper.style3,
+  #main{
+    background-color:var(--bg) !important;
+  }
+  .inner{ background-color:transparent !important; }
+  
+  /* Botones */
+  .button{
+    background:var(--accent);
+    color:var(--black);
+    border:1px solid var(--accent);
+  }
+  .button:hover{
+    background:transparent;
+    color:var(--accent);
+  }
+  
+  /* Formularios */
+  input[type="text"], input[type="email"], textarea, select{
+    background:#0f1318;
+    color:var(--text);
+    border:1px solid var(--line);
+  }
+  input:focus, textarea:focus, select:focus{
+    border-color:#ffffff99;
+    outline:0;
+    box-shadow:0 0 0 3px #ffffff1f;
+  }
+  
+  /* =========================================================
+     IMÁGENES SIEMPRE VISIBLES (banner + spotlights)
+     ========================================================= */
+  
+  /* No sobrescribir ni ocultar backgrounds del banner */
+  #banner .image,
+  .spotlights .image{
+    background:transparent !important;
+  }
+  #banner .image img,
+  .spotlights .image img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:none !important;     /* nunca en gris aquí */
+  }
+  
+  /* Overlay sutil para legibilidad en banners (opcional) */
+  #banner:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    pointer-events:none;
+  }
+  
+  /* =========================================================
+     TILES (imagen gris por defecto → color al hover)
+     ========================================================= */
+  .tiles article{
+    background:var(--panel) !important;
+    border:1px solid var(--line);
+    cursor:pointer;               /* UX: indica que todo es clickable */
+  }
+  .tiles article .image img{
+    filter:grayscale(100%) contrast(1.05) brightness(0.95);
+    transition:filter .3s ease;
+  }
+  .tiles article:hover .image img{
+    filter:none;
+  }
+  
+  /* Nada de fondos blancos al hover global */
+  a:hover{ background:transparent !important; }
+  
