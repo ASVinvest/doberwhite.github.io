@@ -1,8 +1,8 @@
 /* =========================================================
-   DoberWhite — MONOCHROME + TILES (Forty-safe, FINAL)
+   DoberWhite — MONOCHROME + BANNERS + TILES (FINAL)
    ========================================================= */
 
-/* ---------- Paleta ---------- */
+/* Paleta */
 :root{
   --bg:#0b0d12;
   --elev:#12151c;
@@ -13,147 +13,102 @@
   --black:#000000;
 }
 
-/* ---------- Base monocromo ---------- */
-html,body{
-  background:var(--bg) !important;
-  color:var(--text);
-}
-a{
-  color:var(--white);
-  text-decoration:none;
-  border-bottom:1px solid transparent;
-  transition:all .2s;
-}
-a:hover{
-  color:var(--white);
-  background:transparent !important;
-  border-bottom-color:var(--white);
-}
-a:focus{
-  outline:2px dashed var(--white);
-  outline-offset:2px;
-}
+/* Base monocroma */
+html,body{ background:var(--bg) !important; color:var(--text) }
+a{ color:var(--white); text-decoration:none; border-bottom:1px solid transparent; transition:all .2s }
+a:hover{ color:var(--white); background:transparent !important; border-bottom-color:var(--white) }
+a:focus{ outline:2px dashed var(--white); outline-offset:2px }
 .muted,.disclaimer{ color:var(--muted) }
 
-/* ---------- Header / Menu / Footer ---------- */
-#header{
-  background:rgba(0,0,0,.55) !important;
-  border-bottom:1px solid var(--line);
-}
-#menu{ background:#0c0f15 !important; }
-#footer{ border-top:1px solid var(--line); }
+/* Header/Menu/Footer */
+#header{ background:rgba(0,0,0,.55) !important; border-bottom:1px solid var(--line) }
+#menu{ background:#0c0f15 !important }
+#footer{ border-top:1px solid var(--line) }
 
-/* ---------- HERO / Banner ----------
-   Mantenemos la imagen de fondo del tema.
-   SOLO añadimos un overlay oscuro para legibilidad.
-------------------------------------- */
+/* ==================== BANNERS ==================== */
+/* Mantener imagen de fondo del tema + overlay oscuro + capas correctas */
 #banner,
 #banner.major{
   position:relative;
-  background-color:transparent !important; /* no usar shorthand 'background' */
+  background-color:transparent !important; /* NO usar shorthand 'background' */
+}
+#banner .image{
+  position:absolute; inset:0; z-index:0; display:block; overflow:hidden;
+}
+#banner .image img{
+  width:100%; height:100%; object-fit:cover; display:block;
 }
 #banner:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.55); /* overlay */
+  content:""; position:absolute; inset:0; z-index:1;
+  background:rgba(0,0,0,.55); /* overlay para legibilidad */
   pointer-events:none;
 }
 #banner .inner{
-  background:transparent !important;
-  box-shadow:none !important;
+  position:relative; z-index:2;
+  background:transparent !important; box-shadow:none !important;
 }
 
-/* ---------- Secciones negras ----------
-   ¡NO tocar el #banner! (trae background-image del tema)
------------------------------------------ */
+/* Secciones en negro (NO tocar #banner, que trae su imagen) */
 .wrapper, .wrapper.style1, .wrapper.style2, .wrapper.style3,
 #main, .inner, #one, #two, #three, #four, #contact,
 section:not(#banner){
   background:var(--bg) !important;
 }
 
-/* ---------- Botones ---------- */
-.button{
-  background:var(--white);
-  color:var(--black);
-  border:1px solid var(--white);
+/* Botones B/N */
+.button{ background:var(--white); color:var(--black); border:1px solid var(--white) }
+.button:hover{ background:transparent; color:var(--white) }
+.button.primary{ background:var(--white); color:var(--black) }
+.button.primary:hover{ background:transparent; color:var(--white) }
+
+/* Formularios */
+input[type="text"],input[type="email"],textarea,select{
+  background:#0f131a; color:var(--text); border:1px solid var(--line)
 }
-.button:hover{
-  background:transparent;
-  color:var(--white);
-}
-.button.primary{
-  background:var(--white);
-  color:var(--black);
-}
-.button.primary:hover{
-  background:transparent;
-  color:var(--white);
+input:focus,textarea:focus,select:focus{
+  border-color:#ffffff99; outline:0; box-shadow:0 0 0 3px #ffffff1f
 }
 
-/* ---------- Formularios ---------- */
-input[type="text"], input[type="email"], textarea, select{
-  background:#0f131a;
-  color:var(--text);
-  border:1px solid var(--line);
-}
-input:focus, textarea:focus, select:focus{
-  border-color:#ffffff99;
-  outline:0;
-  box-shadow:0 0 0 3px #ffffff1f;
-}
+/* ==================== TILES (Forty) ==================== */
+/* Todo el panel clickeable + imagen gris→color al hover */
 
-/* =========================================================
-   TILES (Forty) — solo filtros de imagen y estilo;
-   NO tocar ::before de .image para no romper la altura.
-   ========================================================= */
-
-/* Caja + borde sutil */
 .tiles article{
+  position:relative;
   background:var(--elev) !important;
   border:1px solid var(--line);
   overflow:hidden;
+  min-height:320px;
 }
 
-/* Imagen visible; gris por defecto → color al hover */
+/* Imagen ocupa todo el panel (NO tocar ::before del tema en .image a nivel global) */
 .tiles article .image{
-  display:block;
-  position:relative;
-  overflow:hidden;
-  background:transparent !important;
+  position:absolute; inset:0; display:block; overflow:hidden; background:transparent !important;
+  z-index:0;
 }
 .tiles article .image img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   filter:grayscale(100%) contrast(1.05) brightness(0.95);
   transition:filter .35s ease, transform .35s ease;
 }
-.tiles article:hover .image img{
-  filter:none;
-  transform:translateY(-2px);
-}
+.tiles article:hover .image img{ filter:none; transform:translateY(-2px) }
 
-/* Enlace overlay nativo de Forty:
-   mantenemos relativo, sin fondos blancos. */
+/* Enlace overlay: ocupa TODO el recuadro y es transparente */
 .tiles article > a{
-  position:relative !important; /* default del tema */
-  z-index:2;
-  color:inherit;
-  background:transparent !important;
-  border:0;
+  position:absolute !important; inset:0 !important;
+  z-index:3 !important; display:flex; align-items:flex-end;
+  color:inherit; background:transparent !important; border:0;
+  text-decoration:none;
 }
-/* Sombra/overlay del enlace (oscuro, nunca blanco) */
+/* Sombra oscura (nunca blanca) del overlay; se aclara al hover */
 .tiles article > a:before{
-  /* IMPORTANTE: NO eliminar este pseudo-elemento */
-  background:rgba(0,0,0,.25) !important;
-  transition:background .35s ease;
+  content:""; position:absolute; inset:0; z-index:1;
+  background:rgba(0,0,0,.25) !important; transition:background .35s ease;
 }
-.tiles article:hover > a:before{
-  background:rgba(0,0,0,.05) !important;
-}
+.tiles article:hover > a:before{ background:rgba(0,0,0,.05) !important; }
 
-/* Nunca heredar fondos blancos desde hover global */
-a:hover{ background:transparent !important; }
+/* Texto del overlay arriba de la sombra */
+.tiles article > a h3,
+.tiles article > a .content{ position:relative; z-index:2; color:var(--white) }
+
+/* Jamás heredar fondos blancos desde hover global */
+a:hover{ background:transparent !important }
