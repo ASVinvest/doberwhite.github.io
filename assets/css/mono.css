@@ -1,86 +1,111 @@
-/* ====== TILES: imagen visible en gris → color (v6) ====== */
+/* =========================================================
+   DoberWhite — MONOCHROME OVERRIDE + TILES FIX (FINAL)
+   ========================================================= */
 
-/* Contenedor de imagen sin fondos ni overlays */
+/* Paleta básica */
+:root{
+  --bg:#0b0d12;           /* fondo general */
+  --elev:#12151c;         /* panel/tile */
+  --line:rgba(255,255,255,.08);
+  --text:#f3f5f7;         /* texto principal */
+  --muted:#a9b0ba;        /* texto secundario */
+  --white:#ffffff;
+  --black:#000000;
+}
+
+/* Base */
+html, body{ background:var(--bg) !important; color:var(--text) }
+.muted, .disclaimer{ color:var(--muted) }
+
+/* Enlaces: nunca pintes fondo (evita “parche blanco”) */
+a{ color:var(--white); text-decoration:none; border-bottom:1px solid transparent; transition:all .2s }
+a:hover{ color:var(--white); background:transparent !important; border-bottom-color:var(--white) }
+a:focus{ outline:2px dashed var(--white); outline-offset:2px }
+
+/* Header / Menú / Footer */
+#header{ background:rgba(0,0,0,.55) !important; border-bottom:1px solid var(--line) }
+#menu{ background:#0c0f15 !important }
+#footer{ border-top:1px solid var(--line) }
+
+/* ===== HERO =====
+   Volvemos a usar la imagen de fondo del tema y sólo añadimos overlay oscuro
+*/
+#banner, #banner.major{ position:relative; background-color:transparent !important }
+#banner:before{
+  content:""; position:absolute; inset:0;
+  background:rgba(0,0,0,.55); pointer-events:none;
+}
+#banner .inner{ background:transparent !important; box-shadow:none !important }
+
+/* ===== Secciones genéricas en negro ===== */
+.wrapper, .wrapper.style1, .wrapper.style2, .wrapper.style3,
+#main, .inner, section, #one, #two, #three, #four, #contact{
+  background-color:var(--bg) !important;
+}
+
+/* ===== Botones B/N ===== */
+.button{ background:var(--white); color:var(--black); border:1px solid var(--white) }
+.button:hover{ background:transparent; color:var(--white) }
+.button.primary{ background:var(--white); color:var(--black) }
+.button.primary:hover{ background:transparent; color:var(--white) }
+
+/* ===== Formularios ===== */
+input[type="text"], input[type="email"], textarea, select{
+  background:#0f131a; color:var(--text); border:1px solid var(--line)
+}
+input:focus, textarea:focus, select:focus{
+  border-color:#ffffff99; outline:0; box-shadow:0 0 0 3px #ffffff1f
+}
+
+/* =========================================================
+   TILES (HTML5 UP: Forty) — Fix definitivo
+   ========================================================= */
+
+/* Caja del artículo monocroma */
+.tiles article{
+  background:var(--elev) !important;
+  border:1px solid var(--line);
+  overflow:hidden;               /* recorta cualquier overlay */
+}
+
+/* Contenedor de imagen: NUNCA fondos ni pseudo-overlays */
 .tiles article .image,
 .tiles article .image:before,
 .tiles article .image:after{
-  background: transparent !important;
-  box-shadow: none !important;
+  background:transparent !important;
+  box-shadow:none !important;
 }
 
-/* Imagen: ocupar ancho, sin forzar alto, y en gris por defecto */
+/* Imagen: gris por defecto → color al hover */
 .tiles article .image{ display:block; position:relative; overflow:hidden }
 .tiles article .image img{
-  display:block;
-  width:100%;
-  height:auto;               /* << clave: NO forzar height:100% */
-  object-fit:cover;
-  filter: grayscale(100%) contrast(1.05) brightness(0.95);
-  transition: filter .3s ease, transform .3s ease;
+  display:block; width:100%; height:auto; object-fit:cover;
+  filter:grayscale(100%) contrast(1.05) brightness(0.95);
+  transition:filter .3s ease, transform .3s ease;
 }
-
-/* Color y ligero lift al hover del tile */
 .tiles article:hover .image img{
-  filter:none;
-  transform: translateY(-2px);
+  filter:none; transform:translateY(-2px);
 }
 
-/* Cualquier overlay/link del tile NO debe pintar fondo */
+/* Enlace-overlay nativo de Forty: transparente SIEMPRE */
 .tiles article > a,
-.tiles article > a.link,
-.tiles article .link{
-  background: transparent !important;
+.tiles article > a:before,
+.tiles article > a:after{
+  background:transparent !important;
+  box-shadow:none !important;
+  /* mantiene clickeable sin cubrir la imagen con color */
 }
 
-/* Pseudo overlays del link: apagados */
-.tiles article > a:before,
-.tiles article > a:after,
+/* Cualquier variante/hover del overlay: también transparente */
+.tiles article:hover > a:before,
+.tiles article:hover > a:after{ background:transparent !important; box-shadow:none !important }
+
+/* Por si el tema intenta pintar highlight con .link internos */
+.tiles article .link,
 .tiles article .link:before,
 .tiles article .link:after{
-  background: transparent !important;
-  box-shadow: none !important;
-  content: '' !important;
+  background:transparent !important; box-shadow:none !important;
 }
 
-/* Enlaces globales: nunca pintar fondo (evita parche blanco) */
-a:hover{ background: transparent !important; }
-
-/* ===== DoberWhite – Tiles fix definitivo (v7) ===== */
-
-/* Nunca pintes fondo en enlaces globales (evita “parche blanco”) */
-a:hover { background: transparent !important; }
-
-/* Contenedor de imagen de la tile: sin fondos ni overlays */
-.tiles article .image,
-.tiles article .image:before,
-.tiles article .image:after {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* Imagen: gris por defecto, color al hover del artículo */
-.tiles article .image img {
-  display: block; width: 100%; height: auto; object-fit: cover;
-  filter: grayscale(100%) contrast(1.05) brightness(0.95);
-  transition: filter .3s ease, transform .3s ease;
-}
-.tiles article:hover .image img { filter: none; transform: translateY(-2px); }
-
-/* El enlace-overlay nativo de Forty: transparente siempre */
-.tiles article > a,
-.tiles article > a.tile-link,
-.tiles article > a:before,
-.tiles article > a:after {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* Por si el tema añade pseudo-overlays extra al hacer hover */
-.tiles article:hover > a:before,
-.tiles article:hover > a:after {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* Mantén la tarjeta monocroma (borde sutil) */
-.tiles article { background: #12151c !important; border: 1px solid rgba(255,255,255,.08); }
+/* Nunca heredar fondos desde hover global */
+a:hover{ background:transparent !important; }
