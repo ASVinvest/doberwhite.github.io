@@ -15,6 +15,12 @@
     .row{display:flex;align-items:center;gap:.6rem}
     .icon{width:36px;height:36px;border-radius:10px;background:#2a3042;display:grid;place-items:center;font-weight:700}
     #viewer iframe{width:100%;height:72vh;border:0;border-radius:12px;background:#0e111a}
+    /* Callouts de diagnóstico */
+    #diag{margin:8px 0}
+    .call{padding:.6rem .8rem;border-radius:.5rem;margin:.35rem 0;font-size:.9rem}
+    .ok{background:#16361a;border:1px solid #1f7a1f}
+    .warn{background:#3a2c10;border:1px solid #b36b00}
+    .err{background:#3a1616;border:1px solid #a43a3a}
   </style>
 </head>
 <body class="is-preload">
@@ -48,28 +54,32 @@
 
   <div id="main">
     <section>
-      <div class="inner grid-2">
-        <!-- IZQUIERDA -->
-        <div>
-          <div id="authBox">
-            <button id="btnLogin" class="button primary small">Entrar con Google</button>
-            <p class="muted" style="margin:.4rem 0 1rem">Solo correos autorizados.</p>
+      <div class="inner">
+        <div id="diag"></div> <!-- Diagnóstico -->
+
+        <div class="grid-2">
+          <!-- IZQUIERDA -->
+          <div>
+            <div id="authBox">
+              <button id="btnLogin" class="button primary small">Entrar con Google</button>
+              <p class="muted" style="margin:.4rem 0 1rem">Solo correos autorizados.</p>
+            </div>
+
+            <div id="userBox" style="display:none; margin-bottom:.5rem;">
+              <span class="muted" id="userEmail">-</span>
+              <button id="btnLogout" class="button small" style="margin-left:.5rem">Salir</button>
+            </div>
+
+            <div id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</div>
+            <div class="cards" id="cards"></div>
           </div>
 
-          <div id="userBox" style="display:none; margin-bottom:.5rem;">
-            <span class="muted" id="userEmail">-</span>
-            <button id="btnLogout" class="button small" style="margin-left:.5rem">Salir</button>
+          <!-- DERECHA -->
+          <div id="viewer">
+            <header class="major"><h3>Visor</h3></header>
+            <p class="muted" id="hint">Selecciona un informe para visualizarlo aquí.</p>
+            <iframe id="preview" src="" style="display:none;" sandbox="allow-scripts allow-same-origin"></iframe>
           </div>
-
-          <div id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</div>
-          <div class="cards" id="cards"></div>
-        </div>
-
-        <!-- DERECHA -->
-        <div id="viewer">
-          <header class="major"><h3>Visor</h3></header>
-          <p class="muted" id="hint">Selecciona un informe para visualizarlo aquí.</p>
-          <iframe id="preview" src="" style="display:none;" sandbox="allow-scripts allow-same-origin"></iframe>
         </div>
       </div>
     </section>
@@ -89,12 +99,13 @@
   // === SUPABASE ===
   const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
-  const BUCKET = 'informes'; // debe ser minúsculas
-  const ALLOWLIST = ['asvglobalinvest@gmail.com']; // en minúsculas
+  const BUCKET = 'informes';
+  const ALLOWLIST = ['asvglobalinvest@gmail.com']; // minúsculas
 
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  // UI
+  // UI refs
+  const diag = document.getElementById('diag');
   const authBox = document.getElementById('authBox');
   const userBox = document.getElementById('userBox');
   const userEmail = document.getElementById('userEmail');
@@ -104,6 +115,8 @@
   const emptyMsg = document.getElementById('emptyMsg');
   const preview = document.getElementById('preview');
   const hint = document.getElementById('hint');
+
+  function log(msg, cls='ok'){ const d=document.createElement('div'); d.className='call '+cls; d.textContent=msg; diag.appendChild(d); console.log('[INF]', msg); }
 
   const fmt = iso => new Date(iso||Date.now()).toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'2-digit'});
   const ext = n => (n.split('.').pop()||'').toLowerCase();
@@ -134,19 +147,26 @@
     });
   }
 
+  async function ensureBucket(){
+    log('Verificando acceso al bucket…');
+    const { error } = await supabaseClient.storage.from(BUCKET).list('', { limit:1 });
+    if(error){ log(`No se pudo acceder al bucket '${BUCKET}': `+error.message, 'err'); throw error; }
+    log('Acceso al bucket OK.', 'ok');
+  }
+
   async function loadList(){
-    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', {
-      limit: 1000,
-      sortBy: { column: 'updated_at', order: 'desc' }
-    });
-    if(error){ console.error('List error:', error.message); emptyMsg.style.display='block'; return; }
-    allFiles = data || [];
+    log(`Listando bucket '${BUCKET}'…`);
+    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1000 });
+    if(error){ log('Error al listar: '+error.message, 'err'); return; }
+    if(!data || data.length===0){ log('Bucket vacío (no hay objetos en la raíz).', 'warn'); }
+    allFiles = (data||[]).sort((a,b)=> new Date(b.updated_at||b.created_at) - new Date(a.updated_at||a.created_at));
     render(allFiles);
+    log(`OK: ${allFiles.length} archivos visibles.`, 'ok');
   }
 
   async function showFile(path){
     const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 180);
-    if(error){ alert('No se pudo abrir el informe'); console.error(error.message); return; }
+    if(error){ log('No se pudo firmar URL: '+error.message, 'err'); alert('No se pudo abrir el informe'); return; }
     const url = data.signedUrl;
     const e = ext(path);
     let viewer = '';
@@ -154,11 +174,7 @@
       viewer = url + '#toolbar=0&navpanes=0&scrollbar=0';
     } else if(e==='ppt' || e==='pptx'){
       viewer = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(url) + '&wdDownloadButton=False&wdPrint=0';
-    } else {
-      // Si no es PDF/PPTX, mostramos aviso
-      alert('Formato no soportado para visor: ' + e);
-      return;
-    }
+    } else { alert('Formato no soportado: '+e); return; }
     hint.style.display='none';
     preview.src = viewer;
     preview.style.display='block';
@@ -169,6 +185,7 @@
     const { data: { session } } = await supabaseClient.auth.getSession();
     const user = session?.user || null;
     if(!user){
+      log('No hay sesión. Haz clic en “Entrar con Google”.', 'warn');
       authBox.style.display='block';
       userBox.style.display='none';
       cards.innerHTML=''; emptyMsg.style.display='block';
@@ -176,17 +193,21 @@
       return;
     }
     const email = (user.email||'').toLowerCase();
-    if(!ALLOWLIST.includes(email)){
+    log('Autenticado como: '+email, 'ok');
+    if(!['asvglobalinvest@gmail.com'].includes(email)){
+      log('Email autenticado NO está en allowlist del front.', 'err');
       alert('Tu email no está autorizado.'); await supabaseClient.auth.signOut(); return;
     }
     authBox.style.display='none';
     userBox.style.display='block';
     userEmail.textContent = email;
+    await ensureBucket();
     await loadList();
   }
 
   // Eventos
   btnLogin.addEventListener('click', async ()=>{
+    log('Redirigiendo a Google OAuth…','warn');
     await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: location.origin + '/informes.html' }
@@ -194,6 +215,7 @@
   });
   btnLogout.addEventListener('click', async ()=>{
     await supabaseClient.auth.signOut();
+    preview.src=''; preview.style.display='none';
     await onAuthChanged();
   });
   cards.addEventListener('click', (e)=>{
@@ -204,6 +226,8 @@
 
   // Init
   (async function(){
+    log('SUPABASE_URL: '+SUPABASE_URL, 'ok');
+    log('BUCKET: '+BUCKET, 'ok');
     if(location.hash.includes('access_token')) history.replaceState(null,'',location.pathname);
     await onAuthChanged();
     supabaseClient.auth.onAuthStateChange(onAuthChanged);
