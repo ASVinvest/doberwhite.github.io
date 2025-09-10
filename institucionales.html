@@ -1,14 +1,11 @@
 <!DOCTYPE HTML>
-<!-- Servicios institucionales — DoberWhite (Forty) -->
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <title>Servicios institucionales — DoberWhite</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <!-- CSS base del tema -->
   <link rel="stylesheet" href="assets/css/main.css" />
-  <!-- Paleta BN + arreglos de spotlights -->
-  <link rel="stylesheet" href="assets/css/mono.css?v=bnw-spotlights" />
+  <link rel="stylesheet" href="assets/css/mono.css?v=bnw-spotlights2" />
   <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 </head>
 <body class="is-preload">
@@ -44,8 +41,14 @@
           <p>Arquitectura institucional: ejecución multi-venue, reporting auditado y modelos cuantitativos. Control de riesgo y SLAs claros.</p>
         </div>
       </div>
-      <!-- Asegúrate que esta ruta exista -->
-      <span class="image"><img src="images/banners/institucionales.jpg?v=1" alt="Servicios institucionales"></span>
+      <!-- Ruta de tu banner; si falla, usa una del tema -->
+      <span class="image">
+        <img
+          src="images/banners/institucionales.jpg?v=1"
+          alt="Servicios institucionales"
+          onerror="this.onerror=null;this.src='images/pic08.jpg';"
+        />
+      </span>
     </section>
 
     <!-- Main -->
@@ -57,7 +60,7 @@
           <header class="major"><h2>Qué ofrecemos</h2></header>
           <p>
             Operamos con políticas, límites y monitoreo continuo. Enfoque cuantitativo, ejecución
-            con métricas de costo (TC/ slippage) y reportes útiles para comités e inspección.
+            con métricas de costo (TC/slippage) y reportes útiles para comités e inspección.
           </p>
           <ul class="actions">
             <li><a href="contacto.html" class="button">Hablar con un especialista</a></li>
@@ -65,14 +68,19 @@
         </div>
       </section>
 
-      <!-- SPOTLIGHTS (como la demo) -->
+      <!-- SPOTLIGHTS -->
       <section class="spotlights">
 
-        <!-- 1) Imagen a la izquierda, texto a la derecha -->
+        <!-- 1) Imagen IZQ / Texto DER -->
         <section>
           <a class="image">
-            <!-- Cambia el nombre si tu archivo es otro -->
-            <img src="images/spotlights/inst-1.jpg?v=1" alt="Ejecución y routing" data-position="center center" />
+            <img
+              src="images/spotlights/inst-1.jpg?v=1"
+              alt="Propuesta"
+              loading="lazy"
+              data-position="center center"
+              onerror="this.onerror=null;this.src='images/pic01.jpg';"
+            />
           </a>
           <div class="content">
             <div class="inner">
@@ -89,11 +97,16 @@
           </div>
         </section>
 
-        <!-- 2) Texto a la izquierda, imagen a la derecha -->
+        <!-- 2) Texto IZQ / Imagen DER (alternado) -->
         <section>
           <a class="image">
-            <!-- Cambia el nombre si tu archivo es otro -->
-            <img src="images/spotlights/inst-3.jpg?v=1" alt="Gobernanza y cumplimiento" data-position="center center" />
+            <img
+              src="images/spotlights/inst-3.jpg?v=1"
+              alt="Gobernanza y cumplimiento"
+              loading="lazy"
+              data-position="center center"
+              onerror="this.onerror=null;this.src='images/pic11.jpg';"
+            />
           </a>
           <div class="content">
             <div class="inner">
@@ -118,7 +131,7 @@
 
   </div>
 
-  <!-- JS del tema -->
+  <!-- JS -->
   <script src="assets/js/jquery.min.js"></script>
   <script src="assets/js/jquery.scrolly.min.js"></script>
   <script src="assets/js/jquery.scrollex.min.js"></script>
