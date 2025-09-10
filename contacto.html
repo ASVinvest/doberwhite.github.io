@@ -32,7 +32,7 @@
   <!-- Banner -->
   <section id="banner" class="style2">
     <div class="inner">
-      <span class="image"><img src="images/performance.png" alt="" /></span>
+      <span class="image"><img src="images/performance.png" alt="Contacto" loading="lazy" decoding="async" /></span>
       <header class="major"><h1>Agenda una reunión</h1></header>
       <div class="content"><p>Cuéntanos tu caso. Respondemos en 24–48h hábiles.</p></div>
     </div>
@@ -43,9 +43,9 @@
     <section>
       <div class="inner">
         <div class="split">
-          <!-- FORMULARIO FUNCIONAL -->
+          <!-- FORMULARIO (AJAX) -->
           <section>
-            <form action="https://formsubmit.co/Asvglobalinvest@gmail.com" method="POST">
+            <form id="contactForm">
               <div class="fields">
                 <div class="field half">
                   <label for="name">Nombre</label>
@@ -61,12 +61,10 @@
                 </div>
               </div>
 
-              <!-- Config FormSubmit -->
+              <!-- Config extra -->
               <input type="hidden" name="_subject" value="Nuevo mensaje desde DoberWhite.com">
               <input type="hidden" name="_template" value="table">
               <input type="hidden" name="_captcha" value="false">
-              <input type="hidden" name="_next" value="https://www.doberwhite.com/gracias.html">
-              <input type="hidden" name="_autoresponse" value="Hola, hemos recibido tu mensaje en DoberWhite Capital. Te contactaremos pronto.">
               <!-- Honeypot anti-spam -->
               <input type="text" name="_honey" style="display:none">
 
@@ -74,6 +72,9 @@
                 <li><input type="submit" value="Enviar" class="primary" /></li>
                 <li><input type="reset" value="Limpiar" /></li>
               </ul>
+
+              <!-- Mensajes UX -->
+              <p id="formStatus" style="display:none; margin-top:8px;"></p>
             </form>
           </section>
 
@@ -112,7 +113,7 @@
 
 </div>
 
-<!-- Scripts (corregido: ya NO falta el "<") -->
+<!-- Scripts -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery.scrolly.min.js"></script>
 <script src="assets/js/jquery.scrollex.min.js"></script>
@@ -120,5 +121,43 @@
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
+
+<!-- Envío AJAX para evitar 405 -->
+<script>
+(function(){
+  const form = document.getElementById('contactForm');
+  const statusEl = document.getElementById('formStatus');
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+
+    statusEl.style.display = 'block';
+    statusEl.textContent = 'Enviando...';
+
+    const data = new FormData(form);
+    // Campos FormSubmit (AJAX)
+    data.append('_subject', 'Nuevo mensaje desde DoberWhite.com');
+    data.append('_template', 'table');
+    data.append('_captcha', 'false');
+
+    try {
+      const resp = await fetch('https://formsubmit.co/ajax/Asvglobalinvest@gmail.com', {
+        method: 'POST',
+        body: data
+      });
+
+      if (resp.ok) {
+        // Limpia y redirige a gracias
+        form.reset();
+        window.location.href = 'gracias.html';
+      } else {
+        statusEl.textContent = 'No se pudo enviar (código ' + resp.status + '). Intenta otra vez.';
+      }
+    } catch (err) {
+      statusEl.textContent = 'Error de red. Revisa tu conexión e intenta nuevamente.';
+    }
+  });
+})();
+</script>
 </body>
 </html>
