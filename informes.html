@@ -7,28 +7,39 @@
   <link rel="stylesheet" href="assets/css/main.css" />
   <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
   <style>
+    :root{
+      --panel-w: 360px;
+    }
     .muted{opacity:.75}
-    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
-    .toolbar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin:.5rem 0 1rem}
-    .toolbar input[type="search"], .toolbar select{height:2.6rem}
-    .count{font-size:.9rem;opacity:.8}
+    .container{max-width:1280px;margin:0 auto;padding:0 1.5rem}
 
-    /* VISOR */
-    #viewer .frame-wrap{position:relative;border-radius:12px;overflow:hidden;background:#0e111a;border:1px solid rgba(255,255,255,.06)}
-    #preview{width:100%;height:72vh;border:0;display:none}
+    /* Layout 2 columnas */
+    .layout{display:flex;gap:2rem;align-items:flex-start}
+    .sidebar{width:var(--panel-w)}
+    .viewer{flex:1}
+
+    /* Visor */
+    #viewerHeader{display:flex;align-items:center;gap:.75rem;margin:.25rem 0 .6rem}
     #filename{font-weight:600}
-    .viewer-actions{margin-left:auto;display:flex;gap:.5rem}
-    .tall #preview{height:90vh}
+    #btnFull{margin-left:auto}
+    .frame-wrap{position:relative;border-radius:12px;overflow:hidden;background:#0e111a;border:1px solid rgba(255,255,255,.06)}
+    #preview{width:100%;height:82vh;border:0;display:none}
+    .placeholder{
+      height:82vh;border-radius:12px;display:grid;place-items:center;
+      background:#446bb3;border:1px dashed rgba(255,255,255,.2);color:#fff;font-size:1.4rem
+    }
 
-    /* LISTA */
-    .group{margin:1.2rem 0 .6rem}
-    .group h4{margin:0 0 .4rem}
-    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
-    .card{background:#1f2330;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1rem}
+    /* Lista simple */
+    h3.small{margin:0 0 .6rem}
+    ul.files{list-style:disc;padding-left:1.2rem;margin:0}
+    ul.files li{margin:.8rem 0}
     .row{display:flex;align-items:center;gap:.6rem}
-    .icon{width:36px;height:36px;border-radius:10px;background:#2a3042;display:grid;place-items:center;font-weight:700}
-    .title{margin:.4rem 0 .2rem;font-weight:700;line-height:1.25}
-    .date{font-size:.9rem;opacity:.9}
+    .row .title{flex:1;min-width:0}
+    .row .title small{opacity:.75}
+    .row .button{white-space:nowrap}
+
+    /* Auth strip */
+    .auth-strip{display:flex;gap:.6rem;align-items:center;margin:.6rem 0 1rem}
   </style>
 </head>
 <body class="is-preload">
@@ -52,50 +63,39 @@
     </ul>
   </nav>
 
-  <!-- VISOR ARRIBA -->
   <section class="container" style="margin-top:1.2rem">
-    <header class="major"><h2 style="margin-bottom:.2rem">Visor</h2></header>
-    <div class="toolbar" id="viewerTools" style="margin-top:.2rem">
-      <span id="filename" class="muted">Selecciona un informe para visualizarlo.</span>
-      <div class="viewer-actions">
-        <button id="btnFull" class="button small">Pantalla completa</button>
-        <a id="btnTab" class="button small" href="#" target="_blank" rel="noopener">Abrir en pestaña</a>
-      </div>
-    </div>
-    <div id="viewer" class="frame-wrap">
-      <!-- sin sandbox para evitar bloqueos del visor -->
-      <iframe id="preview" allow="fullscreen" allowfullscreen></iframe>
-    </div>
-  </section>
-
-  <!-- LISTADO -->
-  <div id="main">
-    <section>
-      <div class="inner container">
+    <div class="layout">
+      <!-- Columna izquierda -->
+      <aside class="sidebar">
         <div id="authBox">
           <button id="btnLogin" class="button primary small">Entrar con Google</button>
           <p class="muted" style="margin:.4rem 0 1rem">Solo correos autorizados.</p>
         </div>
 
-        <div id="userBox" style="display:none; margin-bottom:.5rem;display:flex;gap:.5rem;align-items:center">
+        <div id="userBox" class="auth-strip" style="display:none">
           <span class="muted" id="userEmail">-</span>
           <button id="btnLogout" class="button small">Salir</button>
         </div>
 
-        <div class="toolbar" id="tools" style="display:none">
-          <input id="q" type="search" placeholder="Buscar informe..." style="flex:1">
-          <select id="order">
-            <option value="desc">Más recientes</option>
-            <option value="asc">Más antiguos</option>
-          </select>
-          <span id="count" class="count"></span>
-        </div>
+        <h3 class="small">Selecciona el informe para ver</h3>
+        <ul id="fileList" class="files"></ul>
+        <p id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</p>
+      </aside>
 
-        <div id="list"></div>
-        <div id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</div>
-      </div>
-    </section>
-  </div>
+      <!-- Columna derecha (visor) -->
+      <section class="viewer">
+        <header id="viewerHeader">
+          <span id="filename" class="muted">Zona de visualización de informe</span>
+          <button id="btnFull" class="button small">Pantalla completa</button>
+        </header>
+        <div id="viewer" class="frame-wrap">
+          <!-- sin sandbox para compatibilidad con visores embebidos -->
+          <iframe id="preview" allow="fullscreen" allowfullscreen></iframe>
+          <div id="ph" class="placeholder">Zona de visualización de informe</div>
+        </div>
+      </section>
+    </div>
+  </section>
 
   <footer id="footer">
     <div class="inner">
@@ -125,16 +125,12 @@
   const btnLogin = document.getElementById('btnLogin');
   const btnLogout= document.getElementById('btnLogout');
 
-  const tools    = document.getElementById('tools');
-  const q        = document.getElementById('q');
-  const orderSel = document.getElementById('order');
-  const countEl  = document.getElementById('count');
-  const listBox  = document.getElementById('list');
+  const fileList = document.getElementById('fileList');
   const emptyMsg = document.getElementById('emptyMsg');
 
   const preview  = document.getElementById('preview');
+  const placeholder = document.getElementById('ph');
   const filename = document.getElementById('filename');
-  const btnTab   = document.getElementById('btnTab');
   const btnFull  = document.getElementById('btnFull');
   const viewer   = document.getElementById('viewer');
 
@@ -142,129 +138,101 @@
   const ext = n => (n.split('.').pop()||'').toLowerCase();
   const nice= n => n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
 
-  let allFiles = [], filtered = [], currentURL = '', lastSignedRaw = '';
+  let allFiles = [];
 
-  function groupByMonth(items){
-    const map = {};
-    items.forEach(o=>{
-      const d = new Date(o.updated_at||o.created_at||Date.now());
-      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-      (map[key] = map[key] || []).push(o);
-    });
-    return Object.entries(map).sort((a,b)=> a[0] < b[0] ? 1 : -1);
-  }
-
-  function render(){
-    listBox.innerHTML='';
-    if(!filtered.length){ emptyMsg.style.display='block'; countEl.textContent=''; return; }
+  function renderList(){
+    fileList.innerHTML = '';
+    if(!allFiles.length){ emptyMsg.style.display='block'; return; }
     emptyMsg.style.display='none';
-    countEl.textContent = `${filtered.length} informes`;
 
-    const groups = groupByMonth(filtered);
-    groups.forEach(([key,items])=>{
-      const [y,m] = key.split('-');
-      const h = document.createElement('div');
-      h.className='group';
-      h.innerHTML = `<h4>${y} — ${new Date(+y, +m-1, 1).toLocaleDateString('es-CL',{month:'long'}).replace(/^./,c=>c.toUpperCase())}</h4>`;
-      listBox.appendChild(h);
+    // Orden: más recientes primero
+    const items = allFiles.slice().sort((a,b)=> new Date(b.updated_at||b.created_at) - new Date(a.updated_at||a.created_at));
 
-      const wrap = document.createElement('div');
-      wrap.className='cards';
-      listBox.appendChild(wrap);
+    items.forEach(o=>{
+      const li = document.createElement('li');
+      const row = document.createElement('div');
+      row.className = 'row';
 
-      items.forEach(o=>{
-        const icon = ext(o.name)==='pdf' ? 'PDF' : (['ppt','pptx'].includes(ext(o.name)) ? 'PPT' : 'FILE');
-        const card = document.createElement('div');
-        card.className='card';
-        card.innerHTML = `
-          <div class="row">
-            <div class="icon">${icon}</div>
-            <div style="min-width:0">
-              <div class="title">${nice(o.name)}</div>
-              <div class="date">${fmt(o.updated_at||o.created_at)}</div>
-            </div>
-          </div>
-          <button class="button small" data-path="${o.name}">Ver</button>
-        `;
-        wrap.appendChild(card);
-      });
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.innerHTML = `${nice(o.name)} <br><small>${fmt(o.updated_at||o.created_at)}</small>`;
+
+      const btn = document.createElement('button');
+      btn.className = 'button small';
+      btn.textContent = 'Ver';
+      btn.addEventListener('click', ()=> openInViewer(o.name));
+
+      row.appendChild(title);
+      row.appendChild(btn);
+      li.appendChild(row);
+      fileList.appendChild(li);
     });
-  }
-
-  function applyFilters(){
-    const dir = orderSel.value==='asc' ? 1 : -1;
-    filtered = allFiles.slice().sort((a,b)=> (new Date(a.updated_at||a.created_at) - new Date(b.updated_at||b.created_at)) * dir);
-    const qv = q.value.trim().toLowerCase();
-    if(qv) filtered = filtered.filter(o => nice(o.name).toLowerCase().includes(qv));
-    render();
   }
 
   async function loadList(){
-    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit:1000 });
-    if(error){ listBox.innerHTML=''; emptyMsg.style.display='block'; return; }
+    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1000 });
+    if(error){ emptyMsg.style.display='block'; return; }
     allFiles = data || [];
-    applyFilters();
+    renderList();
   }
 
-  // Abre en el visor. Para PDFs usamos Google Docs Viewer (fiable con URLs firmadas).
-  async function showFile(path){
+  async function openInViewer(path){
+    // Firmamos URL privada (no mostramos el link al usuario)
     const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 300);
     if(error){ alert('No se pudo abrir el informe'); return; }
-    const rawUrl = data.signedUrl;              // URL original firmada
-    lastSignedRaw = rawUrl;                     // para "Abrir en pestaña"
+    const rawUrl = data.signedUrl;
 
     const e = ext(path);
     let viewerURL = '';
     if(e==='pdf'){
+      // Google Docs Viewer — sin botón de descarga visible
       viewerURL = 'https://docs.google.com/gview?embedded=1&url=' + encodeURIComponent(rawUrl);
     } else if(e==='ppt' || e==='pptx'){
+      // Office Viewer — sin botón de descarga/print
       viewerURL = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(rawUrl) + '&wdDownloadButton=False&wdPrint=0';
     } else {
-      alert('Formato no soportado para visor: '+e); return;
+      alert('Formato no soportado: ' + e); return;
     }
 
-    currentURL = viewerURL;
-    btnTab.href = lastSignedRaw;                // en pestaña nueva abre el original
     filename.textContent = nice(path);
     preview.src = viewerURL;
-    preview.style.display='block';
+    preview.style.display = 'block';
+    placeholder.style.display = 'none';
   }
 
-  // Fullscreen (contenedor)
+  // Fullscreen contenedor visor (no abre pestañas ni descarga)
   btnFull.addEventListener('click', async ()=>{
     try{
       if(!document.fullscreenElement){ await viewer.requestFullscreen(); }
       else{ await document.exitFullscreen(); }
     }catch(_){}
-    viewer.classList.toggle('tall');
   });
 
-  // Auth
+  // Auth/UI
   async function refreshUI(){
     const { data:{ session } } = await supabaseClient.auth.getSession();
     const user = session?.user || null;
+
     if(!user){
-      authBox.style.display='block'; userBox.style.display='none'; tools.style.display='none';
-      listBox.innerHTML=''; emptyMsg.style.display='block';
-      preview.src=''; preview.style.display='none';
-      filename.textContent = 'Selecciona un informe para visualizarlo.';
-      btnTab.removeAttribute('href');
+      authBox.style.display='block';
+      userBox.style.display='none';
+      fileList.innerHTML = '';
+      emptyMsg.style.display='block';
+      preview.src=''; preview.style.display='none'; placeholder.style.display='grid';
+      filename.textContent = 'Zona de visualización de informe';
       return;
     }
+
     const email = (user.email||'').toLowerCase();
-    if(!ALLOWLIST.includes(email)){ alert('Email no autorizado'); await supabaseClient.auth.signOut(); return; }
-    authBox.style.display='none'; userBox.style.display='flex'; tools.style.display='flex';
+    if(!['asvglobalinvest@gmail.com'].includes(email)){
+      alert('Email no autorizado'); await supabaseClient.auth.signOut(); return;
+    }
+    authBox.style.display='none';
+    userBox.style.display='flex';
     userEmail.textContent = email;
+
     await loadList();
   }
-
-  // Eventos
-  listBox.addEventListener('click', (e)=>{
-    const b = e.target.closest('button[data-path]'); if(!b) return;
-    showFile(b.getAttribute('data-path'));
-  });
-  q.addEventListener('input', applyFilters);
-  orderSel.addEventListener('change', applyFilters);
 
   btnLogin.addEventListener('click', async ()=>{
     await supabaseClient.auth.signInWithOAuth({
@@ -276,8 +244,7 @@
     await supabaseClient.auth.signOut(); await refreshUI();
   });
 
-  // Init
-  (async function(){
+  (async function init(){
     if (/[?&]code=/.test(location.href)) {
       await supabaseClient.auth.exchangeCodeForSession(location.href);
       history.replaceState({}, '', location.origin + location.pathname);
