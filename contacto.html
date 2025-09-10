@@ -1,163 +1,18 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Contacto — DoberWhite Capital</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+  <meta charset="utf-8">
+  <title>Agendar reunión — Redirigiendo…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="0; url=https://calendly.com/asv_global_invest/30min">
+  <link rel="canonical" href="https://calendly.com/asv_global_invest/30min">
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0}
+    a.button{padding:.7rem 1rem;border:1px solid #111;border-radius:.5rem;text-decoration:none}
+  </style>
 </head>
-<body class="is-preload">
-<div id="wrapper">
-
-  <!-- Header -->
-  <header id="header">
-    <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
-    <nav><a href="#menu">Menú</a></nav>
-  </header>
-
-  <!-- Menu -->
-  <nav id="menu">
-    <ul class="links">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="institucionales.html">Servicios institucionales</a></li>
-      <li><a href="particulares.html">Servicios particulares</a></li>
-      <li><a href="trading.html">Trading algorítmico</a></li>
-      <li><a href="cursos.html">Cursos & seminarios</a></li>
-      <li><a href="valores.html">Nuestros valores</a></li>
-      <li><a href="rendimientos.html">Rendimientos</a></li>
-    </ul>
-  </nav>
-
-  <!-- Banner -->
-  <section id="banner" class="style2">
-    <div class="inner">
-      <span class="image"><img src="images/performance.png" alt="Contacto" loading="lazy" decoding="async" /></span>
-      <header class="major"><h1>Agenda una reunión</h1></header>
-      <div class="content"><p>Cuéntanos tu caso. Respondemos en 24–48h hábiles.</p></div>
-    </div>
-  </section>
-
-  <!-- Main -->
-  <div id="main">
-    <section>
-      <div class="inner">
-        <div class="split">
-          <!-- FORMULARIO (AJAX) -->
-          <section>
-            <form id="contactForm">
-              <div class="fields">
-                <div class="field half">
-                  <label for="name">Nombre</label>
-                  <input type="text" name="name" id="name" required />
-                </div>
-                <div class="field half">
-                  <label for="email">Email</label>
-                  <input type="email" name="email" id="email" required />
-                </div>
-                <div class="field">
-                  <label for="message">Mensaje</label>
-                  <textarea name="message" id="message" rows="6" placeholder="Interés: institucional/particular/cursos. Capital estimado. Objetivo." required></textarea>
-                </div>
-              </div>
-
-              <!-- Config extra -->
-              <input type="hidden" name="_subject" value="Nuevo mensaje desde DoberWhite.com">
-              <input type="hidden" name="_template" value="table">
-              <input type="hidden" name="_captcha" value="false">
-              <!-- Honeypot anti-spam -->
-              <input type="text" name="_honey" style="display:none">
-
-              <ul class="actions">
-                <li><input type="submit" value="Enviar" class="primary" /></li>
-                <li><input type="reset" value="Limpiar" /></li>
-              </ul>
-
-              <!-- Mensajes UX -->
-              <p id="formStatus" style="display:none; margin-top:8px;"></p>
-            </form>
-          </section>
-
-          <!-- Datos de contacto -->
-          <section>
-            <div class="contact-method">
-              <span class="icon solid alt fa-envelope"></span>
-              <h3>Email</h3>
-              <a href="mailto:Asvglobalinvest@gmail.com">Asvglobalinvest@gmail.com</a>
-            </div>
-            <div class="contact-method">
-              <span class="icon solid alt fa-phone"></span>
-              <h3>Fono</h3>
-              <span>(+56) 9 8853 6769</span>
-            </div>
-            <div class="contact-method">
-              <span class="icon solid alt fa-home"></span>
-              <h3>Dirección</h3>
-              <span>Santiago de Chile, Chile</span>
-            </div>
-            <p class="disclaimer">El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo de pérdida de capital.</p>
-          </section>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- Footer -->
-  <footer id="footer">
-    <div class="inner">
-      <ul class="copyright">
-        <li>&copy; DoberWhite 2025</li><li>All rights reserved</li>
-      </ul>
-    </div>
-  </footer>
-
-</div>
-
-<!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/jquery.scrollex.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
-
-<!-- Envío AJAX para evitar 405 -->
-<script>
-(function(){
-  const form = document.getElementById('contactForm');
-  const statusEl = document.getElementById('formStatus');
-
-  form.addEventListener('submit', async function(e){
-    e.preventDefault();
-
-    statusEl.style.display = 'block';
-    statusEl.textContent = 'Enviando...';
-
-    const data = new FormData(form);
-    // Campos FormSubmit (AJAX)
-    data.append('_subject', 'Nuevo mensaje desde DoberWhite.com');
-    data.append('_template', 'table');
-    data.append('_captcha', 'false');
-
-    try {
-      const resp = await fetch('https://formsubmit.co/ajax/Asvglobalinvest@gmail.com', {
-        method: 'POST',
-        body: data
-      });
-
-      if (resp.ok) {
-        // Limpia y redirige a gracias
-        form.reset();
-        window.location.href = 'gracias.html';
-      } else {
-        statusEl.textContent = 'No se pudo enviar (código ' + resp.status + '). Intenta otra vez.';
-      }
-    } catch (err) {
-      statusEl.textContent = 'Error de red. Revisa tu conexión e intenta nuevamente.';
-    }
-  });
-})();
-</script>
+<body>
+  <p>Redirigiendo a tu agenda… Si no ocurre, <a class="button" href="https://calendly.com/asv_global_invest/30min" rel="noopener">haz clic aquí</a>.</p>
+  <script>window.location.replace("https://calendly.com/asv_global_invest/30min");</script>
 </body>
 </html>
