@@ -1,0 +1,78 @@
+/* ===== DoberWhite — Monochrome override ===== */
+
+/* Escala base */
+:root{
+    --mono-bg: #0b0d12;         /* fondo app */
+    --mono-elev: #12151c;       /* paneles/cards */
+    --mono-line: rgba(255,255,255,.08);
+    --mono-text: #f3f5f7;
+    --mono-muted:#a9b0ba;
+    --mono-white:#ffffff;
+    --mono-black:#000000;
+  }
+  
+  /* Base */
+  html,body{ background:var(--mono-bg); color:var(--mono-text) }
+  a{ color:var(--mono-white); text-decoration:none; border-bottom:1px solid transparent; transition:all .2s ease }
+  a:hover{ color:var(--mono-black); background:var(--mono-white); border-bottom-color:var(--mono-white) }
+  
+  /* Header & menú */
+  #header{ background:rgba(0,0,0,.55); border-bottom:1px solid var(--mono-line); backdrop-filter:saturate(180%) blur(6px) }
+  #menu{ background:#0c0f15 }
+  #menu .links li a{ color:var(--mono-text) }
+  #menu .links li a:hover{ background:#10141b; color:var(--mono-white) }
+  
+  /* Banner/hero */
+  #banner.style2 .image:before,
+  #banner .image:before{ background:linear-gradient(180deg, rgba(0,0,0,.5), rgba(0,0,0,.75)) }
+  
+  /* Secciones / inner */
+  .inner{ color:var(--mono-text) }
+  .major h1,.major h2,.major h3{ color:var(--mono-white) }
+  .muted, .disclaimer{ color:var(--mono-muted) }
+  
+  /* Cards / tiles */
+  .tiles article{ background:var(--mono-elev); border:1px solid var(--mono-line) }
+  .tiles article .image img{
+    filter:grayscale(100%) contrast(1.05) brightness(0.95);
+    transition:filter .3s ease, transform .3s ease, opacity .3s ease;
+  }
+  .tiles article:hover .image img{ filter:none; transform:translateY(-2px) }
+  
+  /* Imágenes genéricas con efecto B/N → color */
+  img.hover-color{
+    filter:grayscale(100%) contrast(1.05) brightness(0.95);
+    transition:filter .3s ease, transform .3s ease;
+  }
+  img.hover-color:hover{ filter:none }
+  
+  /* Botones (blanco/negro) */
+  .button{ background:var(--mono-white); color:var(--mono-black); border:1px solid var(--mono-white) }
+  .button:hover{ background:transparent; color:var(--mono-white) }
+  .button.primary{ background:var(--mono-white); color:var(--mono-black) }
+  .button.primary:hover{ background:transparent; color:var(--mono-white) }
+  
+  /* Inputs / formularios */
+  input[type="text"], input[type="email"], textarea, select{
+    background:#0f131a; color:var(--mono-text); border:1px solid var(--mono-line)
+  }
+  input:focus, textarea:focus, select:focus{ border-color:#ffffff99; outline:0; box-shadow:0 0 0 3px #ffffff1f }
+  
+  /* Tablas / bordes sutiles */
+  table, .features, .spotlights, .contact-method{
+    border-color:var(--mono-line)
+  }
+  
+  /* Footer */
+  #footer{ border-top:1px solid var(--mono-line); background:#0b0d12; color:var(--mono-muted) }
+  
+  /* Visor de informes (por si esta página usa este override) */
+  .frame-wrap{ background:#0e111a; border:1px solid var(--mono-line) }
+  .placeholder{ background:#151924; color:#e7eaee; border:1px dashed var(--mono-line) }
+  
+  /* Accesibilidad de foco en enlaces y botones */
+  a:focus, .button:focus{
+    outline:2px dashed var(--mono-white);
+    outline-offset:2px;
+  }
+  
