@@ -1,111 +1,111 @@
 /* =========================================================
-   DoberWhite — MONOCHROME OVERRIDE + TILES FIX (FINAL)
+   DoberWhite — MONOCHROME + TILES FIX (FINAL)
    ========================================================= */
 
-/* Paleta básica */
+/* Paleta */
 :root{
-  --bg:#0b0d12;           /* fondo general */
-  --elev:#12151c;         /* panel/tile */
+  --bg:#0b0d12;
+  --elev:#12151c;
   --line:rgba(255,255,255,.08);
-  --text:#f3f5f7;         /* texto principal */
-  --muted:#a9b0ba;        /* texto secundario */
+  --text:#f3f5f7;
+  --muted:#a9b0ba;
   --white:#ffffff;
   --black:#000000;
 }
 
-/* Base */
-html, body{ background:var(--bg) !important; color:var(--text) }
-.muted, .disclaimer{ color:var(--muted) }
+/* Base monocromo */
+html,body{background:var(--bg) !important;color:var(--text)}
+a{color:var(--white);text-decoration:none;border-bottom:1px solid transparent;transition:all .2s}
+a:hover{color:var(--white);background:transparent !important;border-bottom-color:var(--white)}
+a:focus{outline:2px dashed var(--white);outline-offset:2px}
+.muted,.disclaimer{color:var(--muted)}
 
-/* Enlaces: nunca pintes fondo (evita “parche blanco”) */
-a{ color:var(--white); text-decoration:none; border-bottom:1px solid transparent; transition:all .2s }
-a:hover{ color:var(--white); background:transparent !important; border-bottom-color:var(--white) }
-a:focus{ outline:2px dashed var(--white); outline-offset:2px }
+/* Header/Menu/Footer */
+#header{background:rgba(0,0,0,.55) !important;border-bottom:1px solid var(--line)}
+#menu{background:#0c0f15 !important}
+#footer{border-top:1px solid var(--line)}
 
-/* Header / Menú / Footer */
-#header{ background:rgba(0,0,0,.55) !important; border-bottom:1px solid var(--line) }
-#menu{ background:#0c0f15 !important }
-#footer{ border-top:1px solid var(--line) }
+/* HERO: mantiene imagen de fondo y añade overlay oscuro para legibilidad */
+#banner, #banner.major{position:relative;background-color:transparent !important}
+#banner:before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.55);pointer-events:none}
+#banner .inner{background:transparent !important;box-shadow:none !important}
 
-/* ===== HERO =====
-   Volvemos a usar la imagen de fondo del tema y sólo añadimos overlay oscuro
-*/
-#banner, #banner.major{ position:relative; background-color:transparent !important }
-#banner:before{
-  content:""; position:absolute; inset:0;
-  background:rgba(0,0,0,.55); pointer-events:none;
-}
-#banner .inner{ background:transparent !important; box-shadow:none !important }
-
-/* ===== Secciones genéricas en negro ===== */
+/* Secciones negras */
 .wrapper, .wrapper.style1, .wrapper.style2, .wrapper.style3,
 #main, .inner, section, #one, #two, #three, #four, #contact{
-  background-color:var(--bg) !important;
+  background:var(--bg) !important;
 }
 
-/* ===== Botones B/N ===== */
-.button{ background:var(--white); color:var(--black); border:1px solid var(--white) }
-.button:hover{ background:transparent; color:var(--white) }
-.button.primary{ background:var(--white); color:var(--black) }
-.button.primary:hover{ background:transparent; color:var(--white) }
+/* Botones B/N */
+.button{background:var(--white);color:var(--black);border:1px solid var(--white)}
+.button:hover{background:transparent;color:var(--white)}
+.button.primary{background:var(--white);color:var(--black)}
+.button.primary:hover{background:transparent;color:var(--white)}
 
-/* ===== Formularios ===== */
-input[type="text"], input[type="email"], textarea, select{
-  background:#0f131a; color:var(--text); border:1px solid var(--line)
+/* Formularios */
+input[type="text"],input[type="email"],textarea,select{
+  background:#0f131a;color:var(--text);border:1px solid var(--line)
 }
-input:focus, textarea:focus, select:focus{
-  border-color:#ffffff99; outline:0; box-shadow:0 0 0 3px #ffffff1f
+input:focus,textarea:focus,select:focus{
+  border-color:#ffffff99;outline:0;box-shadow:0 0 0 3px #ffffff1f
 }
 
 /* =========================================================
-   TILES (HTML5 UP: Forty) — Fix definitivo
+   TILES (Forty) — FIX definitivo (click + imagen + hover)
    ========================================================= */
 
-/* Caja del artículo monocroma */
+/* El artículo es el contenedor de referencia */
 .tiles article{
+  position:relative;            /* << clave para posicionar hijos */
+  min-height:320px;             /* asegura altura para el anchor/imagen */
   background:var(--elev) !important;
   border:1px solid var(--line);
-  overflow:hidden;               /* recorta cualquier overlay */
+  overflow:hidden;
 }
 
-/* Contenedor de imagen: NUNCA fondos ni pseudo-overlays */
-.tiles article .image,
+/* Quitar overlays del tema que tapaban imagen/click */
+.tiles article:before,
+.tiles article:after,
+.tiles article > a:before,
+.tiles article > a:after,
 .tiles article .image:before,
 .tiles article .image:after{
   background:transparent !important;
   box-shadow:none !important;
+  content:"" !important;
 }
 
-/* Imagen: gris por defecto → color al hover */
-.tiles article .image{ display:block; position:relative; overflow:hidden }
+/* Contenedor de imagen ocupa TODO el tile */
+.tiles article .image{
+  position:absolute; inset:0; display:block; overflow:hidden;
+  background:transparent !important;
+}
+
+/* Imagen: gris por defecto, color al hover */
 .tiles article .image img{
-  display:block; width:100%; height:auto; object-fit:cover;
+  position:absolute; inset:0;
+  width:100%; height:100%; object-fit:cover;
   filter:grayscale(100%) contrast(1.05) brightness(0.95);
   transition:filter .3s ease, transform .3s ease;
 }
-.tiles article:hover .image img{
-  filter:none; transform:translateY(-2px);
+.tiles article:hover .image img{filter:none;transform:translateY(-2px)}
+
+/* Anchor overlay: ocupa TODO y es clickeable, sin fondos */
+.tiles article > a{
+  position:absolute !important; inset:0 !important;
+  z-index:3 !important; display:block !important;
+  background:transparent !important; color:inherit !important;
+  border:0 !important;
 }
 
-/* Enlace-overlay nativo de Forty: transparente SIEMPRE */
-.tiles article > a,
-.tiles article > a:before,
-.tiles article > a:after{
-  background:transparent !important;
-  box-shadow:none !important;
-  /* mantiene clickeable sin cubrir la imagen con color */
+/* Contenido (título + texto) se muestra sobre la imagen */
+.tiles article > a h3,
+.tiles article > a .content{
+  position:relative; z-index:4; color:var(--white);
 }
 
-/* Cualquier variante/hover del overlay: también transparente */
-.tiles article:hover > a:before,
-.tiles article:hover > a:after{ background:transparent !important; box-shadow:none !important }
+/* Opcional: ligerísimo sombreado interior al hover del texto (no de la imagen) */
+.tiles article > a:hover{background:transparent !important}
 
-/* Por si el tema intenta pintar highlight con .link internos */
-.tiles article .link,
-.tiles article .link:before,
-.tiles article .link:after{
-  background:transparent !important; box-shadow:none !important;
-}
-
-/* Nunca heredar fondos desde hover global */
-a:hover{ background:transparent !important; }
+/* Nunca heredar fondos blancos desde hover global */
+a:hover{background:transparent !important}
