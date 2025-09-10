@@ -1,4 +1,4 @@
-/* ===== DoberWhite — Monochrome override (v3) ===== */
+/* ===== DoberWhite — Monochrome override (v4) ===== */
 :root{
   --mono-bg:#0b0d12;
   --mono-elev:#12151c;
@@ -11,8 +11,9 @@
 
 /* Base */
 html,body{background:var(--mono-bg) !important;color:var(--mono-text)}
+/* Enlaces: SIN fondo en hover para no cubrir tiles */
 a{color:var(--mono-white);text-decoration:none;border-bottom:1px solid transparent;transition:all .2s}
-a:hover{color:var(--mono-black);background:var(--mono-white);border-bottom-color:var(--mono-white)}
+a:hover{color:var(--mono-white);background:transparent;border-bottom-color:var(--mono-white)}
 .muted,.disclaimer{color:var(--mono-muted)}
 
 /* Header / menú / footer */
@@ -20,34 +21,40 @@ a:hover{color:var(--mono-black);background:var(--mono-white);border-bottom-color
 #menu{background:#0c0f15 !important}
 #footer{border-top:1px solid var(--mono-line)}
 
-/* ===== HERO (RESTAURADO) ===== */
-/* NO sobrescribimos el background-image del banner */
+/* ===== HERO (restaurado con overlay) ===== */
 #banner, #banner.major{background-color:transparent !important; position:relative}
 #banner:before{
   content:""; position:absolute; inset:0;
   background:rgba(0,0,0,.55) !important; /* overlay oscuro para legibilidad */
   pointer-events:none;
 }
-/* sin cajas claras en el interior */
 #banner .inner{background:transparent !important; box-shadow:none !important}
 
-/* ===== SECCIONES GENERALES ===== */
+/* ===== SECCIONES ===== */
 .wrapper, .wrapper.style1, .wrapper.style2, .wrapper.style3,
 #main, .inner, section, #two, #three, #four, #contact{
   background-color:var(--mono-bg) !important;
 }
 
-/* ===== TILES / CARDS ===== */
+/* ===== TILES ===== */
 .tiles article{background:var(--mono-elev) !important;border:1px solid var(--mono-line)}
+/* Imagen en gris por defecto */
 .tiles article .image img,
 img.hover-color{
+  display:block; width:100%; height:auto;
   filter:grayscale(100%) contrast(1.05) brightness(0.95);
   transition:filter .3s ease, transform .3s ease;
 }
+/* Color al hover del tile */
 .tiles article:hover .image img,
 img.hover-color:hover{filter:none;transform:translateY(-2px)}
+/* El overlay del tile (a.link) NO debe pintar fondo nunca */
+.tiles article > a,
+.tiles article header .link,
+.tiles article a.link,
+.tiles article a.link:hover{background:transparent !important;}
 
-/* Botones B/N */
+/* Botones B/N (se mantiene inversión) */
 .button{background:var(--mono-white);color:var(--mono-black);border:1px solid var(--mono-white)}
 .button:hover{background:transparent;color:var(--mono-white)}
 .button.primary{background:var(--mono-white);color:var(--mono-black)}
