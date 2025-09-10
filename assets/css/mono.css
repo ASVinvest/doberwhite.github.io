@@ -1,7 +1,7 @@
-/* ===== DoberWhite — Monochrome override (v2) ===== */
+/* ===== DoberWhite — Monochrome override (v3) ===== */
 :root{
-  --mono-bg:#0b0d12;        /* fondo base */
-  --mono-elev:#12151c;      /* paneles/cards */
+  --mono-bg:#0b0d12;
+  --mono-elev:#12151c;
   --mono-line:rgba(255,255,255,.08);
   --mono-text:#f3f5f7;
   --mono-muted:#a9b0ba;
@@ -15,30 +15,29 @@ a{color:var(--mono-white);text-decoration:none;border-bottom:1px solid transpare
 a:hover{color:var(--mono-black);background:var(--mono-white);border-bottom-color:var(--mono-white)}
 .muted,.disclaimer{color:var(--mono-muted)}
 
-/* === MATAR EL MORADO DEL TEMA FORTY === */
-/* Fondos de secciones comunes */
-#main, #wrapper, #wrapper > *, section, .inner,
-.wrapper, .wrapper.style1, .wrapper.style2, .wrapper.style3,
-.spotlights > section, .spotlights > section:nth-child(2n),
-#one, #two, #three, #four, #contact, #cta,
-#banner, #banner.major, #footer, #menu
-{background-color:var(--mono-bg) !important}
-
-/* Overlays/gradientes morados */
-.wrapper:before,
-.spotlights > section:before,
-.spotlights > section > .content:before,
-#banner:before,
-#banner .image:before,
-#banner.style2 .image:before
-{background:none !important}
-
-/* Header / footer */
+/* Header / menú / footer */
 #header{background:rgba(0,0,0,.55) !important;border-bottom:1px solid var(--mono-line)}
 #menu{background:#0c0f15 !important}
 #footer{border-top:1px solid var(--mono-line)}
 
-/* Tiles / cards */
+/* ===== HERO (RESTAURADO) ===== */
+/* NO sobrescribimos el background-image del banner */
+#banner, #banner.major{background-color:transparent !important; position:relative}
+#banner:before{
+  content:""; position:absolute; inset:0;
+  background:rgba(0,0,0,.55) !important; /* overlay oscuro para legibilidad */
+  pointer-events:none;
+}
+/* sin cajas claras en el interior */
+#banner .inner{background:transparent !important; box-shadow:none !important}
+
+/* ===== SECCIONES GENERALES ===== */
+.wrapper, .wrapper.style1, .wrapper.style2, .wrapper.style3,
+#main, .inner, section, #two, #three, #four, #contact{
+  background-color:var(--mono-bg) !important;
+}
+
+/* ===== TILES / CARDS ===== */
 .tiles article{background:var(--mono-elev) !important;border:1px solid var(--mono-line)}
 .tiles article .image img,
 img.hover-color{
@@ -48,7 +47,7 @@ img.hover-color{
 .tiles article:hover .image img,
 img.hover-color:hover{filter:none;transform:translateY(-2px)}
 
-/* Botones blanco/negro */
+/* Botones B/N */
 .button{background:var(--mono-white);color:var(--mono-black);border:1px solid var(--mono-white)}
 .button:hover{background:transparent;color:var(--mono-white)}
 .button.primary{background:var(--mono-white);color:var(--mono-black)}
