@@ -63,8 +63,8 @@
       </div>
     </div>
     <div id="viewer" class="frame-wrap">
-      <!-- IMPORTANTE: sin sandbox para evitar bloqueos de PDF -->
-      <iframe id="preview"></iframe>
+      <!-- sin sandbox para evitar bloqueos del visor -->
+      <iframe id="preview" allow="fullscreen" allowfullscreen></iframe>
     </div>
   </section>
 
@@ -112,7 +112,7 @@
   const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
   const BUCKET = 'informes';
-  const ALLOWLIST = ['asvglobalinvest@gmail.com']; // en minúsculas
+  const ALLOWLIST = ['asvglobalinvest@gmail.com']; // minúsculas
 
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
     auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, flowType:'pkce' }
@@ -142,7 +142,7 @@
   const ext = n => (n.split('.').pop()||'').toLowerCase();
   const nice= n => n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
 
-  let allFiles = [], filtered = [], currentURL = '';
+  let allFiles = [], filtered = [], currentURL = '', lastSignedRaw = '';
 
   function groupByMonth(items){
     const map = {};
@@ -206,27 +206,31 @@
     applyFilters();
   }
 
+  // Abre en el visor. Para PDFs usamos Google Docs Viewer (fiable con URLs firmadas).
   async function showFile(path){
     const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 300);
     if(error){ alert('No se pudo abrir el informe'); return; }
-    const url = data.signedUrl;
+    const rawUrl = data.signedUrl;              // URL original firmada
+    lastSignedRaw = rawUrl;                     // para "Abrir en pestaña"
+
     const e = ext(path);
     let viewerURL = '';
     if(e==='pdf'){
-      viewerURL = url + '#toolbar=0&navpanes=0&scrollbar=0';
+      viewerURL = 'https://docs.google.com/gview?embedded=1&url=' + encodeURIComponent(rawUrl);
     } else if(e==='ppt' || e==='pptx'){
-      viewerURL = 'https://view.officeapps.live.com/op/embed.aspx?src='+encodeURIComponent(url)+'&wdDownloadButton=False&wdPrint=0';
+      viewerURL = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(rawUrl) + '&wdDownloadButton=False&wdPrint=0';
     } else {
       alert('Formato no soportado para visor: '+e); return;
     }
+
     currentURL = viewerURL;
-    btnTab.href = currentURL;
+    btnTab.href = lastSignedRaw;                // en pestaña nueva abre el original
     filename.textContent = nice(path);
     preview.src = viewerURL;
     preview.style.display='block';
   }
 
-  // Fullscreen
+  // Fullscreen (contenedor)
   btnFull.addEventListener('click', async ()=>{
     try{
       if(!document.fullscreenElement){ await viewer.requestFullscreen(); }
