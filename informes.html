@@ -4,42 +4,54 @@
   <meta charset="utf-8" />
   <title>Informes — DoberWhite Capital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Usa exactamente los estilos del sitio -->
   <link rel="stylesheet" href="assets/css/main.css" />
   <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
   <style>
-    :root{ --panel-w:340px; }
-    .muted{opacity:.75}
-    .container{max-width:1600px;margin:0 auto;padding:0 1.5rem}
+    :root{
+      --sidebar-w: 360px;
+      /* colores ya vienen de main.css; sólo toques suaves */
+    }
 
-    /* Layout 2 columnas */
-    .layout{display:grid;grid-template-columns:var(--panel-w) 1fr;gap:2rem;align-items:start}
+    /* Contenedor principal alineado a la grilla del sitio */
+    .container{max-width:1440px;margin:0 auto;padding:0 1.5rem}
 
-    /* Cabecera compacta (email, salir, título, full) */
-    .topbar{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin:1rem 0 .25rem}
+    /* Top bar con email, salir, título y fullscreen */
+    .topbar{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin:1.25rem 0 .5rem}
     .topbar .spacer{flex:1}
     #filename{font-weight:700}
+
+    /* Layout 2 columnas sobrio */
+    .layout{display:grid;grid-template-columns:var(--sidebar-w) 1fr;gap:2rem;align-items:start}
 
     /* Lista izquierda */
     h3.small{margin:.25rem 0 1rem}
     ul.files{list-style:disc;padding-left:1.1rem;margin:0}
-    ul.files li{margin:.9rem 0}
-    .row{display:flex;align-items:center;gap:.6rem}
+    ul.files li{margin:1rem 0}
+    .row{display:flex;align-items:center;gap:.75rem}
     .row .title{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .row .button{white-space:nowrap}
 
-    /* Visor */
-    .frame-wrap{position:relative;border-radius:12px;overflow:hidden;background:#0e111a;border:1px solid rgba(255,255,255,.06)}
-    #preview{width:100%;height:88vh;border:0;display:none}
-    .placeholder{height:88vh;border-radius:12px;display:grid;place-items:center;background:#2f4c8f;color:#fff;font-size:1.25rem}
+    /* Visor: usa paleta del tema (fondos oscuros del main.css) */
+    .frame-wrap{
+      position:relative;border-radius:12px;overflow:hidden;
+      background:#0e111a;border:1px solid rgba(255,255,255,.06)
+    }
+    #preview{width:100%;height:90vh;border:0;display:none}
+    .placeholder{
+      height:90vh;border-radius:12px;display:grid;place-items:center;
+      background:#1f2330;color:#c8cdd8;font-size:1.15rem;
+      border:1px dashed rgba(255,255,255,.08)
+    }
 
-    /* Controles */
-    #btnFull{margin-left:auto}
-    .auth-strip{display:flex;gap:.6rem;align-items:center}
+    /* Botones pequeños consistentes con el tema */
+    .button.small{line-height:2.4rem;height:2.6rem;padding:0 0.9rem}
   </style>
 </head>
 <body class="is-preload">
 <div id="wrapper">
 
+  <!-- Header original del sitio -->
   <header id="header">
     <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
     <nav><a href="#menu">Menú</a></nav>
@@ -58,15 +70,16 @@
     </ul>
   </nav>
 
+  <!-- Cuerpo -->
   <section class="container">
-    <!-- Topbar: email + salir (izq)  |  título + full (der) -->
+    <!-- Barra superior: email + salir | título + fullscreen -->
     <div class="topbar">
-      <div id="authBox" class="auth-strip">
+      <div id="authBox" class="auth-strip" style="display:flex;gap:.6rem;align-items:center">
         <button id="btnLogin" class="button primary small">Entrar con Google</button>
         <span class="muted">Solo correos autorizados</span>
       </div>
 
-      <div id="userBox" class="auth-strip" style="display:none">
+      <div id="userBox" class="auth-strip" style="display:none;gap:.6rem;align-items:center">
         <span class="muted" id="userEmail">-</span>
         <button id="btnLogout" class="button small">Salir</button>
       </div>
@@ -77,17 +90,17 @@
     </div>
 
     <div class="layout">
-      <!-- Columna izquierda -->
+      <!-- Columna izquierda: lista simple -->
       <aside>
         <h3 class="small">Selecciona el informe para ver</h3>
         <ul id="fileList" class="files"></ul>
         <p id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</p>
       </aside>
 
-      <!-- Columna derecha (visor) -->
+      <!-- Columna derecha: visor -->
       <section>
         <div id="viewer" class="frame-wrap">
-          <!-- sin sandbox: garantiza compatibilidad del visor nativo -->
+          <!-- sin sandbox para mejor compatibilidad del visor nativo -->
           <iframe id="preview" allow="fullscreen" allowfullscreen></iframe>
           <div id="ph" class="placeholder">Zona de visualización de informe</div>
         </div>
@@ -104,9 +117,10 @@
 
 </div>
 
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // === SUPABASE CONFIG ===
+  // === Supabase ===
   const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
   const BUCKET = 'informes';
@@ -116,7 +130,7 @@
     auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, flowType:'pkce' }
   });
 
-  // UI refs
+  // UI
   const authBox  = document.getElementById('authBox');
   const userBox  = document.getElementById('userBox');
   const userEmail= document.getElementById('userEmail');
@@ -142,13 +156,12 @@
     if(!allFiles.length){ emptyMsg.style.display='block'; return; }
     emptyMsg.style.display='none';
 
-    // Orden: recientes primero
+    // Más recientes primero
     const items = allFiles.slice().sort((a,b)=> new Date(b.updated_at||b.created_at) - new Date(a.updated_at||a.created_at));
 
     items.forEach(o=>{
       const li = document.createElement('li');
-      const row = document.createElement('div');
-      row.className = 'row';
+      const row = document.createElement('div'); row.className = 'row';
 
       const title = document.createElement('div');
       title.className = 'title';
@@ -173,7 +186,7 @@
     renderList();
   }
 
-  // Abre en visor nativo (PDF) u Office Viewer (PPT/PPTX)
+  // Visor: PDF nativo (sin barra) u Office Viewer para PPT/PPTX
   async function openInViewer(path){
     const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 300);
     if(error){ alert('No se pudo abrir el informe'); return; }
@@ -182,7 +195,7 @@
     const e = ext(path);
     let viewerURL = '';
     if(e==='pdf'){
-      // Visor nativo (Chrome/Edge/Firefox). Sin toolbar y ajustado a ancho de página.
+      // ocultamos toolbar y ajustamos a ancho
       viewerURL = rawUrl + '#toolbar=0&navpanes=0&scrollbar=0&zoom=page-width';
     } else if(e==='ppt' || e==='pptx'){
       viewerURL = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(rawUrl) + '&wdDownloadButton=False&wdPrint=0';
@@ -196,7 +209,7 @@
     placeholder.style.display = 'none';
   }
 
-  // Fullscreen contenedor visor
+  // Pantalla completa del contenedor del visor
   btnFull.addEventListener('click', async ()=>{
     try{
       if(!document.fullscreenElement){ await viewer.requestFullscreen(); }
@@ -204,7 +217,7 @@
     }catch(_){}
   });
 
-  // Auth/UI
+  // Auth / navegación
   async function refreshUI(){
     const { data:{ session } } = await supabaseClient.auth.getSession();
     const user = session?.user || null;
@@ -212,14 +225,14 @@
     if(!user){
       authBox.style.display='flex';
       userBox.style.display='none';
-      fileList.innerHTML = ''; emptyMsg.style.display='block';
+      fileList.innerHTML=''; emptyMsg.style.display='block';
       preview.src=''; preview.style.display='none'; placeholder.style.display='grid';
       filename.textContent = 'Zona de visualización de informe';
       return;
     }
 
     const email = (user.email||'').toLowerCase();
-    if(!ALLOWLIST.includes(email)){ alert('Email no autorizado'); await supabaseClient.auth.signOut(); return; }
+    if(!ALLOWLIST.includes(email)){ alert('Email no autorizado'); await supabaseClient.auth.signOut(); window.location.href='index.html'; return; }
 
     authBox.style.display='none';
     userBox.style.display='flex';
@@ -234,8 +247,11 @@
       options:{ redirectTo: location.origin + location.pathname, queryParams:{ access_type:'offline', prompt:'consent' } }
     });
   });
+
+  // << Arreglado: salir vuelve a Inicio >>
   btnLogout.addEventListener('click', async ()=>{
-    await supabaseClient.auth.signOut(); await refreshUI();
+    try{ await supabaseClient.auth.signOut(); }catch(_){}
+    window.location.href = 'index.html';
   });
 
   (async function init(){
