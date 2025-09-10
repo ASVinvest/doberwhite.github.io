@@ -8,27 +8,27 @@
   <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
   <style>
     .muted{opacity:.75}
-    .grid-2{display:grid;gap:1.25rem}
-    @media(min-width:1100px){.grid-2{grid-template-columns:1.15fr .85fr}}
-
-    .toolbar{display:flex;gap:.75rem;align-items:center;margin:.25rem 0 1rem}
+    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+    .toolbar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin:.5rem 0 1rem}
     .toolbar input[type="search"], .toolbar select{height:2.6rem}
     .count{font-size:.9rem;opacity:.8}
 
+    /* VISOR */
+    #viewer .frame-wrap{position:relative;border-radius:12px;overflow:hidden;background:#0e111a;border:1px solid rgba(255,255,255,.06)}
+    #preview{width:100%;height:72vh;border:0;display:none}
+    #filename{font-weight:600}
+    .viewer-actions{margin-left:auto;display:flex;gap:.5rem}
+    .tall #preview{height:90vh}
+
+    /* LISTA */
     .group{margin:1.2rem 0 .6rem}
     .group h4{margin:0 0 .4rem}
-
     .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
     .card{background:#1f2330;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1rem}
     .row{display:flex;align-items:center;gap:.6rem}
     .icon{width:36px;height:36px;border-radius:10px;background:#2a3042;display:grid;place-items:center;font-weight:700}
     .title{margin:.4rem 0 .2rem;font-weight:700;line-height:1.25}
     .date{font-size:.9rem;opacity:.9}
-    .card .button{margin-top:.6rem}
-
-    #viewer iframe{width:100%;height:72vh;border:0;border-radius:12px;background:#0e111a}
-    .skeleton{height:110px;border-radius:14px;background:linear-gradient(90deg,#222533,#2a2f43 50%,#222533 100%);background-size:200% 100%;animation:sh 1.2s linear infinite}
-    @keyframes sh{to{background-position:-200% 0}}
   </style>
 </head>
 <body class="is-preload">
@@ -52,60 +52,54 @@
     </ul>
   </nav>
 
-  <section id="banner" class="style2">
-    <div class="inner">
-      <span class="image"><img src="images/performance.png" alt="Informes" loading="lazy" decoding="async"></span>
-      <header class="major"><h1>Informes</h1></header>
-      <div class="content"><p>Repositorio privado de reportes. Visualización embebida sin descarga.</p></div>
+  <!-- VISOR ARRIBA -->
+  <section class="container" style="margin-top:1.2rem">
+    <header class="major"><h2 style="margin-bottom:.2rem">Visor</h2></header>
+    <div class="toolbar" id="viewerTools" style="margin-top:.2rem">
+      <span id="filename" class="muted">Selecciona un informe para visualizarlo.</span>
+      <div class="viewer-actions">
+        <button id="btnFull" class="button small">Pantalla completa</button>
+        <a id="btnTab" class="button small" href="#" target="_blank" rel="noopener">Abrir en pestaña</a>
+      </div>
+    </div>
+    <div id="viewer" class="frame-wrap">
+      <!-- IMPORTANTE: sin sandbox para evitar bloqueos de PDF -->
+      <iframe id="preview"></iframe>
     </div>
   </section>
 
+  <!-- LISTADO -->
   <div id="main">
     <section>
-      <div class="inner grid-2">
-
-        <!-- IZQUIERDA -->
-        <div>
-          <div id="authBox">
-            <button id="btnLogin" class="button primary small">Entrar con Google</button>
-            <p class="muted" style="margin:.4rem 0 1rem">Solo correos autorizados.</p>
-          </div>
-
-          <div id="userBox" style="display:none; margin-bottom:.5rem;display:flex;gap:.5rem;align-items:center">
-            <span class="muted" id="userEmail">-</span>
-            <button id="btnLogout" class="button small">Salir</button>
-          </div>
-
-          <div id="tools" class="toolbar" style="display:none">
-            <input id="q" type="search" placeholder="Buscar informe..." style="flex:1">
-            <select id="order">
-              <option value="desc">Más recientes</option>
-              <option value="asc">Más antiguos</option>
-            </select>
-            <span id="count" class="count"></span>
-          </div>
-
-          <div id="list">
-            <div class="skeleton"></div>
-            <div class="skeleton"></div>
-          </div>
-          <div id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</div>
+      <div class="inner container">
+        <div id="authBox">
+          <button id="btnLogin" class="button primary small">Entrar con Google</button>
+          <p class="muted" style="margin:.4rem 0 1rem">Solo correos autorizados.</p>
         </div>
 
-        <!-- DERECHA -->
-        <div id="viewer">
-          <header class="major"><h3>Visor</h3></header>
-          <p class="muted" id="hint">Selecciona un informe para visualizarlo aquí.</p>
-          <iframe id="preview" src="" style="display:none;" sandbox="allow-scripts allow-same-origin"></iframe>
+        <div id="userBox" style="display:none; margin-bottom:.5rem;display:flex;gap:.5rem;align-items:center">
+          <span class="muted" id="userEmail">-</span>
+          <button id="btnLogout" class="button small">Salir</button>
         </div>
 
+        <div class="toolbar" id="tools" style="display:none">
+          <input id="q" type="search" placeholder="Buscar informe..." style="flex:1">
+          <select id="order">
+            <option value="desc">Más recientes</option>
+            <option value="asc">Más antiguos</option>
+          </select>
+          <span id="count" class="count"></span>
+        </div>
+
+        <div id="list"></div>
+        <div id="emptyMsg" class="muted" style="display:none">Aún no hay informes.</div>
       </div>
     </section>
   </div>
 
   <footer id="footer">
     <div class="inner">
-      <p class="disclaimer">Contenido privado. URLs expiran automáticamente.</p>
+      <p class="disclaimer">Contenido privado. Las URLs expiran automáticamente.</p>
       <ul class="copyright"><li>&copy; DoberWhite 2025</li></ul>
     </div>
   </footer>
@@ -114,7 +108,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // === SUPABASE ===
+  // === SUPABASE CONFIG ===
   const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
   const BUCKET = 'informes';
@@ -130,20 +124,25 @@
   const userEmail= document.getElementById('userEmail');
   const btnLogin = document.getElementById('btnLogin');
   const btnLogout= document.getElementById('btnLogout');
-  const listBox  = document.getElementById('list');
-  const emptyMsg = document.getElementById('emptyMsg');
-  const preview  = document.getElementById('preview');
-  const hint     = document.getElementById('hint');
+
   const tools    = document.getElementById('tools');
   const q        = document.getElementById('q');
   const orderSel = document.getElementById('order');
   const countEl  = document.getElementById('count');
+  const listBox  = document.getElementById('list');
+  const emptyMsg = document.getElementById('emptyMsg');
+
+  const preview  = document.getElementById('preview');
+  const filename = document.getElementById('filename');
+  const btnTab   = document.getElementById('btnTab');
+  const btnFull  = document.getElementById('btnFull');
+  const viewer   = document.getElementById('viewer');
 
   const fmt = iso => new Date(iso||Date.now()).toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'2-digit'});
   const ext = n => (n.split('.').pop()||'').toLowerCase();
   const nice= n => n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
 
-  let allFiles = [], filtered = [];
+  let allFiles = [], filtered = [], currentURL = '';
 
   function groupByMonth(items){
     const map = {};
@@ -152,7 +151,6 @@
       const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
       (map[key] = map[key] || []).push(o);
     });
-    // ordenar grupos desc por clave
     return Object.entries(map).sort((a,b)=> a[0] < b[0] ? 1 : -1);
   }
 
@@ -161,14 +159,14 @@
     if(!filtered.length){ emptyMsg.style.display='block'; countEl.textContent=''; return; }
     emptyMsg.style.display='none';
     countEl.textContent = `${filtered.length} informes`;
-    // Agrupar
+
     const groups = groupByMonth(filtered);
     groups.forEach(([key,items])=>{
       const [y,m] = key.split('-');
-      const header = document.createElement('div');
-      header.className='group';
-      header.innerHTML = `<h4>${y} — ${new Date(+y, +m-1, 1).toLocaleDateString('es-CL',{month:'long'}).replace(/^./,c=>c.toUpperCase())}</h4>`;
-      listBox.appendChild(header);
+      const h = document.createElement('div');
+      h.className='group';
+      h.innerHTML = `<h4>${y} — ${new Date(+y, +m-1, 1).toLocaleDateString('es-CL',{month:'long'}).replace(/^./,c=>c.toUpperCase())}</h4>`;
+      listBox.appendChild(h);
 
       const wrap = document.createElement('div');
       wrap.className='cards';
@@ -202,7 +200,6 @@
   }
 
   async function loadList(){
-    listBox.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
     const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit:1000 });
     if(error){ listBox.innerHTML=''; emptyMsg.style.display='block'; return; }
     allFiles = data || [];
@@ -210,22 +207,33 @@
   }
 
   async function showFile(path){
-    const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 180);
+    const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 300);
     if(error){ alert('No se pudo abrir el informe'); return; }
     const url = data.signedUrl;
     const e = ext(path);
-    let viewer = '';
+    let viewerURL = '';
     if(e==='pdf'){
-      viewer = url + '#toolbar=0&navpanes=0&scrollbar=0';
+      viewerURL = url + '#toolbar=0&navpanes=0&scrollbar=0';
     } else if(e==='ppt' || e==='pptx'){
-      viewer = 'https://view.officeapps.live.com/op/embed.aspx?src='+encodeURIComponent(url)+'&wdDownloadButton=False&wdPrint=0';
+      viewerURL = 'https://view.officeapps.live.com/op/embed.aspx?src='+encodeURIComponent(url)+'&wdDownloadButton=False&wdPrint=0';
     } else {
       alert('Formato no soportado para visor: '+e); return;
     }
-    hint.style.display='none';
-    preview.src = viewer;
+    currentURL = viewerURL;
+    btnTab.href = currentURL;
+    filename.textContent = nice(path);
+    preview.src = viewerURL;
     preview.style.display='block';
   }
+
+  // Fullscreen
+  btnFull.addEventListener('click', async ()=>{
+    try{
+      if(!document.fullscreenElement){ await viewer.requestFullscreen(); }
+      else{ await document.exitFullscreen(); }
+    }catch(_){}
+    viewer.classList.toggle('tall');
+  });
 
   // Auth
   async function refreshUI(){
@@ -234,7 +242,9 @@
     if(!user){
       authBox.style.display='block'; userBox.style.display='none'; tools.style.display='none';
       listBox.innerHTML=''; emptyMsg.style.display='block';
-      preview.src=''; preview.style.display='none'; hint.style.display='block';
+      preview.src=''; preview.style.display='none';
+      filename.textContent = 'Selecciona un informe para visualizarlo.';
+      btnTab.removeAttribute('href');
       return;
     }
     const email = (user.email||'').toLowerCase();
@@ -245,7 +255,7 @@
   }
 
   // Eventos
-  document.getElementById('list').addEventListener('click', (e)=>{
+  listBox.addEventListener('click', (e)=>{
     const b = e.target.closest('button[data-path]'); if(!b) return;
     showFile(b.getAttribute('data-path'));
   });
