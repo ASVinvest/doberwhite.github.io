@@ -1,58 +1,50 @@
-/* ===== DoberWhite Capital — base clara ===== */
-:root{
-  --bg:#f7f7f8; --text:#0b1020; --muted:#6b7280; --border:#e5e7eb; --accent:#0cab5b;
+/* ... reglas existentes ... */
+
+/* Article-based tiles (usado en la página de inicio actualizada). */
+.tiles > article {
+  display: block;
+  position: relative;
+  min-height: 220px;
+  border-radius: 16px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--text);background:var(--bg)}
 
-/* Cabecera */
-#header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-#header .logo{display:inline-flex;align-items:center;gap:6px;padding:14px 16px;text-decoration:none;color:var(--text)}
-#header .logo strong{font-weight:800}
-#header .logo span{font-weight:300}
-#header nav{position:absolute;right:16px;top:10px}
-#header nav a{display:inline-block;padding:10px 12px;border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text)}
-#header nav a:hover{background:#fafafa}
-#wrapper{padding-top:70px}
+.tiles > article::before {
+  /* superposición oscura para mejor contraste */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
+  transition: opacity 0.3s ease;
+}
 
-/* Menú overlay */
-#menu{position:fixed;inset:0;background:rgba(15,23,42,.97);color:#fff;transform:translateY(-100%);transition:transform .3s ease;z-index:70}
-#menu .links{list-style:none;margin:80px auto;padding:0;max-width:920px;display:grid;gap:16px}
-#menu .links a{display:block;padding:16px 18px;border:1px solid rgba(255,255,255,.15);border-radius:12px;text-decoration:none;color:#fff}
-#menu .links a.button{background:var(--accent);border-color:transparent}
-body.is-menu-visible #menu{transform:translateY(0)}
+.tiles > article:hover::before {
+  opacity: 0.85;
+}
 
-/* Banner */
-#banner{position:relative;display:grid;place-items:center;min-height:48vh;color:#fff;text-align:center;background:#0b1020}
-#banner .inner{position:relative;padding:48px 16px;max-width:1100px;width:100%}
-#banner h1{margin:0 0 8px;font-size:clamp(28px,5vw,48px);font-weight:800}
-#banner p{margin:0;color:#e5e7eb}
+.tiles > article header.major {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+}
 
-/* Tarjetas (home) */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;padding:28px 16px;max-width:1100px;margin:0 auto}
-.tile{display:block;position:relative;min-height:220px;border-radius:16px;overflow:hidden;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.06);background-size:cover;background-position:center}
-.tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.4));transition:opacity .3s}
-.tile:hover::after{opacity:.15}
-.tile .label{position:absolute;left:16px;bottom:16px}
-.tile h3{margin:0;font-size:20px;font-weight:800}
-.tile p{margin:4px 0 0;font-size:12px;color:#e5e7eb}
+.tiles > article h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+}
 
-/* Spotlight secciones */
-#main section{padding:42px 0}
-.spotlights>section{display:grid;grid-template-columns:420px 1fr;gap:16px;align-items:stretch;padding:0 16px;max-width:1100px;margin:0 auto}
-.spotlights img{width:100%;height:100%;object-fit:cover;border-radius:12px}
-.spotlights .inner{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px}
-@media(max-width:960px){.spotlights>section{grid-template-columns:1fr}}
+.tiles > article p {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #e5e7eb;
+}
 
-/* Botones y tablas */
-.button{display:inline-block;padding:12px 18px;border-radius:12px;text-decoration:none;font-weight:700;border:1px solid var(--border);color:var(--text);background:#fff}
-.button.primary{background:var(--accent);color:#fff;border-color:transparent}
-.table-wrapper{overflow:auto}
-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-th,td{padding:12px 14px;border-bottom:1px solid var(--border)} th{background:#fafafa;text-align:left;font-weight:700;color:#111827}
-
-/* Pie */
-#footer{border-top:1px solid var(--border);background:#fff}
-#footer .inner{max-width:1100px;margin:0 auto;padding:22px 16px}
-.disclaimer{color:var(--muted);font-size:12px}
+/* ... resto de reglas existentes ... */
