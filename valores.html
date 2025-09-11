@@ -1,76 +1,197 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Nuestros valores — DoberWhite Capital</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-</head>
-<body class="is-preload"><div id="wrapper">
+  <meta charset="utf-8">
+  <title>DoberWhite Capital — Nuestros valores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* Específico de página, coherente con el home */
+    .hero--split{padding:120px 0 40px;border-bottom:1px solid var(--line)}
+    .split{display:grid;gap:24px;grid-template-columns:1.05fr .95fr;align-items:center}
+    .split img{width:100%;height:320px;object-fit:cover;border-radius:16px;border:1px solid var(--line)}
+    @media(max-width:960px){.split{grid-template-columns:1fr}.split img{height:260px}}
 
-  <header id="header">
-    <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
-    <nav><a href="#menu">Menú</a></nav>
+    .section{padding:40px 0}
+    .features{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+    @media(max-width:960px){.features{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.features{grid-template-columns:1fr}}
+    .feature{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    .feature .top{aspect-ratio:16/9;display:grid;place-items:center;background:#0f1422;border-bottom:1px solid var(--line)}
+    .feature .top svg{width:70%}
+    .feature .body{padding:16px}
+    .feature h3{margin:0 0 6px;font-size:18px;font-weight:800}
+    .feature ul{margin:10px 0 0 18px;color:var(--muted);font-size:14px}
+
+    .kpis{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
+    @media(max-width:960px){.kpis{grid-template-columns:1fr 1fr}}
+    @media(max-width:640px){.kpis{grid-template-columns:1fr}}
+    .kpi{background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:14px;padding:16px}
+    .kpi .lab{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    .kpi .val{font-weight:900;font-size:22px;margin-top:4px}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="index.html">
+        <span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span>
+      </a>
+      <a class="menu-button" href="#menu">Menú</a>
+    </div>
   </header>
 
-  <nav id="menu">
-    <ul class="links">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="institucionales.html">Servicios institucionales</a></li>
-      <li><a href="particulares.html">Servicios particulares</a></li>
-      <li><a href="trading.html">Trading algorítmico</a></li>
-      <li><a href="cursos.html">Cursos & seminarios</a></li>
-      <li><a href="valores.html">Nuestros valores</a></li>
-      <li><a href="rendimientos.html">Rendimientos</a></li>
-      <li><a href="contacto.html" class="button primary">Agendar reunión</a></li>
-    </ul>
+  <!-- Menú (igual al del inicio) -->
+  <nav class="site-menu" id="menu" aria-hidden="true">
+    <div class="inner">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="institucionales.html">Servicios institucionales</a></li>
+        <li><a href="particulares.html">Servicios particulares</a></li>
+        <li><a href="trading.html">Trading algorítmico</a></li>
+        <li><a href="cursos.html">Cursos & seminarios</a></li>
+        <li><a href="valores.html">Nuestros valores</a></li>
+        <li><a href="rendimientos.html">Rendimientos</a></li>
+        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
+      </ul>
+    </div>
   </nav>
 
-  <section id="banner" class="style2">
-    <div class="inner">
-      <span class="image"><img src="images/Valores.png" alt="" /></span>
-      <header class="major"><h1>Nuestros valores</h1></header>
-      <div class="content"><p>Fiduciary duty, transparencia radical y disciplina operativa.</p></div>
+  <!-- Hero -->
+  <section class="hero hero--split">
+    <div class="container split">
+      <div>
+        <h1>Nuestros valores</h1>
+        <p class="sub">Fiduciary duty, transparencia y disciplina operativa. Primero el riesgo, luego el retorno.</p>
+        <div class="value" style="margin-top:16px">
+          Reglas simples, evidencia sobre opinión y comunicación clara de riesgos y límites.
+        </div>
+      </div>
+      <div>
+        <img src="assets/images/valores.png" alt="Valores y ética DoberWhite">
+      </div>
     </div>
   </section>
 
-  <div id="main">
-    <section class="spotlights">
-      <section>
-        <div class="image"><img src="images/performance.png" alt="" /></div>
-        <div class="content"><div class="inner">
-          <header class="major"><h3>Principios</h3></header>
+  <!-- Principios -->
+  <section class="section">
+    <div class="container features">
+
+      <!-- Risk-first -->
+      <article class="feature">
+        <div class="top">
+          <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Risk-first">
+            <rect width="100%" height="100%" fill="#121728"/>
+            <g stroke="#00e18e" stroke-width="2" fill="none">
+              <circle cx="55" cy="60" r="26"/>
+              <path d="M44,60 l9,11 l18,-22"/>
+              <polyline points="90,86 112,72 128,78 150,62 166,68" />
+            </g>
+            <g fill="#fff" opacity=".18">
+              <rect x="26" y="32" width="10" height="56"/>
+              <rect x="46" y="40" width="10" height="48"/>
+              <rect x="66" y="28" width="10" height="60"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Risk-first</h3>
           <ul>
-            <li><strong>Risk-first:</strong> preservar capital antes que retorno.</li>
-            <li><strong>Datos & método:</strong> evidencia sobre opinión.</li>
-            <li><strong>Transparencia:</strong> métricas, límites y reportes claros.</li>
-            <li><strong>Disciplina:</strong> reglas simples, ejecución impecable.</li>
+            <li>Preservación de capital por sobre el retorno.</li>
+            <li>Límites por trade, sesión y cuenta.</li>
+            <li>Pausas automáticas ante drawdown.</li>
           </ul>
-        </div></div>
-      </section>
+        </div>
+      </article>
 
-      <section>
-        <div class="image"><img src="images/algoritmico.png" alt="" /></div>
-        <div class="content"><div class="inner">
-          <header class="major"><h3>Ética & conflictos</h3></header>
-          <p>Segregación de funciones, bitácora de decisiones, comunicación de riesgos y manejo de conflictos de interés.</p>
-          <a href="contacto.html" class="button">Conocer el marco de control</a>
-        </div></div>
-      </section>
-    </section>
-  </div>
+      <!-- Transparencia -->
+      <article class="feature">
+        <div class="top">
+          <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Transparencia">
+            <rect width="100%" height="100%" fill="#0f1422"/>
+            <g fill="#fff" opacity=".20">
+              <rect x="28" y="30" width="12" height="56"/>
+              <rect x="52" y="42" width="12" height="44"/>
+              <rect x="76" y="24" width="12" height="62"/>
+              <rect x="100" y="50" width="12" height="36"/>
+            </g>
+            <g stroke="#00e18e" stroke-width="2" fill="none" opacity=".9">
+              <polyline points="22,90 52,70 82,80 112,58 142,66"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Transparencia</h3>
+          <ul>
+            <li>Métricas y límites visibles.</li>
+            <li>Reportes diarios/semanales.</li>
+            <li>Verificación externa cuando aplica.</li>
+          </ul>
+        </div>
+      </article>
 
-  <footer id="footer"><div class="inner">
-    <ul class="copyright"><li>&copy; DoberWhite 2025</li></ul>
-  </div></footer>
+      <!-- Ética & conflictos -->
+      <article class="feature">
+        <div class="top">
+          <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ética y conflictos">
+            <rect width="100%" height="100%" fill="#10162a"/>
+            <g stroke="#00e18e" stroke-width="2" fill="none">
+              <path d="M50,76 c12,-10 20,-10 32,0" />
+              <path d="M44,64 c20,-18 24,-18 44,0" opacity=".7"/>
+              <rect x="104" y="28" width="60" height="64" rx="8" />
+              <line x1="114" y1="46" x2="154" y2="46"/>
+              <line x1="114" y1="62" x2="146" y2="62"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Ética & conflictos</h3>
+          <ul>
+            <li>Deber fiduciario y segregación de funciones.</li>
+            <li>Bitácora de decisiones y cambios de modelo.</li>
+            <li>Comunicación de riesgos y manejo de conflictos.</li>
+          </ul>
+        </div>
+      </article>
 
-</div>
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/jquery.scrollex.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
-</body></html>
+    </div>
+  </section>
+
+  <!-- Marco de control (KPIs) -->
+  <section class="section">
+    <div class="container">
+      <div class="kpis">
+        <div class="kpi"><div class="lab">Gobernanza</div><div class="val">Reglas auditables</div></div>
+        <div class="kpi"><div class="lab">Trazabilidad</div><div class="val">Bitácora completa</div></div>
+        <div class="kpi"><div class="lab">Comunicación</div><div class="val">Reportes claros</div></div>
+      </div>
+      <p class="mini" style="color:var(--muted);margin-top:10px">El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="value" style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <div><strong>¿Quieres conocer nuestro marco de control?</strong> Te mostramos los procesos, límites y reportes.</div>
+        <a class="btn" href="contacto.html">Agendar en Calendly</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container mini">
+      <div>El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo.</div>
+      <div style="margin-top:8px">&copy; DoberWhite 2025 · Design: Ariel Salazar</div>
+    </div>
+  </footer>
+
+  <!-- Botón flotante -->
+  <a class="fab" href="contacto.html">Contacta con nosotros</a>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
