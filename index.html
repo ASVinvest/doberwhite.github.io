@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/css/main.css" />
   <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 </head>
-<body class="is-preload">
+<body>
 <div id="wrapper">
 
   <!-- Header -->
@@ -30,10 +30,9 @@
     </ul>
   </nav>
 
-  <!-- Banner (texto) -->
-  <section id="banner" class="style2">
+  <!-- Banner (solo texto marca + tagline) -->
+  <section id="banner">
     <div class="inner">
-      <!-- sin imagen: mostramos marca y tagline -->
       <header class="major"><h1>DOBERWHITE <span style="font-weight:300">CAPITAL</span></h1></header>
       <div class="content"><p>Inversiones con método, control de riesgo y verificación externa.</p></div>
     </div>
@@ -41,22 +40,22 @@
 
   <!-- Tiles -->
   <section class="tiles">
-    <a class="tile" data-href="institucionales.html" style="--img:url('images/servicios_instituciones.png')">
+    <a class="tile" href="institucionales.html" style="background-image:url('images/servicios_instituciones.png')">
       <div class="label"><h3>Servicios institucionales</h3><p>Haz que tus clientes operen con respaldo</p></div>
     </a>
-    <a class="tile" data-href="particulares.html" style="--img:url('images/servicios_individuales.png')">
+    <a class="tile" href="particulares.html" style="background-image:url('images/servicios_individuales.png')">
       <div class="label"><h3>Servicios particulares</h3><p>Deja tu capital en nuestras manos</p></div>
     </a>
-    <a class="tile" data-href="trading.html" style="--img:url('images/algoritmico.png')">
+    <a class="tile" href="trading.html" style="background-image:url('images/algoritmico.png')">
       <div class="label"><h3>Trading algorítmico</h3><p>Revisa la solidez de nuestro método</p></div>
     </a>
-    <a class="tile" data-href="cursos.html" style="--img:url('images/cursos.png')">
+    <a class="tile" href="cursos.html" style="background-image:url('images/cursos.png')">
       <div class="label"><h3>Cursos & seminarios</h3><p>Formación aplicada, sin humo</p></div>
     </a>
-    <a class="tile" data-href="valores.html" style="--img:url('images/Valores.png')">
+    <a class="tile" href="valores.html" style="background-image:url('images/Valores.png')">
       <div class="label"><h3>Nuestros valores</h3><p>Deber fiduciario y transparencia</p></div>
     </a>
-    <a class="tile" data-href="rendimientos.html" style="--img:url('images/performance.png')">
+    <a class="tile" href="rendimientos.html" style="background-image:url('images/performance.png')">
       <div class="label"><h3>Rendimientos</h3><p>Métricas e historial</p></div>
     </a>
   </section>
@@ -70,68 +69,6 @@
   </footer>
 
 </div>
-
-<!-- JS -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/jquery.scrollex.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
-
-<!-- Fondo de tiles desde CSS var -->
-<script>
-  document.querySelectorAll('.tile').forEach(t=>{
-    const v=t.getAttribute('style').match(/--img:url\('(.+)'\)/)[1];
-    t.style.setProperty('--img',`url('${v}')`);
-    t.style.setProperty('--dummy',''); /* nada, solo fuerza el parseo */
-    t.style.setProperty('--x','0');
-    t.style.setProperty('--y','0');
-    t.style.setProperty('--z','1');
-    t.style.setProperty('--o','1');
-    t.style.setProperty('--b','0');
-    t.style.setProperty('--s','cover');
-    t.style.setProperty('--p','center');
-    t.style.setProperty('--r','0');
-    t.style.setProperty('--f','brightness(.75)');
-    t.style.setProperty('--t','');
-    t.style.setProperty('--bg','');
-    t.style.setProperty('--radius','16px');
-    t.style.setProperty('--border','1px solid rgba(255,255,255,.06)');
-    t.style.setProperty('--shadow','');
-    t.style.setProperty('--clip','');
-    t.style.setProperty('--filter','');
-    t.style.setProperty('--mask','');
-    t.style.setProperty('--blend','');
-    t.style.setProperty('--backdrop','');
-    t.style.setProperty('--outline','');
-    t.style.setProperty('--gap','');
-    t.style.setProperty('--pad','');
-    t.style.setProperty('--mar','');
-    t.style.setProperty('--disp','');
-    t.style.setProperty('--pos','');
-    t.style.setProperty('--grid','');
-    t.style.setProperty('--flow','');
-    t.style.setProperty('--align','');
-    t.style.setProperty('--justify','');
-    t.style.setProperty('--place','');
-    t.style.setProperty('--size','');
-    t.style.setProperty('--w','');
-    t.style.setProperty('--h','');
-    t.style.setProperty('--minh','');
-    t.style.setProperty('--maxh','');
-    t.style.setProperty('--minw','');
-    t.style.setProperty('--maxw','');
-    t.style.setProperty('--opacity','');
-    t.style.setProperty('--pointer','');
-    t.style.setProperty('--zindex','');
-    t.style.setProperty('--cursor','');
-  });
-  // aplica el bg con ::before
-  const css = document.createElement('style');
-  css.textContent = `.tile::before{background-image:var(--img);}`;
-  document.head.appendChild(css);
-</script>
 </body>
 </html>
