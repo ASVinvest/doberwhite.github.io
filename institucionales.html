@@ -1,88 +1,194 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <title>Servicios institucionales — DoberWhite Capital</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+  <meta charset="utf-8">
+  <title>DoberWhite Capital — Servicios institucionales</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* Estilos mínimos específicos de página, manteniendo el look del home */
+    .hero--split{padding:120px 0 40px;border-bottom:1px solid var(--line)}
+    .split{display:grid;gap:24px;grid-template-columns:1.05fr .95fr;align-items:center}
+    .split img{width:100%;height:320px;object-fit:cover;border-radius:16px;border:1px solid var(--line)}
+    @media(max-width:960px){.split{grid-template-columns:1fr}.split img{height:260px}}
+
+    .section{padding:40px 0}
+    .features{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+    @media(max-width:960px){.features{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.features{grid-template-columns:1fr}}
+    .feature{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    .feature .top{aspect-ratio:16/9;display:grid;place-items:center;background:#0f1422;border-bottom:1px solid var(--line)}
+    .feature .top svg{width:70%}
+    .feature .body{padding:16px}
+    .feature h3{margin:0 0 6px;font-size:18px;font-weight:800}
+    .feature ul{margin:10px 0 0 18px;color:var(--muted);font-size:14px}
+    .kpis{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
+    @media(max-width:960px){.kpis{grid-template-columns:1fr 1fr}}
+    @media(max-width:640px){.kpis{grid-template-columns:1fr}}
+    .kpi{background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:14px;padding:16px}
+    .kpi .lab{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    .kpi .val{font-weight:900;font-size:22px;margin-top:4px}
+  </style>
 </head>
 <body>
-<div id="wrapper">
 
-  <header id="header">
-    <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
-    <nav><a href="#menu">Menú</a></nav>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="index.html">
+        <span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span>
+      </a>
+      <a class="menu-button" href="#menu">Menú</a>
+    </div>
   </header>
 
-  <nav id="menu">
-    <ul class="links">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="institucionales.html">Servicios institucionales</a></li>
-      <li><a href="particulares.html">Servicios particulares</a></li>
-      <li><a href="trading.html">Trading algorítmico</a></li>
-      <li><a href="cursos.html">Cursos & seminarios</a></li>
-      <li><a href="valores.html">Nuestros valores</a></li>
-      <li><a href="rendimientos.html">Rendimientos</a></li>
-      <li><a href="contacto.html" class="button primary">Agendar reunión</a></li>
-    </ul>
+  <!-- Menú (igual al del inicio) -->
+  <nav class="site-menu" id="menu" aria-hidden="true">
+    <div class="inner">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="institucionales.html">Servicios institucionales</a></li>
+        <li><a href="particulares.html">Servicios particulares</a></li>
+        <li><a href="trading.html">Trading algorítmico</a></li>
+        <li><a href="cursos.html">Cursos & seminarios</a></li>
+        <li><a href="valores.html">Nuestros valores</a></li>
+        <li><a href="rendimientos.html">Rendimientos</a></li>
+        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
+      </ul>
+    </div>
   </nav>
 
-  <!-- Banner con imagen -->
-  <section id="banner">
-    <div class="bg" style="background-image:url('images/servicios_instituciones.png')"></div>
-    <div class="inner">
-      <header class="major"><h1>Soluciones institucionales</h1></header>
-      <div class="content"><p>Arquitectura cuantitativa, control de riesgo y reporting para Family Offices, IBs y Brokers.</p></div>
+  <!-- Hero -->
+  <section class="hero hero--split">
+    <div class="container split">
+      <div>
+        <h1>Servicios institucionales</h1>
+        <p class="sub">Arquitectura cuantitativa, control de riesgo y reporting para Family Offices, brokers e IBs. Estructuras robustas, límites claros y verificación externa.</p>
+        <div class="value" style="margin-top:16px">
+          Modelos auditables, segregación operativa, SLAs y tableros con métricas diarias/semanales.
+        </div>
+      </div>
+      <div>
+        <img src="assets/images/institucionales.png" alt="Arquitectura institucional">
+      </div>
     </div>
   </section>
 
-  <div id="main">
-    <section class="spotlights">
-      <section>
-        <div class="image"><img src="images/algoritmico.png" alt="Propuesta" /></div>
-        <div class="inner">
-          <header class="major"><h3>Propuesta</h3></header>
+  <!-- Propuesta en 3 bloques -->
+  <section class="section">
+    <div class="container features">
+
+      <!-- Esquemas -->
+      <article class="feature">
+        <div class="top">
+          <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#121728"/>
+            <g stroke="#00e18e" stroke-width="2" fill="none">
+              <rect x="20" y="20" width="40" height="28" rx="4"/>
+              <rect x="70" y="20" width="40" height="28" rx="4"/>
+              <rect x="120" y="20" width="40" height="28" rx="4"/>
+              <path d="M40,48 L40,80 M90,48 L90,80 M140,48 L140,80"/>
+              <path d="M20,80 H160" opacity=".6"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Esquemas & despliegue</h3>
           <ul>
-            <li>Esquemas IB / White-label / PAMM–MAM / API de señales certificables.</li>
-            <li>Guardrails: VaR interno, límites de drawdown, exposición por activo y por sesión.</li>
-            <li>SLAs & reporting: frecuencia diaria/semanal, tableros y alertas.</li>
+            <li>IB / White-label / PAMM–MAM / señales vía API.</li>
+            <li>Playbooks de alta disponibilidad y failover.</li>
+            <li>Onboarding y handover documentado.</li>
           </ul>
-          <a href="contacto.html" class="button">Solicitar deck institucional</a>
         </div>
-      </section>
+      </article>
 
-      <section>
-        <div class="image"><img src="images/Valores.png" alt="Cumplimiento" /></div>
-        <div class="inner">
-          <header class="major"><h3>Gobernanza & cumplimiento</h3></header>
-          <p>KYC/AML, segregación operativa, control de cambios de modelos, bitácora de riesgos y auditoría interna.</p>
+      <!-- Gobernanza -->
+      <article class="feature">
+        <div class="top">
+          <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#0f1422"/>
+            <g stroke="#2c3550" fill="none">
+              <rect x="28" y="22" width="124" height="76" rx="8"/>
+              <line x1="40" y1="40" x2="140" y2="40"/>
+            </g>
+            <g stroke="#00e18e" stroke-width="2" fill="none">
+              <path d="M45,60 l12,12 l22,-26"/>
+              <path d="M95,60 l12,12 l22,-26" opacity=".7"/>
+            </g>
+          </svg>
         </div>
-      </section>
-
-      <section>
-        <div class="image"><img src="images/performance.png" alt="Arquitectura técnica" /></div>
-        <div class="inner">
-          <header class="major"><h3>Arquitectura técnica</h3></header>
+        <div class="body">
+          <h3>Gobernanza & cumplimiento</h3>
           <ul>
-            <li>MT5 / cTrader + VPS baja latencia y redundancia.</li>
-            <li>Monitoreo 24/5 con alertas por equity y exposición.</li>
-            <li>Integración con verificadores externos (FXBlue / Myfxbook).</li>
+            <li>KYC/AML y segregación operativa.</li>
+            <li>Bitácora de cambios de modelo y riesgos.</li>
+            <li>Auditoría interna y trazabilidad.</li>
           </ul>
-          <a class="button primary" href="contacto.html">Agendar reunión</a>
         </div>
-      </section>
-    </section>
-  </div>
+      </article>
 
-  <footer id="footer">
-    <div class="inner">
-      <p class="disclaimer">El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo.</p>
-      <ul class="copyright"><li>&copy; DoberWhite 2025</li><li>Design: Ariel Salazar</li></ul>
+      <!-- Arquitectura -->
+      <article class="feature">
+        <div class="top">
+          <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#10162a"/>
+            <g stroke="#00e18e" stroke-width="2" fill="none">
+              <polyline points="10,90 40,70 60,78 90,56 120,68 150,40 170,52"/>
+            </g>
+            <g fill="#fff" opacity=".18">
+              <rect x="25" y="34" width="10" height="40"/>
+              <rect x="55" y="44" width="10" height="30"/>
+              <rect x="85" y="30" width="10" height="44"/>
+              <rect x="115" y="42" width="10" height="32"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Arquitectura técnica</h3>
+          <ul>
+            <li>MT5 / cTrader + VPS de baja latencia y redundancia.</li>
+            <li>Monitoreo 24/5 con alertas por equity/exposición.</li>
+            <li>Verificación externa (FXBlue / Myfxbook).</li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- KPIs / SLAs -->
+  <section class="section">
+    <div class="container">
+      <div class="kpis">
+        <div class="kpi"><div class="lab">Acuerdos de servicio</div><div class="val">SLA respuesta &lt; 24h</div></div>
+        <div class="kpi"><div class="lab">Disponibilidad</div><div class="val">Uptime ≥ 99.9%</div></div>
+        <div class="kpi"><div class="lab">Reporting</div><div class="val">Diario / semanal</div></div>
+      </div>
+      <p class="mini" style="color:var(--muted);margin-top:10px">El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="value" style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <div><strong>¿Agenda una demo institucional?</strong> Revisamos tu caso y definimos los guardrails y el tablero de control.</div>
+        <a class="btn" href="contacto.html">Agendar en Calendly</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container mini">
+      <div>El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo.</div>
+      <div style="margin-top:8px">&copy; DoberWhite 2025 · Design: Ariel Salazar</div>
     </div>
   </footer>
 
-</div>
-<script src="assets/js/main.js"></script>
+  <!-- Botón flotante -->
+  <a class="fab" href="contacto.html">Contacta con nosotros</a>
+
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
