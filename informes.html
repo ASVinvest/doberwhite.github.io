@@ -4,26 +4,27 @@
   <meta charset="utf-8" />
   <title>Informes — DoberWhite Capital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Usa exactamente los estilos del sitio -->
+  <!-- Tema nuevo del sitio -->
   <link rel="stylesheet" href="assets/css/main.css" />
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
   <style>
     :root{
       --sidebar-w: 360px;
-      /* colores ya vienen de main.css; sólo toques suaves */
+      /* Colores ya vienen del main.css del nuevo tema:
+         --bg, --panel, --ink, --muted, --line, --accent */
     }
 
-    /* Contenedor principal alineado a la grilla del sitio */
-    .container{max-width:1440px;margin:0 auto;padding:0 1.5rem}
+    /* Contenedor ancho local para esta vista (no tocamos .container del tema) */
+    .container-xl{max-width:1440px;margin:0 auto;padding:0 1.5rem}
 
     /* Top bar con email, salir, título y fullscreen */
     .topbar{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin:1.25rem 0 .5rem}
     .topbar .spacer{flex:1}
     #filename{font-weight:700}
 
-    /* Layout 2 columnas sobrio */
+    /* Layout 2 columnas */
     .layout{display:grid;grid-template-columns:var(--sidebar-w) 1fr;gap:2rem;align-items:start}
+    @media (max-width: 980px){ .layout{grid-template-columns:1fr} }
 
     /* Lista izquierda */
     h3.small{margin:.25rem 0 1rem}
@@ -32,7 +33,7 @@
     .row{display:flex;align-items:center;gap:.75rem}
     .row .title{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    /* Visor: usa paleta del tema (fondos oscuros del main.css) */
+    /* Visor: usa paleta del tema */
     .frame-wrap{
       position:relative;border-radius:12px;overflow:hidden;
       background:#0e111a;border:1px solid rgba(255,255,255,.06)
@@ -40,53 +41,61 @@
     #preview{width:100%;height:90vh;border:0;display:none}
     .placeholder{
       height:90vh;border-radius:12px;display:grid;place-items:center;
-      background:#1f2330;color:#c8cdd8;font-size:1.15rem;
+      background:#1f2330;color:#c8cdd8;font-size:1.05rem;
       border:1px dashed rgba(255,255,255,.08)
     }
 
-    /* Botones pequeños consistentes con el tema */
-    .button.small{line-height:2.4rem;height:2.6rem;padding:0 0.9rem}
+    /* Botones, alineados al tema (mapeo a .btn del sitio) */
+    .btn.small{line-height:2.2rem;height:2.4rem;padding:0 .9rem;font-weight:800}
+    .btn.primary{background:var(--accent);color:#000;border-color:transparent}
+    .muted{color:var(--muted)}
   </style>
 </head>
-<body class="is-preload">
-<div id="wrapper">
+<body>
 
-  <!-- Header original del sitio -->
-  <header id="header">
-    <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
-    <nav><a href="#menu">Menú</a></nav>
+  <!-- Header del tema nuevo -->
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="index.html">
+        <span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span>
+      </a>
+      <a class="menu-button" href="#menu">Menú</a>
+    </div>
   </header>
 
-  <nav id="menu">
-    <ul class="links">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="institucionales.html">Servicios institucionales</a></li>
-      <li><a href="particulares.html">Servicios particulares</a></li>
-      <li><a href="trading.html">Trading algorítmico</a></li>
-      <li><a href="cursos.html">Cursos & seminarios</a></li>
-      <li><a href="valores.html">Nuestros valores</a></li>
-      <li><a href="rendimientos.html">Rendimientos</a></li>
-      <li><a href="contacto.html" class="button primary">Agendar reunión</a></li>
-    </ul>
+  <!-- Menú overlay del tema nuevo -->
+  <nav class="site-menu" id="menu" aria-hidden="true">
+    <div class="inner">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="institucionales.html">Servicios institucionales</a></li>
+        <li><a href="particulares.html">Servicios particulares</a></li>
+        <li><a href="trading.html">Trading algorítmico</a></li>
+        <li><a href="cursos.html">Cursos & seminarios</a></li>
+        <li><a href="valores.html">Nuestros valores</a></li>
+        <li><a href="rendimientos.html">Rendimientos</a></li>
+        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
+      </ul>
+    </div>
   </nav>
 
   <!-- Cuerpo -->
-  <section class="container">
+  <section class="container-xl" style="padding-top:96px">
     <!-- Barra superior: email + salir | título + fullscreen -->
     <div class="topbar">
       <div id="authBox" class="auth-strip" style="display:flex;gap:.6rem;align-items:center">
-        <button id="btnLogin" class="button primary small">Entrar con Google</button>
+        <button id="btnLogin" class="btn primary small">Entrar con Google</button>
         <span class="muted">Solo correos autorizados</span>
       </div>
 
       <div id="userBox" class="auth-strip" style="display:none;gap:.6rem;align-items:center">
         <span class="muted" id="userEmail">-</span>
-        <button id="btnLogout" class="button small">Salir</button>
+        <button id="btnLogout" class="btn small">Salir</button>
       </div>
 
       <span class="spacer"></span>
       <span id="filename" class="muted">Zona de visualización de informe</span>
-      <button id="btnFull" class="button small">Pantalla completa</button>
+      <button id="btnFull" class="btn small">Pantalla completa</button>
     </div>
 
     <div class="layout">
@@ -100,7 +109,6 @@
       <!-- Columna derecha: visor -->
       <section>
         <div id="viewer" class="frame-wrap">
-          <!-- sin sandbox para mejor compatibilidad del visor nativo -->
           <iframe id="preview" allow="fullscreen" allowfullscreen></iframe>
           <div id="ph" class="placeholder">Zona de visualización de informe</div>
         </div>
@@ -108,161 +116,166 @@
     </div>
   </section>
 
-  <footer id="footer">
-    <div class="inner">
-      <p class="disclaimer">Contenido privado. Las URLs expiran automáticamente.</p>
-      <ul class="copyright"><li>&copy; DoberWhite 2025</li></ul>
+  <!-- Footer del tema nuevo -->
+  <footer class="site-footer">
+    <div class="container mini">
+      <div>Contenido privado. Las URLs expiran automáticamente.</div>
+      <div style="margin-top:8px">&copy; DoberWhite 2025</div>
     </div>
   </footer>
 
-</div>
+  <!-- Botón flotante a Calendly -->
+  <a class="fab" href="contacto.html">Contacta con nosotros</a>
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // === Supabase ===
-  const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
-  const BUCKET = 'informes';
-  const ALLOWLIST = ['asvglobalinvest@gmail.com']; // en minúsculas
+  <!-- Supabase (tus integraciones intactas) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // === Supabase ===
+    const SUPABASE_URL  = 'https://pmwdminfezdrzrjrzuei.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtd2RtaW5mZXpkcnpyanJ6dWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NzQ2NTcsImV4cCI6MjA3MzA1MDY1N30.XnLcqfobjL0WakJ7D-UFDxpcYVKfVSpGt2DDW0Z-jSM';
+    const BUCKET = 'informes';
+    const ALLOWLIST = ['asvglobalinvest@gmail.com']; // en minúsculas
 
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
-    auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, flowType:'pkce' }
-  });
-
-  // UI
-  const authBox  = document.getElementById('authBox');
-  const userBox  = document.getElementById('userBox');
-  const userEmail= document.getElementById('userEmail');
-  const btnLogin = document.getElementById('btnLogin');
-  const btnLogout= document.getElementById('btnLogout');
-
-  const fileList = document.getElementById('fileList');
-  const emptyMsg = document.getElementById('emptyMsg');
-
-  const preview  = document.getElementById('preview');
-  const placeholder = document.getElementById('ph');
-  const filename = document.getElementById('filename');
-  const btnFull  = document.getElementById('btnFull');
-  const viewer   = document.getElementById('viewer');
-
-  const ext  = n => (n.split('.').pop()||'').toLowerCase();
-  const nice = n => n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
-
-  let allFiles = [];
-
-  function renderList(){
-    fileList.innerHTML = '';
-    if(!allFiles.length){ emptyMsg.style.display='block'; return; }
-    emptyMsg.style.display='none';
-
-    // Más recientes primero
-    const items = allFiles.slice().sort((a,b)=> new Date(b.updated_at||b.created_at) - new Date(a.updated_at||a.created_at));
-
-    items.forEach(o=>{
-      const li = document.createElement('li');
-      const row = document.createElement('div'); row.className = 'row';
-
-      const title = document.createElement('div');
-      title.className = 'title';
-      title.textContent = nice(o.name);
-
-      const btn = document.createElement('button');
-      btn.className = 'button small';
-      btn.textContent = 'Ver';
-      btn.addEventListener('click', ()=> openInViewer(o.name));
-
-      row.appendChild(title);
-      row.appendChild(btn);
-      li.appendChild(row);
-      fileList.appendChild(li);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+      auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, flowType:'pkce' }
     });
-  }
 
-  async function loadList(){
-    const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1000 });
-    if(error){ emptyMsg.style.display='block'; return; }
-    allFiles = data || [];
-    renderList();
-  }
+    // UI
+    const authBox  = document.getElementById('authBox');
+    const userBox  = document.getElementById('userBox');
+    const userEmail= document.getElementById('userEmail');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnLogout= document.getElementById('btnLogout');
 
-  // Visor: PDF nativo (sin barra) u Office Viewer para PPT/PPTX
-  async function openInViewer(path){
-    const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 300);
-    if(error){ alert('No se pudo abrir el informe'); return; }
-    const rawUrl = data.signedUrl;
+    const fileList = document.getElementById('fileList');
+    const emptyMsg = document.getElementById('emptyMsg');
 
-    const e = ext(path);
-    let viewerURL = '';
-    if(e==='pdf'){
-      // ocultamos toolbar y ajustamos a ancho
-      viewerURL = rawUrl + '#toolbar=0&navpanes=0&scrollbar=0&zoom=page-width';
-    } else if(e==='ppt' || e==='pptx'){
-      viewerURL = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(rawUrl) + '&wdDownloadButton=False&wdPrint=0';
-    } else {
-      alert('Formato no soportado: ' + e); return;
+    const preview  = document.getElementById('preview');
+    const placeholder = document.getElementById('ph');
+    const filename = document.getElementById('filename');
+    const btnFull  = document.getElementById('btnFull');
+    const viewer   = document.getElementById('viewer');
+
+    const ext  = n => (n.split('.').pop()||'').toLowerCase();
+    const nice = n => n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+
+    let allFiles = [];
+
+    function renderList(){
+      fileList.innerHTML = '';
+      if(!allFiles.length){ emptyMsg.style.display='block'; return; }
+      emptyMsg.style.display='none';
+
+      // Más recientes primero
+      const items = allFiles.slice().sort((a,b)=> new Date(b.updated_at||b.created_at) - new Date(a.updated_at||a.created_at));
+
+      items.forEach(o=>{
+        const li = document.createElement('li');
+        const row = document.createElement('div'); row.className = 'row';
+
+        const title = document.createElement('div');
+        title.className = 'title';
+        title.textContent = nice(o.name);
+
+        const btn = document.createElement('button');
+        btn.className = 'btn small';
+        btn.textContent = 'Ver';
+        btn.addEventListener('click', ()=> openInViewer(o.name));
+
+        row.appendChild(title);
+        row.appendChild(btn);
+        li.appendChild(row);
+        fileList.appendChild(li);
+      });
     }
 
-    filename.textContent = nice(path);
-    preview.src = viewerURL;
-    preview.style.display = 'block';
-    placeholder.style.display = 'none';
-  }
-
-  // Pantalla completa del contenedor del visor
-  btnFull.addEventListener('click', async ()=>{
-    try{
-      if(!document.fullscreenElement){ await viewer.requestFullscreen(); }
-      else{ await document.exitFullscreen(); }
-    }catch(_){}
-  });
-
-  // Auth / navegación
-  async function refreshUI(){
-    const { data:{ session } } = await supabaseClient.auth.getSession();
-    const user = session?.user || null;
-
-    if(!user){
-      authBox.style.display='flex';
-      userBox.style.display='none';
-      fileList.innerHTML=''; emptyMsg.style.display='block';
-      preview.src=''; preview.style.display='none'; placeholder.style.display='grid';
-      filename.textContent = 'Zona de visualización de informe';
-      return;
+    async function loadList(){
+      const { data, error } = await supabaseClient.storage.from(BUCKET).list('', { limit: 1000 });
+      if(error){ emptyMsg.style.display='block'; return; }
+      allFiles = data || [];
+      renderList();
     }
 
-    const email = (user.email||'').toLowerCase();
-    if(!ALLOWLIST.includes(email)){ alert('Email no autorizado'); await supabaseClient.auth.signOut(); window.location.href='index.html'; return; }
+    // Visor: PDF nativo (sin barra) u Office Viewer para PPT/PPTX
+    async function openInViewer(path){
+      const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(path, 300);
+      if(error){ alert('No se pudo abrir el informe'); return; }
+      const rawUrl = data.signedUrl;
 
-    authBox.style.display='none';
-    userBox.style.display='flex';
-    userEmail.textContent = email;
+      const e = ext(path);
+      let viewerURL = '';
+      if(e==='pdf'){
+        // ocultamos toolbar y ajustamos a ancho
+        viewerURL = rawUrl + '#toolbar=0&navpanes=0&scrollbar=0&zoom=page-width';
+      } else if(e==='ppt' || e==='pptx'){
+        viewerURL = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(rawUrl) + '&wdDownloadButton=False&wdPrint=0';
+      } else {
+        alert('Formato no soportado: ' + e); return;
+      }
 
-    await loadList();
-  }
+      filename.textContent = nice(path);
+      preview.src = viewerURL;
+      preview.style.display = 'block';
+      placeholder.style.display = 'none';
+    }
 
-  btnLogin.addEventListener('click', async ()=>{
-    await supabaseClient.auth.signInWithOAuth({
-      provider: 'google',
-      options:{ redirectTo: location.origin + location.pathname, queryParams:{ access_type:'offline', prompt:'consent' } }
+    // Pantalla completa del contenedor del visor
+    btnFull.addEventListener('click', async ()=>{
+      try{
+        if(!document.fullscreenElement){ await viewer.requestFullscreen(); }
+        else{ await document.exitFullscreen(); }
+      }catch(_){}
     });
-  });
 
-  // << Arreglado: salir vuelve a Inicio >>
-  btnLogout.addEventListener('click', async ()=>{
-    try{ await supabaseClient.auth.signOut(); }catch(_){}
-    window.location.href = 'index.html';
-  });
+    // Auth / navegación
+    async function refreshUI(){
+      const { data:{ session } } = await supabaseClient.auth.getSession();
+      const user = session?.user || null;
 
-  (async function init(){
-    if (/[?&]code=/.test(location.href)) {
-      await supabaseClient.auth.exchangeCodeForSession(location.href);
-      history.replaceState({}, '', location.origin + location.pathname);
+      if(!user){
+        authBox.style.display='flex';
+        userBox.style.display='none';
+        fileList.innerHTML=''; emptyMsg.style.display='block';
+        preview.src=''; preview.style.display='none'; placeholder.style.display='grid';
+        filename.textContent = 'Zona de visualización de informe';
+        return;
+      }
+
+      const email = (user.email||'').toLowerCase();
+      if(!ALLOWLIST.includes(email)){ alert('Email no autorizado'); await supabaseClient.auth.signOut(); window.location.href='index.html'; return; }
+
+      authBox.style.display='none';
+      userBox.style.display='flex';
+      userEmail.textContent = email;
+
+      await loadList();
     }
-    if(location.hash.includes('access_token')) history.replaceState({},'',location.pathname);
-    await refreshUI();
-    supabaseClient.auth.onAuthStateChange(refreshUI);
-  })();
-</script>
+
+    btnLogin.addEventListener('click', async ()=>{
+      await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options:{ redirectTo: location.origin + location.pathname, queryParams:{ access_type:'offline', prompt:'consent' } }
+      });
+    });
+
+    // Salir vuelve a Inicio
+    btnLogout.addEventListener('click', async ()=>{
+      try{ await supabaseClient.auth.signOut(); }catch(_){}
+      window.location.href = 'index.html';
+    });
+
+    (async function init(){
+      if (/[?&]code=/.test(location.href)) {
+        await supabaseClient.auth.exchangeCodeForSession(location.href);
+        history.replaceState({}, '', location.origin + location.pathname);
+      }
+      if(location.hash.includes('access_token')) history.replaceState({},'',location.pathname);
+      await refreshUI();
+      supabaseClient.auth.onAuthStateChange(refreshUI);
+    })();
+  </script>
+
+  <!-- JS del tema (menú overlay) -->
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
