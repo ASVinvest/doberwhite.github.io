@@ -1,83 +1,215 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Cursos & seminarios — DoberWhite Capital</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-</head>
-<body class="is-preload"><div id="wrapper">
+  <meta charset="utf-8">
+  <title>DoberWhite Capital — Cursos & seminarios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* Específico de página (coherente con el home) */
+    .hero--split{padding:120px 0 40px;border-bottom:1px solid var(--line)}
+    .split{display:grid;gap:24px;grid-template-columns:1.05fr .95fr;align-items:center}
+    .split img{width:100%;height:320px;object-fit:cover;border-radius:16px;border:1px solid var(--line)}
+    @media(max-width:960px){.split{grid-template-columns:1fr}.split img{height:260px}}
 
-  <header id="header">
-    <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
-    <nav><a href="#menu">Menú</a></nav>
+    .section{padding:40px 0}
+    .features{display:grid;gap:18px;grid-template-columns:repeat(4,1fr)}
+    @media(max-width:1100px){.features{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:820px){.features{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.features{grid-template-columns:1fr}}
+    .feature{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    .feature .top{aspect-ratio:16/10;display:grid;place-items:center;background:#0f1422;border-bottom:1px solid var(--line)}
+    .feature .top svg{width:74%}
+    .feature .body{padding:16px}
+    .feature h3{margin:0 0 6px;font-size:18px;font-weight:800}
+    .feature p{margin:0;color:var(--muted);font-size:14px}
+
+    .syllabus{display:grid;gap:18px;grid-template-columns:1.2fr .8fr}
+    @media(max-width:900px){.syllabus{grid-template-columns:1fr}}
+    .box{background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:14px;padding:16px}
+    .box h4{margin:0 0 10px;font-size:16px}
+    .box ul{margin:0 0 0 18px;color:var(--muted);font-size:14px}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="index.html">
+        <span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span>
+      </a>
+      <a class="menu-button" href="#menu">Menú</a>
+    </div>
   </header>
 
-  <nav id="menu">
-    <ul class="links">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="institucionales.html">Servicios institucionales</a></li>
-      <li><a href="particulares.html">Servicios particulares</a></li>
-      <li><a href="trading.html">Trading algorítmico</a></li>
-      <li><a href="cursos.html">Cursos & seminarios</a></li>
-      <li><a href="valores.html">Nuestros valores</a></li>
-      <li><a href="rendimientos.html">Rendimientos</a></li>
-      <li><a href="contacto.html" class="button primary">Inscribirme</a></li>
-    </ul>
+  <!-- Menú (igual al del inicio) -->
+  <nav class="site-menu" id="menu" aria-hidden="true">
+    <div class="inner">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="institucionales.html">Servicios institucionales</a></li>
+        <li><a href="particulares.html">Servicios particulares</a></li>
+        <li><a href="trading.html">Trading algorítmico</a></li>
+        <li><a href="cursos.html">Cursos & seminarios</a></li>
+        <li><a href="valores.html">Nuestros valores</a></li>
+        <li><a href="rendimientos.html">Rendimientos</a></li>
+        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
+      </ul>
+    </div>
   </nav>
 
-  <section id="banner" class="style2">
-    <div class="inner">
-      <span class="image"><img src="images/cursos.png" alt="" /></span>
-      <header class="major"><h1>Formación aplicada</h1></header>
-      <div class="content"><p>Cursos sin humo. Método, riesgo y ejecución.</p></div>
+  <!-- Hero -->
+  <section class="hero hero--split">
+    <div class="container split">
+      <div>
+        <h1>Cursos & seminarios</h1>
+        <p class="sub">Formación aplicada: método, riesgo y ejecución. Monocromático, directo y con foco en resultados.</p>
+        <div class="value" style="margin-top:16px">
+          Programas modulares, sin humo: reglas claras, riesgos controlados y despliegue en producción.
+        </div>
+      </div>
+      <div>
+        <!-- Imagen del home/IA monocroma para cursos -->
+        <img src="images/cursos.png" alt="Formación aplicada">
+      </div>
     </div>
   </section>
 
-  <div id="main">
-    <section class="features">
-      <article>
-        <span class="icon solid fa-chart-line"></span>
-        <h3>Intro cuant</h3>
-        <p>Fundamentos de trading sistemático y diseño de reglas.</p>
-      </article>
-      <article>
-        <span class="icon solid fa-shield-alt"></span>
-        <h3>Gestión de riesgo pro</h3>
-        <p>De drawdown a sizing (Kelly fraccional, límites por sesión).</p>
-      </article>
-      <article>
-        <span class="icon solid fa-robot"></span>
-        <h3>Trading sistemático aplicado</h3>
-        <p>Backtest OOS, forward y despliegue en producción.</p>
-      </article>
-      <article>
-        <span class="icon solid fa-stopwatch"></span>
-        <h3>Bootcamp 4H</h3>
-        <p>Proyecto guiado de idea a ejecución con tu activo favorito.</p>
-      </article>
-    </section>
+  <!-- Programas -->
+  <section class="section">
+    <div class="container">
+      <div class="features">
 
-    <section>
-      <div class="inner">
-        <header class="major"><h2>Próximas fechas</h2></header>
-        <p>Agenda en preparación. Únete a la lista de espera.</p>
-        <a href="contacto.html" class="button">Unirme</a>
+        <!-- Intro cuant -->
+        <article class="feature">
+          <div class="top">
+            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Intro cuant">
+              <rect width="100%" height="100%" fill="#121728"/>
+              <g stroke="#00e18e" stroke-width="2" fill="none">
+                <polyline points="14,98 44,78 70,86 98,60 128,72 158,46 186,58"/>
+              </g>
+              <g fill="#fff" opacity=".2">
+                <rect x="32" y="34" width="12" height="54"/>
+                <rect x="64" y="44" width="12" height="44"/>
+                <rect x="96" y="30" width="12" height="58"/>
+                <rect x="128" y="40" width="12" height="48"/>
+              </g>
+            </svg>
+          </div>
+          <div class="body">
+            <h3>Intro cuant</h3>
+            <p>Fundamentos de trading sistemático y diseño de reglas.</p>
+          </div>
+        </article>
+
+        <!-- Riesgo pro -->
+        <article class="feature">
+          <div class="top">
+            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gestión de riesgo pro">
+              <rect width="100%" height="100%" fill="#0f1422"/>
+              <g stroke="#00e18e" stroke-width="2" fill="none">
+                <circle cx="58" cy="66" r="22"/>
+                <path d="M48,66 l8,10 l14,-18"/>
+                <rect x="98" y="36" width="70" height="60" rx="8"/>
+                <line x1="110" y1="56" x2="156" y2="56"/>
+                <line x1="110" y1="72" x2="148" y2="72"/>
+              </g>
+            </svg>
+          </div>
+          <div class="body">
+            <h3>Gestión de riesgo pro</h3>
+            <p>De drawdown a sizing (Kelly fraccional, límites por sesión).</p>
+          </div>
+        </article>
+
+        <!-- Sist aplicado -->
+        <article class="feature">
+          <div class="top">
+            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Trading sistemático aplicado">
+              <rect width="100%" height="100%" fill="#10162a"/>
+              <g stroke="#00e18e" stroke-width="2" fill="none" opacity=".9">
+                <polyline points="14,100 44,80 70,86 98,62 126,74 154,48 186,60"/>
+              </g>
+              <g fill="#fff" opacity=".18">
+                <rect x="24" y="30" width="10" height="60"/>
+                <rect x="54" y="46" width="10" height="44"/>
+                <rect x="84" y="28" width="10" height="62"/>
+                <rect x="114" y="42" width="10" height="48"/>
+                <rect x="144" y="36" width="10" height="54"/>
+              </g>
+            </svg>
+          </div>
+          <div class="body">
+            <h3>Trading sistemático aplicado</h3>
+            <p>Backtest OOS, forward y despliegue en producción.</p>
+          </div>
+        </article>
+
+        <!-- Bootcamp 4H -->
+        <article class="feature">
+          <div class="top">
+            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bootcamp 4H">
+              <rect width="100%" height="100%" fill="#151a27"/>
+              <g stroke="#00e18e" stroke-width="2" fill="none">
+                <rect x="30" y="40" width="140" height="60" rx="8"/>
+                <line x1="40" y1="60" x2="160" y2="60"/>
+                <polyline points="50,80 80,64 110,74 140,56" />
+              </g>
+            </svg>
+          </div>
+          <div class="body">
+            <h3>Bootcamp 4H</h3>
+            <p>Proyecto guiado de idea a ejecución con tu activo favorito.</p>
+          </div>
+        </article>
+
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
-  <footer id="footer"><div class="inner">
-    <ul class="copyright"><li>&copy; DoberWhite 2025</li></ul>
-  </div></footer>
+  <!-- Temario + Próximas fechas -->
+  <section class="section">
+    <div class="container syllabus">
+      <div class="box">
+        <h4>Temario tipo</h4>
+        <ul>
+          <li>Marco cuantitativo: hipótesis, reglas y datos.</li>
+          <li>Backtesting robusto (OOS / Walk-Forward).</li>
+          <li>Riesgo: límites por trade, sesión y equity curve.</li>
+          <li>Evaluación: Sharpe, Sortino, max DD y estabilidad.</li>
+          <li>Producción: monitoreo, alertas y verificación externa.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h4>Próximas fechas</h4>
+        <p style="margin:0 0 8px;color:var(--muted)">Agenda en preparación. Únete a la lista de espera y recibe prioridad.</p>
+        <a class="btn" href="contacto.html">Unirme (Calendly)</a>
+      </div>
+    </div>
+  </section>
 
-</div>
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/jquery.scrollex.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
-</body></html>
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="value" style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <div><strong>¿Necesitas un programa in-company?</strong> Adaptamos el contenido a tu mesa y a tus límites de riesgo.</div>
+        <a class="btn" href="contacto.html">Solicitar propuesta</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container mini">
+      <div>El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo.</div>
+      <div style="margin-top:8px">&copy; DoberWhite 2025 · Design: Ariel Salazar</div>
+    </div>
+  </footer>
+
+  <!-- Botón flotante -->
+  <a class="fab" href="contacto.html">Contacta con nosotros</a>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
