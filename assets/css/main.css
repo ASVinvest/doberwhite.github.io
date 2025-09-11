@@ -1,124 +1,95 @@
-/* ==========================================================
-   DoberWhite – Overrides mínimos
-   (Pegar al final de main.css o crear assets/css/dw-overrides.css)
-   ========================================================== */
+/* ===== DoberWhite Capital — main.css ===== */
+display: grid; place-items: center; width: 36px; height: 36px;
+border-radius: 10px; background: var(--text); color: #fff; font-weight: 800;
+}
+.logo-text { font-weight: 800; letter-spacing: 0.2px; }
+.logo-thin { font-weight: 300; margin-left: 4px; }
 
-/* Base monocromática */
-html, body {
-	background:#000 !important;
-	color:#fff !important;
-  }
-  
-  /* Fija color de textos generales para no perder contraste */
-  body, #wrapper, #main, #footer, #menu {
-	background: transparent !important;
-	color:#fff !important;
-  }
-  
-  /* ---------------- Banner tipográfico ---------------- */
-  #banner.typographic{
-	background:#000 !important;
-	min-height:52vh !important;
-	display:flex !important;
-	align-items:center !important;
-	padding:6rem 0 4rem !important;
-	position:relative !important;
-  }
-  /* apaga overlays del tema que estaban tapando el banner */
-  #banner.typographic:before,
-  #banner.typographic:after{
-	content:none !important;
-	display:none !important;
-	background:transparent !important;
-  }
-  #banner.typographic .inner{
-	position:relative !important;
-	z-index:2 !important;
-	opacity:1 !important;
-	transform:none !important;
-  }
-  #banner.typographic .major h1{
-	color:#fff !important;
-	font-weight:800;
-	letter-spacing:.02em;
-	margin:0 0 .5rem 0;
-  }
-  #banner.typographic .content p{
-	color:#cfcfcf !important;
-  }
-  #banner.typographic .title-underline{
-	border:0;
-	border-top:1px solid rgba(255,255,255,.45);
-	width:100%;
-	margin:.75rem 0 0;
-  }
-  
-  /* Botón CTA claro sobre fondo negro */
-  #banner.typographic .actions .button{
-	background:#fff !important;
-	color:#000 !important;
-	border:none !important;
-  }
-  #banner.typographic .actions .button:hover{ opacity:.9 !important; }
-  
-  /* ---------------- Tiles (cuadrículas) ----------------
-	 - Imagen visible
-	 - Toda la tarjeta clicable
-	 - Sin parches blancos del overlay nativo
-  ------------------------------------------------------- */
-  
-  /* El contenedor visual de la imagen NO debe pintar fondos */
-  .tiles article .image,
-  .tiles article .image:before,
-  .tiles article .image:after{
-	background:transparent !important;
-	box-shadow:none !important;
-  }
-  
-  /* Imagen: cubrir el bloque (como en Forty) */
-  .tiles article .image img{
-	display:block;
-	width:100%;
-	height:100%;
-	object-fit:cover;
-	transform:none !important;
-	filter:none !important;
-  }
-  
-  /* Enlace-overlay ocupa toda la tarjeta y no pinta fondos */
-  .tiles article > a{
-	position:absolute !important;
-	inset:0 !important;
-	z-index:5 !important;
-	background:transparent !important;
-	box-shadow:none !important;
-	text-indent:-9999px; /* el texto del link no se ve, el h3/desc siguen visibles */
-	border:none !important;
-	cursor:pointer !important;
-  }
-  .tiles article > a:before,
-  .tiles article > a:after{
-	content:none !important;           /* mata los overlays del tema */
-	background:transparent !important;
-	box-shadow:none !important;
-  }
-  
-  /* Títulos y copies de las tiles bien contrastados */
-  .tiles article header.major h3 a,
-  .tiles article header.major h3,
-  .tiles article header.major p{
-	color:#fff !important;
-  }
-  
-  /* Borde sutil para separar tiles en la grilla oscura (opcional) */
-  .tiles article{
-	background:#0d0f12 !important;
-	border:1px solid rgba(255,255,255,.06);
-  }
-  
-  /* Iconos del footer/menu */
-  #footer .icons a,
-  #menu .links a{
-	color:#fff !important;
-  }
-  
+
+.nav ul { list-style: none; display: flex; gap: 22px; margin: 0; padding: 0; }
+.nav a { text-decoration: none; color: var(--text); opacity: 0.8; font-weight: 500; }
+.nav a:hover { opacity: 1; }
+
+
+.header-cta .btn { margin-left: 8px; }
+
+
+/* Botones */
+.btn { display: inline-block; padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid transparent; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { filter: brightness(0.95); }
+.btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-ghost:hover { background: #fafafa; }
+
+
+/* Hero */
+.hero { padding: 80px 0 48px; border-bottom: 1px solid var(--border); }
+.hero .eyebrow { color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; margin: 6px 0 14px; }
+.hero h1 { font-size: clamp(36px, 5vw, 64px); line-height: 1.05; margin: 0 0 12px; font-weight: 800; }
+.hero h1 .sub { display: block; font-size: clamp(14px, 2.4vw, 18px); font-weight: 400; color: var(--muted); margin-top: 8px; }
+.hero .lead { font-size: 18px; color: #111827; max-width: 840px; }
+.cta-group { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.trust { margin-top: 18px; color: var(--muted); font-size: 14px; }
+
+
+/* Secciones */
+.section { padding: 64px 0; }
+.section.alt { background: #fafafa; }
+.section h2 { font-size: clamp(28px, 3.6vw, 36px); margin: 0 0 18px; }
+
+
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+
+.card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: #111827; }
+
+
+.ticks { margin: 10px 0 0 0; padding-left: 18px; }
+.ticks li { margin: 6px 0; }
+
+
+.highlight { background: #fff; border: 1px dashed var(--border); border-radius: 14px; padding: 16px; }
+
+
+/* Métricas */
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 8px; }
+.metric { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+.metric .kpi { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.metric strong { font-size: 20px; }
+
+
+.disclaimer { margin-top: 12px; font-size: 12px; color: var(--muted); }
+
+
+/* Contacto */
+.contact-box { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--border); padding: 22px 0; background: #fff; }
+.site-footer .mini { color: var(--muted); font-size: 12px; }
+
+
+/* Botón flotante Calendly */
+.floating-cta {
+position: fixed; right: 16px; bottom: 16px; z-index: 60;
+background: var(--accent); color: #fff; padding: 14px 16px; border-radius: 999px; font-weight: 700; text-decoration: none;
+box-shadow: 0 8px 24px rgba(12,171,91,0.25);
+}
+.floating-cta:hover { filter: brightness(0.95); }
+
+
+/* Responsivo */
+@media (max-width: 960px) {
+.grid-4 { grid-template-columns: 1fr 1fr; }
+.metrics { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+.grid-4, .grid-2 { grid-template-columns: 1fr; }
+.site-header .container { gap: 12px; }
+.nav ul { gap: 14px; }
+.header-cta { display: none; }
+}
