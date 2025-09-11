@@ -1,22 +1,31 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>DoberWhite Capital — Inversiones cuantitativas</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <link rel="stylesheet" href="assets/css/main.css">
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css"></noscript>
+  <meta charset="utf-8" />
+  <title>DoberWhite Capital — Inicio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+  <style>
+    /* Botón flotante Calendly */
+    .floating-cta{
+      position:fixed;right:16px;bottom:16px;z-index:1000;
+      background:#0cab5b;color:#fff;padding:12px 16px;border-radius:999px;
+      font-weight:700;text-decoration:none;box-shadow:0 8px 24px rgba(12,171,91,.25);
+    }
+    .floating-cta:hover{filter:brightness(.96);}
+  </style>
 </head>
-<body>
+<body class="is-preload">
 <div id="wrapper">
 
-  <!-- Cabecera -->
-  <header id="header">
+  <!-- Encabezado -->
+  <header id="header" class="alt">
     <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
     <nav><a href="#menu">Menú</a></nav>
   </header>
 
-  <!-- Menú overlay -->
+  <!-- Menú lateral -->
   <nav id="menu">
     <ul class="links">
       <li><a href="index.html">Inicio</a></li>
@@ -30,48 +39,98 @@
     </ul>
   </nav>
 
-  <!-- Banner -->
-  <section id="banner">
+  <!-- Banner principal (texto) -->
+  <section id="banner" class="style2">
     <div class="inner">
-      <h1>DOBERWHITE <span style="font-weight:300">CAPITAL</span></h1>
-      <p>Inversiones con método, control de riesgo y verificación externa.</p>
+      <header class="major"><h1>DOBERWHITE <span style="font-weight:300">CAPITAL</span></h1></header>
+      <div class="content"><p>Inversiones con método, control de riesgo y verificación externa.</p></div>
     </div>
   </section>
 
-  <!-- Sección de tarjetas -->
-  <section class="tiles">
-    <a href="institucionales.html" class="tile" style="background-image:url('images/servicios_instituciones.png')">
-      <div class="label"><h3>Servicios institucionales</h3><p>Haz que tus clientes operen con respaldo</p></div>
-    </a>
-    <a href="particulares.html" class="tile" style="background-image:url('images/servicios_individuales.png')">
-      <div class="label"><h3>Servicios particulares</h3><p>Deja tu capital en nuestras manos</p></div>
-    </a>
-    <a href="trading.html" class="tile" style="background-image:url('images/algoritmico.png')">
-      <div class="label"><h3>Trading algorítmico</h3><p>Revisa la solidez de nuestro método</p></div>
-    </a>
-    <a href="cursos.html" class="tile" style="background-image:url('images/cursos.png')">
-      <div class="label"><h3>Cursos & seminarios</h3><p>Formación aplicada, sin humo</p></div>
-    </a>
-    <a href="valores.html" class="tile" style="background-image:url('images/Valores.png')">
-      <div class="label"><h3>Nuestros valores</h3><p>Deber fiduciario y transparencia</p></div>
-    </a>
-    <a href="rendimientos.html" class="tile" style="background-image:url('images/performance.png')">
-      <div class="label"><h3>Rendimientos</h3><p>Métricas e historial</p></div>
-    </a>
-  </section>
+  <!-- Tiles con formato uniforme (idéntico al tema) -->
+  <div id="main">
+    <section class="tiles">
+      <article>
+        <span class="image"><img src="images/servicios_instituciones.png" alt="" /></span>
+        <header class="major">
+          <h3><a href="institucionales.html" class="link">Servicios institucionales</a></h3>
+          <p>Haz que tus clientes operen con respaldo</p>
+        </header>
+      </article>
+
+      <article>
+        <span class="image"><img src="images/servicios_individuales.png" alt="" /></span>
+        <header class="major">
+          <h3><a href="particulares.html" class="link">Servicios particulares</a></h3>
+          <p>Deja tu capital en nuestras manos</p>
+        </header>
+      </article>
+
+      <article>
+        <span class="image"><img src="images/algoritmico.png" alt="" /></span>
+        <header class="major">
+          <h3><a href="trading.html" class="link">Trading algorítmico</a></h3>
+          <p>Revisa la solidez de nuestro método</p>
+        </header>
+      </article>
+
+      <article>
+        <span class="image"><img src="images/cursos.png" alt="" /></span>
+        <header class="major">
+          <h3><a href="cursos.html" class="link">Cursos & seminarios</a></h3>
+          <p>Formación aplicada, sin humo</p>
+        </header>
+      </article>
+
+      <article>
+        <span class="image"><img src="images/Valores.png" alt="" /></span>
+        <header class="major">
+          <h3><a href="valores.html" class="link">Nuestros valores</a></h3>
+          <p>Deber fiduciario y transparencia</p>
+        </header>
+      </article>
+
+      <article>
+        <span class="image"><img src="images/performance.png" alt="" /></span>
+        <header class="major">
+          <h3><a href="rendimientos.html" class="link">Rendimientos</a></h3>
+          <p>Métricas e historial</p>
+        </header>
+      </article>
+    </section>
+
+    <!-- Sección extra con botón a Calendly -->
+    <section>
+      <div class="inner">
+        <header class="major"><h2>Contacta con nosotros</h2></header>
+        <p>Programa una reunión para revisar tu caso y conocer nuestros servicios en detalle.</p>
+        <a href="contacto.html" class="button primary">Agendar en Calendly</a>
+      </div>
+    </section>
+  </div>
 
   <!-- Pie -->
   <footer id="footer">
     <div class="inner">
       <p class="disclaimer">El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo.</p>
       <ul class="copyright">
-        <li>&copy; DoberWhite 2025</li>
-        <li>Design: Ariel Salazar</li>
+        <li>&copy; DoberWhite 2025</li><li>Design: Ariel Salazar</li>
       </ul>
     </div>
   </footer>
 
 </div>
+
+<!-- Botón flotante (CTA) -->
+<a href="contacto.html" class="floating-cta">Contacta con nosotros</a>
+
+<!-- Carga de scripts (en orden correcto) -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>
