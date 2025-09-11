@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <!--
-  DoberWhite Capital (Forty)
+  DoberWhite Capital
   html5up.net | @ajlkn
-  Licencia CCA 3.0 (html5up.net/license)
+  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html lang="es">
 <head>
@@ -11,15 +11,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="assets/css/main.css" />
   <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+  <style>
+    /* Protección mínima: asegura que el banner muestre la imagen a full */
+    #banner { position: relative; }
+    #banner .image { position:absolute; inset:0; overflow:hidden; }
+    #banner .image img { width:100%; height:100%; object-fit:cover; display:block; }
+    #banner .inner { position:relative; z-index:2; }
+    #banner::before{
+      content:""; position:absolute; inset:0; z-index:1;
+      /* ligero overlay para legibilidad del texto */
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.45));
+    }
+    /* Hace todo el tile clickeable (comportamiento original de Forty) */
+    .tiles article > a.link {
+      position: absolute; inset: 0; text-indent: -9999px; overflow: hidden;
+      background: transparent;
+    }
+    .tiles article { position: relative; }
+  </style>
 </head>
 <body class="is-preload">
+
   <!-- Wrapper -->
   <div id="wrapper">
 
     <!-- Header -->
     <header id="header" class="alt">
       <a href="index.html" class="logo"><strong>DoberWhite</strong> <span>Capital</span></a>
-      <nav><a href="#menu">Menú</a></nav>
+      <nav>
+        <a href="#menu">Menú</a>
+      </nav>
     </header>
 
     <!-- Menu -->
@@ -34,20 +55,32 @@
         <li><a href="rendimientos.html">Rendimientos</a></li>
       </ul>
       <ul class="actions stacked">
-        <li><a href="https://calendly.com/asv_global_invest/30min" class="button primary fit" target="_blank" rel="noopener">Agendar reunión</a></li>
+        <li><a href="https://calendly.com/asv_global_invest/30min" target="_blank" rel="noopener" class="button primary fit">Agendar reunión</a></li>
       </ul>
     </nav>
 
-    <!-- Banner -->
+    <!-- Banner (restaurado) -->
     <section id="banner" class="major">
       <div class="inner">
+        <!-- Usa aquí tu imagen de héroe que ya tenías -->
+        <span class="image">
+          <img src="images/banner.jpg" alt="DoberWhite Capital" />
+          <!-- Si tu archivo se llama distinto, cambia la ruta arriba -->
+        </span>
+
         <header class="major">
           <h1>DoberWhite</h1>
         </header>
         <div class="content">
           <p>Decidir con poder,<br/>Proteger con clase</p>
           <ul class="actions">
-            <li><a href="https://calendly.com/asv_global_invest/30min" class="button next" target="_blank" rel="noopener">Quiero una reunión</a></li>
+            <li>
+              <a class="button next"
+                 href="https://calendly.com/asv_global_invest/30min"
+                 target="_blank" rel="noopener">
+                 Quiero una reunión
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -56,15 +89,15 @@
     <!-- Main -->
     <div id="main">
 
-      <!-- Tiles -->
+      <!-- One (tiles restauradas con imágenes y link de overlay) -->
       <section id="one" class="tiles">
-
         <article>
           <span class="image">
             <img src="servicios_instituciones.png" alt="Servicios institucionales" />
           </span>
+          <a href="institucionales.html" class="link">Servicios institucionales</a>
           <header class="major">
-            <h3><a href="institucionales.html" class="link">Servicios institucionales</a></h3>
+            <h3><a href="institucionales.html">Servicios institucionales</a></h3>
             <p>Haz que tus clientes operen con respaldo</p>
           </header>
         </article>
@@ -73,8 +106,9 @@
           <span class="image">
             <img src="servicios_individuales.png" alt="Servicios particulares" />
           </span>
+          <a href="particulares.html" class="link">Servicios particulares</a>
           <header class="major">
-            <h3><a href="particulares.html" class="link">Servicios particulares</a></h3>
+            <h3><a href="particulares.html">Servicios particulares</a></h3>
             <p>Deja tu capital en nuestras manos</p>
           </header>
         </article>
@@ -83,8 +117,9 @@
           <span class="image">
             <img src="images/algoritmico.png" alt="Trading algorítmico" />
           </span>
+          <a href="trading.html" class="link">Trading algorítmico</a>
           <header class="major">
-            <h3><a href="trading.html" class="link">Trading algorítmico</a></h3>
+            <h3><a href="trading.html">Trading algorítmico</a></h3>
             <p>Revisa la solidez de nuestro método</p>
           </header>
         </article>
@@ -93,8 +128,9 @@
           <span class="image">
             <img src="images/cursos.png" alt="Cursos & Seminarios" />
           </span>
+          <a href="cursos.html" class="link">Cursos & Seminarios</a>
           <header class="major">
-            <h3><a href="cursos.html" class="link">Cursos & Seminarios</a></h3>
+            <h3><a href="cursos.html">Cursos & Seminarios</a></h3>
             <p>Revisa nuestras próximas fechas</p>
           </header>
         </article>
@@ -103,8 +139,9 @@
           <span class="image">
             <img src="images/Valores.png" alt="Nuestros valores" />
           </span>
+          <a href="valores.html" class="link">Nuestros valores</a>
           <header class="major">
-            <h3><a href="valores.html" class="link">Nuestros valores</a></h3>
+            <h3><a href="valores.html">Nuestros valores</a></h3>
             <p>Descubre qué nos impulsa</p>
           </header>
         </article>
@@ -113,15 +150,15 @@
           <span class="image">
             <img src="images/performance.png" alt="Rendimientos" />
           </span>
+          <a href="rendimientos.html" class="link">Rendimientos</a>
           <header class="major">
-            <h3><a href="rendimientos.html" class="link">Rendimientos</a></h3>
+            <h3><a href="rendimientos.html">Rendimientos</a></h3>
             <p>Revisa nuestra performance</p>
           </header>
         </article>
-
       </section>
 
-      <!-- CTA -->
+      <!-- Two (sección de CTA) -->
       <section id="two">
         <div class="inner">
           <header class="major">
@@ -129,7 +166,12 @@
           </header>
           <p>Si te interesan nuestros servicios, agenda una reunión directa en Calendly y conversemos tu caso.</p>
           <ul class="actions">
-            <li><a href="https://calendly.com/asv_global_invest/30min" class="button next" target="_blank" rel="noopener">Quiero una reunión</a></li>
+            <li>
+              <a href="https://calendly.com/asv_global_invest/30min"
+                 class="button next" target="_blank" rel="noopener">
+                 Quiero una reunión
+              </a>
+            </li>
           </ul>
         </div>
       </section>
@@ -160,5 +202,6 @@
   <script src="assets/js/breakpoints.min.js"></script>
   <script src="assets/js/util.js"></script>
   <script src="assets/js/main.js"></script>
+
 </body>
 </html>
