@@ -8,92 +8,125 @@ const CANDIDATES = [
 
 // === Paleta y ejes (estilo Excel + marca) ===
 const brand = '#00e18e', red = '#ef9a9a', axis = '#9aa0a6', grid = '#eaecef';
-const gray  = '#cbd5e1'; // gris claro para la serie "n°"
+const gray  = '#cbd5e1'; // gris claro para "n°"
+
 const baseGrid = { left: 36, right: 16, top: 24, bottom: 28, containLabel: true };
-const axisX = l => ({ type:'category', data:l, axisLabel:{ color:'#555' }, axisLine:{ lineStyle:{ color:axis } } });
-const axisY = () => ({ type:'value', axisLabel:{ color:'#555' }, splitLine:{ lineStyle:{ color:grid } } });
+const axisX = l => ({
+  type:'category', data:l,
+  axisLabel:{ color:'#555' },
+  axisLine:{ lineStyle:{ color:axis } }
+});
+const axisY = () => ({
+  type:'value',
+  axisLabel:{ color:'#555' },
+  splitLine:{ lineStyle:{ color:grid } }
+});
 
 // === Formateadores local es-CL ===
 const nf0 = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 });
 const nf2 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const cf0 = new Intl.NumberFormat('es-CL', { style:'currency', currency:'USD', maximumFractionDigits: 0 });
 
-// === Opciones de gráficos (con etiquetas) ===
-const barLabelTop = { show:true, position:'top', fontSize:10, color:'#4b5563',
-  formatter:(p)=> nf2.format(p.value ?? p.data?.value ?? 0) };
+// === Etiquetas ===
+const barLabelTop = {
+  show:true, position:'top', fontSize:10, color:'#4b5563',
+  formatter:(p)=> nf2.format(p.value ?? p.data?.value ?? 0)
+};
+const barLabelRight = {
+  show:true, position:'right', fontSize:10, color:'#4b5563',
+  formatter:(p)=> nf2.format(p.value ?? p.data?.value ?? 0)
+};
 
-const barLabelRight = { show:true, position:'right', fontSize:10, color:'#4b5563',
-  formatter:(p)=> nf2.format(p.value ?? p.data?.value ?? 0) };
-
+// === Gráficos base ===
 function optLine(labels, values){
   return {
-    grid: baseGrid, xAxis: axisX(labels), yAxis: axisY(), tooltip:{ trigger:'axis' },
-    series:[{ type:'line', smooth:true, symbol:'circle', symbolSize:6,
-      lineStyle:{ width:2, color:brand }, areaStyle:{ opacity:.08, color:brand }, data: values }]
+    grid: baseGrid,
+    xAxis: axisX(labels),
+    yAxis: axisY(),
+    tooltip:{ trigger:'axis' },
+    series:[{
+      type:'line', smooth:true, symbol:'circle', symbolSize:6,
+      lineStyle:{ width:2, color:brand },
+      areaStyle:{ opacity:.08, color:brand },
+      data: values
+    }]
   };
 }
 
 function optBar(labels, values){
   return {
-    grid: baseGrid, xAxis: axisX(labels), yAxis: axisY(), tooltip:{ trigger:'axis' },
-    series:[{ type:'bar', barMaxWidth:28, label: barLabelTop,
-      data: values.map(v => ({ value:v, itemStyle:{ color: v>=0 ? brand : red } })) }]
+    grid: baseGrid,
+    xAxis: axisX(labels),
+    yAxis: axisY(),
+    tooltip:{ trigger:'axis' },
+    series:[{
+      type:'bar', barMaxWidth:28, label: barLabelTop,
+      data: values.map(v => ({ value:v, itemStyle:{ color: v>=0 ? brand : red } }))
+    }]
   };
 }
 
 function optBarH(labels, values){
   return {
-    grid: baseGrid, xAxis: axisY(),
-    yAxis:{ type:'category', data:labels, axisLabel:{ color:'#555' }, axisLine:{ lineStyle:{ color:axis } } },
+    grid: baseGrid,
+    xAxis: axisY(),
+    yAxis:{
+      type:'category', data:labels,
+      axisLabel:{ color:'#555' },
+      axisLine:{ lineStyle:{ color:axis } }
+    },
     tooltip:{ trigger:'axis' },
-    series:[{ type:'bar', barMaxWidth:22, label: barLabelRight,
-      data: values.map(v => ({ value:v, itemStyle:{ color: v>=0 ? brand : red } })) }]
+    series:[{
+      type:'bar', barMaxWidth:22, label: barLabelRight,
+      data: values.map(v => ({ value:v, itemStyle:{ color: v>=0 ? brand : red } }))
+    }]
   };
 }
 
+// === Allocation (colores fijos + leyenda con %) ===
 const PALETTE = { GBPUSD:'#3b82f6', XAUUSD:'#22c55e', NDX100:'#f59e0b', BTCUSD:'#ef4444' };
-
 function optPie(labels, values){
   const total = values.reduce((a,b)=>a+b,0) || 1;
   return {
-    legend:{ bottom: 0, itemWidth:12, itemHeight:12, textStyle:{ color:'#444' },
+    legend:{
+      bottom: 0, itemWidth:12, itemHeight:12, textStyle:{ color:'#444' },
       formatter: (name)=>{
         const i = labels.indexOf(name);
         const pct = Math.round(values[i]*100/total);
         return `${name}  ${pct}%`;
-      }},
+      }
+    },
     tooltip:{ trigger:'item', formatter: ({name,percent}) => `${name}: ${percent}%` },
     series:[{
       type:'pie', radius:['46%','68%'], center:['50%','50%'],
-      label:{ show:false }, // evitamos textos cortados en el donut
+      label:{ show:false },
       data: labels.map((n,i)=>({ name:n, value:values[i], itemStyle:{ color: PALETTE[n] || '#94a3b8' } }))
     }]
   };
 }
 
-// === Distribution USD: "n°" gris y holgura para no tapar P&L ===
+// === Distribution USD: "n°" gris y holgura para que no tape P&L ===
 function optDist(d){
   const maxCount = Math.max(...d.counts, 0);
-  const maxPnl   = Math.max(...d.pnl, 0);
-  const head     = x => Math.ceil(x * 1.15); // +15% de margen superior
+  const maxPnl   = Math.max(...d.pnl,    0);
+  const head     = x => Math.ceil(x * 1.15); // +15% margen superior
 
   return {
-    // más espacio arriba para que la leyenda no invada el área de gráfico
-    grid: { ...baseGrid, top: 52 },
-    legend: { top: 6, data: ['n°','P&L'], textStyle: { color:'#444' } },
+    grid: { ...baseGrid, top: 60 }, // más espacio arriba
+    legend: { top: 6, right: 8, data: ['n°','P&L'], textStyle: { color:'#444' } },
     tooltip: { trigger: 'axis' },
     xAxis: axisX(d.labels),
     yAxis: [
-      { ...axisY(), max: head(maxCount) },          // escala para "n°"
-      { ...axisY(), name: 'P&L', max: head(maxPnl) } // escala para P&L
+      { ...axisY(), max: head(maxCount) },
+      { ...axisY(), name: 'P&L', max: head(maxPnl) }
     ],
     series: [
       {
         name:'n°',
         type:'bar',
         barMaxWidth:26,
-        itemStyle:{ color: gray },                   // barras grises
-        label:{ ...barLabelTop, color:'#6b7280' },   // etiqueta gris
+        itemStyle:{ color: gray },                 // gris claro
+        label:{ ...barLabelTop, color:'#6b7280' }, // etiqueta gris
         data: d.counts,
         z: 1
       },
@@ -102,7 +135,7 @@ function optDist(d){
         type:'bar',
         yAxisIndex:1,
         barMaxWidth:26,
-        itemStyle:{ color: brand },                  // verde marca
+        itemStyle:{ color: brand },                // verde marca
         label: barLabelTop,
         data: d.pnl,
         barGap:'35%', barCategoryGap:'30%',
