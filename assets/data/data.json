@@ -1,0 +1,13 @@
+{
+  "period":{"from":"OCT-25","to":"27-10-2025"},
+  "kpis":{"Win Rate":42,"Profitability":0.9,"Risk Benefit":2.3,"N° Trades":65,"N° Trades Win":27,"N° Trades Loss":38,"P&L (USD)":475,"Win Average":45.3,"Loss Average":-19.7,"WipeOut":0,"% Average SL":20,"Comission":31},
+  "balance":{"labels":["oct-25","nov-25"],"values":[50475,50475]},
+  "monthly":{"labels":["oct"],"values":[475.46]},
+  "distribution":{"labels":["buy","sell"],"counts":[44,21],"pnl":[388.21,87.25]},
+  "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[20,31,43,6]},
+  "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[347.88,166.28,-12.83,-25.87]},
+  "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[56,37,40,0]},
+  "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[12,26,22,20,20]},
+  "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[50,29,71,31,31]},
+  "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.21,0.11,0.07,0.01]}
+}
