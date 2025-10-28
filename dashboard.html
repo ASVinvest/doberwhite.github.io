@@ -1,85 +1,72 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <title>Dasboard — DoberWhite Capital</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="assets/css/main.css">
-  <style>
-    :root{--dw-line:#1a1a1a;--dw-panel:#0e0e0e}
-    .dw-wrap{padding:16px}
-    .dw-layout{display:grid;grid-template-columns:280px 1fr;gap:16px}
-    .dw-aside{background:var(--dw-panel);border:1px solid var(--dw-line);border-radius:12px;padding:14px}
-    .dw-kpis{list-style:none;margin:0;padding:0}
-    .dw-kpis li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--dw-line)}
-    .dw-kpis li:last-child{border-bottom:0}
-    .dw-kpis .neg{color:#ff5252}
-    .dw-grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-    .dw-card{grid-column:span 4;background:var(--dw-panel);border:1px solid var(--dw-line);border-radius:12px}
-    .dw-card h3{margin:10px 12px 0}
-    .dw-chart{height:260px;width:100%}
-    @media (max-width:1100px){.dw-card{grid-column:span 6}.dw-layout{grid-template-columns:1fr}}
-    @media (max-width:700px){.dw-card{grid-column:span 12}}
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-</head>
-<body>
+// assets/js/dasboard.js
+const DATA_URL = '/assets/data/dasboard/data.json'; // ruta ABSOLUTA
 
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container bar">
-      <a class="brand" href="index.html"><span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span></a>
-      <a class="menu-button" href="#menu">Menú</a>
-    </div>
-  </header>
+const DEFAULT_DATA = {
+  period: { from: 'OCT-25', to: '27-10-2025' },
+  kpis: {
+    'Win Rate': 42, 'Profitability': 0.9, 'Risk Benefit': 2.3,
+    'N° Trades': 65, 'N° Trades Win': 27, 'N° Trades Loss': 38,
+    'P&L (USD)': 475, 'Win Average': 45.3, 'Loss Average': -19.7,
+    'WipeOut': 0, '% Average SL': 20, 'Comission': 31
+  },
+  balance:   { labels:['oct-25','nov-25'], values:[50000,50475] },
+  monthly:   { labels:['oct'], values:[475.46] },
+  distribution: { labels:['buy','sell'], counts:[44,21], pnl:[388.21,87.25] },
+  allocation:{ labels:['GBPUSD','XAUUSD','NDX100','BTCUSD'], values:[20,31,43,6] },
+  plAssets:  { labels:['XAUUSD','GBPUSD','BTCUSD','NDX100'], values:[347.88,166.28,-12.83,-25.87] },
+  wrAssets:  { labels:['XAUUSD','GBPUSD','NDX100','BTCUSD'], values:[56,37,40,0] },
+  daysDist:  { labels:['Lunes','Martes','Miércoles','Jueves','Viernes'], values:[12,26,22,20,20] },
+  daysPerf:  { labels:['Lunes','Martes','Miércoles','Jueves','Viernes'], values:[50,29,71,31,31] },
+  avgPos:    { labels:['GBPUSD','NDX100','XAUUSD','BTCUSD'], values:[0.21,0.11,0.07,0.01] }
+};
 
-  <!-- Menú (igual al de index) -->
-  <nav class="site-menu" id="menu" aria-hidden="true">
-    <div class="inner">
-      <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="institucionales.html">Servicios institucionales</a></li>
-        <li><a href="particulares.html">Servicios particulares</a></li>
-        <!-- <a href="trading.html">Trading algorítmico</a></li>-->
-        <li><a href="cursos.html">Cursos & seminarios</a></li>
-        <li><a href="valores.html">Nuestros valores</a></li>
-        <li class="active"><a href="dasboard.html">Dasboard</a></li>
-        <li><a href="informes.html">Informes Privados</a></li>
-        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
-      </ul>
-    </div>
-  </nav>
+async function loadDW(){
+  let d;
+  try{
+    const res = await fetch(DATA_URL + '?v=' + Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    d = await res.json();
+  }catch(e){
+    console.warn('No se pudo cargar data.json. Usando DEFAULT_DATA.', e);
+    d = DEFAULT_DATA;
+    const p = document.getElementById('dw-periodo');
+    if (p) p.textContent += ' (demo)';
+  }
+  document.getElementById('dw-periodo').textContent = `From: ${d.period.from} → ${d.period.to}`;
+  renderKPIs(d.kpis);
+  drawCharts(d);
+}
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1>Dasboard</h1>
-      <p class="sub" id="dw-periodo">Performance SYNC</p>
-    </div>
-  </section>
+function renderKPIs(k){
+  const ul = document.getElementById('dw-kpis'); ul.innerHTML = '';
+  Object.entries(k).forEach(([label, val])=>{
+    let txt = val;
+    if (typeof val === 'number' && (label.includes('Rate') || label.includes('%') || label.includes('Wipe'))) txt = `${val}%`;
+    if (label.includes('P&L')) txt = `${val>=0?'+$':'-$'}${Math.abs(val)}`;
+    ul.insertAdjacentHTML('beforeend', `<li><span>${label}</span><span class="${label.includes('P&L')&&val<0?'neg':''}">${txt}</span></li>`);
+  });
+}
 
-  <!-- Dashboard -->
-  <section class="dw-wrap">
-    <div class="container">
-      <div class="dw-layout">
-        <aside class="dw-aside">
-          <h4>Ratio <span style="opacity:.6">YTD</span></h4>
-          <ul class="dw-kpis" id="dw-kpis"></ul>
-        </aside>
+const baseGrid = {left:28,right:12,top:20,bottom:22,containLabel:true};
+const axisX = labels => ({type:'category',data:labels,axisLabel:{color:'#ccc'},axisLine:{lineStyle:{color:'#666'}}});
+const axisY = () => ({type:'value',axisLabel:{color:'#ccc'},splitLine:{lineStyle:{color:'#1a1a1a'}}});
 
-        <div>
-          <div class="dw-grid">
-            <div class="dw-card"><h3>Balance</h3><div id="ch_balance" class="dw-chart"></div></div>
-            <div class="dw-card"><h3>Monthly</h3><div id="ch_monthly" class="dw-chart"></div></div>
-            <div class="dw-card"><h3>Distribution</h3><div id="ch_distribution" class="dw-chart"></div></div>
-          </div>
+function optLine(labels,values){return{grid:baseGrid,xAxis:axisX(labels),yAxis:axisY(),tooltip:{trigger:'axis'},series:[{type:'line',smooth:true,areaStyle:{opacity:.05},data:values}]};}
+function optBar(labels,values){return{grid:baseGrid,xAxis:axisX(labels),yAxis:axisY(),tooltip:{trigger:'axis'},series:[{type:'bar',barMaxWidth:28,data:values.map(v=>({value:v,itemStyle:{color:v>=0?'#00c853':'#ff5252'}}))}]};}
+function optPie(labels,values){return{tooltip:{trigger:'item'},series:[{type:'pie',radius:['45%','70%'],center:['50%','55%'],label:{color:'#ddd'},data:labels.map((l,i)=>({name:l,value:values[i]}))}]};}
+function optDist(d){return{grid:baseGrid,tooltip:{trigger:'axis'},legend:{data:['n°','P&L'],textStyle:{color:'#ccc'}},xAxis:axisX(d.labels),yAxis:[axisY(),{...axisY(),name:'P&L'}],series:[{name:'n°',type:'bar',barMaxWidth:28,data:d.counts},{name:'P&L',type:'bar',yAxisIndex:1,barMaxWidth:28,data:d.pnl}]};}
 
-          <div class="dw-grid" style="margin-top:12px">
-            <div class="dw-card"><h3>Allocation</h3><div id="ch_allocation" class="dw-chart"></div></div>
-            <div class="dw-card"><h3>P&amp;L</h3><div id="ch_pl_assets" class="dw-chart"></div></div>
-            <div class="dw-card"><h3>Win rate</h3><div id="ch_wr_assets" class="dw-chart"></div></div>
-          </div>
+function drawCharts(d){
+  echarts.init(document.getElementById('ch_balance')).setOption(optLine(d.balance.labels, d.balance.values));
+  echarts.init(document.getElementById('ch_monthly')).setOption(optBar(d.monthly.labels, d.monthly.values));
+  echarts.init(document.getElementById('ch_distribution')).setOption(optDist(d.distribution));
+  echarts.init(document.getElementById('ch_allocation')).setOption(optPie(d.allocation.labels, d.allocation.values));
+  echarts.init(document.getElementById('ch_pl_assets')).setOption(optBar(d.plAssets.labels, d.plAssets.values));
+  echarts.init(document.getElementById('ch_wr_assets')).setOption(optBar(d.wrAssets.labels, d.wrAssets.values));
+  echarts.init(document.getElementById('ch_days_dist')).setOption(optBar(d.daysDist.labels, d.daysDist.values));
+  echarts.init(document.getElementById('ch_days_perf')).setOption(optBar(d.daysPerf.labels, d.daysPerf.values));
+  echarts.init(document.getElementById('ch_avg_pos')).setOption(optBar(d.avgPos.labels, d.avgPos.values));
+  window.addEventListener('resize', ()=>document.querySelectorAll('.dw-chart').forEach(el=>echarts.getInstanceByDom(el)?.resize()));
+}
 
-          <div class="dw-grid" style="margin-top:12px">
-            <div class="dw-card"><h3>Distribution trading days</h3><div id="ch_days_dist" class="dw-chart"></div></div>
-            <di
+document.addEventListener('DOMContentLoaded', loadDW);
