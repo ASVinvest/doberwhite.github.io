@@ -19,10 +19,37 @@ const optBarH=(l,v)=>({grid:baseGrid,xAxis:axisY(),yAxis:{type:'category',data:l
   tooltip:{trigger:'axis'},series:[{type:'bar',barMaxWidth:22,data:v.map(x=>({value:x,itemStyle:{color:x>=0?green:red}}))}]});
 const optPie=(l,v)=>({tooltip:{trigger:'item'},series:[{type:'pie',radius:['46%','68%'],center:['50%','55%'],label:{color:'#444'},
   data:l.map((n,i)=>({name:n,value:v[i]}))}]});
-const optDist=d=>({grid:baseGrid,tooltip:{trigger:'axis'},legend:{data:['n°','P&L'],textStyle:{color:'#444'}},
-  xAxis:axisX(d.labels),yAxis:[axisY(),{...axisY(),name:'P&L'}],
-  series:[{name:'n°',type:'bar',barMaxWidth:28,itemStyle:{color:green},data:d.counts},
-          {name:'P&L',type:'bar',yAxisIndex:1,barMaxWidth:28,itemStyle:{color:green},data:d.pnl}]});
+  const brand = '#00e18e', red = '#ef9a9a', axis = '#9aa0a6', grid = '#eaecef';
+const gray  = '#cbd5e1'; // gris claro para la serie "n°"
+function optDist(d){
+  return {
+    grid: baseGrid,
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['n°','P&L'], textStyle: { color: '#444' } },
+    xAxis: axisX(d.labels),
+    yAxis: [ axisY(), { ...axisY(), name: 'P&L' } ],
+    series: [
+      {
+        name: 'n°',
+        type: 'bar',
+        barMaxWidth: 28,
+        label: { ...barLabelTop, color: '#6b7280' },
+        itemStyle: { color: gray },
+        data: d.counts
+      },
+      {
+        name: 'P&L',
+        type: 'bar',
+        yAxisIndex: 1,
+        barMaxWidth: 28,
+        label: barLabelTop,
+        itemStyle: { color: brand },
+        data: d.pnl
+      }
+    ]
+  };
+}
+
 
 // Datos demo si no encuentra el JSON
 const DEMO = {
