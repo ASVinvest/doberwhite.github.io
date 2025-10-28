@@ -13,7 +13,13 @@ const baseGrid = { left: 36, right: 16, top: 24, bottom: 28, containLabel: true 
 const axisX = (l, opts={}) => ({
   type:'category',
   data:l,
-  axisLabel:{ color:'#555', interval: opts.showAll ? 0 : 'auto' }, // mostrar todos si se pide
+  axisLabel:{
+    color:'#555',
+    interval: opts.showAll ? 0 : 'auto',
+    hideOverlap: opts.showAll ? false : true, // fuerza mostrar todo en desktop
+    margin: 10
+  },
+  axisTick:{ alignWithLabel:true },
   axisLine:{ lineStyle:{ color:axis } }
 });
 const axisY = (opts={}) => ({
@@ -29,10 +35,10 @@ const nf2 = new Intl.NumberFormat('es-CL',{minimumFractionDigits:0,maximumFracti
 const cf0 = new Intl.NumberFormat('es-CL',{style:'currency',currency:'USD',maximumFractionDigits:0});
 
 // === Labels ===
-const barLabelTop   = { show:true, position:'top',   fontSize:10, color:'#4b5563', formatter:p=>nf2.format(p.value ?? p.data?.value ?? 0) };
-const barLabelTopPct= { show:true, position:'top',   fontSize:10, color:'#4b5563', formatter:p=>`${nf2.format(p.value ?? p.data?.value ?? 0)}%` };
-const barLabelRight = { show:true, position:'right', fontSize:10, color:'#4b5563', formatter:p=>nf2.format(p.value ?? p.data?.value ?? 0) };
-const barLabelRightPct={ show:true, position:'right', fontSize:10, color:'#4b5563', formatter:p=>`${nf2.format(p.value ?? p.data?.value ?? 0)}%` };
+const barLabelTop       = { show:true, position:'top',   fontSize:10, color:'#4b5563', formatter:p=>nf2.format(p.value ?? p.data?.value ?? 0) };
+const barLabelTopPct    = { show:true, position:'top',   fontSize:10, color:'#4b5563', formatter:p=>`${nf2.format(p.value ?? p.data?.value ?? 0)}%` };
+const barLabelRight     = { show:true, position:'right', fontSize:10, color:'#4b5563', formatter:p=>nf2.format(p.value ?? p.data?.value ?? 0) };
+const barLabelRightPct  = { show:true, position:'right', fontSize:10, color:'#4b5563', formatter:p=>`${nf2.format(p.value ?? p.data?.value ?? 0)}%` };
 
 // === Render helper (notMerge=true) ===
 function render(id, option){
@@ -40,7 +46,7 @@ function render(id, option){
   if(!el) return;
   let chart = echarts.getInstanceByDom(el);
   if(!chart) chart = echarts.init(el);
-  chart.setOption(option, true); // replace options to avoid cached configs
+  chart.setOption(option, true); // replace options to evitar merges viejos
 }
 
 // === Opciones de gráficos ===
@@ -57,7 +63,7 @@ function optLine(labels, values){ // Balance (mantiene ejes)
 
 function optBar(labels, values, opts={}){
   // opts.hideValueAxisLabels | opts.showAllCats | opts.percent
-  const gridCfg = opts.showAllCats ? { ...baseGrid, bottom: 36 } : baseGrid;
+  const gridCfg = opts.showAllCats ? { ...baseGrid, bottom: 52 } : baseGrid; // +aire para todas las etiquetas
   return {
     grid: gridCfg,
     xAxis: axisX(labels, { showAll: !!opts.showAllCats }),
@@ -84,7 +90,7 @@ function optBarH(labels, values, opts={}){
   };
 }
 
-// Allocation (colores + % en leyenda) — subimos el donut para dar aire
+// Allocation (colores + % en leyenda) — subimos el donut para dar aire abajo
 const PALETTE = { GBPUSD:'#3b82f6', XAUUSD:'#22c55e', NDX100:'#f59e0b', BTCUSD:'#ef4444' };
 function optPie(labels, values){
   const total = values.reduce((a,b)=>a+b,0) || 1;
@@ -108,7 +114,7 @@ function optDist(d){
     grid:{ ...baseGrid, top: 60 },
     legend:{ top:6, right:8, data:['n°','P&L'], textStyle:{ color:'#444' } },
     tooltip:{ trigger:'axis' },
-    xAxis: axisX(d.labels),
+    xAxis: axisX(d.labels, { showAll:true }), // fuerza ver buy/sell siempre
     yAxis:[
       { ...axisY({ hideLabels:true }), max: head(maxCount) },
       { ...axisY({ hideLabels:true }), name:'P&L', max: head(maxPnl) }
@@ -148,7 +154,7 @@ function draw(d){
   // Balance (mantiene escala visible)
   render('ch_balance', optLine(d.balance.labels, d.balance.values));
 
-  // Montly (mantiene escala visible)
+  // Monthly (mantiene escala visible)
   render('ch_monthly', optBar(d.monthly.labels, d.monthly.values, { hideValueAxisLabels:false }));
 
   // Distribution (ejes ocultos + gris)
@@ -160,17 +166,17 @@ function draw(d){
   // P&L por activo (oculta eje de valor)
   render('ch_pl_assets', optBarH(d.plAssets.labels, d.plAssets.values, { hideValueAxisLabels:true }));
 
-  // Win rate: mostrar todos los activos + % y eje oculto
+  // Win rate: ver TODOS los activos + % + eje oculto
   render('ch_wr_assets', optBar(d.wrAssets.labels, d.wrAssets.values, {
     hideValueAxisLabels:true, showAllCats:true, percent:true
   }));
 
-  // Distribution trading days: ver todos + % + eje oculto
+  // Distribution trading days: ver TODOS los días + % + eje oculto
   render('ch_days_dist', optBar(d.daysDist.labels, d.daysDist.values, {
     hideValueAxisLabels:true, showAllCats:true, percent:true
   }));
 
-  // Performance day: ver todos + % + eje oculto
+  // Performance day: ver TODOS los días + % + eje oculto
   render('ch_days_perf', optBar(d.daysPerf.labels, d.daysPerf.values, {
     hideValueAxisLabels:true, showAllCats:true, percent:true
   }));
