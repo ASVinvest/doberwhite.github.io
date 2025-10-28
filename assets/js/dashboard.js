@@ -16,9 +16,11 @@ const axisX = l => ({
   axisLabel:{ color:'#555' },
   axisLine:{ lineStyle:{ color:axis } }
 });
-const axisY = () => ({
+// Eje de valor base
+const axisY = (opts={}) => ({
   type:'value',
-  axisLabel:{ color:'#555' },
+  axisLabel:{ color:'#555', show: !(opts.hideLabels) },
+  axisTick:{ show:false },
   splitLine:{ lineStyle:{ color:grid } }
 });
 
@@ -39,10 +41,11 @@ const barLabelRight = {
 
 // === Gráficos base ===
 function optLine(labels, values){
+  // Balance: conserva escala visible
   return {
     grid: baseGrid,
     xAxis: axisX(labels),
-    yAxis: axisY(),
+    yAxis: axisY({ hideLabels:false }),
     tooltip:{ trigger:'axis' },
     series:[{
       type:'line', smooth:true, symbol:'circle', symbolSize:6,
@@ -53,11 +56,12 @@ function optLine(labels, values){
   };
 }
 
-function optBar(labels, values){
+function optBar(labels, values, opts={}){
+  // opts.hideValueAxisLabels => oculta números del eje de valores (y)
   return {
     grid: baseGrid,
     xAxis: axisX(labels),
-    yAxis: axisY(),
+    yAxis: axisY({ hideLabels: !!opts.hideValueAxisLabels }),
     tooltip:{ trigger:'axis' },
     series:[{
       type:'bar', barMaxWidth:28, label: barLabelTop,
@@ -66,10 +70,11 @@ function optBar(labels, values){
   };
 }
 
-function optBarH(labels, values){
+function optBarH(labels, values, opts={}){
+  // Horizontal: el eje de valores es el X (ocultamos ahí)
   return {
     grid: baseGrid,
-    xAxis: axisY(),
+    xAxis: axisY({ hideLabels: !!opts.hideValueAxisLabels }),
     yAxis:{
       type:'category', data:labels,
       axisLabel:{ color:'#555' },
@@ -116,9 +121,10 @@ function optDist(d){
     legend: { top: 6, right: 8, data: ['n°','P&L'], textStyle: { color:'#444' } },
     tooltip: { trigger: 'axis' },
     xAxis: axisX(d.labels),
+    // ocultamos números de ambos ejes de valor
     yAxis: [
-      { ...axisY(), max: head(maxCount) },
-      { ...axisY(), name: 'P&L', max: head(maxPnl) }
+      { ...axisY({ hideLabels:true }), max: head(maxCount) },
+      { ...axisY({ hideLabels:true }), name: 'P&L', max: head(maxPnl) }
     ],
     series: [
       {
@@ -170,15 +176,41 @@ function draw(d){
   if(per) per.textContent = `From : ${d.period.from}  →  ${d.period.to}`;
   renderKPIs(d.kpis);
 
-  echarts.init(document.getElementById('ch_balance')).setOption(optLine(d.balance.labels, d.balance.values));
-  echarts.init(document.getElementById('ch_monthly')).setOption(optBar(d.monthly.labels, d.monthly.values));
-  echarts.init(document.getElementById('ch_distribution')).setOption(optDist(d.distribution));
-  echarts.init(document.getElementById('ch_allocation')).setOption(optPie(d.allocation.labels, d.allocation.values));
-  echarts.init(document.getElementById('ch_pl_assets')).setOption(optBarH(d.plAssets.labels, d.plAssets.values));
-  echarts.init(document.getElementById('ch_wr_assets')).setOption(optBar(d.wrAssets.labels, d.wrAssets.values));
-  echarts.init(document.getElementById('ch_days_dist')).setOption(optBar(d.daysDist.labels, d.daysDist.values));
-  echarts.init(document.getElementById('ch_days_perf')).setOption(optBar(d.daysPerf.labels, d.daysPerf.values));
-  echarts.init(document.getElementById('ch_avg_pos')).setOption(optBarH(d.avgPos.labels, d.avgPos.values));
+  // Balance USD (mantiene escala visible)
+  echarts.init(document.getElementById('ch_balance'))
+    .setOption(optLine(d.balance.labels, d.balance.values));
+
+  // Montly USD (mantiene escala visible)
+  echarts.init(document.getElementById('ch_monthly'))
+    .setOption(optBar(d.monthly.labels, d.monthly.values, { hideValueAxisLabels:false }));
+
+  // Distribution USD (oculta escalas)
+  echarts.init(document.getElementById('ch_distribution'))
+    .setOption(optDist(d.distribution));
+
+  // Allocation (pie)
+  echarts.init(document.getElementById('ch_allocation'))
+    .setOption(optPie(d.allocation.labels, d.allocation.values));
+
+  // P&L USD por activo (horizontal, oculta escala de valor)
+  echarts.init(document.getElementById('ch_pl_assets'))
+    .setOption(optBarH(d.plAssets.labels, d.plAssets.values, { hideValueAxisLabels:true }));
+
+  // Win rate (oculta escala de valor)
+  echarts.init(document.getElementById('ch_wr_assets'))
+    .setOption(optBar(d.wrAssets.labels, d.wrAssets.values, { hideValueAxisLabels:true }));
+
+  // Distribution trading days (oculta escala de valor)
+  echarts.init(document.getElementById('ch_days_dist'))
+    .setOption(optBar(d.daysDist.labels, d.daysDist.values, { hideValueAxisLabels:true }));
+
+  // Performance day (oculta escala de valor)
+  echarts.init(document.getElementById('ch_days_perf'))
+    .setOption(optBar(d.daysPerf.labels, d.daysPerf.values, { hideValueAxisLabels:true }));
+
+  // Average Position (horizontal, oculta escala de valor)
+  echarts.init(document.getElementById('ch_avg_pos'))
+    .setOption(optBarH(d.avgPos.labels, d.avgPos.values, { hideValueAxisLabels:true }));
 
   window.addEventListener('resize', ()=>document.querySelectorAll('.dw-chart')
     .forEach(el => echarts.getInstanceByDom(el)?.resize()));
