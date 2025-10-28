@@ -27,7 +27,19 @@ const axisY = () => ({type:'value',axisLabel:{color:'#ccc'},splitLine:{lineStyle
 function optLine(labels,values){return{grid:baseGrid,xAxis:axisX(labels),yAxis:axisY(),tooltip:{trigger:'axis'},series:[{type:'line',smooth:true,areaStyle:{opacity:.05},data:values}]};}
 function optBar(labels,values){return{grid:baseGrid,xAxis:axisX(labels),yAxis:axisY(),tooltip:{trigger:'axis'},series:[{type:'bar',barMaxWidth:28,data:values.map(v=>({value:v,itemStyle:{color:v>=0?'#00c853':'#ff5252'}}))}]};}
 function optPie(labels,values){return{tooltip:{trigger:'item'},series:[{type:'pie',radius:['45%','70%'],center:['50%','55%'],label:{color:'#ddd'},data:labels.map((l,i)=>({name:l,value:values[i]}))}]};}
-function optDist(d){return{grid:baseGrid,tooltip:{trigger:'axis'},legend:{data:['n°','P&L'],textStyle:{color:'#ccc'}},xAxis:axisX(d.labels),yAxis:[axisY(),{...axisY(),name:'P&L'}],series:[{name:'n°',type:'bar',barMaxWidth:28,data:d.counts},{name:'P&L',type:'line',yAxisIndex:1,data:d.pnl}]};}
+function optDist(d){
+  return {
+    grid: baseGrid,
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['n°','P&L'], textStyle: { color: '#ccc' } },
+    xAxis: axisX(d.labels),
+    yAxis: [ axisY(), { ...axisY(), name: 'P&L' } ],
+    series: [
+      { name: 'n°',  type: 'bar', barMaxWidth: 28, data: d.counts },
+      { name: 'P&L', type: 'bar', yAxisIndex: 1, barMaxWidth: 28, data: d.pnl }
+    ]
+  };
+}
 
 function drawCharts(d){
   echarts.init(document.getElementById('ch_balance')).setOption(optLine(d.balance.labels, d.balance.values));
