@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Dasboard — DoberWhite Capital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    :root{--dw-line:#1a1a1a;--dw-panel:#0e0e0e}
+    .dw-wrap{padding:16px}
+    .dw-layout{display:grid;grid-template-columns:280px 1fr;gap:16px}
+    .dw-aside{background:var(--dw-panel);border:1px solid var(--dw-line);border-radius:12px;padding:14px}
+    .dw-kpis{list-style:none;margin:0;padding:0}
+    .dw-kpis li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--dw-line)}
+    .dw-kpis li:last-child{border-bottom:0}
+    .dw-kpis .neg{color:#ff5252}
+    .dw-grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
+    .dw-card{grid-column:span 4;background:var(--dw-panel);border:1px solid var(--dw-line);border-radius:12px}
+    .dw-card h3{margin:10px 12px 0}
+    .dw-chart{height:260px;width:100%}
+    @media (max-width:1100px){.dw-card{grid-column:span 6}.dw-layout{grid-template-columns:1fr}}
+    @media (max-width:700px){.dw-card{grid-column:span 12}}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="index.html"><span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span></a>
+      <a class="menu-button" href="#menu">Menú</a>
+    </div>
+  </header>
+
+  <!-- Menú (igual al de index) -->
+  <nav class="site-menu" id="menu" aria-hidden="true">
+    <div class="inner">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="institucionales.html">Servicios institucionales</a></li>
+        <li><a href="particulares.html">Servicios particulares</a></li>
+        <!-- <a href="trading.html">Trading algorítmico</a></li>-->
+        <li><a href="cursos.html">Cursos & seminarios</a></li>
+        <li><a href="valores.html">Nuestros valores</a></li>
+        <li class="active"><a href="dasboard.html">Dasboard</a></li>
+        <li><a href="informes.html">Informes Privados</a></li>
+        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>Dasboard</h1>
+      <p class="sub" id="dw-periodo">Performance SYNC</p>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section class="dw-wrap">
+    <div class="container">
+      <div class="dw-layout">
+        <aside class="dw-aside">
+          <h4>Ratio <span style="opacity:.6">YTD</span></h4>
+          <ul class="dw-kpis" id="dw-kpis"></ul>
+        </aside>
+
+        <div>
+          <div class="dw-grid">
+            <div class="dw-card"><h3>Balance</h3><div id="ch_balance" class="dw-chart"></div></div>
+            <div class="dw-card"><h3>Monthly</h3><div id="ch_monthly" class="dw-chart"></div></div>
+            <div class="dw-card"><h3>Distribution</h3><div id="ch_distribution" class="dw-chart"></div></div>
+          </div>
+
+          <div class="dw-grid" style="margin-top:12px">
+            <div class="dw-card"><h3>Allocation</h3><div id="ch_allocation" class="dw-chart"></div></div>
+            <div class="dw-card"><h3>P&amp;L</h3><div id="ch_pl_assets" class="dw-chart"></div></div>
+            <div class="dw-card"><h3>Win rate</h3><div id="ch_wr_assets" class="dw-chart"></div></div>
+          </div>
+
+          <div class="dw-grid" style="margin-top:12px">
+            <div class="dw-card"><h3>Distribution trading days</h3><div id="ch_days_dist" class="dw-chart"></div></div>
+            <di
