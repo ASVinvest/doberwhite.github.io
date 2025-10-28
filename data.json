@@ -14,7 +14,7 @@
     "% Average SL": 20,
     "Comission": 31
   },
-  "balance": { "labels": ["oct-25","nov-25"], "values": [50000, 50475] },
+  "balance": { "labels": ["oct-25","nov-25"], "values": [50475, 50475] },
   "monthly": { "labels": ["oct"], "values": [475.46] },
   "distribution": { "labels": ["buy","sell"], "counts": [44,21], "pnl": [388.21, 87.25] },
   "allocation": { "labels": ["GBPUSD","XAUUSD","NDX100","BTCUSD"], "values": [20,31,43,6] },
