@@ -47,15 +47,26 @@ function optBarH(labels, values){
       data: values.map(v => ({ value:v, itemStyle:{ color: v>=0 ? brand : red } })) }]
   };
 }
+const PALETTE = { GBPUSD:'#3b82f6', XAUUSD:'#22c55e', NDX100:'#f59e0b', BTCUSD:'#ef4444' };
+
 function optPie(labels, values){
+  const total = values.reduce((a,b)=>a+b,0) || 1;
   return {
-    tooltip:{ trigger:'item' },
-    series:[{ type:'pie', radius:['46%','68%'], center:['50%','55%'],
-      label:{ color:'#444', formatter: '{b}: {d}%' },
-      data: labels.map((n,i)=>({ name:n, value:values[i] }))
+    legend:{ bottom: 0, itemWidth:12, itemHeight:12, textStyle:{ color:'#444' },
+      formatter: (name)=>{
+        const i = labels.indexOf(name);
+        const pct = Math.round(values[i]*100/total);
+        return `${name}  ${pct}%`;
+      }},
+    tooltip:{ trigger:'item', formatter: ({name,value,percent}) => `${name}: ${percent}%` },
+    series:[{
+      type:'pie', radius:['46%','68%'], center:['50%','50%'],
+      label:{ show:false }, // evitamos textos cortados en el donut
+      data: labels.map((n,i)=>({ name:n, value:values[i], itemStyle:{ color: PALETTE[n] || '#94a3b8' } }))
     }]
   };
 }
+
 function optDist(d){
   return {
     grid: baseGrid, tooltip:{ trigger:'axis' },
