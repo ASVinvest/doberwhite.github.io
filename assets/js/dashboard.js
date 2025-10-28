@@ -1,5 +1,5 @@
 // Ruta absoluta para evitar problemas en GitHub Pages
-const DATA_URL = '/assets/data/dashboard/data.json';
+const DATA_URL = '/assets/data/data.json';
 
 // Paleta y ejes estilo Excel
 const green = '#9bd6a4', red = '#ef9a9a', axis = '#9aa0a6', grid = '#eaecef';
