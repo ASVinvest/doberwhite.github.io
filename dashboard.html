@@ -8,23 +8,36 @@
 
   <!-- Estilo claro tipo Excel (solo para esta página) -->
   <style>
-    body{background:#fff;color:#111}
+    :root{
+      --dw-green:#00e18e;        /* color marca */
+      --dw-border:#e7eaf0;
+      --dw-text:#111;
+      --dw-muted:#6b7280;
+    }
+    body{background:#fff;color:var(--dw-text)}
     .dw-wrap{padding:16px}
     .dw-layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
-    .dw-aside{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px}
+    .dw-aside{background:#fff;border:1px solid var(--dw-border);border-radius:12px;padding:14px}
     .dw-aside h4{margin:0 0 8px;font-weight:700}
     .dw-kpis{list-style:none;margin:0;padding:0;border-top:2px solid #111}
-    .dw-kpis li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #e6e6e6}
+    .dw-kpis li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e6e6e6}
+    .dw-kpis li span:first-child{color:var(--dw-muted)}
+    .dw-kpis li span:last-child{font-variant-numeric:tabular-nums}
     .dw-kpis .neg{color:#c62828}
+  
     .dw-section{margin-top:6px}
+    .dw-subtitle{font-style:italic;font-weight:700;text-align:center;margin:0 0 6px;color:#222;opacity:.9}
+  
     .dw-grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-    .dw-card{grid-column:span 4;background:#fff;border:1px solid #ddd;border-radius:10px}
-    .dw-card h3{margin:10px 12px 0;font-weight:700}
+    .dw-card{grid-column:span 4;background:#fff;border:1px solid var(--dw-border);border-radius:12px;
+             box-shadow:0 2px 8px rgba(17,24,39,.06)}
+    .dw-card h3{margin:12px 14px 0;font-weight:700}
     .dw-chart{height:260px;width:100%}
-    .dw-subtitle{font-style:italic; font-weight:700; text-align:center; margin:0 0 6px}
+  
     @media (max-width:1100px){.dw-card{grid-column:span 6}.dw-layout{grid-template-columns:1fr}}
-    @media (max-width:700px){.dw-card{grid-column:span 12}}
+    @media (max-width:700px){.dw-card{grid-column:span 12}.dw-chart{height:220px}}
   </style>
+  
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 </head>
