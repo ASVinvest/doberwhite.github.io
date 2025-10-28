@@ -8,6 +8,7 @@ const CANDIDATES = [
 
 // === Paleta y ejes (estilo Excel + marca) ===
 const brand = '#00e18e', red = '#ef9a9a', axis = '#9aa0a6', grid = '#eaecef';
+const gray  = '#cbd5e1'; // gris claro para la serie "n°"
 const baseGrid = { left: 36, right: 16, top: 24, bottom: 28, containLabel: true };
 const axisX = l => ({ type:'category', data:l, axisLabel:{ color:'#555' }, axisLine:{ lineStyle:{ color:axis } } });
 const axisY = () => ({ type:'value', axisLabel:{ color:'#555' }, splitLine:{ lineStyle:{ color:grid } } });
@@ -31,6 +32,7 @@ function optLine(labels, values){
       lineStyle:{ width:2, color:brand }, areaStyle:{ opacity:.08, color:brand }, data: values }]
   };
 }
+
 function optBar(labels, values){
   return {
     grid: baseGrid, xAxis: axisX(labels), yAxis: axisY(), tooltip:{ trigger:'axis' },
@@ -38,6 +40,7 @@ function optBar(labels, values){
       data: values.map(v => ({ value:v, itemStyle:{ color: v>=0 ? brand : red } })) }]
   };
 }
+
 function optBarH(labels, values){
   return {
     grid: baseGrid, xAxis: axisY(),
@@ -47,6 +50,7 @@ function optBarH(labels, values){
       data: values.map(v => ({ value:v, itemStyle:{ color: v>=0 ? brand : red } })) }]
   };
 }
+
 const PALETTE = { GBPUSD:'#3b82f6', XAUUSD:'#22c55e', NDX100:'#f59e0b', BTCUSD:'#ef4444' };
 
 function optPie(labels, values){
@@ -58,7 +62,7 @@ function optPie(labels, values){
         const pct = Math.round(values[i]*100/total);
         return `${name}  ${pct}%`;
       }},
-    tooltip:{ trigger:'item', formatter: ({name,value,percent}) => `${name}: ${percent}%` },
+    tooltip:{ trigger:'item', formatter: ({name,percent}) => `${name}: ${percent}%` },
     series:[{
       type:'pie', radius:['46%','68%'], center:['50%','50%'],
       label:{ show:false }, // evitamos textos cortados en el donut
@@ -67,14 +71,43 @@ function optPie(labels, values){
   };
 }
 
+// === Distribution USD: "n°" gris y holgura para no tapar P&L ===
 function optDist(d){
+  const maxCount = Math.max(...d.counts, 0);
+  const maxPnl   = Math.max(...d.pnl, 0);
+  const head     = x => Math.ceil(x * 1.15); // +15% de margen superior
+
   return {
-    grid: baseGrid, tooltip:{ trigger:'axis' },
-    legend:{ data:['n°','P&L'], textStyle:{ color:'#444' } },
-    xAxis: axisX(d.labels), yAxis: [ axisY(), { ...axisY(), name:'P&L' } ],
-    series:[
-      { name:'n°',  type:'bar', barMaxWidth:28, label: barLabelTop, itemStyle:{ color:brand }, data: d.counts },
-      { name:'P&L', type:'bar', barMaxWidth:28, yAxisIndex:1, label: barLabelTop, itemStyle:{ color:brand }, data: d.pnl }
+    // más espacio arriba para que la leyenda no invada el área de gráfico
+    grid: { ...baseGrid, top: 52 },
+    legend: { top: 6, data: ['n°','P&L'], textStyle: { color:'#444' } },
+    tooltip: { trigger: 'axis' },
+    xAxis: axisX(d.labels),
+    yAxis: [
+      { ...axisY(), max: head(maxCount) },          // escala para "n°"
+      { ...axisY(), name: 'P&L', max: head(maxPnl) } // escala para P&L
+    ],
+    series: [
+      {
+        name:'n°',
+        type:'bar',
+        barMaxWidth:26,
+        itemStyle:{ color: gray },                   // barras grises
+        label:{ ...barLabelTop, color:'#6b7280' },   // etiqueta gris
+        data: d.counts,
+        z: 1
+      },
+      {
+        name:'P&L',
+        type:'bar',
+        yAxisIndex:1,
+        barMaxWidth:26,
+        itemStyle:{ color: brand },                  // verde marca
+        label: barLabelTop,
+        data: d.pnl,
+        barGap:'35%', barCategoryGap:'30%',
+        z: 2
+      }
     ]
   };
 }
