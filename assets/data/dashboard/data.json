@@ -1,13 +1,13 @@
 {
-  "period":{"from":"Jul-25","to":"27-10-2025"},
-  "kpis":{"Win Rate":42,"Profitability":1.5,"Risk Benefit":2.7,"N° Trades":76,"N° Trades Win":32,"N° Trades Loss":44,"P&L (USD)":808,"Win Average":52.1,"Loss Average":-19.5,"WipeOut":0,"% Average SL":20,"Comission":40},
-  "balance":{"labels":["oct-25","nov-25"],"values":[50808,0]},
-  "monthly":{"labels":["oct"],"values":[808]},
-  "distribution":{"labels":["buy","sell"],"counts":[50,26],"pnl":[499.25,308.86]},
-  "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[41,34,50,5]},
-  "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[406.59,302.18,-12.83,112.7]},
-  "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[55,33,45,0]},
-  "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[25,22,18,17,17]},
-  "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[47,29,71,31,31]},
-  "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.23,0.13,0.08,0.01]}
+  "period":{"from":"OCT-25","to":"31-10-2025"},
+  "kpis":{"Win Rate":39,"Profitability":1.3,"Risk Benefit":2.5,"N° Trades":94,"N° Trades Win":37,"N° Trades Loss":57,"P&L (USD)":691,"Win Average":48.3,"Loss Average":-19.2,"WipeOut":0,"% Average SL":19,"Comission":49},
+  "balance":{"labels":["oct-25","nov-25"],"values":[50691,0]},
+  "monthly":{"labels":["oct"],"values":[691]},
+  "distribution":{"labels":["buy","sell"],"counts":[62,32],"pnl":[376,315]},
+  "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[32,30,35,3]},
+  "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[372.9,308.4,-12.83,22.6]},
+  "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[50,30,42,0]},
+  "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[17,24,21,18,19]},
+  "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[44,39,50,35,28]},
+  "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.23,0.13,0.07,0.01]}
 }
