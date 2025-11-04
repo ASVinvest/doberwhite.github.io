@@ -137,3 +137,11 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 @media (min-width: 992px){
   .services .card .art{ height: 200px !important; }
 }
+/* full-bleed en tarjetas (mata padding heredado) */
+.services .card .art{ padding:0 !important; margin:0 !important; }
+.services .card .art img,
+.services .card .art svg{ display:block; width:100% !important; height:200px !important; object-fit:cover; }
+@media (max-width: 991.98px){
+  .services .card .art img,
+  .services .card .art svg{ height:auto !important; aspect-ratio:16/10; }
+}
