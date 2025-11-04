@@ -1,13 +1,13 @@
 {
-  "period":{"from":"OCT-25","to":"31-10-2025"},
-  "kpis":{"Win Rate":39,"Profitability":1.3,"Risk Benefit":2.5,"N° Trades":94,"N° Trades Win":37,"N° Trades Loss":57,"P&L (USD)":691,"Win Average":48.3,"Loss Average":-19.2,"WipeOut":0,"% Average SL":19,"Comission":49},
-  "balance":{"labels":["oct-25","nov-25"],"values":[50691,0]},
-  "monthly":{"labels":["oct"],"values":[691]},
-  "distribution":{"labels":["buy","sell"],"counts":[62,32],"pnl":[376,315]},
-  "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[32,30,35,3]},
-  "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[372.9,308.4,-12.83,22.6]},
-  "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[50,30,42,0]},
-  "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[17,24,21,18,19]},
-  "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[44,39,50,35,28]},
-  "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.23,0.13,0.07,0.01]}
+  "period":{"from":"OCT-25","to":"04-11-2025"},
+  "kpis":{"Win Rate":39,"Profitability":1.2,"Risk Benefit":2.4,"N° Trades":102,"N° Trades Win":40,"N° Trades Loss":62,"P&L (USD)":657,"Win Average":45.1,"Loss Average":-18.5,"WipeOut":0,"% Average SL":19,"Comission":52},
+  "balance":{"labels":["oct-25","nov-25"],"values":[50691,50657]},
+  "monthly":{"labels":["oct","Nov"],"values":[691,-34]},
+  "distribution":{"labels":["buy","sell"],"counts":[66,36],"pnl":[339,317]},
+  "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[35,32,38,3]},
+  "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[325.7,302.6,-12.83,42]},
+  "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[47,27,47,0]},
+  "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[24,23,20,17,18]},
+  "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[42,39,50,35,28]},
+  "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.22,0.12,0.07,0.01]}
 }
