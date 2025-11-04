@@ -116,3 +116,5 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
     height: 100%;
   }
 }
+
+.services .card .art{ height:200px !important; }
