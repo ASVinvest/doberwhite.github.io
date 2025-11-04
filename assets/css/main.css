@@ -6,7 +6,7 @@
 body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);}
 
 /* Container */
-.container{max-width:1200px;margin:100 auto;padding:0 16px}
+.container{max-width:1200px;margin:0 auto;padding:0 16px}
 
 /* Header fijo */
 .site-header{position:fixed;inset:0 0 auto 0;z-index:50;border-bottom:1px solid var(--line);
@@ -144,4 +144,15 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 @media (max-width: 991.98px){
   .services .card .art img,
   .services .card .art svg{ height:auto !important; aspect-ratio:16/10; }
+}
+
+/* Compacta el hero (desktop y móvil) */
+.hero{ padding: 24px 0 12px !important; }
+.hero h1{ margin: 0 0 6px !important; line-height: 1.05; }
+.hero .sub{ margin-top: 2px !important; }
+.hero .value{ margin-top: 8px !important; }
+
+/* Aún más compacto en desktop */
+@media (min-width: 992px){
+  .hero{ padding: 18px 0 8px !important; }
 }
