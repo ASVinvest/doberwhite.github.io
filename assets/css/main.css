@@ -156,3 +156,6 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 @media (min-width: 992px){
   .hero{ padding: 18px 0 8px !important; }
 }
+@media (min-width: 992px){
+  .hero h1{ font-size: clamp(36px, 4.2vw, 64px); } /* le baja ~10–15% en pantallas grandes */
+}
