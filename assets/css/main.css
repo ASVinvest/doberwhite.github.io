@@ -64,3 +64,11 @@ body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-s
 /* Accesibilidad focus */
 a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
    
+.art-img{
+  display:block;
+  width:100%;
+  height:200px;      /* alto igual al SVG anterior */
+  object-fit:cover;  /* recorta sin deformar */
+  border-radius:12px;
+  background:#0f1422;
+}
