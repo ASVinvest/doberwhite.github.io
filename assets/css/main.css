@@ -118,3 +118,22 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 }
 
 .services .card .art{ height:200px !important; }
+
+/* Full-bleed para las imágenes de las tarjetas (PC y móvil) */
+.services .card .art{
+  padding: 0 !important;          /* elimina el marco interno que deja ese espacio */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.services .card .art img.art-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;               /* recorta centrado sin deformar */
+  display: block;
+}
+
+/* Alto fijo en desktop para alinear */
+@media (min-width: 992px){
+  .services .card .art{ height: 200px !important; }
+}
