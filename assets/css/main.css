@@ -6,7 +6,7 @@
 body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);}
 
 /* Container */
-.container{max-width:1200px;margin:30 auto;padding:0 16px}
+.container{max-width:1200px;margin:0 auto;padding:0 16px}
 
 /* Header fijo */
 .site-header{position:fixed;inset:0 0 auto 0;z-index:50;border-bottom:1px solid var(--line);
