@@ -84,4 +84,34 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
   object-fit:cover;  /* recorta sin deformar */
   border-radius:12px;
   background:#0f1422;
+}/* ultima linea valida
+
+/* === Overrides de visibilidad en tema claro === */
+/* Header claro + textos oscuros */
+.site-header{
+  background: rgba(255,255,255,.92) !important;
+  border-bottom: 1px solid #e9eef5 !important;
+  backdrop-filter: saturate(120%) blur(8px);
 }
+.brand, .menu-button{ color:#0b1320 !important; }
+.menu-button{
+  border:1px solid #d8e0ec !important;
+  background:#ffffff !important;
+}
+.menu-button:hover{ background:#f5f7fb !important; }
+
+/* Título del hero legible en claro */
+.hero h1{ color:#0b1320 !important; }
+.hero .sub, .hero .value{ color:#3b4658 !important; }
+
+/* Botón flotante verde de marca siempre visible */
+.fab{
+  background:#00e18e !important;
+  color:#052b1f !important;
+  box-shadow:0 12px 32px rgba(0,225,142,.25) !important;
+}
+
+/* Links generales en claro */
+a{ color:#0b1320; }
+
+
