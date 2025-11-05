@@ -141,4 +141,23 @@ a{ color:#0b1320; }
 
 /* Final final, hasta antes de corregir los datos de tabla de rendmientos.
 
+/* Caja de imagen para los feature cards */
+.imgbox{
+  position: relative;
+  width: 100%;
+  height: 200px;              /* alto del box */
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0f1422;        /* fallback si la imagen tarda */
+}
+
+/* Imagen a full, recorte sin deformar */
+.fit-cover{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
