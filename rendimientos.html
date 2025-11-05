@@ -14,13 +14,40 @@
 
     .section{padding:40px 0}
 
-    /* Tabla métricas */
-    .table-wrap{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-    .table-scroll{overflow-x:auto}
-    table{width:100%;border-collapse:collapse;min-width:880px}
-    thead th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#0f1422;border-bottom:1px solid var(--line);padding:12px}
-    tbody td{padding:12px;border-bottom:1px solid var(--line);color:#e5e7eb}
-    tbody tr:hover{background:rgba(255,255,255,.03)}
+    /* Tabla métricas – contraste alto */
+.table-wrap{
+  background:transparent;            /* deja el fondo del body */
+  border:1px solid var(--line);
+  border-radius:16px;overflow:hidden
+}
+.table-scroll{overflow-x:auto}
+
+/* solo la tabla de métricas */
+.metrics-table{width:100%;border-collapse:separate;border-spacing:0 10px;min-width:880px}
+
+/* Head oscuro, texto claro */
+.metrics-table thead th{
+  background:#0b1320;                /* header dark */
+  color:#dce3ee;
+  font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  padding:12px;border:1px solid #1f2a3d
+}
+.metrics-table thead th:first-child{border-radius:12px 0 0 12px}
+.metrics-table thead th:last-child{border-radius:0 12px 12px 0}
+
+/* Filas con celdas blancas y texto oscuro */
+.metrics-table tbody td{
+  background:#ffffff;
+  color:#0b1320;
+  padding:12px;border:1px solid #e6ecf5
+}
+.metrics-table tbody tr td:first-child{border-radius:12px 0 0 12px}
+.metrics-table tbody tr td:last-child{border-radius:0 12px 12px 0}
+
+/* Hover sutil */
+.metrics-table tbody tr:hover td{background:#f7f9fc}
+
+   
 
     /* Verificación externa */
     .verifs{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
@@ -80,7 +107,7 @@
     <div class="container">
       <header style="margin-bottom:12px"><h2 style="margin:0">Métricas</h2></header>
       <div class="table-wrap">
-        <div class="table-scroll">
+        <div class="metrics-table">
           <table>
             <thead>
               <tr>
