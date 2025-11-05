@@ -1,4 +1,4 @@
-@ -1,158 +1,161 @@
+@ -1,120 +1,139 @@
 /* DoberWhite — Tema monocromático limpio */
 :root{
   --bg:#0b0e14; --panel:#111522; --ink:#ffffff; --muted:#b4bac8; --line:#1d2333; --accent:#00e18e;
@@ -137,26 +137,4 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 /* Alto fijo en desktop para alinear */
 @media (min-width: 992px){
   .services .card .art{ height: 200px !important; }
-}
-/* full-bleed en tarjetas (mata padding heredado) */
-.services .card .art{ padding:0 !important; margin:0 !important; }
-.services .card .art img,
-.services .card .art svg{ display:block; width:100% !important; height:200px !important; object-fit:cover; }
-@media (max-width: 991.98px){
-  .services .card .art img,
-  .services .card .art svg{ height:auto !important; aspect-ratio:16/10; }
-}
-
-/* Compacta el hero (desktop y móvil) */
-.hero{ padding: 24px 0 12px !important; }
-.hero h1{ margin: 0 0 6px !important; line-height: 1.05; }
-.hero .sub{ margin-top: 2px !important; }
-.hero .value{ margin-top: 8px !important; }
-
-/* Aún más compacto en desktop */
-@media (min-width: 992px){
-  .hero{ padding: 18px 0 8px !important; }
-}
-@media (min-width: 992px){
-  .hero h1{ font-size: clamp(36px, 4.2vw, 64px); } /* le baja ~10–15% en pantallas grandes */
 }
