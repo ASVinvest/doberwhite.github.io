@@ -81,18 +81,20 @@
 
       <!-- Gestión & custodia -->
       <article class="feature">
-        <div class="top">
-          <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
-            <rect width="100%" height="100%" fill="#121728"/>
-            <g stroke="#00e18e" stroke-width="2" fill="none">
-              <circle cx="55" cy="58" r="24"/>
-              <path d="M45,58 l8,9 l16,-18"/>
-              <rect x="92" y="30" width="60" height="56" rx="8"/>
-              <line x1="102" y1="46" x2="142" y2="46"/>
-              <line x1="102" y1="60" x2="135" y2="60"/>
-            </g>
-          </svg>
+        <div class="top" style="position:relative;padding:0;margin:0;width:100%;height:200px;overflow:hidden;border-radius:12px;">
+          <picture>
+            <source type="image/webp"
+                    srcset="images/servicios_privados-480.webp 480w,
+                            images/servicios_privados-800.webp 800w,
+                            images/servicios_privados-1200.webp 1200w"
+                    sizes="(min-width:1200px) 360px, (min-width:992px) 320px, 92vw">
+            <img src="images/servicios_privados.png"
+                 alt="Servicios privados de trading con control de riesgo y ejecución dedicada"
+                 width="1200" height="750" loading="lazy" decoding="async"
+                 style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+          </picture>
         </div>
+        
         <div class="body">
           <h3>Servicios privados</h3>
           <ul>
