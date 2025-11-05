@@ -114,4 +114,27 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 /* Links generales en claro */
 a{ color:#0b1320; }
 
+/* === Menú overlay legible (oscuro con texto claro) === */
+.site-menu{
+  background: rgba(6,9,15,.98) !important;
+  backdrop-filter: blur(8px) saturate(120%);
+}
+.site-menu .inner{ margin-top: 84px; }
+.site-menu ul{ gap: 12px; }
+
+.site-menu a{
+  color: #dce3ee !important;                     /* texto claro */
+  border: 1px solid #253043 !important;          /* borde visible */
+  background: rgba(255,255,255,.03) !important;  /* leve contraste */
+}
+.site-menu a:hover{ background: rgba(255,255,255,.06) !important; }
+
+.site-menu a.primary{
+  background: #00e18e !important; 
+  color: #052b1f !important;
+  border-color: transparent !important;
+}
+
+/* anula el override global para links dentro del menú */
+.site-menu a *{ color: inherit !important; }
 
