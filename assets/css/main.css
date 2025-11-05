@@ -110,3 +110,25 @@ body section.hero .sub{ margin-top: 4px !important; }
 body section.hero .value{ margin-top: 12px !important; }
 
 body section.hero + .services{ margin-top: 24px !important; }
+/* === RESET HERO A NORMAL === */
+:root{
+  --header-h: 56px;                 /* alto aprox. de tu header sticky */
+}
+
+body .hero{
+  margin-top: 16px !important;      /* despega el título del header */
+  padding: 48px 0 24px !important;  /* alto típico de hero */
+  min-height: auto !important;
+}
+
+body .hero h1{
+  font-size: clamp(44px, 6vw, 84px) !important;
+  line-height: 1.08 !important;
+  margin: 0 0 12px !important;
+}
+
+body .hero .sub{ margin-top: 4px !important; }
+body .hero .value{ margin-top: 12px !important; }
+
+/* separa hero de la grilla de tarjetas */
+body .hero + .services{ margin-top: 24px !important; }
