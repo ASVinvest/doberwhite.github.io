@@ -80,18 +80,30 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 }
 .card .art > img.art-img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-/* Desktop: altura fija para alinear tarjetas */
+/* Tarjetas */
+.card .art{
+  border-radius:12px;
+  overflow:hidden;
+}
+
+/* Móvil: proporción fluida */
+@media (max-width: 991.98px){
+  .card .art{ aspect-ratio:16/10; height:auto; }
+  .card .art > img.art-img{ width:100%; height:100%; object-fit:cover; display:block; }
+}
+
+/* Desktop: alto fijo y alineación */
 @media (min-width: 992px){
-  .card .art{ aspect-ratio: auto; height: 200px; } /* o 220px si la quieres un poco más alta */
-  .card{ height:100%; display:flex; flex-direction:column; }
+  .services .card{ display:flex; flex-direction:column; }
+  .services .card .art{
+    height:200px !important;     /* ← antes tenías 800px */
+    padding:0 !important;
+  }
+  .services .card .art > img.art-img{ width:100%; height:100%; object-fit:cover; display:block; }
   .card .body{ flex:1 1 auto; }
 }
-/* ---- Fix desktop: imagen contenida y altura pareja ---- */
-.services .card{ display:flex; flex-direction:column; }
-
-.services .card .art{
-  position: relative;
-  height: 800px !important;      /* fija alto en PC */
-  border-radius: 12px;
-  overflow: hidden;
-}
+/* Hero normal */
+.hero{ padding:40px 0; }
+.hero h1{ font-size:clamp(40px,5vw,72px); line-height:1.1; margin:0 0 12px; }
+.hero .sub{ margin-top:4px; }
+.hero .value{ margin-top:12px; }
