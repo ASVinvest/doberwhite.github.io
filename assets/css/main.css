@@ -1,140 +1,135 @@
-@ -1,120 +1,139 @@
-/* DoberWhite — Tema monocromático limpio */
-:root{
-  --bg:#0b0e14; --panel:#111522; --ink:#ffffff; --muted:#b4bac8; --line:#1d2333; --accent:#00e18e;
-}
-*{box-sizing:border-box} html,body{height:100%}
-body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>DoberWhite Capital — Inicio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/main.css?v=15">
+</head>
+<body>
 
-/* Container */
-.container{max-width:1200px;margin:0 auto;padding:0 16px}
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="index.html">
+        <span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span>
+      </a>
+      <a class="menu-button" href="#menu">Menú</a>
+    </div>
+  </header>
 
-/* Header fijo */
-.site-header{position:fixed;inset:0 0 auto 0;z-index:50;border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(11,14,20,.92),rgba(11,14,20,.86));backdrop-filter:blur(8px)}
-.site-header .bar{display:flex;align-items:center;justify-content:space-between;height:64px}
-.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)}
-.brand .word{font-weight:900;letter-spacing:.6px}
-.brand .thin{font-weight:300;opacity:.9;letter-spacing:.8px}
-.menu-button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);color:var(--ink);
-  text-decoration:none;border-radius:12px;padding:8px 12px}
-.menu-button:hover{background:#151a27}
+  <!-- Menú -->
+  <nav class="site-menu" id="menu" aria-hidden="true">
+    <div class="inner">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="institucionales.html">Servicios institucionales</a></li>
+        <li><a href="particulares.html">Servicios particulares</a></li>
+        <li><a href="cursos.html">Cursos & seminarios</a></li>
+        <li><a href="valores.html">Nuestros valores</a></li>
+        <li><a href="rendimientos.html">Rendimientos</a></li>
+        <li><a href="informes.html">Informes Privados</a></li>
+        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
+      </ul>
+    </div>
+  </nav>
 
-/* Overlay menú */
-.site-menu{position:fixed;inset:0;background:rgba(6,9,15,.98);transform:translateY(-100%);transition:transform .28s ease;z-index:60}
-.site-menu .inner{max-width:900px;margin:84px auto;padding:0 16px}
-.site-menu ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-.site-menu a{display:block;padding:16px 18px;border:1px solid var(--line);border-radius:14px;color:var(--ink);text-decoration:none}
-.site-menu a.primary{background:var(--ink);color:#000;font-weight:800;border-color:transparent}
-.is-open .site-menu{transform:translateY(0)}
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>DOBERWHITE <span style="font-weight:300">CAPITAL</span></h1>
+      <p class="sub">Protegemos con poder, construimos con método.</p>
+      <div class="value">Gestión sistemática del riesgo, proteger tu capital es nuestra prioridad</div>
+    </div>
+  </section>
 
-/* Hero */
-.hero{padding:120px 0 52px;border-bottom:1px solid var(--line);background:
-  radial-gradient(1200px 500px at 70% -200px,#1b2030 0,transparent 60%)}
-.hero h1{margin:0;font-size:clamp(32px,6vw,64px);line-height:1.02;font-weight:900;letter-spacing:.3px}
-.hero .sub{margin:14px 0 0;color:var(--muted);max-width:840px}
+  <!-- Servicios -->
+  <section class="services">
+    <div class="container">
+      <div class="grid">
 
-/* Grid servicios */
-.services{padding:42px 0}
-.grid{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
-@media(max-width:960px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.grid{grid-template-columns:1fr}}
-.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.card::after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.06);border-radius:16px;pointer-events:none}
-.card .art{aspect-ratio:16/10;display:grid;place-items:center;background:#0f1422;border-bottom:1px solid var(--line)}
-.card .art svg{width:78%;height:auto;filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))}
-.card .body{padding:16px}
-.card h3{margin:0 0 6px;font-size:18px;font-weight:800}
-.card p{margin:0;color:var(--muted);font-size:14px}
-.card a.stretched{position:absolute;inset:0;text-indent:-9999px}
+        <!-- Institucionales -->
+        <article class="card">
+          <div class="art">
+            <img src="images/institucionales_1.png?v=8" alt="Servicios institucionales" class="art-img" loading="eager" decoding="async">
+          </div>
+          <div class="body">
+            <h3>Servicios institucionales</h3>
+            <p>Arquitectura MAM, reporting y conferencias.</p>
+          </div>
+          <a class="stretched" href="institucionales.html">Ir</a>
+        </article>
 
-/* Métricas o valor agregado */
-.value{padding:18px;background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:14px}
+        <!-- Particulares -->
+        <article class="card">
+          <div class="art">
+            <img src="images/particulares.png?v=8" alt="Servicios particulares" class="art-img" loading="lazy" decoding="async">
+          </div>
+          <div class="body">
+            <h3>Servicios particulares</h3>
+            <p>Gestión de cuentas ASV SYNC.</p>
+          </div>
+          <a class="stretched" href="particulares.html">Ir</a>
+        </article>
 
-/* CTA sección + botón flotante */
-.cta{padding:44px 0;border-top:1px solid var(--line)}
-.btn{display:inline-block;padding:12px 18px;border-radius:12px;border:1px solid var(--line);text-decoration:none;font-weight:800;color:#000;background:var(--ink)}
-.btn:hover{filter:brightness(.94)}
-.fab{position:fixed;right:16px;bottom:16px;z-index:70;background:var(--accent);color:#000;font-weight:900;text-decoration:none;border-radius:999px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,225,142,.25)}
-.fab:hover{filter:brightness(.96)}
+        <!-- Cursos -->
+        <article class="card">
+          <div class="art">
+            <img src="images/cursosyseminarios.png?v=8" alt="Cursos y seminarios" class="art-img" loading="lazy" decoding="async">
+          </div>
+          <div class="body">
+            <h3>Cursos & seminarios</h3>
+            <p>Formación aplicada, sin humo.</p>
+          </div>
+          <a class="stretched" href="cursos.html">Ir</a>
+        </article>
 
-/* Footer */
-.site-footer{border-top:1px solid var(--line);background:#0b0e14}
-.site-footer .mini{color:var(--muted);font-size:12px;padding:18px 0}
+        <!-- Valores -->
+        <article class="card">
+          <div class="art">
+            <img src="images/nuestrosvalores.png?v=8" alt="Nuestros valores" class="art-img" loading="lazy" decoding="async">
+          </div>
+          <div class="body">
+            <h3>Nuestros valores</h3>
+            <p>Deber, disciplina y resultados</p>
+          </div>
+          <a class="stretched" href="valores.html">Ir</a>
+        </article>
 
-/* Accesibilidad focus */
-a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-   
-.art-img{
-  display:block;
-  width:100%;
-  height:200px;      /* alto igual al SVG anterior */
-  object-fit:cover;  /* recorta sin deformar */
-  border-radius:12px;
-  background:#0f1422;
-}
-/* Móvil: proporción fluida */
-.card .art{
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 12px;
-}
-.card .art > img.art-img{ width:100%; height:100%; object-fit:cover; display:block; }
+        <!-- Rendimientos -->
+        <article class="card">
+          <div class="art">
+            <img src="images/rendimientos.png?v=8" alt="Rendimientos" class="art-img" loading="lazy" decoding="async">
+          </div>
+          <div class="body">
+            <h3>Rendimientos</h3>
+            <p>Métricas históricas</p>
+          </div>
+          <a class="stretched" href="rendimientos.html">Ir</a>
+        </article>
 
-/* Desktop: altura fija para alinear tarjetas */
-@media (min-width: 992px){
-  .card .art{ aspect-ratio: auto; height: 200px; } /* o 220px si la quieres un poco más alta */
-  .card{ height:100%; display:flex; flex-direction:column; }
-  .card .body{ flex:1 1 auto; }
-}
-/* ---- Fix desktop: imagen contenida y altura pareja ---- */
-.services .card{ display:flex; flex-direction:column; }
+      </div>
+    </div>
+  </section>
 
-.services .card .art{
-  position: relative;
-  height: 200px !important;      /* fija alto en PC */
-  border-radius: 12px;
-  overflow: hidden;
-}
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <h2>¿Conversemos?</h2>
+      <p>Agenda una reunión y revisamos cómo podemos ayudarte.</p>
+      <a class="btn" href="contacto.html">Agendar en Calendly</a>
+    </div>
+  </section>
 
-.services .card .art img.art-img{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;              /* recorta sin deformar */
-  display: block;
-}
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container mini">
+      <div>El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo de perder.</div>
+      <div style="margin-top:8px">&copy; DoberWhite 2025 · Design: Ariel Salazar</div>
+    </div>
+  </footer>
 
-/* móvil/tablet: usa proporción fluida */
-@media (max-width: 991.98px){
-  .services .card .art{
-    height: auto !important;
-    aspect-ratio: 16 / 10;
-  }
-  .services .card .art img.art-img{
-    position: static;
-    height: 100%;
-  }
-}
-
-.services .card .art{ height:200px !important; }
-
-/* Full-bleed para las imágenes de las tarjetas (PC y móvil) */
-.services .card .art{
-  padding: 0 !important;          /* elimina el marco interno que deja ese espacio */
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.services .card .art img.art-img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;               /* recorta centrado sin deformar */
-  display: block;
-}
-
-/* Alto fijo en desktop para alinear */
-@media (min-width: 992px){
-  .services .card .art{ height: 200px !important; }
-}
+  <a class="fab" href="contacto.html">Contacta con nosotros</a>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
