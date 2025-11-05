@@ -1,8 +1,19 @@
 @ -1,66 +1,74 @@
 /* DoberWhite — Tema monocromático limpio */
 :root{
-  --bg:#0b0e14; --panel:#111522; --ink:#ffffff; --muted:#b4bac8; --line:#1d2333; --accent:#00e18e;
+  /* Base marca */
+  --bg:       #0b0f17;   /* negro-azul profundo */
+  --panel:    #101726;   /* tarjeta */
+  --panel-2:  #0d1422;   /* degradé sutil (opcional) */
+  --ink:      #dce3ee;   /* texto principal (mejor legibilidad que #fff) */
+  --muted:    #9aa7bb;   /* texto secundario */
+  --line:     #1f2a3d;   /* bordes suaves */
+
+  /* Marca */
+  --accent:       #00e18e; /* verde millonario */
+  --accent-ink:   #052b1f; /* texto sobre verde */
 }
+
 *{box-sizing:border-box} html,body{height:100%}
 body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);}
 
