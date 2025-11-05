@@ -86,3 +86,27 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 .hero h1{ font-size:clamp(40px,5vw,72px); line-height:1.1; margin:0 0 12px; }
 .hero .sub{ margin-top:4px; }
 .hero .value{ margin-top:12px; }
+/* === HERO NORMAL (override final) === */
+body section.hero,
+body .hero{
+  padding: 48px 0 28px !important;  /* alto normal */
+  min-height: auto !important;
+}
+
+body section.hero .container,
+body section.hero .inner,
+body section.hero .wrapper{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body section.hero h1{
+  font-size: clamp(44px, 6vw, 84px) !important; /* tamaño grande */
+  line-height: 1.08 !important;
+  margin: 0 0 12px !important;
+}
+
+body section.hero .sub{ margin-top: 4px !important; }
+body section.hero .value{ margin-top: 12px !important; }
+
+body section.hero + .services{ margin-top: 24px !important; }
