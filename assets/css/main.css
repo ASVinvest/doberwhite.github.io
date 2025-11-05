@@ -91,7 +91,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 
 .services .card .art{
   position: relative;
-  height: 200px !important;      /* fija alto en PC */
+  height: 400px !important;      /* fija alto en PC */
   border-radius: 12px;
   overflow: hidden;
 }
