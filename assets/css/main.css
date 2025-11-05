@@ -148,7 +148,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 
 /* Compacta el hero (desktop y móvil) */
 .hero{ padding: 24px 0 12px !important; }
-.hero h1{ margin: 0 0 6px !important; line-height: 1.05; }
+.hero h1{ margin: 12px 0 6px !important; line-height: 1.05; }
 .hero .sub{ margin-top: 2px !important; }
 .hero .value{ margin-top: 8px !important; }
 
