@@ -138,3 +138,78 @@ a{ color:#0b1320; }
 /* anula el override global para links dentro del menú */
 .site-menu a *{ color: inherit !important; }
 
+
+/* Final final, hasta antes de corregir los datos de tabla de rendmientos.
+
+/* ===== Contraste tabla de métricas (Rendimientos) ===== */
+.metrics, .metrics-table{ --bgCell:#101726; --bgHead:#0b1320; --bd:#1f2a3d; --txt:#dce3ee; --mut:#9aa7bb; }
+
+.metrics-table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;      /* filas “flotantes” */
+}
+
+.metrics-table thead th{
+  background: var(--bgHead);
+  color: var(--txt);
+  font-weight: 800;
+  padding: 10px 12px;
+  border-top: 1px solid var(--bd);
+  border-bottom: 1px solid var(--bd);
+}
+.metrics-table thead th:first-child{ border-radius: 12px 0 0 12px; }
+.metrics-table thead th:last-child{  border-radius: 0 12px 12px 0;  }
+
+/* celdas */
+.metrics-table tbody td{
+  background: var(--bgCell);
+  color: var(--txt);
+  padding: 10px 12px;
+  border: 1px solid var(--bd);
+}
+
+/* redondeo por fila */
+.metrics-table tbody tr td:first-child{ border-radius: 12px 0 0 12px; }
+.metrics-table tbody tr td:last-child{  border-radius: 0 12px 12px 0;  }
+
+/* “chips” de valores (si la celda trae spans) */
+.metrics-table tbody td span,
+.metrics-table tbody td .chip{
+  display:inline-block;
+  background:#1a2233;
+  color:#dce3ee;
+  padding:4px 8px;
+  border-radius:8px;
+  line-height:1;
+}
+
+/* resaltar datos clave con el verde marca */
+.metrics-table tbody td.is-good,
+.metrics-table tbody td .ok{
+  background:#00e18e;
+  color:#052b1f;
+  font-weight:800;
+}
+
+/* subtítulo bajo el h1 en esta página */
+.rendimientos-intro{ color:#9aa7bb; }
+
+/* responsive */
+@media (max-width: 640px){
+  .metrics-table{ font-size: 14px; }
+  .metrics-table thead{ display:none; }
+  .metrics-table tbody tr{
+    display:block; margin:0 0 12px; border-radius:12px; overflow:hidden;
+  }
+  .metrics-table tbody td{
+    display:flex; justify-content:space-between; gap:12px;
+    border-top:none; border-bottom:1px solid var(--bd);
+  }
+  .metrics-table tbody td::before{
+    content: attr(data-label);
+    color: var(--mut);
+    font-weight:600;
+  }
+}
+
