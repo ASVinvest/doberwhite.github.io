@@ -146,16 +146,14 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
   .services .card .art svg{ height:auto !important; aspect-ratio:16/10; }
 }
 
-/* Compacta el hero (desktop y móvil) */
-.hero{ padding: 24px 0 12px !important; }
-.hero h1{ margin: 12px 0 6px !important; line-height: 1.05; }
-.hero .sub{ margin-top: 2px !important; }
-.hero .value{ margin-top: 8px !important; }
-
-/* Aún más compacto en desktop */
-@media (min-width: 992px){
-  .hero{ padding: 18px 0 8px !important; }
+:root{
+  --hero-pt: 8px;
+  --hero-pb: 6px;
+  --hero-h1: clamp(32px, 4vw, 54px);
 }
-@media (min-width: 992px){
-  .hero h1{ font-size: clamp(36px, 4.2vw, 64px); } /* le baja ~10–15% en pantallas grandes */
-}
+.hero{ padding: var(--hero-pt) 0 var(--hero-pb) !important; }
+.hero .container{ padding-top:0!important; padding-bottom:0!important; }
+.hero h1{ margin:0 0 6px!important; line-height:1.05!important; font-size:var(--hero-h1)!important; }
+.hero .sub{ margin-top:2px!important; }
+.hero .value{ margin-top:6px!important; }
+.hero + .services{ margin-top:8px!important; }
