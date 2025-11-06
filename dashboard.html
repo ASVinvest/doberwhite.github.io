@@ -1,136 +1,102 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <title>Dashboard — DoberWhite Capital</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="assets/css/main.css">
-
-  <!-- Estilo claro tipo Excel (solo para esta página) -->
-  <style>
-    :root{
-      --dw-green:#00e18e;        /* color marca */
-      --dw-border:#e7eaf0;
-      --dw-text:#111;
-      --dw-muted:#6b7280;
-    }
-    body{background:#fff;color:var(--dw-text)}
-    .dw-wrap{padding:16px}
-    .dw-layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
-    .dw-aside{background:#fff;border:1px solid var(--dw-border);border-radius:12px;padding:14px}
-    .dw-aside h4{margin:0 0 8px;font-weight:700}
-    .dw-kpis{list-style:none;margin:0;padding:0;border-top:2px solid #111}
-    .dw-kpis li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e6e6e6}
-    .dw-kpis li span:first-child{color:var(--dw-muted)}
-    .dw-kpis li span:last-child{font-variant-numeric:tabular-nums}
-    .dw-kpis .neg{color:#c62828}
+<script>
+  (async () => {
+    // A) Cargar datos
+    const res = await fetch('./assets/data/dashboard/data.json'); // <- ruta correcta
+    if (!res.ok) { console.error('No se encontró data.json', res.status); return; }
+    const data = await res.json();
   
-    .dw-section{margin-top:6px}
-    .dw-subtitle{font-style:italic;font-weight:700;text-align:center;margin:0 0 6px;color:#222;opacity:.9}
+    // B) KPIs (Profitability con 1 decimal)
+    const list = document.getElementById('dw-kpis');
+    const nf0 = new Intl.NumberFormat('es-CL',{maximumFractionDigits:0});
+    const nf1 = new Intl.NumberFormat('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});
+    const order = ["Win Rate","Profitability","Risk Benefit","N° Trades","N° Trades Win","N° Trades Loss",
+                   "P&L (USD)","Win Average","Loss Average","WipeOut","% Average SL","Comission"];
+    list.innerHTML = '';
+    order.forEach(k=>{
+      let v = data.kpis[k];
+      if (k==="Profitability") v = nf1.format(v)+"%";
+      else if (k==="Win Rate"||k==="WipeOut"||k==="% Average SL") v = nf0.format(v)+"%";
+      else if (k==="P&L (USD)") v = "$ "+nf0.format(v);
+      list.insertAdjacentHTML('beforeend', `<li><span>${k}</span><span>${v}</span></li>`);
+    });
+    const p = document.getElementById('dw-periodo');
+    if (p) p.textContent = `From: ${data.period.from} → ${data.period.to}`;
   
-    .dw-grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-    .dw-card{grid-column:span 4;background:#fff;border:1px solid var(--dw-border);border-radius:12px;
-             box-shadow:0 2px 8px rgba(17,24,39,.06)}
-    .dw-card h3{margin:12px 14px 0;font-weight:700}
-    .dw-chart{height:260px;width:100%}
+    // C) Dibujar charts (ECharts DEBE estar cargado ya)
+    if (!window.echarts) { console.error('ECharts no cargó'); return; }
+    const $ = id => echarts.init(document.getElementById(id));
   
-    @media (max-width:1100px){.dw-card{grid-column:span 6}.dw-layout{grid-template-columns:1fr}}
-    @media (max-width:700px){.dw-card{grid-column:span 12}.dw-chart{height:220px}}
-  </style>
+    $('#ch_balance').setOption({
+      tooltip:{trigger:'axis'},
+      xAxis:{type:'category',data:data.balance.labels},
+      yAxis:{type:'value'},
+      series:[{type:'bar',data:data.balance.values}]
+    });
   
-
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-</head>
-<body>
-
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container bar">
-      <a class="brand" href="index.html"><span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span></a>
-      <a class="menu-button" href="#menu">Menú</a>
-    </div>
-  </header>
-
-  <!-- Menú (mismo que en index) -->
-  <nav class="site-menu" id="menu" aria-hidden="true">
-    <div class="inner">
-      <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="institucionales.html">Servicios institucionales</a></li>
-        <li><a href="particulares.html">Servicios particulares</a></li>
-        <li><a href="cursos.html">Cursos & seminarios</a></li>
-        <li><a href="valores.html">Nuestros valores</a></li>
-        <li class="active"><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="informes.html">Informes Privados</a></li>
-        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="hero" style="background:#fff;color:#111;border-bottom:1px solid #eee">
-    <div class="container">
-      <h1 style="color:#111">Dashboard</h1>
-      <p class="sub" id="dw-periodo" style="color:#444">Performance SYNC</p>
-    </div>
-  </section>
-
-  <!-- Dashboard -->
-  <section class="dw-wrap">
-    <div class="container">
-      <div class="dw-layout">
-
-        <!-- KPIs -->
-        <aside class="dw-aside">
-          <div class="dw-subtitle">Ratio <span style="font-weight:400">YTD</span></div>
-          <ul id="dw-kpis" class="dw-kpis"></ul>
-        </aside>
-
-        <!-- Contenido -->
-        <div>
-          <div class="dw-section">
-            <div class="dw-subtitle">P&L</div>
-            <div class="dw-grid">
-              <div class="dw-card"><h3>Balance USD</h3><div id="ch_balance" class="dw-chart"></div></div>
-              <div class="dw-card"><h3>Montly USD</h3><div id="ch_monthly" class="dw-chart"></div></div>
-              <div class="dw-card"><h3>Distribution USD</h3><div id="ch_distribution" class="dw-chart"></div></div>
-            </div>
-          </div>
-
-          <div class="dw-section">
-            <div class="dw-subtitle">Assets</div>
-            <div class="dw-grid">
-              <div class="dw-card"><h3>Allocation</h3><div id="ch_allocation" class="dw-chart"></div></div>
-              <div class="dw-card"><h3>P&L USD</h3><div id="ch_pl_assets" class="dw-chart"></div></div>
-              <div class="dw-card"><h3>Win rate</h3><div id="ch_wr_assets" class="dw-chart"></div></div>
-            </div>
-          </div>
-
-          <div class="dw-section">
-            <div class="dw-subtitle">Miscellaneous</div>
-            <div class="dw-grid">
-              <div class="dw-card"><h3>Distribution trading days</h3><div id="ch_days_dist" class="dw-chart"></div></div>
-              <div class="dw-card"><h3>Performance day</h3><div id="ch_days_perf" class="dw-chart"></div></div>
-              <div class="dw-card"><h3>Average Position</h3><div id="ch_avg_pos" class="dw-chart"></div></div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer mínimo -->
-  <footer class="site-footer" style="background:#fff;color:#111;border-top:1px solid #eee">
-    <div class="container mini">
-      <div>El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo de perder.</div>
-      <div style="margin-top:8px">&copy; DoberWhite 2025 · Design: Ariel Salazar</div>
-    </div>
-  </footer>
-
-  <!-- Carga SOLO como script (no pegar el JS aquí en texto) -->
-  <script src="/assets/js/dashboard.js"></script> 
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-     <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
-</body>
-</html>
+    $('#ch_monthly').setOption({
+      tooltip:{trigger:'axis'},
+      xAxis:{type:'category',data:data.monthly.labels},
+      yAxis:{type:'value'},
+      series:[{type:'bar',data:data.monthly.values,label:{show:true,position:'top'}}]
+    });
+  
+    $('#ch_distribution').setOption({
+      tooltip:{trigger:'axis'},
+      legend:{data:['n°','Beneficio']},
+      xAxis:{type:'category',data:data.distribution.labels},
+      yAxis:[{type:'value',name:'n°'},{type:'value',name:'USD'}],
+      series:[
+        {name:'n°', type:'bar', data:data.distribution.counts, yAxisIndex:0},
+        {name:'Beneficio', type:'bar', data:data.distribution.pnl, yAxisIndex:1}
+      ]
+    });
+  
+    $('#ch_allocation').setOption({
+      tooltip:{trigger:'item',formatter:'{b}: {d}%'},
+      series:[{type:'pie',radius:['45%','70%'],
+        data:data.allocation.labels.map((l,i)=>({name:l,value:data.allocation.values[i]}))
+      }]
+    });
+  
+    $('#ch_pl_assets').setOption({
+      tooltip:{trigger:'axis'},
+      xAxis:{type:'value'},
+      yAxis:{type:'category',data:data.plAssets.labels},
+      series:[{type:'bar',data:data.plAssets.values}]
+    });
+  
+    $('#ch_wr_assets').setOption({
+      tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+      xAxis:{type:'category',data:data.wrAssets.labels},
+      yAxis:{type:'value'},
+      series:[{type:'bar',data:data.wrAssets.values,label:{show:true,position:'top',formatter:'{c}%'}}]
+    });
+  
+    $('#ch_days_dist').setOption({
+      tooltip:{trigger:'axis'},
+      xAxis:{type:'category',data:data.daysDist.labels},
+      yAxis:{type:'value'},
+      series:[{type:'bar',data:data.daysDist.values}]
+    });
+  
+    $('#ch_days_perf').setOption({
+      tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+      xAxis:{type:'category',data:data.daysPerf.labels},
+      yAxis:{type:'value'},
+      series:[{type:'bar',data:data.daysPerf.values,label:{show:true,position:'top',formatter:'{c}%'}}]
+    });
+  
+    $('#ch_avg_pos').setOption({
+      tooltip:{trigger:'axis'},
+      xAxis:{type:'value'},
+      yAxis:{type:'category',data:data.avgPos.labels},
+      series:[{type:'bar',data:data.avgPos.values,label:{show:true,position:'right'}}]
+    });
+  
+    // D) Resize
+    window.addEventListener('resize', () =>
+      document.querySelectorAll('.dw-chart').forEach(n => echarts.getInstanceByDom(n)?.resize())
+    );
+  })();
+  </script>
+  
