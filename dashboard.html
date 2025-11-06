@@ -129,12 +129,40 @@
   </footer>
 
   <!-- Carga SOLO como script (no pegar el JS aquí en texto) -->
-  <script src="/assets/js/dashboard.js"></script>
+   <!--  <script src="/assets/js/dashboard.js"></script>-->
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-  <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
+    <!-- <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>-->
 
-
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        const res = await fetch('assets/data/dashboard/data.json'); // ruta de tu JSON
+        const data = await res.json();
+      
+        // Periodo (opcional)
+        const p = document.getElementById('dw-periodo');
+        if (p) p.textContent = `From: ${data.period.from} → ${data.period.to}`;
+      
+        // === KPIs ===
+        const list = document.getElementById('dw-kpis');
+        list.innerHTML = '';
+      
+        const nf0 = new Intl.NumberFormat('es-CL',{maximumFractionDigits:0});
+        const nf1 = new Intl.NumberFormat('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});
+      
+        const order = ["Win Rate","Profitability","Risk Benefit","N° Trades","N° Trades Win","N° Trades Loss",
+                       "P&L (USD)","Win Average","Loss Average","WipeOut","% Average SL","Comission"];
+      
+        order.forEach(k => {
+          let v = data.kpis[k];
+          if (k === "Profitability") v = nf1.format(v) + "%";                  // ← 1 decimal aquí
+          else if (k === "Win Rate" || k === "WipeOut" || k === "% Average SL") v = nf0.format(v) + "%";
+          else if (k === "P&L (USD)") v = "$ " + nf0.format(v);
+          list.insertAdjacentHTML('beforeend', `<li><span>${k}</span><span>${v}</span></li>`);
+        });
+      });
+      </script>
+      
 
 
   
