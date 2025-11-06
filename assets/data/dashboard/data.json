@@ -1,6 +1,6 @@
 {
   "period": {"from":"OCT-25","to":"06-11-2025"},
-  "kpis":{"Win Rate":37,"Profitability":0.6,"Risk Benefit":2.1,"N° Trades":132,"N° Trades Win":49,"N° Trades Loss":83,"P&L (USD)":369,"Win Average":42.7,"Loss Average":-20.0,"WipeOut":0,"% Average SL":20,"Comission":60},
+  "kpis":{"Win Rate":37,"Profitability":"0.6","Risk Benefit":2.1,"N° Trades":132,"N° Trades Win":49,"N° Trades Loss":83,"P&L (USD)":369,"Win Average":42.7,"Loss Average":-20.0,"WipeOut":0,"% Average SL":20,"Comission":60},
   "balance":{"labels":["oct-25","nov-25"],"values":[50691,50429]},
   "monthly":{"labels":["oct","Nov"],"values":[691.14,-262.38]},
   "distribution":{"labels":["buy","sell"],"counts":[84,48],"pnl":[42.99,385.77]},
