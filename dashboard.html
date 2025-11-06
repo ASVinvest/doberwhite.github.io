@@ -132,34 +132,44 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
   <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
 
-  <!-- Fix: mostrar Profitability con 1 decimal (0,6%) sin tocar tu JS actual -->
+  <!-- Forzar Profitability desde data.json a 1 decimal (0,6%) incluso si dashboard.js lo redibuja -->
   <script>
-    window.addEventListener('load', () => {
+    (async function () {
+      const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      // lee el JSON real
+      let json = null;
+      try {
+        const res = await fetch('assets/data/dashboard/data.json');
+        if (res.ok) json = await res.json();
+      } catch (e) { /* ignora */ }
+
+      function apply(val) {
+        const ul = document.getElementById('dw-kpis');
+        if (!ul) return false;
+        const li = [...ul.querySelectorAll('li')]
+          .find(x => x.querySelector('span:first-child')?.textContent?.trim() === 'Profitability');
+        if (!li) return false;
+        const value = Number(val);
+        if (!Number.isFinite(value)) return false;
+        li.querySelector('span:last-child').textContent = nf1.format(value) + '%';
+        return true;
+      }
+
+      // 1) intenta con el valor del JSON (0.6)
+      if (json && json.kpis && typeof json.kpis["Profitability"] === 'number') {
+        if (apply(json.kpis["Profitability"])) return;
+      }
+
+      // 2) si aún no existe la fila, observa hasta que el UL sea pintado por dashboard.js y aplica el valor del JSON
       const ul = document.getElementById('dw-kpis');
       if (!ul) return;
-
-      const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-
-      const formatOnce = () => {
-        const li = [...ul.querySelectorAll('li')].find(
-          x => x.querySelector('span:first-child')?.textContent?.trim() === 'Profitability'
-        );
-        if (!li) return false;
-
-        const valEl = li.querySelector('span:last-child');
-        if (!valEl) return false;
-
-        const n = parseFloat(valEl.textContent.replace('%','').replace(',','.'));
-        if (Number.isFinite(n)) valEl.textContent = nf1.format(n) + '%';
-        return true;
-      };
-
-      // Formatea ahora y cada vez que el UL sea repintado por dashboard.js
-      if (!formatOnce()) {
-        const obs = new MutationObserver(() => { if (formatOnce()) obs.disconnect(); });
-        obs.observe(ul, { childList: true, subtree: true, characterData: true });
-      }
-    });
+      const obs = new MutationObserver(() => {
+        if (json?.kpis?.["Profitability"] != null && apply(json.kpis["Profitability"])) {
+          obs.disconnect();
+        }
+      });
+      obs.observe(ul, { childList: true, subtree: true, characterData: true });
+    })();
   </script>
 </body>
 </html>
