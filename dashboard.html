@@ -9,9 +9,9 @@
     })();
   </script>
   <!-- fin login -->
-   <!-- inicio boton salir-->
+   <!-- inicio boton salir
   <a href="#" onclick="localStorage.removeItem('dw_auth');localStorage.removeItem('dw_user');location.href='login.html'">Salir</a>
-<!-- fin boton salir-->
+   fin boton salir-->
   <meta charset="utf-8">
   <title>Dashboard — DoberWhite Capital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -62,6 +62,17 @@
       <a class="brand" href="index.html"><span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span></a>
       <a class="menu-button" href="#menu">Menú</a>
     </div>
+ <!-- ⬇️ NUEVO: barra de usuario -->
+ <div class="container mini" style="display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:8px">
+  <span id="dw-user" style="opacity:.75"></span>
+  <button id="dw-logout"
+          style="border:1px solid var(--line);background:var(--panel);color:var(--ink);
+                 padding:6px 10px;border-radius:10px;cursor:pointer">
+    Cerrar sesión
+  </button>
+</div>
+
+
   </header>
 
   <!-- Menú (mismo que en index) -->
@@ -185,5 +196,25 @@
       obs.observe(ul, { childList: true, subtree: true, characterData: true });
     })();
   </script>
+   <!-- Fuerzs y botón la salida -->
+<script>
+  (function () {
+    // Muestra el usuario logueado
+    var u = localStorage.getItem('dw_user');
+    var el = document.getElementById('dw-user');
+    if (el) el.textContent = u || '';
+
+    // Cerrar sesión
+    var btn = document.getElementById('dw-logout');
+    if (btn) {
+      btn.addEventListener('click', function(){
+        localStorage.removeItem('dw_auth');
+        localStorage.removeItem('dw_user');
+        location.href = 'login.html';
+      });
+    }
+  })();
+</script>
+
 </body>
 </html>
