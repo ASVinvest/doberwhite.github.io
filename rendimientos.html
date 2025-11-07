@@ -138,47 +138,108 @@ table.metrics-table{
     </div>
   </section>
 
-  <!-- Tabla de métricas -->
-  <section class="section">
-    <div class="container">
-      <header style="margin-bottom:12px"><h2 style="margin:0">Métricas</h2></header>
-      <div class="table-outer">
-        <div class="table-scroll" tabindex="0" aria-label="Tabla de métricas desplazable horizontalmente">
-          <table class="metrics-table"></table>>
-            <thead>
-              <tr>
-                <th>Fecha inicio</th>
-                <th>Estrategia</th>
-                <th>YTD</th>
-                <th>Max DD</th>
-                <th>Win rate</th>
-                <th>RR medio</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td> Julio 25</td>
-                <td> ASV Sync</td>
-                <td> -3.0%</td>
-                <td> -3.0%</td>
-                <td> 39.0%</td>
-                <td> 2.3</td>
-              </tr>
-            <!--  <tr>
-                <td>Adolfito Pro</td>
-                <td>12.4%</td>
-                <td>8.1%</td>
-                <td>1.08</td>
-                <td>1.52</td>
-                <td>-17.3%</td>
-                <td>16</td>
-                <td>392</td>
-                <td>51.0%</td>
-                <td>1.22</td>
-              </tr>
-               Puedes agregar más estrategias aquí -->
-            </tbody>
-          </table> 
+<!-- Tabla de métricas -->
+<section class="section" id="metrics">
+  <style>
+    /* ---- estilos SOLO para esta sección (#metrics) ---- */
+    #metrics .m-table{
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+      background:transparent;
+    }
+    #metrics .m-scroll{
+      overflow-x:auto;                 /* scroll horizontal */
+      -webkit-overflow-scrolling:touch;
+      touch-action: pan-x;
+      display:block;
+    }
+    #metrics table.m-metrics{
+      width:100%;
+      min-width:720px;                 /* da espacio para deslizar */
+      border-collapse:separate;
+      border-spacing:0;
+      font-size:14px;
+    }
+    #metrics thead th{
+      background:#0f1422;              /* header dark, marca */
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:12px;
+      padding:12px 14px;
+      text-align:left;
+      border-bottom:1px solid var(--line);
+      white-space:nowrap;
+    }
+    #metrics tbody td{
+      background:var(--panel);
+      color:var(--ink);
+      padding:14px;
+      border-bottom:1px solid var(--line);
+    }
+    #metrics tbody tr:hover td{ background:rgba(255,255,255,.03); }
+
+    /* numéricos a la derecha */
+    #metrics td:nth-child(3),
+    #metrics td:nth-child(4),
+    #metrics td:nth-child(5),
+    #metrics td:nth-child(6){ text-align:right; }
+
+    /* chips para % positivos/negativos */
+    #metrics .kpi{
+      display:inline-block; padding:2px 8px; border-radius:999px;
+      font-weight:700; font-size:12px;
+    }
+    #metrics .kpi--pos{ background:rgba(0,225,142,.12); color:#00e18e; }
+    #metrics .kpi--neg{ background:rgba(255,99,99,.16); color:#ff6b6b; }
+  </style>
+
+  <div class="container">
+    <header style="margin-bottom:12px">
+      <h2 style="margin:0">Métricas</h2>
+    </header>
+
+    <div class="m-table">
+      <div class="m-scroll" tabindex="0" aria-label="Tabla de métricas desplazable horizontalmente">
+        <table class="m-metrics">
+          <thead>
+            <tr>
+              <th>Fecha inicio</th>
+              <th>Estrategia</th>
+              <th>YTD</th>
+              <th>Max DD</th>
+              <th>Win rate</th>
+              <th>RR medio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Julio 25</td>
+              <td>ASV Sync</td>
+              <td><span class="kpi kpi--neg">-3,0%</span></td>
+              <td><span class="kpi kpi--neg">-3,0%</span></td>
+              <td>39,0%</td>
+              <td>2,3</td>
+            </tr>
+            <!--
+            <tr>
+              <td>...</td>
+              <td>Adolfito Pro</td>
+              <td><span class="kpi kpi--pos">+8,1%</span></td>
+              <td><span class="kpi kpi--neg">-17,3%</span></td>
+              <td>51,0%</td>
+              <td>1,22</td>
+            </tr>
+            Más estrategias aquí (deja este bloque comentado como recordatorio)
+            -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
           
           
           
