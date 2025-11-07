@@ -1,40 +1,76 @@
 (async function(){
-    const form = document.getElementById('dw-login');
-    const err  = document.getElementById('err');
-  
-    // Utilidad: lee CSV simple (email,password,active)
-    async function loadUsers(){
-      const res = await fetch('assets/data/users.csv', {cache:'no-store'});
-      if(!res.ok) throw new Error('No se pudo leer users.csv');
-      const txt = await res.text();
-      const lines = txt.trim().split(/\r?\n/);
-      const header = lines.shift(); // "email,password,active"
-      return lines.map(l=>{
-        const [email,password,active] = l.split(',');
-        return { email: (email||'').trim().toLowerCase(),
-                 password: (password||'').trim(),
-                 active: ((active||'').trim().toLowerCase()==='true') };
-      });
+  const form = document.getElementById('dw-login');
+  const err  = document.getElementById('err');
+
+  // Normaliza una celda: quita BOM, comillas, espacios raros
+  const clean = (s) => (s||'')
+    .replace(/^\uFEFF/, '')           // BOM al inicio
+    .replace(/^["']|["']$/g,'')       // comillas al borde
+    .trim()
+    .normalize('NFKC');
+
+  // Lee CSV simple (email,password,active) con coma o punto y coma
+  async function loadUsers(){
+    const res = await fetch('assets/data/users.csv', { cache:'no-store' });
+    if(!res.ok) {
+      console.warn('No se pudo leer users.csv', res.status);
+      return [];
     }
-  
-    const users = await loadUsers().catch(()=>[]);
-  
-    form.addEventListener('submit', e=>{
-      e.preventDefault();
-      err.style.display='none';
-  
-      const email = document.getElementById('email').value.trim().toLowerCase();
-      const pass  = document.getElementById('password').value;
-  
-      const u = users.find(x=>x.email===email && x.password===pass && x.active);
-      if(!u){
-        err.style.display='block';
-        return;
+    const txt = await res.text();
+
+    // Separa líneas
+    const lines = txt.split(/\r?\n/).filter(l => l.trim().length);
+    if(!lines.length) return [];
+
+    // Detecta separador por la cabecera
+    const header = clean(lines[0]);
+    const sep = header.includes(';') ? ';' : ',';
+
+    // Índices por nombre (por si el orden cambia)
+    const cols = header.split(sep).map(c => clean(c).toLowerCase());
+    const iEmail = cols.indexOf('email');
+    const iPass  = cols.indexOf('password');
+    const iAct   = cols.indexOf('active');
+
+    const users = [];
+    for(let i=1;i<lines.length;i++){
+      const raw = lines[i];
+      if(!raw.trim()) continue;
+      const parts = raw.split(sep).map(clean);
+
+      const email = (parts[iEmail] || '').toLowerCase();
+      const password = parts[iPass] || '';
+      const activeStr = (parts[iAct] || 'true').toLowerCase(); // si falta, asume true
+      const active = activeStr === 'true' || activeStr === '1' || activeStr === 'yes';
+
+      if(email && password){
+        users.push({ email, password, active });
       }
-      // Marca sesión y redirige al dashboard
-      localStorage.setItem('dw_auth','ok');
-      localStorage.setItem('dw_user', email);
-      window.location.href = 'dashboard.html';
-    });
-  })();
-  
+    }
+    return users;
+  }
+
+  let users = [];
+  try { users = await loadUsers(); }
+  catch(e){ console.error(e); }
+
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    err.style.display = 'none';
+
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const pass  = document.getElementById('password').value;
+
+    // Busca coincidencia exacta (case-insensitive para email)
+    const u = users.find(x => x.email === email && x.password === pass && x.active);
+
+    if(!u){
+      err.style.display = 'block';
+      return;
+    }
+    // Marca sesión y entra
+    localStorage.setItem('dw_auth','ok');
+    localStorage.setItem('dw_user', email);
+    window.location.href = 'dashboard.html';
+  });
+})();
