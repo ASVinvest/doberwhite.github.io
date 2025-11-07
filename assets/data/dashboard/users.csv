@@ -1,4 +1,2 @@
-email;salt;iter;dk;active;role
-trader@doberwhite.com;2f9c7a9d;120000;4f7a6c3c0d1f...<hex 64>...;1;viewer
-maria@cliente.com;7ab3e41c;120000;8c44a9b2e1d0...<hex 64>...;0;viewer
-ariel.salazar@izo.es,120000,0e971ecf34aa7844,5f00b6e5a28e56d981336e9e7a9e8a75b55e67cefa456496a6104593dd024d7d,true
+email;password:active
+ariel.salazar@izo.es,Prueba2025,true
