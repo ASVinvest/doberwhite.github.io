@@ -68,6 +68,28 @@
     @media(min-width: 768px){
    .table-scroll::after{ content:""; }
 }
+
+/* ---- Scroll horizontal para la tabla de Rendimientos ---- */
+.table-outer{ border:1px solid var(--line); border-radius:16px; background:transparent; overflow:hidden; }
+.table-scroll{
+  overflow-x:auto;                 /* <- clave para scroll horizontal */
+  -webkit-overflow-scrolling:touch;/* inercia en iOS */
+  touch-action: pan-x;             /* permite deslizar lateral con el dedo */
+  display:block;
+}
+.table-scroll:focus{ outline:none; } /* por si recibe foco con teclado */
+
+/* La tabla necesita ancho mínimo para que exista algo que desplazar */
+table.metrics-table{
+  width:100%;
+  min-width: 880px;                /* ajusta si quieres más/menos ancho mínimo */
+  border-collapse:separate; border-spacing:0 10px;
+}
+
+/* (Opcional) pista visual de que hay scroll disponible */
+.table-scroll::-webkit-scrollbar{ height:8px; }
+.table-scroll::-webkit-scrollbar-thumb{ background:#2a3852; border-radius:8px; }
+
 /* Verificación externa  a_rendimientos 6-11-2025 -22:29*/
   </style>
 </head>
@@ -120,9 +142,9 @@
   <section class="section">
     <div class="container">
       <header style="margin-bottom:12px"><h2 style="margin:0">Métricas</h2></header>
-      <div class="table-wrap">
-        <div class="metrics-table">
-          <table>
+      <div class="table-outer">
+        <div class="table-scroll" tabindex="0" aria-label="Tabla de métricas desplazable horizontalmente">
+          <table class="metrics-table"></table>>
             <thead>
               <tr>
                 <th>Fecha inicio</th>
