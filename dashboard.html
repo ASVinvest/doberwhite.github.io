@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- inicio login -->
+  <script>
+    (function(){
+      const ok = localStorage.getItem('dw_auth') === 'ok';
+      if(!ok) window.location.href = 'login.html';
+    })();
+  </script>
+  <!-- fin login -->
   <meta charset="utf-8">
   <title>Dashboard — DoberWhite Capital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
