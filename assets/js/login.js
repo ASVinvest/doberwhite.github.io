@@ -2,6 +2,9 @@
   const form = document.getElementById('dw-login');
   const err  = document.getElementById('err');
 
+  // 👉 Ruta correcta al CSV (carpeta /data/dashboard) + cache buster
+  const CSV_PATH = 'assets/data/dashboard/users.csv?v=' + Date.now();
+
   // Normaliza una celda: quita BOM, comillas, espacios raros
   const clean = (s) => (s||'')
     .replace(/^\uFEFF/, '')           // BOM al inicio
@@ -11,15 +14,15 @@
 
   // Lee CSV simple (email,password,active) con coma o punto y coma
   async function loadUsers(){
-    const res = await fetch('assets/data/dashboard/users.csv', { cache:'no-store' });
+    const res = await fetch(CSV_PATH, { cache:'no-store' });
     if(!res.ok) {
       console.warn('No se pudo leer users.csv', res.status);
       return [];
     }
     const txt = await res.text();
 
-    // Separa líneas
-    const lines = txt.split(/\r?\n/).filter(l => l.trim().length);
+    // Normaliza CRLF y separa líneas
+    const lines = txt.replace(/\r/g,'').split('\n').filter(l => l.trim().length);
     if(!lines.length) return [];
 
     // Detecta separador por la cabecera
