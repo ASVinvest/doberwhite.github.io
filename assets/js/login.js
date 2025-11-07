@@ -11,7 +11,7 @@
 
   // Lee CSV simple (email,password,active) con coma o punto y coma
   async function loadUsers(){
-    const res = await fetch('assets/data/users.csv', { cache:'no-store' });
+    const res = await fetch('assets/data/dashboard/users.csv', { cache:'no-store' });
     if(!res.ok) {
       console.warn('No se pudo leer users.csv', res.status);
       return [];
