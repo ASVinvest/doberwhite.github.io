@@ -1,13 +1,13 @@
 {
-  "period": {"from":"OCT-25","to":"11-11-2025"},
-  "kpis":{"Win Rate":36,"Profitability":0.6,"Risk Benefit":2.1,"N° Trades":149,"N° Trades Win":54,"N° Trades Loss":95,"P&L (USD)":305,"Win Average":44.1,"Loss Average":-21.0,"WipeOut":0,"% Average SL":21,"Comission":75},
-  "balance":{"labels":["oct-25","nov-25"],"values":[50691,50380]},
-  "monthly":{"labels":["oct","Nov"],"values":[691.14,-310.65]},
-  "distribution":{"labels":["buy","sell"],"counts":[93,56],"pnl":[180.94,199.55]},
+  "period": {"from":"13-10-2025","to":"12-11-2025"},
+  "kpis":{"Win Rate":38,"Profitability":1.1,"Risk Benefit":2.2,"N° Trades":157,"N° Trades Win":59,"N° Trades Loss":98,"P&L (USD)":547,"Win Average":46.3,"Loss Average":-21.5,"WipeOut":0,"% Average SL":22,"Comission":77},
+  "balance":{"labels":["oct-25","nov-25"],"values":[50691,50625]},
+  "monthly":{"labels":["oct","Nov"],"values":[691.14,-86.83]},
+  "distribution":{"labels":["buy","sell"],"counts":[98,59],"pnl":[401.04,223.47]},
   "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[15,39,43,3]},
-  "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[245.06,442.21,-12.83,-293.95]},
-  "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[42,32,38,0]},
-  "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[20,26,17,20,16]},
-  "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[37,36,46,33,29]},
-  "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.23,0.13,0.07,0.01]}
+  "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[528.23,453.61,-12.83,-344.50]},
+  "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[42,33,39,0]},
+  "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[19,25,22,19,15]},
+  "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[37,36,50,33,29]},
+  "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.23,0.14,0.07,0.01]}
 }
