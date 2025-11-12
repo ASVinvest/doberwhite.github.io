@@ -2,7 +2,7 @@
   "period": {"from":"13-10-2025","to":"12-11-2025"},
   "kpis":{"Win Rate":38,"Profitability":1.1,"Risk Benefit":2.2,"N° Trades":157,"N° Trades Win":59,"N° Trades Loss":98,"P&L (USD)":547,"Win Average":46.3,"Loss Average":-21.5,"WipeOut":0,"% Average SL":22,"Comission":77},
   "balance":{"labels":["oct-25","nov-25"],"values":[50642,50547]},
-  "monthly":{"labels":["oct","Nov"],"values":[691.14,-86.83]},
+  "monthly":{"labels":["oct","Nov"],"values":[642.03,-94.73]},
   "distribution":{"labels":["buy","sell"],"counts":[98,59],"pnl":[358.50,188.80]},
   "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[15,39,43,3]},
   "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[512.28,393.71,-14.19,-344.50]},
