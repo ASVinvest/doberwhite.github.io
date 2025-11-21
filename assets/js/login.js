@@ -50,7 +50,7 @@
     return users;
   }
 
-  // seguridad: sólo permitimos como next estas dos páginas
+  // Sanitiza la página pedida (?next=)
   function basePage(p){
     if(!p) return '';
     try{
@@ -65,7 +65,7 @@
     }catch(e){ return ''; }
   }
 
-  // lo que cada rol puede ver
+  // Permisos por rol/página
   function isAllowed(scope, page){
     if(!page) return false;
     if(scope === 'small') return page === 'dashboard_s.html';
@@ -75,6 +75,11 @@
 
   let users = [];
   try { users = await loadUsers(); } catch(e){ console.error(e); }
+
+  if(!form){
+    console.warn('No se encontró el formulario #dw-login');
+    return;
+  }
 
   form.addEventListener('submit', e=>{
     e.preventDefault();
@@ -89,17 +94,17 @@
       return;
     }
 
-    // sesión
+    // Sesión
     localStorage.setItem('dw_auth','ok');
     localStorage.setItem('dw_user',  u.email);
     localStorage.setItem('dw_scope', u.scope);
     localStorage.setItem('dw_home',  u.home);
 
-    // decide destino
-    const req = getNext();                            // lo que pidió la URL
-    const target = isAllowed(u.scope, req) ? req      // si está permitido, vamos ahí
-                  : (isAllowed(u.scope, u.home) ? u.home  // si no, a su home válido
-                  : (u.scope === 'small' ? 'dashboard_s.html' : 'dashboard.html')); // fallback
+    // Decide destino: next permitido > home permitido > fallback por rol
+    const req = getNext();
+    const target = isAllowed(u.scope, req) ? req
+                  : (isAllowed(u.scope, u.home) ? u.home
+                    : (u.scope === 'small' ? 'dashboard_s.html' : 'dashboard.html'));
 
     window.location.href = target;
   });
