@@ -1,14 +1,64 @@
 {
-    "period": {"from":"13-10-2025","to":"20-11-2025"},
-    "kpis":{"Win Rate":37,"Profitability":1.4,"Risk Benefit":2.3,"N° Trades":176,"N° Trades Win":65,"N° Trades Loss":111,"P&L (USD)":5000,"Win Average":46.7,"Loss Average":-20.4,"WipeOut":0,"% Average SL":21,"Comission":90},
-    "balance":{"labels":["oct-25","nov-25"],"values":[50642,55685]},
-    "monthly":{"labels":["oct","Nov"],"values":[642.03,42.70]},
-    "distribution":{"labels":["buy","sell"],"counts":[106,70],"pnl":[371.54,313.19]},
-    "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[27,32,40,2]},
-    "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[552.60,329.03,-14.19,-182.71]},
-    "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[43,30,40,0]},
-    "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[22,26,19,20,14]},
-    "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[34,33,50,37,29]},
-    "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.23,0.14,0.07,0.01]}
+  "period": { "from": "Jul-25", "to": "21-11-2025" },
+
+  "kpis": {
+    "Win Rate": 42,
+    "Profitability": -2.4,
+    "Risk Benefit": 1.1,
+    "N° Trades": 65,
+    "N° Trades Win": 27,
+    "N° Trades Loss": 38,
+    "P&L (USD)": -47,
+    "Win Average": 6.8,
+    "Loss Average": -6.1,
+    "WipeOut": 13,
+    "% Average SL": 57,
+    "Comission": -13
+  },
+
+  "balance": {
+    "labels": ["jul-25", "ago-25", "sept-25"],
+    "values": [1993, 2019, 1963]
+  },
+
+  "monthly": {
+    "labels": ["jul", "ago", "sept", "oct", "nov"],
+    "values": [-7.25, 26.55, -56.54, -8.91, -1.26]
+  },
+
+  "distribution": {
+    "labels": ["buy", "sell"],
+    "counts": [59, 6],
+    "pnl": [-22.93, -24.48]
+  },
+
+  "allocation": {
+    "labels": ["GBPUSD", "NAS100", "USDJPY", "XAUUSD"],
+    "values": [14, 35, 29, 22]
+  },
+
+  "plAssets": {
+    "labels": ["USDJPY", "GBPUSD", "XAUUSD", "NAS100"],
+    "values": [22.59, -11.33, -27.61, -31.06]
+  },
+
+  "wrAssets": {
+    "labels": ["XAUUSD", "NAS100", "GBPUSD", "USDJPY"],
+    "values": [33, 35, 36, 58]
+  },
+
+  "daysDist": {
+    "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+    "values": [35, 14, 20, 17, 14]
+  },
+
+  "daysPerf": {
+    "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+    "values": [48, 22, 31, 45, 56]
+  },
+
+  "avgPos": {
+    "labels": ["NAS100", "USDJPY", "GBPUSD", "XAUUSD"],
+    "values": [0.12, 0.05, 0.05, 0.01]
   }
-  
+}
