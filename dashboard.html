@@ -14,14 +14,14 @@
         return;
       }
     
-      const allow = ['admin','main'].includes(scope);
+      const allow = (scope === 'admin' || scope === 'main');
       if(!allow){
-        // Si NO tiene permiso, llévalo a su home (small -> dashboard_s.html)
         const here = location.pathname.split('/').pop() || 'dashboard.html';
         if (here !== home) location.replace(home);
       }
     })();
     </script>
+    
     
     
     
