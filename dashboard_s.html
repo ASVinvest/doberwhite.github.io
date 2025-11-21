@@ -9,17 +9,24 @@
       let   home  = (localStorage.getItem('dw_home')  || '').trim();
     
       if(!home) home = (scope === 'small' ? 'dashboard_s.html' : 'dashboard.html');
+    
       const allow = ['admin','small'].includes(scope);
+      const here = location.pathname.split('/').pop() || 'dashboard_s.html';
     
       if(!ok){
-        window.location.href = 'login.html?next=dashboard_s.html';
+        location.replace('login.html?next=' + encodeURIComponent('dashboard_s.html'));
         return;
       }
+    
       if(!allow){
-        window.location.href = home;
+        if (here !== home) {
+          location.replace(home);
+        }
+        return;
       }
     })();
     </script>
+    
     
     
 
