@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="assets/css/main.css">
 
   <style>
-    :root{ --dw-green:#00e18e; --dw-border:#e7eaf0; --dw-text:#111; --dw-muted:#6b7280; }
+    :root{ --dw-green:#00e18e; --dw-border:#e7eaf0; --dw-text:#111; --dw-muted:#6b7280; --line:#e7eaf0; --panel:#fff; --ink:#111;}
     body{background:#fff;color:var(--dw-text)}
     .dw-wrap{padding:16px}
     .dw-layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
@@ -52,7 +52,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 
-  <!-- ===== Overrides estéticos (igual a dashboard_s) ===== -->
+  <!-- ===== Overrides estéticos: sin líneas internas en TODOS los charts ===== -->
   <script>
   (function(){
     // Paleta fija para "Allocation" (verde claro, rojo, naranjo, cian)
@@ -60,83 +60,75 @@
       'XAUUSD':'#86efac', // verde claro
       'BTCUSD':'#ef4444', // rojo
       'NDX100':'#fb923c', // naranjo
-      'NAS100':'#fb923c', // alias mismo color
+      'NAS100':'#fb923c', // alias
       'USDJPY':'#22d3ee', // cian
-      'GBPUSD':'#60a5fa', // respaldo si aparece en datos
+      'GBPUSD':'#60a5fa',
       'EURUSD':'#f59e0b'
     };
 
-    // Utilidad para remover TODA línea interna (y ejes) en cualquier opción
-    function stripAllLines(opt, hideYAxisLabels = true) {
-      // Eje X
-      if (Array.isArray(opt.xAxis)) {
-        opt.xAxis.forEach(ax => {
-          ax.splitLine = { show:false };
-          ax.axisLine  = { show:false };
-          ax.axisTick  = { show:false };
-        });
-      } else if (opt.xAxis) {
-        opt.xAxis.splitLine = { show:false };
-        opt.xAxis.axisLine  = { show:false };
-        opt.xAxis.axisTick  = { show:false };
-      }
-      // Eje Y
-      if (Array.isArray(opt.yAxis)) {
-        opt.yAxis.forEach(ax => {
-          ax.splitLine = { show:false };
-          ax.axisLine  = { show:false };
-          ax.axisTick  = { show:false };
-          if (hideYAxisLabels) ax.axisLabel = Object.assign({}, ax.axisLabel, { show:false });
-        });
-      } else if (opt.yAxis) {
-        opt.yAxis.splitLine = { show:false };
-        opt.yAxis.axisLine  = { show:false };
-        opt.yAxis.axisTick  = { show:false };
-        if (hideYAxisLabels) opt.yAxis.axisLabel = Object.assign({}, opt.yAxis.axisLabel, { show:false });
-      }
+    // Quita grid lines, ejes y ticks (x/y), y cualquier splitArea
+    function stripAllLines(opt, keepYLabels=false){
+      const stripAxis = (ax, hideLabels=true)=>{
+        ax.splitLine  = { show:false };
+        ax.axisLine   = { show:false };
+        ax.axisTick   = { show:false };
+        ax.splitArea  = { show:false };
+        ax.minorTick  = { show:false };
+        ax.minorSplitLine = { show:false };
+        if (hideLabels) ax.axisLabel = Object.assign({}, ax.axisLabel, { show:false });
+        return ax;
+      };
+
+      if (Array.isArray(opt.xAxis)) opt.xAxis = opt.xAxis.map(a=>stripAxis(a,true));
+      else if (opt.xAxis) opt.xAxis = stripAxis(opt.xAxis,true);
+
+      if (Array.isArray(opt.yAxis)) opt.yAxis = opt.yAxis.map(a=>stripAxis(a,!keepYLabels));
+      else if (opt.yAxis) opt.yAxis = stripAxis(opt.yAxis,!keepYLabels);
+
+      // Evita líneas de "axisPointer" al hacer hover
+      opt.axisPointer = { show:false };
       return opt;
     }
 
-    // === Balance (único que mantiene etiquetas en eje Y) ===
+    // ==== Balance (mantiene SOLO etiquetas Y; sin líneas internas) ====
     window.optLine = function(series, labels){
       const opt = {
         grid:{ left:36,right:10,top:20,bottom:28,containLabel:true },
         xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
-        yAxis:{ type:'value', axisLabel:{ color:'#666' } }, // <- mantiene valores
+        yAxis:{ type:'value', axisLabel:{ color:'#666' } }, // solo labels visibles
+        tooltip:{ trigger:'axis' },
         series:[{
           type:'line', smooth:true, symbol:'circle', symbolSize:6,
-          lineStyle:{ width:2 },
+          lineStyle:{ width:2, color:'#00e18e' },
           areaStyle:{ color:'rgba(0,225,142,0.06)' },
           data:series
         }]
       };
-      // Sin líneas internas (pero conserva labels de Y)
-      return stripAllLines(opt, /*hideYAxisLabels=*/false);
+      return stripAllLines(opt, /*keepYLabels*/true);
     };
 
-    // === Monthly USD ===
+    // ==== Monthly USD ====
     window.optMonth = function(labels, values){
       const opt = {
         grid:{ left:28,right:10,top:24,bottom:24,containLabel:true },
         xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
         yAxis:{ type:'value', axisLabel:{ show:false } },
+        tooltip:{ trigger:'axis' },
         series:[{
-          type:'bar', data:values,
+          type:'bar', data:values, barMaxWidth:26,
           itemStyle:{ color:(p)=> p.value>=0 ? '#00e18e' : '#ef9a9a' },
-          barMaxWidth:26,
           label:{ show:true, position:'top', formatter:(p)=>p.value, color:'#666' }
         }]
       };
       return stripAllLines(opt);
     };
 
-    // === Distribution USD (barras dobles: n° y P&L) ===
+    // ==== Distribution USD (n° + P&L) ====
     window.optDist = function(d){
       const brand = '#00e18e', red = '#ef9a9a', gray = '#cbd5e1';
       const maxCount = Math.max(...d.counts, 0);
       const minPnl   = Math.min(...d.pnl, 0);
-      const maxAbs   = Math.max(maxCount, Math.abs(minPnl));
-      const head     = Math.ceil(maxAbs * 1.15);
+      const head     = Math.ceil(Math.max(maxCount, Math.abs(minPnl)) * 1.15);
 
       const opt = {
         grid:{ left:28,right:10,top:36,bottom:28,containLabel:true },
@@ -156,7 +148,7 @@
       return stripAllLines(opt);
     };
 
-    // === Allocation (donut con paleta fija) ===
+    // ==== Allocation (donut) ====
     window.optPie = function(labels, values){
       const total = values.reduce((a,b)=>a+b,0) || 1;
       return {
@@ -170,12 +162,13 @@
       };
     };
 
-    // === P&L USD (Neto) por activo ===
+    // ==== P&L USD (Neto) por activo (horizontal) ====
     window.optBarPLAssets = function(labels, values){
       const opt = {
         grid:{ left:64,right:16,top:24,bottom:18,containLabel:true },
         xAxis:{ type:'value', axisLabel:{ show:false } },
         yAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        tooltip:{ trigger:'axis' },
         series:[{
           type:'bar', data:values, barMaxWidth:22,
           itemStyle:{ color:(p)=> p.value>=0 ? '#00e18e' : '#ef9a9a' },
@@ -185,12 +178,13 @@
       return stripAllLines(opt);
     };
 
-    // === Win rate (en %) ===
+    // ==== Win rate (en %) ====
     window.optBarWRAssets = function(labels, values){
       const opt = {
         grid:{ left:28,right:10,top:24,bottom:26,containLabel:true },
         xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
         yAxis:{ type:'value', axisLabel:{ show:false }, max:100 },
+        tooltip:{ trigger:'axis', valueFormatter:(v)=>`${v}%` },
         series:[{
           type:'bar', data:values, barMaxWidth:26, itemStyle:{ color:'#00e18e' },
           label:{ show:true, position:'top', formatter:(p)=>`${p.value}%`, color:'#666' }
@@ -199,12 +193,13 @@
       return stripAllLines(opt);
     };
 
-    // === Distribution trading days (en %) ===
+    // ==== Distribution trading days (en %) ====
     window.optDaysDist = function(labels, values){
       const opt = {
         grid:{ left:28,right:10,top:24,bottom:26,containLabel:true },
         xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
         yAxis:{ type:'value', axisLabel:{ show:false }, max:100 },
+        tooltip:{ trigger:'axis', valueFormatter:(v)=>`${v}%` },
         series:[{
           type:'bar', data:values, barMaxWidth:26, itemStyle:{ color:'#00e18e' },
           label:{ show:true, position:'top', formatter:(p)=>`${p.value}%`, color:'#666' }
@@ -213,12 +208,13 @@
       return stripAllLines(opt);
     };
 
-    // === Performance day (en %) ===
+    // ==== Performance day (en %) ====
     window.optDaysPerf = function(labels, values){
       const opt = {
         grid:{ left:28,right:10,top:24,bottom:26,containLabel:true },
         xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
         yAxis:{ type:'value', axisLabel:{ show:false }, max:100 },
+        tooltip:{ trigger:'axis', valueFormatter:(v)=>`${v}%` },
         series:[{
           type:'bar', data:values, barMaxWidth:26, itemStyle:{ color:'#00e18e' },
           label:{ show:true, position:'top', formatter:(p)=>`${p.value}%`, color:'#666' }
@@ -227,12 +223,13 @@
       return stripAllLines(opt);
     };
 
-    // === Average Position (horizontal, evita corte de etiquetas) ===
+    // ==== Average Position (horizontal) ====
     window.optAvgPos = function(labels, values){
       const opt = {
         grid:{ left:64,right:42,top:24,bottom:18,containLabel:true },
         xAxis:{ type:'value', axisLabel:{ show:false } },
         yAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        tooltip:{ trigger:'axis' },
         series:[{
           type:'bar', data:values, barMaxWidth:16, itemStyle:{ color:'#00e18e' },
           label:{ show:true, position:'right', formatter:(p)=>p.value.toFixed(2), color:'#666' }
