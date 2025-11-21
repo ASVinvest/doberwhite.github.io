@@ -53,7 +53,7 @@
   <!-- ECharts -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 
-  <!-- 👇 Fuerza la fuente de datos SOLO para este dashboard small -->
+  <!-- Fuerza la fuente de datos SOLO para este dashboard small -->
   <script>
     window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';
   </script>
@@ -97,7 +97,7 @@
     </div>
   </nav>
 
-  <!-- Oculta enlaces del menú según rol (evita que small vea un link al dashboard grande) -->
+  <!-- Oculta enlaces del menú según rol -->
   <script>
     (function(){
       const scope = (localStorage.getItem('dw_scope')||'').trim().toLowerCase();
@@ -166,71 +166,89 @@
     </div>
   </footer>
 
-  <!-- Parche visual: 1) P&L negativo en rojo en Distribution USD  2) USDJPY con color propio en Allocation -->
+  <!-- Tweaks small-only: Allocation colores únicos + Distribution USD conserva “n°” y P&L negativo en rojo -->
   <script>
     (function(){
-      const brand = '#00e18e';
-      const loss  = '#ef9a9a';   // mismo tono que usas para pérdidas
-      const piePalette = {
-        GBPUSD:'#3b82f6',
-        XAUUSD:'#22c55e',
-        NDX100:'#f59e0b',
-        USDJPY:'#8b5cf6',   // púrpura para diferenciar de NAS100
-        BTCUSD:'#ef4444'
-      };
+      const BRAND = '#00e18e', RED = '#ef9a9a', GRAY = '#cbd5e1';
 
-      function patchDistribution(){
-        const el = document.getElementById('ch_distribution');
-        if(!el) return false;
-        const ch = echarts.getInstanceByDom(el);
-        if(!ch) return false;
-        const opt = ch.getOption();
-        if(!opt || !opt.series) return false;
-
-        // Busca la serie de P&L (yAxisIndex 1 o nombre 'P&L')
-        const idx = opt.series.findIndex(s => s.yAxisIndex === 1 || s.name === 'P&L');
-        if(idx < 0) return false;
-
-        const raw = opt.series[idx].data || [];
-        const values = raw.map(d => (typeof d === 'object' ? d.value : d));
-        const data = values.map(v => ({ value: v, itemStyle: { color: (v >= 0 ? brand : loss) } }));
-
-        ch.setOption({ series: [{ seriesIndex: idx, data }] }, false);
-        return true;
+      function onChartReady(id, cb){
+        const el = document.getElementById(id);
+        if(!el) return;
+        const tick = () =>{
+          const ch = echarts.getInstanceByDom(el);
+          if(ch){ cb(ch); }
+          else   { requestAnimationFrame(tick); }
+        };
+        tick();
       }
 
-      function patchAllocation(){
-        const el = document.getElementById('ch_allocation');
-        if(!el) return false;
-        const ch = echarts.getInstanceByDom(el);
-        if(!ch) return false;
-        const opt = ch.getOption();
-        if(!opt || !opt.series || !opt.series[0]) return false;
+      // 1) Allocation: asigna colores únicos por activo
+      onChartReady('ch_allocation', function(chart){
+        const opt = chart.getOption();
+        const series = opt.series && opt.series[0];
+        if(!series) return;
 
-        const s0 = opt.series[0];
-        const data = (s0.data || []).map(item => {
-          const name  = item.name ?? item?.value?.name ?? '';
-          const value = item.value ?? 0;
-          return { name, value, itemStyle:{ color: piePalette[name] || '#94a3b8' } };
+        const data = series.data || [];
+        const PAL = {
+          'GBPUSD':'#3b82f6',   // azul
+          'USDJPY':'#7c3aed',   // violeta (evita colisión con NAS100)
+          'XAUUSD':'#22c55e',   // verde
+          'NAS100':'#64748b'    // gris azulado
+        };
+        series.data = data.map(d => {
+          const name = (typeof d === 'object') ? d.name : d;
+          const value = (typeof d === 'object') ? d.value : d;
+          return { name, value, itemStyle:{ color: PAL[name] || '#94a3b8' } };
         });
+        chart.setOption(opt, false);
+      });
 
-        ch.setOption({ series: [{ seriesIndex: 0, data }] }, false);
-        return true;
-      }
+      // 2) Distribution USD: mantiene serie "n°" y pinta P&L negativo en rojo
+      onChartReady('ch_distribution', function(chart){
+        const opt = chart.getOption();
 
-      // Reintenta hasta que dashboard.js haya dibujado
-      let tries = 0;
-      (function tick(){
-        const ok1 = patchDistribution();
-        const ok2 = patchAllocation();
-        if((ok1 && ok2) || tries > 20) return;
-        tries += 1;
-        setTimeout(tick, 150);
-      })();
+        // Asegura leyenda con ambas series
+        if(opt.legend && opt.legend[0]){
+          const L = new Set(opt.legend[0].data || []);
+          L.add('n°'); L.add('P&L');
+          opt.legend[0].data = Array.from(L);
+        }
+
+        // Localiza series
+        const iCounts = (opt.series || []).findIndex(s => s.name === 'n°');
+        const iPL     = (opt.series || []).findIndex(s => s.name === 'P&L');
+
+        // Si falta "n°", crea una mínima para no perder el conteo visual (valores 0)
+        if(iCounts === -1){
+          const cats = (opt.xAxis && opt.xAxis[0] && opt.xAxis[0].data) || ['buy','sell'];
+          (opt.series = opt.series || []).unshift({
+            name:'n°', type:'bar', barMaxWidth:26, z:1,
+            itemStyle:{ color: GRAY },
+            label:{ show:true, position:'top', fontSize:10, color:'#6b7280' },
+            data: cats.map(() => 0)
+          });
+        } else {
+          // Colorea "n°" en gris por si otro script lo cambió
+          opt.series[iCounts].itemStyle = { color: GRAY };
+          opt.series[iCounts].label = { show:true, position:'top', fontSize:10, color:'#6b7280' };
+        }
+
+        // Recolorea P&L según signo (verde / rojo)
+        if(iPL !== -1){
+          const raw = opt.series[iPL].data || [];
+          const vals = raw.map(v => (typeof v === 'object') ? v.value : v);
+          opt.series[iPL].data = vals.map(v => ({ value:v, itemStyle:{ color: v >= 0 ? BRAND : RED }}));
+          // Asegura que P&L esté en el segundo eje si tu opción original lo usa
+          opt.series[iPL].yAxisIndex = 1;
+          opt.series[iPL].barMaxWidth = 26;
+        }
+
+        chart.setOption(opt, false); // merge, no borra series
+      });
     })();
   </script>
 
-  <!-- Profitability a 1 decimal (usa la MISMA fuente que dashboard.js) -->
+  <!-- Profitability a 1 decimal (usa la misma fuente de dashboard.js) -->
   <script>
   (async function () {
     const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
