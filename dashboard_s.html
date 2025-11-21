@@ -1,45 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Gate de acceso: SOLO admin o main -->
+  <!-- Gate: SOLO admin o small -->
   <script>
-    (function(){
-      const ok    = localStorage.getItem('dw_auth') === 'ok';
-      const scope = (localStorage.getItem('dw_scope') || '').trim().toLowerCase();
-      let   home  = (localStorage.getItem('dw_home')  || '').trim();
-      if(!home) home = (scope === 'small' ? 'dashboard_s.html' : 'dashboard.html');
-    
-      if(!ok){
-        location.href = 'login.html?next=' + encodeURIComponent('dashboard_s.html');
-        return;
-      }
-    
-      const allow = (scope === 'admin' || scope === 'small');
-      if(!allow){
-        const here = location.pathname.split('/').pop() || 'dashboard_s.html';
-        if (here !== home) location.replace(home);
-      }
-    })();
-    </script>
-    
-    
-    
-    
-    
+  (function(){
+    const ok    = localStorage.getItem('dw_auth') === 'ok';
+    const scope = (localStorage.getItem('dw_scope') || '').trim().toLowerCase();
+    let   home  = (localStorage.getItem('dw_home')  || '').trim();
+    if(!home) home = (scope === 'small' ? 'dashboard_s.html' : 'dashboard.html');
+
+    if(!ok){
+      location.href = 'login.html?next=' + encodeURIComponent('dashboard_s.html');
+      return;
+    }
+
+    const allow = (scope === 'admin' || scope === 'small');
+    if(!allow){
+      const here = location.pathname.split('/').pop() || 'dashboard_s.html';
+      if (here !== home) location.replace(home);
+    }
+  })();
+  </script>
 
   <meta charset="utf-8">
   <title>Dashboard — DoberWhite Capital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="assets/css/main.css">
 
-  <!-- Estilo claro tipo Excel (solo para esta página) -->
   <style>
-    :root{
-      --dw-green:#00e18e;        /* color marca */
-      --dw-border:#e7eaf0;
-      --dw-text:#111;
-      --dw-muted:#6b7280;
-    }
+    :root{ --dw-green:#00e18e; --dw-border:#e7eaf0; --dw-text:#111; --dw-muted:#6b7280; }
     body{background:#fff;color:var(--dw-text)}
     .dw-wrap{padding:16px}
     .dw-layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
@@ -50,16 +39,13 @@
     .dw-kpis li span:first-child{color:var(--dw-muted)}
     .dw-kpis li span:last-child{font-variant-numeric:tabular-nums}
     .dw-kpis .neg{color:#c62828}
-
     .dw-section{margin-top:6px}
     .dw-subtitle{font-style:italic;font-weight:700;text-align:center;margin:0 0 6px;color:#222;opacity:.9}
-
     .dw-grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
     .dw-card{grid-column:span 4;background:#fff;border:1px solid var(--dw-border);border-radius:12px;
              box-shadow:0 2px 8px rgba(17,24,39,.06)}
     .dw-card h3{margin:12px 14px 0;font-weight:700}
     .dw-chart{height:260px;width:100%}
-
     @media (max-width:1100px){.dw-card{grid-column:span 6}.dw-layout{grid-template-columns:1fr}}
     @media (max-width:700px){.dw-card{grid-column:span 12}.dw-chart{height:220px}}
   </style>
@@ -68,7 +54,6 @@
 </head>
 <body>
   <script src="assets/js/main.js" defer></script>
-  <!-- ⬇️ NUEVO: logout centralizado (después de main.js) -->
   <script src="assets/js/logout.js" defer></script>
 
   <!-- Header -->
@@ -89,7 +74,7 @@
     </div>
   </header>
 
-  <!-- Menú (mismo que en index) -->
+  <!-- Menú (esta página small) -->
   <nav class="site-menu" id="menu" aria-hidden="true">
     <div class="inner">
       <ul>
@@ -98,32 +83,17 @@
         <li><a href="particulares.html">Servicios particulares</a></li>
         <li><a href="cursos.html">Cursos & seminarios</a></li>
         <li><a href="valores.html">Nuestros valores</a></li>
-        <li class="active"><a href="dashboard.html">Dashboard</a></li>
-        <!-- <li><a href="informes.html">Informes Privados</a></li> -->
+        <li class="active"><a href="dashboard_s.html">Dashboard</a></li>
         <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- Oculta enlaces del menú según rol -->
-  <script>
-    (function(){
-      const scope = localStorage.getItem('dw_scope');
-      if (scope && scope !== 'admin') {
-        if (scope === 'small') {
-          document.querySelector('a[href="dashboard.html"]')?.closest('li')?.remove();
-        } else if (scope === 'main') {
-          document.querySelector('a[href="dashboard_s.html"]')?.closest('li')?.remove();
-        }
-      }
-    })();
-  </script>
-
   <!-- Hero -->
   <section class="hero" style="background:#fff;color:#111;border-bottom:1px solid #eee">
     <div class="container">
       <h1 style="color:#111">Dashboard</h1>
-      <p class="sub" id="dw-periodo" style="color:#444">Performance SYNC</p>
+      <p class="sub" id="dw-periodo" style="color:#444">Performance SYNC (Small)</p>
     </div>
   </section>
 
@@ -131,14 +101,11 @@
   <section class="dw-wrap">
     <div class="container">
       <div class="dw-layout">
-
-        <!-- KPIs -->
         <aside class="dw-aside">
           <div class="dw-subtitle">Ratio <span style="font-weight:400">YTD</span></div>
           <ul id="dw-kpis" class="dw-kpis"></ul>
         </aside>
 
-        <!-- Contenido -->
         <div>
           <div class="dw-section">
             <div class="dw-subtitle">P&L</div>
@@ -172,7 +139,6 @@
     </div>
   </section>
 
-  <!-- Footer mínimo -->
   <footer class="site-footer" style="background:#fff;color:#111;border-top:1px solid #eee">
     <div class="container mini">
       <div>El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo de perder.</div>
@@ -180,21 +146,23 @@
     </div>
   </footer>
 
-  <!-- Scripts existentes (tu render actual) -->
+  <!-- Render -->
   <script src="/assets/js/dashboard.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
   <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
 
-  <!-- Profitability a 1 decimal -->
+  <!-- Profitability a 1 decimal (si usas mismo JSON, deja igual;
+       si usas otro JSON para small, cambia la URL a tu data pequeña) -->
   <script>
     (async function () {
       const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
       let json = null;
       try {
+        // Si small usa otro JSON, ponlo aquí (por ejemplo):
+        // const res = await fetch('assets/data/dashboard/data_small.json');
         const res = await fetch('assets/data/dashboard/data.json');
         if (res.ok) json = await res.json();
       } catch (e) {}
-
       function apply(val) {
         const ul = document.getElementById('dw-kpis');
         if (!ul) return false;
@@ -206,7 +174,6 @@
         li.querySelector('span:last-child').textContent = nf1.format(value) + '%';
         return true;
       }
-
       if (json && json.kpis && typeof json.kpis["Profitability"] === 'number') {
         if (apply(json.kpis["Profitability"])) return;
       }
