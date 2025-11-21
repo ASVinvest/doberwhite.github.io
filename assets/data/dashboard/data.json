@@ -1,13 +1,54 @@
 {
-  "period": {"from":"13-10-2025","to":"18-11-2025"},
-  "kpis":{"Win Rate":37,"Profitability":1.4,"Risk Benefit":2.3,"N° Trades":176,"N° Trades Win":65,"N° Trades Loss":111,"P&L (USD)":685,"Win Average":46.7,"Loss Average":-20.4,"WipeOut":0,"% Average SL":21,"Comission":90},
-  "balance":{"labels":["oct-25","nov-25"],"values":[50642,50685]},
-  "monthly":{"labels":["oct","Nov"],"values":[642.03,42.70]},
-  "distribution":{"labels":["buy","sell"],"counts":[106,70],"pnl":[371.54,313.19]},
-  "allocation":{"labels":["GBPUSD","XAUUSD","NDX100","BTCUSD"],"values":[27,32,40,2]},
-  "plAssets":{"labels":["XAUUSD","GBPUSD","BTCUSD","NDX100"],"values":[552.60,329.03,-14.19,-182.71]},
-  "wrAssets":{"labels":["XAUUSD","GBPUSD","NDX100","BTCUSD"],"values":[43,30,40,0]},
-  "daysDist":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[22,26,19,20,14]},
-  "daysPerf":{"labels":["Lunes","Martes","Miércoles","Jueves","Viernes"],"values":[34,33,50,37,29]},
-  "avgPos":{"labels":["GBPUSD","NDX100","XAUUSD","BTCUSD"],"values":[0.23,0.14,0.07,0.01]}
+  "period": { "from": "13-10-2025", "to": "21-11-2025" },
+  "kpis": {
+    "Win Rate": 38,
+    "Profitability": 1.6,
+    "Risk Benefit": 2.2,
+    "N° Trades": 193,
+    "N° Trades Win": 73,
+    "N° Trades Loss": 120,
+    "P&L (USD)": 782,
+    "Win Average": 45.7,
+    "Loss Average": -20.5,
+    "WipeOut": 0,
+    "% Average SL": 21,
+    "Comission": 92
+  },
+  "balance": {
+    "labels": ["oct-25", "nov-25"],
+    "values": [50642, 50782]
+  },
+  "monthly": {
+    "labels": ["oct", "nov"],
+    "values": [642.03, 139.98]
+  },
+  "distribution": {
+    "labels": ["buy", "sell"],
+    "counts": [118, 75],
+    "pnl": [358.99, 423.02]
+  },
+  "allocation": {
+    "labels": ["GBPUSD", "XAUUSD", "NDX100", "BTCUSD"],
+    "values": [27, 32, 40, 2]
+  },
+  "plAssets": {
+    "labels": ["XAUUSD", "GBPUSD", "BTCUSD", "NDX100"],
+    "values": [518.92, 307.43, -14.19, -30.15]
+  },
+  "wrAssets": {
+    "labels": ["XAUUSD", "GBPUSD", "NDX100", "BTCUSD"],
+    "values": [42, 30, 43, 0]
+  },
+  "daysDist": {
+    "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+    "values": [20, 24, 21, 22, 13]
+  },
+  "daysPerf": {
+    "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+    "values": [34, 35, 51, 36, 31]
+  },
+  "avgPos": {
+    "labels": ["GBPUSD", "NDX100", "XAUUSD", "BTCUSD"],
+    "values": [0.21, 0.13, 0.07, 0.01]
+  }
 }
