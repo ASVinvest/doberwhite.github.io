@@ -7,29 +7,22 @@
       const ok    = localStorage.getItem('dw_auth') === 'ok';
       const scope = (localStorage.getItem('dw_scope') || '').trim().toLowerCase();
       let   home  = (localStorage.getItem('dw_home')  || '').trim();
-    
-      // fallback de home
       if(!home) home = (scope === 'small' ? 'dashboard_s.html' : 'dashboard.html');
     
-      const allow = ['admin','main'].includes(scope);
-    
-      // URL actual (solo nombre del archivo)
-      const here = location.pathname.split('/').pop() || 'dashboard.html';
-    
       if(!ok){
-        location.replace('login.html?next=' + encodeURIComponent('dashboard.html'));
+        location.href = 'login.html?next=' + encodeURIComponent('dashboard.html');
         return;
       }
     
+      const allow = ['admin','main'].includes(scope);
       if(!allow){
-        // evita loop si ya estás en el "home" calculado
-        if (here !== home) {
-          location.replace(home);
-        }
-        return;
+        // Si NO tiene permiso, llévalo a su home (small -> dashboard_s.html)
+        const here = location.pathname.split('/').pop() || 'dashboard.html';
+        if (here !== home) location.replace(home);
       }
     })();
     </script>
+    
     
     
     
