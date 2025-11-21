@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Gate de login -->
+  <!-- Login -->
   <script>
     (function(){
       const ok = localStorage.getItem('dw_auth') === 'ok';
@@ -14,14 +14,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="assets/css/main.css">
 
-  <!-- Estilo claro tipo Excel -->
   <style>
-    :root{
-      --dw-green:#00e18e;
-      --dw-border:#e7eaf0;
-      --dw-text:#111;
-      --dw-muted:#6b7280;
-    }
+    :root{ --dw-green:#00e18e; --dw-border:#e7eaf0; --dw-text:#111; --dw-muted:#6b7280; }
     body{background:#fff;color:var(--dw-text)}
     .dw-wrap{padding:16px}
     .dw-layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
@@ -35,8 +29,7 @@
     .dw-section{margin-top:6px}
     .dw-subtitle{font-style:italic;font-weight:700;text-align:center;margin:0 0 6px;color:#222;opacity:.9}
     .dw-grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-    .dw-card{grid-column:span 4;background:#fff;border:1px solid var(--dw-border);border-radius:12px;
-             box-shadow:0 2px 8px rgba(17,24,39,.06)}
+    .dw-card{grid-column:span 4;background:#fff;border:1px solid var(--dw-border);border-radius:12px;box-shadow:0 2px 8px rgba(17,24,39,.06)}
     .dw-card h3{margin:12px 14px 0;font-weight:700}
     .dw-chart{height:260px;width:100%}
     @media (max-width:1100px){.dw-card{grid-column:span 6}.dw-layout{grid-template-columns:1fr}}
@@ -45,25 +38,20 @@
 </head>
 <body>
 
-  <!-- Header -->
   <header class="site-header">
     <div class="container bar">
       <a class="brand" href="index.html"><span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span></a>
       <a class="menu-button" href="#menu">Menú</a>
     </div>
-
-    <!-- Barra de usuario -->
     <div class="container mini" style="display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:8px">
       <span id="dw-user" style="opacity:.75"></span>
       <button id="dw-logout"
-              style="border:1px solid var(--dw-border);background:#fff;color:#111;
-                     padding:6px 10px;border-radius:10px;cursor:pointer">
+              style="border:1px solid var(--dw-border);background:#fff;color:#111;padding:6px 10px;border-radius:10px;cursor:pointer">
         Cerrar sesión
       </button>
     </div>
   </header>
 
-  <!-- Menú -->
   <nav class="site-menu" id="menu" aria-hidden="true">
     <div class="inner">
       <ul>
@@ -73,32 +61,28 @@
         <li><a href="cursos.html">Cursos & seminarios</a></li>
         <li><a href="valores.html">Nuestros valores</a></li>
         <li><a href="dashboard.html">Dashboard</a></li>
-        <li class="active"><a href="dashboard_s.html">Dashboard Small</a></li>
+        <li class="active"><a href="dashboard_s.html">Dashboard S</a></li>
         <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- Hero -->
   <section class="hero" style="background:#fff;color:#111;border-bottom:1px solid #eee">
     <div class="container">
-      <h1 style="color:#111">Dashboard Small</h1>
+      <h1 style="color:#111">Dashboard S</h1>
       <p class="sub" id="dw-periodo" style="color:#444">Performance SYNC — Cuenta Small</p>
     </div>
   </section>
 
-  <!-- Dashboard -->
   <section class="dw-wrap">
     <div class="container">
       <div class="dw-layout">
 
-        <!-- KPIs -->
         <aside class="dw-aside">
           <div class="dw-subtitle">Ratio <span style="font-weight:400">YTD</span></div>
           <ul id="dw-kpis" class="dw-kpis"></ul>
         </aside>
 
-        <!-- Contenido -->
         <div>
           <div class="dw-section">
             <div class="dw-subtitle">P&L (Neto)</div>
@@ -132,7 +116,6 @@
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="site-footer" style="background:#fff;color:#111;border-top:1px solid #eee">
     <div class="container mini">
       <div>El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo de perder.</div>
@@ -140,14 +123,37 @@
     </div>
   </footer>
 
-  <!-- Fuente de datos para ESTE dashboard -->
-  <script>window.DW_DATA_URL = 'assets/data/dashboard_s/data_small.json';</script>
+  <!-- 1) Fuente deseada para este tablero -->
+  <script>window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';</script>
 
-  <!-- Librerías y script común -->
+  <!-- 2) Shim: si tu dashboard.js no soporta DW_DATA_URL, redirige cualquier fetch de data.json a data_small.json -->
+  <script>
+    (function(){
+      const TARGET = 'assets/data/dashboard/data_small.json';
+      const ORIGINALS = [
+        '/assets/data/dashboard/data.json',
+        'assets/data/dashboard/data.json',
+        '/assets/data/data.json',
+        'assets/data/data.json'
+      ];
+      const _fetch = window.fetch;
+      window.fetch = function(resource, init){
+        try{
+          const url = (typeof resource === 'string') ? resource : resource.url;
+          if (url && ORIGINALS.some(x => url.indexOf(x) !== -1)) {
+            resource = TARGET + (url.includes('?') ? '&' : '?') + 'v=' + Date.now();
+          }
+        }catch(e){}
+        return _fetch(resource, init);
+      };
+    })();
+  </script>
+
+  <!-- 3) Libs y script común (UNA sola vez) -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-  <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
+  <script src="/assets/js/dashboard.js?v=2025-11-18-01"></script>
 
-  <!-- User bar (mostrar usuario y logout) -->
+  <!-- User bar -->
   <script>
     (function () {
       var u = localStorage.getItem('dw_user');
