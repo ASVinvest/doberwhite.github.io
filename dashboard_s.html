@@ -28,7 +28,10 @@
   <link rel="stylesheet" href="assets/css/main.css">
 
   <style>
-    :root{ --dw-green:#00e18e; --dw-border:#e7eaf0; --dw-text:#111; --dw-muted:#6b7280; }
+    :root{
+      --dw-green:#00e18e; --dw-border:#e7eaf0; --dw-text:#111; --dw-muted:#6b7280;
+      --dw-ink:#111; --dw-panel:#fff; --line:#e7eaf0;
+    }
     body{background:#fff;color:var(--dw-text)}
     .dw-wrap{padding:16px}
     .dw-layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
@@ -38,17 +41,22 @@
     .dw-kpis li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e6e6e6}
     .dw-kpis li span:first-child{color:var(--dw-muted)}
     .dw-kpis li span:last-child{font-variant-numeric:tabular-nums}
-    /* rojo para negativos (aplicado por dashboard.js y/o overrides) */
     .dw-kpis .neg{color:#c62828}
     .dw-section{margin-top:6px}
     .dw-subtitle{font-style:italic;font-weight:700;text-align:center;margin:0 0 6px;color:#222;opacity:.9}
     .dw-grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-    .dw-card{grid-column:span 4;background:#fff;border:1px solid var(--dw-border);border-radius:12px;
-             box-shadow:0 2px 8px rgba(17,24,39,.06)}
+    .dw-card{grid-column:span 4;background:#fff;border:1px solid var(--dw-border);border-radius:12px;box-shadow:0 2px 8px rgba(17,24,39,.06)}
     .dw-card h3{margin:12px 14px 0;font-weight:700}
     .dw-chart{height:260px;width:100%}
     @media (max-width:1100px){.dw-card{grid-column:span 6}.dw-layout{grid-template-columns:1fr}}
     @media (max-width:700px){.dw-card{grid-column:span 12}.dw-chart{height:220px}}
+
+    /* Negativos en rojo en Ratio YTD */
+    .dw-kpis li span:last-child[data-val^="-"]{color:#c62828}
+
+    /* Ocultar ejes verticales y líneas internas: se controla en opciones ECharts,
+       pero como refuerzo visual quitamos grid por CSS (no afecta el init) */
+    .dw-card canvas{image-rendering:auto}
   </style>
 
   <!-- ECharts -->
@@ -64,15 +72,35 @@
   <script>
     (function(){
       // Paleta fija para Allocation (verde claro, rojo, naranjo, cian)
-      const PIE_MAP = {
-        'XAUUSD':'#86efac', // verde claro
-        'USDJPY':'#ef4444', // rojo
-        'NAS100':'#f59e0b', // naranjo
-        'NDX100':'#f59e0b', // alias mismo color
-        'GBPUSD':'#22d3ee', // cian
-        'BTCUSD':'#ef4444',
-        'EURUSD':'#22d3ee'
+      const PIE_FIXED = {
+        'XAUUSD':'#86efac',   // verde claro
+        'GBPUSD':'#ef4444',   // rojo
+        'NAS100':'#f59e0b',   // naranjo
+        'NDX100':'#f59e0b',   // alias
+        'USDJPY':'#06b6d4',   // cian
+        'BTCUSD':'#06b6d4',
+        'EURUSD':'#86efac'
       };
+
+      // Utilidades comunes (mismo look & feel)
+      const brand = '#00e18e', red = '#ef9a9a', axis = '#9aa0a6', labelColor = '#374151', grid = '#ffffff00'; // grid off
+
+      const baseGrid   = { left: 36, right: 20, top: 36, bottom: 28, containLabel: true };
+      const axisX = (labels, opts={}) => ({
+        type:'category',
+        data:labels,
+        axisLabel:{ color:'#555', interval: opts.showAll ? 0 : 'auto', hideOverlap: !opts.showAll, margin:10 },
+        axisTick:{ alignWithLabel:true },
+        axisLine:{ onZero:true, lineStyle:{ color:axis } },
+        splitLine:{ show:false }
+      });
+      const axisY = (opts={}) => ({
+        type:'value',
+        axisLabel:{ color:'#555', show: !(opts.hideLabels) },
+        axisTick:{ show:false },
+        axisLine:{ show:true, lineStyle:{ color:axis } },
+        splitLine:{ show:false }
+      });
 
       // === Override pie (Allocation) ===
       window.optPie = function(labels, values){
@@ -82,18 +110,54 @@
             formatter:(name)=>{ const i=labels.indexOf(name); const p=Math.round(values[i]*100/total); return `${name}  ${p}%`; } },
           tooltip:{ trigger:'item', formatter: ({name,percent}) => `${name}: ${percent}%` },
           series:[{
-            type:'pie', radius:['46%','68%'], center:['50%','44%'],
-            label:{ show:false },
-            data: labels.map((n,i)=>({ name:n, value:values[i], itemStyle:{ color: PIE_MAP[n] || '#94a3b8' } }))
+            type:'pie', radius:['46%','68%'], center:['50%','44%'], label:{ show:false },
+            data: labels.map((n,i)=>({ name:n, value:values[i], itemStyle:{ color: PIE_FIXED[n] || '#94a3b8' } }))
           }]
         };
       };
 
-      // === Override Distribution USD: un solo eje, sin líneas, cero compartido + ETIQUETAS ===
-      const brand = '#00e18e', red = '#ef9a9a', gray = '#cbd5e1';
-      const nf0 = new Intl.NumberFormat('es-CL',{maximumFractionDigits:0});
-      const nf2 = new Intl.NumberFormat('es-CL',{maximumFractionDigits:2, minimumFractionDigits:0});
+      // === Balance (único gráfico con eje Y visible) ===
+      window.optLine = function(labels, values){
+        return {
+          grid: baseGrid,
+          xAxis: axisX(labels),
+          yAxis: axisY({hideLabels:false}),
+          tooltip:{trigger:'axis'},
+          series:[{ type:'line', smooth:true, symbol:'circle', symbolSize:6,
+            lineStyle:{width:2,color:brand}, areaStyle:{opacity:.08,color:brand}, data:values }]
+        };
+      };
 
+      // === Barras genéricas sin eje Y (para WR, días, etc.) ===
+      const labelTop = { show:true, position:'top', color:labelColor, fontSize:10, formatter:p=>p.value + (p.seriesName?.includes('%')?'%':'') };
+      window.optBar = function(labels, values, opts={}){
+        return {
+          grid: baseGrid,
+          xAxis: axisX(labels, { showAll: !!opts.showAll }),
+          yAxis: axisY({ hideLabels:true }),
+          tooltip:{ trigger:'axis' },
+          series:[{
+            type:'bar', barMaxWidth:28, label: labelTop,
+            data: values.map(v=>({ value:v, itemStyle:{ color: v>=0 ? brand : red } }))
+          }]
+        };
+      };
+
+      window.optBarH = function(labels, values, opts={}){
+        return {
+          grid: { ...baseGrid, right: 48 }, // margen extra derecha para no cortar etiquetas
+          xAxis: axisY({ hideLabels:true }),
+          yAxis:{ type:'category', data:labels, axisLabel:{ color:'#555' }, axisLine:{ lineStyle:{ color:axis } }, splitLine:{ show:false } },
+          tooltip:{ trigger:'axis' },
+          series:[{
+            type:'bar', barMaxWidth:22,
+            label:{ show:true, position:'right', color:labelColor, fontSize:10, formatter:p=>p.value },
+            data: values.map(v=>({ value:v, itemStyle:{ color: v>=0 ? brand : red } }))
+          }]
+        };
+      };
+
+      // === Distribution USD: un solo eje, sin líneas; etiquetas coherentes con el resto ===
       window.optDist = function(d){
         const maxCount = Math.max(...d.counts, 0);
         const minPnl   = Math.min(...d.pnl, 0);
@@ -101,82 +165,51 @@
         const head     = Math.ceil(maxAbs * 1.15);
 
         return {
-          grid: { left: 36, right: 20, top: 36, bottom: 30, containLabel: true },
+          grid: baseGrid,
           legend:{ top:6, right:8, data:['n°','P&L'], textStyle:{ color:'#444' } },
           tooltip:{ trigger:'axis' },
-          xAxis: {
-            type:'category', data:d.labels,
-            axisLabel:{ color:'#555', interval:0, hideOverlap:false, margin:10 },
-            axisTick:{ alignWithLabel:true },
-            axisLine:{ onZero:true, lineStyle:{ color:'#9aa0a6' } }
-          },
-          yAxis:{
+          xAxis: axisX(d.labels, { showAll:true }),
+          yAxis: {
             type:'value', min:-head, max:head,
-            splitLine:{ show:false },
-            axisLabel:{ show:false }, /* ocultar valores eje vertical */
-            axisTick:{ show:false },
-            axisLine:{ lineStyle:{ color:'#9aa0a6' } }
+            splitLine:{ show:false }, axisLabel:{ show:false }, axisTick:{ show:false },
+            axisLine:{ show:true, lineStyle:{ color:axis } }
           },
           series:[
-            { name:'n°',  type:'bar', barMaxWidth:26, itemStyle:{ color:gray  },
-              data:d.counts, z:1,
-              label:{
-                show:true,
-                position:(p)=> p.value<0 ? 'bottom' : 'top',
-                distance:3,
-                color:'#6b7280',
-                fontSize:10,
-                formatter:(p)=> nf0.format(p.value)
-              }
-            },
-            { name:'P&L', type:'bar', barMaxWidth:26,
+            // Conteo (gris) con etiqueta arriba
+            { name:'n°',  type:'bar', barMaxWidth:26,
+              itemStyle:{ color:'#cbd5e1' },
+              label:{ show:true, position:'top', color:labelColor, fontSize:10, formatter:p=>p.value },
+              data:d.counts, z:1 },
+
+            // P&L (verde/rojo) con etiqueta coherente y siempre fuera
+            { name:'P&L', type:'bar', barMaxWidth:26, barGap:'40%',
               itemStyle:{ color:(p)=> (p.value<0 ? red : brand) },
-              data:d.pnl, z:2, barGap:'40%',
               label:{
                 show:true,
-                position:(p)=> p.value<0 ? 'bottom' : 'top',
-                distance:3,
-                color:'#6b7280',
+                position:'top',   // fuera de la barra
+                color:labelColor,
                 fontSize:10,
-                formatter:(p)=> (p.value>=0? '' : '-') + nf2.format(Math.abs(p.value))
-              }
-            }
+                formatter:p=>p.value
+              },
+              data:d.pnl, z:2 }
           ]
         };
       };
 
-      // === Override de gráficos de barras HORIZONTALES (p.ej. Average Position) ===
-      // Aumenta margen derecho para que no se corten etiquetas/valores.
-      window.optBarH = function(labels, values, opts={}){
-        return {
-          grid: { left: 36, right: 64, top: 24, bottom: 28, containLabel: true },
-          xAxis:{
-            type:'value',
-            axisLabel:{ color:'#555', show: !(opts.hideValueAxisLabels) },
-            axisTick:{ show:false },
-            splitLine:{ show:false } /* sin líneas internas */
-          },
-          yAxis:{
-            type:'category', data:labels,
-            axisLabel:{ color:'#555' },
-            axisTick:{ show:false },
-            axisLine:{ lineStyle:{ color:'#9aa0a6' } }
-          },
-          tooltip:{ trigger:'axis' },
-          series:[{
-            type:'bar',
-            barMaxWidth:22,
-            data: values.map(v=>({ value:v, itemStyle:{ color: v>=0 ? '#00e18e' : '#ef9a9a' } })),
-            label:{
-              show:true,
-              position:'right',
-              fontSize:10,
-              color:'#4b5563',
-              formatter:(p)=> nf2.format(p.value)
-            }
-          }]
+      // ---- Después de renderizar KPIs, marca negativos en rojo (atributo de datos para CSS) ----
+      window.addEventListener('DOMContentLoaded', ()=>{
+        const ul = document.getElementById('dw-kpis');
+        const mark = () => {
+          if(!ul) return;
+          ul.querySelectorAll('li span:last-child').forEach(s=>{
+            const t = s.textContent?.replace(/\s/g,'') || '';
+            s.setAttribute('data-val', t.replace(',','.'));
+          });
         };
-      };
+        const obs = new MutationObserver(mark);
+        if(ul){ obs.observe(ul,{childList:true,subtree:true,characterData:true}); }
+        mark();
+      });
     })();
   </script>
   <!-- ===== Fin overrides ===== -->
@@ -288,7 +321,7 @@
     </div>
   </footer>
 
-  <!-- Profitability a 1 decimal (usa la MISMA fuente que dashboard.js) -->
+  <!-- Profitability a 1 decimal + marca negativo -->
   <script>
   (async function () {
     const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -305,31 +338,24 @@
       } catch (_) {}
     }
 
+    // Actualiza Profitability a 1 decimal y marca negativos
     function apply(val) {
       const ul = document.getElementById('dw-kpis');
       if (!ul) return false;
       const li = [...ul.querySelectorAll('li')]
         .find(x => x.querySelector('span:first-child')?.textContent?.trim() === 'Profitability');
       if (!li) return false;
-      const value = Number(val);
-      if (!Number.isFinite(value)) return false;
-      li.querySelector('span:last-child').textContent = nf1.format(value) + '%';
-      // marcar negativo en rojo si corresponde
-      if (value < 0) li.querySelector('span:last-child').classList.add('neg');
+      const v = Number(val);
+      if (!Number.isFinite(v)) return false;
+      const target = li.querySelector('span:last-child');
+      target.textContent = nf1.format(v) + '%';
+      target.setAttribute('data-val', v.toString());
       return true;
     }
 
     if (json?.kpis && typeof json.kpis["Profitability"] === 'number') {
-      if (apply(json.kpis["Profitability"])) return;
+      apply(json.kpis["Profitability"]);
     }
-    const ul = document.getElementById('dw-kpis');
-    if (!ul) return;
-    const obs = new MutationObserver(() => {
-      if (json?.kpis?.["Profitability"] != null && apply(json.kpis["Profitability"])) {
-        obs.disconnect();
-      }
-    });
-    obs.observe(ul, { childList: true, subtree: true, characterData: true });
   })();
   </script>
 </body>
