@@ -166,6 +166,70 @@
     </div>
   </footer>
 
+  <!-- Parche visual: 1) P&L negativo en rojo en Distribution USD  2) USDJPY con color propio en Allocation -->
+  <script>
+    (function(){
+      const brand = '#00e18e';
+      const loss  = '#ef9a9a';   // mismo tono que usas para pérdidas
+      const piePalette = {
+        GBPUSD:'#3b82f6',
+        XAUUSD:'#22c55e',
+        NDX100:'#f59e0b',
+        USDJPY:'#8b5cf6',   // púrpura para diferenciar de NAS100
+        BTCUSD:'#ef4444'
+      };
+
+      function patchDistribution(){
+        const el = document.getElementById('ch_distribution');
+        if(!el) return false;
+        const ch = echarts.getInstanceByDom(el);
+        if(!ch) return false;
+        const opt = ch.getOption();
+        if(!opt || !opt.series) return false;
+
+        // Busca la serie de P&L (yAxisIndex 1 o nombre 'P&L')
+        const idx = opt.series.findIndex(s => s.yAxisIndex === 1 || s.name === 'P&L');
+        if(idx < 0) return false;
+
+        const raw = opt.series[idx].data || [];
+        const values = raw.map(d => (typeof d === 'object' ? d.value : d));
+        const data = values.map(v => ({ value: v, itemStyle: { color: (v >= 0 ? brand : loss) } }));
+
+        ch.setOption({ series: [{ seriesIndex: idx, data }] }, false);
+        return true;
+      }
+
+      function patchAllocation(){
+        const el = document.getElementById('ch_allocation');
+        if(!el) return false;
+        const ch = echarts.getInstanceByDom(el);
+        if(!ch) return false;
+        const opt = ch.getOption();
+        if(!opt || !opt.series || !opt.series[0]) return false;
+
+        const s0 = opt.series[0];
+        const data = (s0.data || []).map(item => {
+          const name  = item.name ?? item?.value?.name ?? '';
+          const value = item.value ?? 0;
+          return { name, value, itemStyle:{ color: piePalette[name] || '#94a3b8' } };
+        });
+
+        ch.setOption({ series: [{ seriesIndex: 0, data }] }, false);
+        return true;
+      }
+
+      // Reintenta hasta que dashboard.js haya dibujado
+      let tries = 0;
+      (function tick(){
+        const ok1 = patchDistribution();
+        const ok2 = patchAllocation();
+        if((ok1 && ok2) || tries > 20) return;
+        tries += 1;
+        setTimeout(tick, 150);
+      })();
+    })();
+  </script>
+
   <!-- Profitability a 1 decimal (usa la MISMA fuente que dashboard.js) -->
   <script>
   (async function () {
