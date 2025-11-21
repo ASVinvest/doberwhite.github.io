@@ -28,14 +28,7 @@
   <link rel="stylesheet" href="assets/css/main.css">
 
   <style>
-    :root{
-      --dw-green:#00e18e;
-      --dw-border:#e7eaf0;
-      --dw-text:#111;
-      --dw-muted:#6b7280;
-      --dw-red:#c62828;
-      --dw-gray:#cbd5e1;
-    }
+    :root{ --dw-green:#00e18e; --dw-border:#e7eaf0; --dw-text:#111; --dw-muted:#6b7280; }
     body{background:#fff;color:var(--dw-text)}
     .dw-wrap{padding:16px}
     .dw-layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
@@ -45,7 +38,7 @@
     .dw-kpis li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e6e6e6}
     .dw-kpis li span:first-child{color:var(--dw-muted)}
     .dw-kpis li span:last-child{font-variant-numeric:tabular-nums}
-    .dw-kpis li span.neg{color:var(--dw-red)}
+    .dw-kpis .neg{color:#c62828}
     .dw-section{margin-top:6px}
     .dw-subtitle{font-style:italic;font-weight:700;text-align:center;margin:0 0 6px;color:#222;opacity:.9}
     .dw-grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
@@ -57,172 +50,199 @@
     @media (max-width:700px){.dw-card{grid-column:span 12}.dw-chart{height:220px}}
   </style>
 
-  <!-- ECharts -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 
-  <!-- Fuerza la fuente de datos para el dashboard principal -->
-  <script> window.DW_DATA_URL = 'assets/data/dashboard/data.json'; </script>
-
-  <!-- ================== OVERRIDES ESTÉTICOS (no intrusivos) ================== -->
+  <!-- ===== Overrides estéticos (igual a dashboard_s) ===== -->
   <script>
-    (function(){
-      // Paleta fija para Allocation (verde claro, rojo, naranjo, cian)
-      const PIE_PALETTE = ['#86efac','#f87171','#fb923c','#22d3ee'];
+  (function(){
+    // Paleta fija para "Allocation" (verde claro, rojo, naranjo, cian)
+    const PIE_MAP = {
+      'XAUUSD':'#86efac', // verde claro
+      'BTCUSD':'#ef4444', // rojo
+      'NDX100':'#fb923c', // naranjo
+      'NAS100':'#fb923c', // alias mismo color
+      'USDJPY':'#22d3ee', // cian
+      'GBPUSD':'#60a5fa', // respaldo si aparece en datos
+      'EURUSD':'#f59e0b'
+    };
 
-      const BRAND = getComputedStyle(document.documentElement).getPropertyValue('--dw-green').trim() || '#00e18e';
-      const RED   = '#ef9a9a';
-      const GRAY  = getComputedStyle(document.documentElement).getPropertyValue('--dw-gray').trim() || '#cbd5e1';
-      const TXT   = '#444';
-
-      const nf = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 2 });
-      const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-
-      // 1) Marcar en rojo todos los negativos del panel KPIs
-      function paintNegatives(){
-        const ul = document.getElementById('dw-kpis');
-        if(!ul) return;
-        [...ul.querySelectorAll('li span:last-child')].forEach(s=>{
-          const t = s.textContent || '';
-          if (t.includes('-')) s.classList.add('neg');
+    // Utilidad para remover TODA línea interna (y ejes) en cualquier opción
+    function stripAllLines(opt, hideYAxisLabels = true) {
+      // Eje X
+      if (Array.isArray(opt.xAxis)) {
+        opt.xAxis.forEach(ax => {
+          ax.splitLine = { show:false };
+          ax.axisLine  = { show:false };
+          ax.axisTick  = { show:false };
         });
+      } else if (opt.xAxis) {
+        opt.xAxis.splitLine = { show:false };
+        opt.xAxis.axisLine  = { show:false };
+        opt.xAxis.axisTick  = { show:false };
       }
-      // observar mutaciones porque el UL se pinta después
-      new MutationObserver(paintNegatives).observe(document.body, {subtree:true, childList:true});
+      // Eje Y
+      if (Array.isArray(opt.yAxis)) {
+        opt.yAxis.forEach(ax => {
+          ax.splitLine = { show:false };
+          ax.axisLine  = { show:false };
+          ax.axisTick  = { show:false };
+          if (hideYAxisLabels) ax.axisLabel = Object.assign({}, ax.axisLabel, { show:false });
+        });
+      } else if (opt.yAxis) {
+        opt.yAxis.splitLine = { show:false };
+        opt.yAxis.axisLine  = { show:false };
+        opt.yAxis.axisTick  = { show:false };
+        if (hideYAxisLabels) opt.yAxis.axisLabel = Object.assign({}, opt.yAxis.axisLabel, { show:false });
+      }
+      return opt;
+    }
 
-      // 2) Monkey-patch a echarts.init().setOption() para ajustar estilos por gráfico
-      const _init = echarts.init;
-      echarts.init = function(dom, theme, opts){
-        const chart = _init(dom, theme, opts);
-        const _set = chart.setOption.bind(chart);
-        chart.setOption = function(option, ...rest){
-          try{
-            const id = (dom && dom.id) || '';
-            if (!option) return _set(option, ...rest);
-
-            // helper: fuerza sin líneas internas y ejes consistentes
-            const tidyAxes = (opt, showYLabels=false) => {
-              const axes = Array.isArray(opt.yAxis) ? opt.yAxis : [opt.yAxis || {}];
-              const xaxes = Array.isArray(opt.xAxis) ? opt.xAxis : [opt.xAxis || {}];
-              axes.forEach(a=>{
-                a.splitLine = {show:false};
-                a.axisTick = {show:false};
-                a.axisLine = {lineStyle:{color:'#9aa0a6'}};
-                a.axisLabel = Object.assign({show:showYLabels, color:'#555'}, a.axisLabel||{});
-              });
-              xaxes.forEach(a=>{
-                a.splitLine = {show:false};
-                a.axisTick = {show:false};
-                a.axisLine = {lineStyle:{color:'#9aa0a6'}};
-                a.axisLabel = Object.assign({color:'#555'}, a.axisLabel||{});
-              });
-              opt.yAxis = Array.isArray(opt.yAxis) ? axes : axes[0];
-              opt.xAxis = Array.isArray(opt.xAxis) ? xaxes : xaxes[0];
-            };
-
-            // --- Defaults para TODOS ---
-            tidyAxes(option, id === 'ch_balance'); // solo Balance muestra Y labels
-            option.grid = Object.assign({left:36, right:16, top:36, bottom:28, containLabel:true}, option.grid||{});
-
-            // --- Gráfico específico: Allocation (pie) ---
-            if (id === 'ch_allocation' && option.series){
-              option.color = PIE_PALETTE.slice(); // fuerza paleta
-              option.series.forEach(s=>{
-                if(s.type === 'pie'){
-                  s.radius = s.radius || ['46%','68%'];
-                  s.label = {show:false};
-                }
-              });
-              option.legend = Object.assign({
-                bottom:0, textStyle:{color:TXT}, itemWidth:12, itemHeight:12
-              }, option.legend||{});
-            }
-
-            // --- Distribution USD: un solo eje, barras n° (gris) + P&L (verde/rojo) con etiquetas visibles ---
-            if (id === 'ch_distribution' && option.series){
-              // intenta detectar cuál serie es count y cuál es pnl por tamaño/signos
-              let sCount = option.series[0], sPnl = option.series[1];
-              if (sCount && sPnl && Array.isArray(sPnl.data) && Array.isArray(sCount.data)) {
-                const maxCount = Math.max(...sCount.data.map(Number), 0);
-                const minPnl   = Math.min(...sPnl.data.map(Number), 0);
-                const head = Math.ceil(Math.max(maxCount, Math.abs(minPnl)) * 1.15);
-
-                option.yAxis = {type:'value', min:-head, max:head, splitLine:{show:false}, axisLabel:{show:false}, axisTick:{show:false}, axisLine:{lineStyle:{color:'#9aa0a6'}}};
-
-                // estilos serie n°
-                sCount.type = 'bar';
-                sCount.itemStyle = {color:GRAY};
-                sCount.barMaxWidth = 26;
-                sCount.label = {show:true, position:'top', color:TXT, formatter:(p)=> nf(p.value)};
-
-                // estilos serie P&L
-                sPnl.type = 'bar';
-                sPnl.barMaxWidth = 26;
-                sPnl.itemStyle = {color:(p)=> (Number(p.value)<0 ? RED : BRAND)};
-                sPnl.label = {show:true, position:(p)=> Number(p.value)<0?'bottom':'top', color:TXT, formatter:(p)=> nf(p.value)};
-                option.series = [sCount, sPnl];
-                option.legend = Object.assign({top:6, right:8, textStyle:{color:TXT}}, option.legend||{});
-              }
-            }
-
-            // --- Monthly: colorea positivos/negativos coherentes con marca ---
-            if (id === 'ch_monthly' && option.series){
-              option.series.forEach(s=>{
-                if (s.type === 'bar' || s.type === 'pictorialBar'){
-                  s.itemStyle = {color:(p)=> (Number(p.value)<0 ? RED : BRAND)};
-                  s.label = s.label || {};
-                  s.label.show = true;
-                  s.label.position = (p)=> Number(p.value)<0 ? 'bottom':'top';
-                  s.label.color = TXT;
-                  s.label.formatter = (p)=> nf(p.value);
-                }
-              });
-            }
-
-            // --- Win rate / Distribution trading days / Performance day: etiquetas en % ---
-            const asPercent = (id === 'ch_wr_assets' || id === 'ch_days_dist' || id === 'ch_days_perf');
-            if (asPercent && option.series){
-              option.series.forEach(s=>{
-                if (s.type === 'bar' || s.type === 'line'){
-                  s.label = Object.assign({show:true, color:TXT, position:'top', formatter:(p)=> `${nf(p.value)}%`}, s.label||{});
-                }
-              });
-              // oculta Y labels (igual ya está oculto por tidyAxes)
-              if (option.yAxis && !Array.isArray(option.yAxis)){
-                option.yAxis.axisLabel = {show:false};
-              }
-            }
-
-            // --- Average Position: evita recorte a la derecha y muestra etiquetas legibles ---
-            if (id === 'ch_avg_pos'){
-              option.grid = Object.assign({}, option.grid, {right:48, containLabel:true});
-              if (option.series){
-                option.series.forEach(s=>{
-                  if (s.type === 'bar'){
-                    s.label = Object.assign({show:true, position:'right', color:TXT, formatter:(p)=> nf(p.value)}, s.label||{});
-                    s.barMaxWidth = 20;
-                  }
-                });
-              }
-            }
-
-            // --- PL por activo: etiquetas numéricas finas ---
-            if (id === 'ch_pl_assets' && option.series){
-              option.series.forEach(s=>{
-                if (s.type === 'bar'){
-                  s.label = Object.assign({show:true, position:(p)=> Number(p.value)<0?'left':'right', color:TXT, formatter:(p)=> nf(p.value)}, s.label||{});
-                  s.itemStyle = {color:(p)=> (Number(p.value)<0 ? RED : BRAND)};
-                }
-              });
-            }
-
-          }catch(e){ /* silencio para no romper flujo si dashboard.js cambia */ }
-          return _set(option, ...rest);
-        };
-        return chart;
+    // === Balance (único que mantiene etiquetas en eje Y) ===
+    window.optLine = function(series, labels){
+      const opt = {
+        grid:{ left:36,right:10,top:20,bottom:28,containLabel:true },
+        xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        yAxis:{ type:'value', axisLabel:{ color:'#666' } }, // <- mantiene valores
+        series:[{
+          type:'line', smooth:true, symbol:'circle', symbolSize:6,
+          lineStyle:{ width:2 },
+          areaStyle:{ color:'rgba(0,225,142,0.06)' },
+          data:series
+        }]
       };
-    })();
+      // Sin líneas internas (pero conserva labels de Y)
+      return stripAllLines(opt, /*hideYAxisLabels=*/false);
+    };
+
+    // === Monthly USD ===
+    window.optMonth = function(labels, values){
+      const opt = {
+        grid:{ left:28,right:10,top:24,bottom:24,containLabel:true },
+        xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        yAxis:{ type:'value', axisLabel:{ show:false } },
+        series:[{
+          type:'bar', data:values,
+          itemStyle:{ color:(p)=> p.value>=0 ? '#00e18e' : '#ef9a9a' },
+          barMaxWidth:26,
+          label:{ show:true, position:'top', formatter:(p)=>p.value, color:'#666' }
+        }]
+      };
+      return stripAllLines(opt);
+    };
+
+    // === Distribution USD (barras dobles: n° y P&L) ===
+    window.optDist = function(d){
+      const brand = '#00e18e', red = '#ef9a9a', gray = '#cbd5e1';
+      const maxCount = Math.max(...d.counts, 0);
+      const minPnl   = Math.min(...d.pnl, 0);
+      const maxAbs   = Math.max(maxCount, Math.abs(minPnl));
+      const head     = Math.ceil(maxAbs * 1.15);
+
+      const opt = {
+        grid:{ left:28,right:10,top:36,bottom:28,containLabel:true },
+        legend:{ top:6, right:6, data:['n°','P&L'] },
+        tooltip:{ trigger:'axis' },
+        xAxis:{ type:'category', data:d.labels, axisLabel:{ color:'#666', interval:0 } },
+        yAxis:{ type:'value', min:-head, max:head, axisLabel:{ show:false } },
+        series:[
+          { name:'n°',  type:'bar', barMaxWidth:26, itemStyle:{ color:gray  },
+            label:{ show:true, position:'top', color:'#666' }, data:d.counts, z:1 },
+          { name:'P&L', type:'bar', barMaxWidth:26,
+            itemStyle:{ color:(p)=> (p.value<0 ? red : brand) },
+            label:{ show:true, position:(p)=>p.value>=0?'top':'bottom', color:'#666' },
+            data:d.pnl, z:2, barGap:'40%' }
+        ]
+      };
+      return stripAllLines(opt);
+    };
+
+    // === Allocation (donut con paleta fija) ===
+    window.optPie = function(labels, values){
+      const total = values.reduce((a,b)=>a+b,0) || 1;
+      return {
+        legend:{ bottom:0, itemWidth:12, itemHeight:12, textStyle:{ color:'#444' },
+          formatter:(name)=>{ const i=labels.indexOf(name); const p=Math.round(values[i]*100/total); return `${name}  ${p}%`; } },
+        tooltip:{ trigger:'item', formatter: ({name,percent}) => `${name}: ${percent}%` },
+        series:[{
+          type:'pie', radius:['46%','68%'], center:['50%','44%'], label:{ show:false },
+          data: labels.map((n,i)=>({ name:n, value:values[i], itemStyle:{ color: PIE_MAP[n] || '#94a3b8' } }))
+        }]
+      };
+    };
+
+    // === P&L USD (Neto) por activo ===
+    window.optBarPLAssets = function(labels, values){
+      const opt = {
+        grid:{ left:64,right:16,top:24,bottom:18,containLabel:true },
+        xAxis:{ type:'value', axisLabel:{ show:false } },
+        yAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        series:[{
+          type:'bar', data:values, barMaxWidth:22,
+          itemStyle:{ color:(p)=> p.value>=0 ? '#00e18e' : '#ef9a9a' },
+          label:{ show:true, position:(p)=>p.value>=0?'right':'left', formatter:(p)=>p.value, color:'#666' }
+        }]
+      };
+      return stripAllLines(opt);
+    };
+
+    // === Win rate (en %) ===
+    window.optBarWRAssets = function(labels, values){
+      const opt = {
+        grid:{ left:28,right:10,top:24,bottom:26,containLabel:true },
+        xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        yAxis:{ type:'value', axisLabel:{ show:false }, max:100 },
+        series:[{
+          type:'bar', data:values, barMaxWidth:26, itemStyle:{ color:'#00e18e' },
+          label:{ show:true, position:'top', formatter:(p)=>`${p.value}%`, color:'#666' }
+        }]
+      };
+      return stripAllLines(opt);
+    };
+
+    // === Distribution trading days (en %) ===
+    window.optDaysDist = function(labels, values){
+      const opt = {
+        grid:{ left:28,right:10,top:24,bottom:26,containLabel:true },
+        xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        yAxis:{ type:'value', axisLabel:{ show:false }, max:100 },
+        series:[{
+          type:'bar', data:values, barMaxWidth:26, itemStyle:{ color:'#00e18e' },
+          label:{ show:true, position:'top', formatter:(p)=>`${p.value}%`, color:'#666' }
+        }]
+      };
+      return stripAllLines(opt);
+    };
+
+    // === Performance day (en %) ===
+    window.optDaysPerf = function(labels, values){
+      const opt = {
+        grid:{ left:28,right:10,top:24,bottom:26,containLabel:true },
+        xAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        yAxis:{ type:'value', axisLabel:{ show:false }, max:100 },
+        series:[{
+          type:'bar', data:values, barMaxWidth:26, itemStyle:{ color:'#00e18e' },
+          label:{ show:true, position:'top', formatter:(p)=>`${p.value}%`, color:'#666' }
+        }]
+      };
+      return stripAllLines(opt);
+    };
+
+    // === Average Position (horizontal, evita corte de etiquetas) ===
+    window.optAvgPos = function(labels, values){
+      const opt = {
+        grid:{ left:64,right:42,top:24,bottom:18,containLabel:true },
+        xAxis:{ type:'value', axisLabel:{ show:false } },
+        yAxis:{ type:'category', data:labels, axisLabel:{ color:'#666' } },
+        series:[{
+          type:'bar', data:values, barMaxWidth:16, itemStyle:{ color:'#00e18e' },
+          label:{ show:true, position:'right', formatter:(p)=>p.value.toFixed(2), color:'#666' }
+        }]
+      };
+      return stripAllLines(opt);
+    };
+  })();
   </script>
-  <!-- ================== /OVERRIDES ================== -->
+  <!-- ===== Fin overrides ===== -->
 </head>
 <body>
   <script src="assets/js/main.js" defer></script>
@@ -318,16 +338,18 @@
     </div>
   </footer>
 
-  <!-- Render principal -->
-  <script src="assets/js/dashboard.js"></script>
+  <!-- Render (usa data.json por defecto) -->
+  <script src="/assets/js/dashboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
 
-  <!-- Profitability a 1 decimal (lee data.json por defecto) + rojos en negativos si cambia tardiamente -->
+  <!-- Profitability a 1 decimal -->
   <script>
     (async function () {
       const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
       let json = null;
       try {
-        const res = await fetch(window.DW_DATA_URL || 'assets/data/dashboard/data.json', {cache:'no-store'});
+        const res = await fetch('assets/data/dashboard/data.json');
         if (res.ok) json = await res.json();
       } catch (e) {}
       function apply(val) {
@@ -338,12 +360,10 @@
         if (!li) return false;
         const value = Number(val);
         if (!Number.isFinite(value)) return false;
-        const target = li.querySelector('span:last-child');
-        target.textContent = nf1.format(value) + '%';
-        if (value < 0) target.classList.add('neg');
+        li.querySelector('span:last-child').textContent = nf1.format(value) + '%';
         return true;
       }
-      if (json?.kpis && typeof json.kpis["Profitability"] === 'number') {
+      if (json && json.kpis && typeof json.kpis["Profitability"] === 'number') {
         if (apply(json.kpis["Profitability"])) return;
       }
       const ul = document.getElementById('dw-kpis');
