@@ -50,7 +50,15 @@
     @media (max-width:700px){.dw-card{grid-column:span 12}.dw-chart{height:220px}}
   </style>
 
+  <!-- ECharts -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+  <!-- 👇 Fuerza la fuente de datos SOLO para este dashboard small -->
+  <script>
+    window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';
+  </script>
+  <!-- Render principal (debe cargarse DESPUÉS de definir DW_DATA_URL) -->
+  <script src="assets/js/dashboard.js"></script>
 </head>
 <body>
   <script src="assets/js/main.js" defer></script>
@@ -88,6 +96,18 @@
       </ul>
     </div>
   </nav>
+
+  <!-- Oculta enlaces del menú según rol (evita que small vea un link al dashboard grande) -->
+  <script>
+    (function(){
+      const scope = (localStorage.getItem('dw_scope')||'').trim().toLowerCase();
+      if (scope === 'small') {
+        document.querySelector('a[href="dashboard.html"]')?.closest('li')?.remove();
+      } else if (scope === 'main') {
+        document.querySelector('a[href="dashboard_s.html"]')?.closest('li')?.remove();
+      }
+    })();
+  </script>
 
   <!-- Hero -->
   <section class="hero" style="background:#fff;color:#111;border-bottom:1px solid #eee">
@@ -146,26 +166,15 @@
     </div>
   </footer>
 
-  <!-- Render -->
-  <script src="/assets/js/dashboard.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-  <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
-
-  <!-- Profitability a 1 decimal (sincronizado con la misma fuente del dashboard) -->
-<script>
+  <!-- Profitability a 1 decimal (usa la MISMA fuente que dashboard.js) -->
+  <script>
   (async function () {
     const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  
-    // 1) misma URL que usa dashboard.js si la definiste en el <head>
+
     const primary = (typeof window !== 'undefined' ? window.DW_DATA_URL : null);
-  
-    // 2) prioridad: small -> (fallback) normal
-    const CANDIDATES = [
-      primary,
-      'assets/data/dashboard/data_small.json',
-      'assets/data/dashboard/data.json'
-    ].filter(Boolean);
-  
+    const CANDIDATES = [ primary, 'assets/data/dashboard/data_small.json', 'assets/data/dashboard/data.json' ]
+      .filter(Boolean);
+
     let json = null;
     for (const url of CANDIDATES) {
       try {
@@ -173,7 +182,7 @@
         if (res.ok) { json = await res.json(); break; }
       } catch (_) {}
     }
-  
+
     function apply(val) {
       const ul = document.getElementById('dw-kpis');
       if (!ul) return false;
@@ -185,9 +194,8 @@
       li.querySelector('span:last-child').textContent = nf1.format(value) + '%';
       return true;
     }
-  
-    // aplica cuando esté pintado el UL
-    if (json && json.kpis && typeof json.kpis["Profitability"] === 'number') {
+
+    if (json?.kpis && typeof json.kpis["Profitability"] === 'number') {
       if (apply(json.kpis["Profitability"])) return;
     }
     const ul = document.getElementById('dw-kpis');
@@ -199,6 +207,6 @@
     });
     obs.observe(ul, { childList: true, subtree: true, characterData: true });
   })();
-  </script>  
+  </script>
 </body>
 </html>
