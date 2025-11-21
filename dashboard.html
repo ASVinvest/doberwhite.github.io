@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- inicio login -->
+  <!-- Gate de acceso: SOLO admin o main -->
   <script>
     (function(){
-      const ok = localStorage.getItem('dw_auth') === 'ok';
-      if(!ok) window.location.href = 'login.html';
+      const ok    = localStorage.getItem('dw_auth') === 'ok';
+      const scope = localStorage.getItem('dw_scope') || '';
+      const home  = localStorage.getItem('dw_home')  || 'dashboard.html';
+      const allow = ['admin','main'].includes(scope);
+
+      if(!ok){
+        // vuelve al login y, tras loguear, regresa a esta página
+        window.location.href = 'login.html?next=dashboard.html';
+        return;
+      }
+      if(!allow){
+        // está logueado pero no tiene permiso → envía a SU home
+        window.location.href = home;
+      }
     })();
   </script>
-  <!-- fin login -->
-   <!-- inicio boton salir
-  <a href="#" onclick="localStorage.removeItem('dw_auth');localStorage.removeItem('dw_user');location.href='login.html'">Salir</a>
-   fin boton salir-->
+
   <meta charset="utf-8">
   <title>Dashboard — DoberWhite Capital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,27 +61,24 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 </head>
 <body>
-</style>
-</head>
-<script src="assets/js/main.js" defer></script>
-<body>
+  <script src="assets/js/main.js" defer></script>
+
   <!-- Header -->
   <header class="site-header">
     <div class="container bar">
       <a class="brand" href="index.html"><span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span></a>
       <a class="menu-button" href="#menu">Menú</a>
     </div>
- <!-- ⬇️ NUEVO: barra de usuario -->
- <div class="container mini" style="display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:8px">
-  <span id="dw-user" style="opacity:.75"></span>
-  <button id="dw-logout"
-          style="border:1px solid var(--line);background:var(--panel);color:var(--ink);
-                 padding:6px 10px;border-radius:10px;cursor:pointer">
-    Cerrar sesión
-  </button>
-</div>
 
-
+    <!-- Barra de usuario -->
+    <div class="container mini" style="display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:8px">
+      <span id="dw-user" style="opacity:.75"></span>
+      <button id="dw-logout"
+              style="border:1px solid var(--line);background:var(--panel);color:var(--ink);
+                     padding:6px 10px;border-radius:10px;cursor:pointer">
+        Cerrar sesión
+      </button>
+    </div>
   </header>
 
   <!-- Menú (mismo que en index) -->
@@ -85,11 +91,27 @@
         <li><a href="cursos.html">Cursos & seminarios</a></li>
         <li><a href="valores.html">Nuestros valores</a></li>
         <li class="active"><a href="dashboard.html">Dashboard</a></li>
-       <!-- <li><a href="informes.html">Informes Privados</a></li>-->
+        <!-- <li><a href="informes.html">Informes Privados</a></li> -->
         <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
       </ul>
     </div>
   </nav>
+
+  <!-- Oculta enlaces del menú según rol -->
+  <script>
+    (function(){
+      const scope = localStorage.getItem('dw_scope');
+      if (scope && scope !== 'admin') {
+        if (scope === 'small') {
+          // Si tuvieses link al dashboard grande, lo quita
+          document.querySelector('a[href="dashboard.html"]')?.closest('li')?.remove();
+        } else if (scope === 'main') {
+          // Si existe link al dashboard small, lo quita
+          document.querySelector('a[href="dashboard_s.html"]')?.closest('li')?.remove();
+        }
+      }
+    })();
+  </script>
 
   <!-- Hero -->
   <section class="hero" style="background:#fff;color:#111;border-bottom:1px solid #eee">
@@ -157,16 +179,15 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
   <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
 
-  <!-- Forzar Profitability desde data.json a 1 decimal (0,6%) incluso si dashboard.js lo redibuja -->
+  <!-- Profitability a 1 decimal -->
   <script>
     (async function () {
       const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-      // lee el JSON real
       let json = null;
       try {
         const res = await fetch('assets/data/dashboard/data.json');
         if (res.ok) json = await res.json();
-      } catch (e) { /* ignora */ }
+      } catch (e) {}
 
       function apply(val) {
         const ul = document.getElementById('dw-kpis');
@@ -180,12 +201,9 @@
         return true;
       }
 
-      // 1) intenta con el valor del JSON (0.6)
       if (json && json.kpis && typeof json.kpis["Profitability"] === 'number') {
         if (apply(json.kpis["Profitability"])) return;
       }
-
-      // 2) si aún no existe la fila, observa hasta que el UL sea pintado por dashboard.js y aplica el valor del JSON
       const ul = document.getElementById('dw-kpis');
       if (!ul) return;
       const obs = new MutationObserver(() => {
@@ -196,25 +214,25 @@
       obs.observe(ul, { childList: true, subtree: true, characterData: true });
     })();
   </script>
-   <!-- Fuerzs y botón la salida -->
-<script>
-  (function () {
-    // Muestra el usuario logueado
-    var u = localStorage.getItem('dw_user');
-    var el = document.getElementById('dw-user');
-    if (el) el.textContent = u || '';
 
-    // Cerrar sesión
-    var btn = document.getElementById('dw-logout');
-    if (btn) {
-      btn.addEventListener('click', function(){
-        localStorage.removeItem('dw_auth');
-        localStorage.removeItem('dw_user');
-        location.href = 'index.html';
-      });
-    }
-  })();
-</script>
+  <!-- User bar: muestra usuario y logout (limpia rol y home) -->
+  <script>
+    (function () {
+      var u = localStorage.getItem('dw_user');
+      var el = document.getElementById('dw-user');
+      if (el) el.textContent = u || '';
 
+      var btn = document.getElementById('dw-logout');
+      if (btn) {
+        btn.addEventListener('click', function(){
+          localStorage.removeItem('dw_auth');
+          localStorage.removeItem('dw_user');
+          localStorage.removeItem('dw_scope');  // limpia rol
+          localStorage.removeItem('dw_home');   // limpia home
+          location.href = 'index.html';
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
