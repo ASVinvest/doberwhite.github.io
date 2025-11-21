@@ -51,12 +51,8 @@
     @media (max-width:1100px){.dw-card{grid-column:span 6}.dw-layout{grid-template-columns:1fr}}
     @media (max-width:700px){.dw-card{grid-column:span 12}.dw-chart{height:220px}}
 
-    /* Negativos en rojo en Ratio YTD */
+    /* Negativos en rojo en Ratio YTD (se marca con data-val más abajo) */
     .dw-kpis li span:last-child[data-val^="-"]{color:#c62828}
-
-    /* Ocultar ejes verticales y líneas internas: se controla en opciones ECharts,
-       pero como refuerzo visual quitamos grid por CSS (no afecta el init) */
-    .dw-card canvas{image-rendering:auto}
   </style>
 
   <!-- ECharts -->
@@ -82,10 +78,9 @@
         'EURUSD':'#86efac'
       };
 
-      // Utilidades comunes (mismo look & feel)
-      const brand = '#00e18e', red = '#ef9a9a', axis = '#9aa0a6', labelColor = '#374151', grid = '#ffffff00'; // grid off
-
+      const brand = '#00e18e', red = '#ef9a9a', axis = '#9aa0a6', labelColor = '#374151';
       const baseGrid   = { left: 36, right: 20, top: 36, bottom: 28, containLabel: true };
+
       const axisX = (labels, opts={}) => ({
         type:'category',
         data:labels,
@@ -102,7 +97,7 @@
         splitLine:{ show:false }
       });
 
-      // === Override pie (Allocation) ===
+      // === Allocation ===
       window.optPie = function(labels, values){
         const total = values.reduce((a,b)=>a+b,0) || 1;
         return {
@@ -128,8 +123,8 @@
         };
       };
 
-      // === Barras genéricas sin eje Y (para WR, días, etc.) ===
-      const labelTop = { show:true, position:'top', color:labelColor, fontSize:10, formatter:p=>p.value + (p.seriesName?.includes('%')?'%':'') };
+      // === Barras genéricas sin eje Y ===
+      const labelTop = { show:true, position:'top', color:labelColor, fontSize:10, formatter:p=>p.value };
       window.optBar = function(labels, values, opts={}){
         return {
           grid: baseGrid,
@@ -143,9 +138,10 @@
         };
       };
 
-      window.optBarH = function(labels, values, opts={}){
+      // === Barras horizontales (Average Position) ===
+      window.optBarH = function(labels, values){
         return {
-          grid: { ...baseGrid, right: 48 }, // margen extra derecha para no cortar etiquetas
+          grid: { ...baseGrid, right: 48 }, // margen extra derecha para que no corte las etiquetas
           xAxis: axisY({ hideLabels:true }),
           yAxis:{ type:'category', data:labels, axisLabel:{ color:'#555' }, axisLine:{ lineStyle:{ color:axis } }, splitLine:{ show:false } },
           tooltip:{ trigger:'axis' },
@@ -157,7 +153,7 @@
         };
       };
 
-      // === Distribution USD: un solo eje, sin líneas; etiquetas coherentes con el resto ===
+      // === Distribution USD: etiquetas del mismo estilo (fuera de barras) ===
       window.optDist = function(d){
         const maxCount = Math.max(...d.counts, 0);
         const minPnl   = Math.min(...d.pnl, 0);
@@ -175,28 +171,19 @@
             axisLine:{ show:true, lineStyle:{ color:axis } }
           },
           series:[
-            // Conteo (gris) con etiqueta arriba
             { name:'n°',  type:'bar', barMaxWidth:26,
               itemStyle:{ color:'#cbd5e1' },
               label:{ show:true, position:'top', color:labelColor, fontSize:10, formatter:p=>p.value },
               data:d.counts, z:1 },
-
-            // P&L (verde/rojo) con etiqueta coherente y siempre fuera
             { name:'P&L', type:'bar', barMaxWidth:26, barGap:'40%',
               itemStyle:{ color:(p)=> (p.value<0 ? red : brand) },
-              label:{
-                show:true,
-                position:'top',   // fuera de la barra
-                color:labelColor,
-                fontSize:10,
-                formatter:p=>p.value
-              },
+              label:{ show:true, position:'top', color:labelColor, fontSize:10, formatter:p=>p.value },
               data:d.pnl, z:2 }
           ]
         };
       };
 
-      // ---- Después de renderizar KPIs, marca negativos en rojo (atributo de datos para CSS) ----
+      // Marca negativos en rojo en la lista KPI
       window.addEventListener('DOMContentLoaded', ()=>{
         const ul = document.getElementById('dw-kpis');
         const mark = () => {
@@ -225,16 +212,6 @@
       <a class="brand" href="index.html"><span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span></a>
       <a class="menu-button" href="#menu">Menú</a>
     </div>
-
-    <!-- Barra de usuario -->
-    <div class="container mini" style="display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:8px">
-      <span id="dw-user" style="opacity:.75"></span>
-      <button id="dw-logout"
-              style="border:1px solid var(--line);background:var(--panel);color:var(--ink);
-                     padding:6px 10px;border-radius:10px;cursor:pointer">
-        Cerrar sesión
-      </button>
-    </div>
   </header>
 
   <!-- Menú (esta página small) -->
@@ -251,18 +228,6 @@
       </ul>
     </div>
   </nav>
-
-  <!-- Oculta enlaces del menú según rol -->
-  <script>
-    (function(){
-      const scope = (localStorage.getItem('dw_scope')||'').trim().toLowerCase();
-      if (scope === 'small') {
-        document.querySelector('a[href="dashboard.html"]')?.closest('li')?.remove();
-      } else if (scope === 'main') {
-        document.querySelector('a[href="dashboard_s.html"]')?.closest('li')?.remove();
-      }
-    })();
-  </script>
 
   <!-- Hero -->
   <section class="hero" style="background:#fff;color:#111;border-bottom:1px solid #eee">
@@ -321,7 +286,7 @@
     </div>
   </footer>
 
-  <!-- Profitability a 1 decimal + marca negativo -->
+  <!-- Profitability a 1 decimal + parches de etiquetas % -->
   <script>
   (async function () {
     const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -352,10 +317,38 @@
       target.setAttribute('data-val', v.toString());
       return true;
     }
+    if (json?.kpis && typeof json.kpis["Profitability"] === 'number') apply(json.kpis["Profitability"]);
 
-    if (json?.kpis && typeof json.kpis["Profitability"] === 'number') {
-      apply(json.kpis["Profitability"]);
+    // ---- PARCHE %: Win rate, Distribution trading days, Performance day ----
+    const LABEL_COLOR = '#374151';
+    function patchPercentChart(domId){
+      const el = document.getElementById(domId);
+      if (!el) return false;
+      const inst = echarts.getInstanceByDom(el);
+      if (!inst) return false;
+
+      const opt = inst.getOption();
+      // Etiquetas con % y tooltip con %
+      if (opt && Array.isArray(opt.series)) {
+        opt.series.forEach(s=>{
+          s.label = { show:true, position:'top', color:LABEL_COLOR, fontSize:10, formatter:(p)=> `${p.value}%` };
+          // Mantener color verde/rojo si ya está definido
+        });
+      }
+      opt.tooltip = { trigger:'axis', valueFormatter: (v)=> `${v}%` };
+      inst.setOption(opt, true);
+      return true;
     }
+
+    // Intentos hasta que dashboard.js haya renderizado
+    let tries = 0;
+    const timer = setInterval(()=>{
+      const a = patchPercentChart('ch_wr_assets');
+      const b = patchPercentChart('ch_days_dist');
+      const c = patchPercentChart('ch_days_perf');
+      tries++;
+      if ((a && b && c) || tries > 40){ clearInterval(timer); }
+    }, 150);
   })();
   </script>
 </body>
