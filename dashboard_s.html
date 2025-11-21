@@ -54,9 +54,8 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 
   <!-- Fuerza la fuente de datos SOLO para este dashboard small -->
-  <script>
-    window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';
-  </script>
+  <script>window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';</script>
+
   <!-- Render principal (debe cargarse DESPUÉS de definir DW_DATA_URL) -->
   <script src="assets/js/dashboard.js"></script>
 </head>
@@ -166,17 +165,126 @@
     </div>
   </footer>
 
-  <!-- Profitability a 1 decimal (usa la MISMA fuente que dashboard.js) -->
+  <!-- Profitability a 1 decimal (misma fuente que dashboard.js) -->
   <script>
   (async function () {
     const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-
     const primary = (typeof window !== 'undefined' ? window.DW_DATA_URL : null);
-    const CANDIDATES = [ primary, 'assets/data/dashboard/data_small.json', 'assets/data/dashboard/data.json' ]
-      .filter(Boolean);
+    const CANDIDATES = [ primary, 'assets/data/dashboard/data_small.json', 'assets/data/dashboard/data.json' ].filter(Boolean);
 
     let json = null;
     for (const url of CANDIDATES) {
       try {
         const res = await fetch(url + '?v=' + Date.now(), { cache: 'no-store' });
-        if (res.ok) { json = await res.json
+        if (res.ok) { json = await res.json(); break; }
+      } catch (_) {}
+    }
+
+    function apply(val) {
+      const ul = document.getElementById('dw-kpis');
+      if (!ul) return false;
+      const li = [...ul.querySelectorAll('li')]
+        .find(x => x.querySelector('span:first-child')?.textContent?.trim() === 'Profitability');
+      if (!li) return false;
+      const value = Number(val);
+      if (!Number.isFinite(value)) return false;
+      li.querySelector('span:last-child').textContent = nf1.format(value) + '%';
+      return true;
+    }
+
+    if (json?.kpis && typeof json.kpis["Profitability"] === 'number') {
+      if (apply(json.kpis["Profitability"])) return;
+    }
+    const ul = document.getElementById('dw-kpis');
+    if (!ul) return;
+    const obs = new MutationObserver(() => {
+      if (json?.kpis?.["Profitability"] != null && apply(json.kpis["Profitability"])) {
+        obs.disconnect();
+      }
+    });
+    obs.observe(ul, { childList: true, subtree: true, characterData: true });
+  })();
+  </script>
+
+  <!-- Override SOLO para Distribution USD: un eje, sin grillas y con etiquetas de valor -->
+  <script>
+  (async function(){
+    const fmt = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    const src = window.DW_DATA_URL || 'assets/data/dashboard/data_small.json';
+    let d=null;
+    try{
+      const r = await fetch(src + '?v=' + Date.now(), { cache:'no-store' });
+      if(r.ok) d = await r.json();
+    }catch(_){}
+
+    if(!d || !d.distribution) return;
+
+    const labels = d.distribution.labels || ['buy','sell'];
+    const counts = d.distribution.counts || [];
+    const pnl    = d.distribution.pnl    || [];
+
+    const maxAbs = Math.max(
+      ...counts.map(v=>Math.abs(Number(v)||0)),
+      ...pnl.map(v=>Math.abs(Number(v)||0)),
+      1
+    );
+    const pad = Math.ceil(maxAbs * 1.2);
+
+    const el = document.getElementById('ch_distribution');
+    if(!el) return;
+    const chart = echarts.getInstanceByDom(el) || echarts.init(el);
+
+    chart.setOption({
+      legend:{ data:['n°','P&L'] },
+      grid:{ left:36, right:12, top:28, bottom:28, containLabel:true },
+      xAxis:{
+        type:'category',
+        data:labels,
+        axisLine:{ lineStyle:{ color:'#9aa0a6' } },
+        axisTick:{ alignWithLabel:true },
+        axisLabel:{ color:'#555' }
+      },
+      yAxis:{
+        type:'value',
+        min:-pad, max:pad,
+        splitLine:{ show:false },
+        axisLine:{ lineStyle:{ color:'#9aa0a6' } },
+        axisLabel:{ color:'#555' }
+      },
+      series:[
+        {
+          name:'n°',
+          type:'bar',
+          data: counts,
+          barMaxWidth: 28,
+          itemStyle:{ color:'#cbd5e1' },
+          label:{
+            show:true,
+            position:'top',
+            color:'#6b7280',
+            fontSize:10,
+            formatter: p => fmt.format(p.value ?? 0)
+          },
+          z: 1
+        },
+        {
+          name:'P&L',
+          type:'bar',
+          data: pnl,          /* valores negativos -> barras rojas */
+          barMaxWidth: 28,
+          itemStyle:{ color:'#ef9a9a' },
+          label:{
+            show:true,
+            position:'insideTop',
+            color:'#7f1d1d',
+            fontSize:10,
+            formatter: p => fmt.format(p.value ?? 0)
+          },
+          z: 2
+        }
+      ]
+    }, true);
+  })();
+  </script>
+</body>
+</html>
