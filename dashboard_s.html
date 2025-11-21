@@ -14,14 +14,14 @@
         return;
       }
     
-      const allow = ['admin','small'].includes(scope);
+      const allow = (scope === 'admin' || scope === 'small');
       if(!allow){
-        // admin/main no ven el small → vuelven a su home (dashboard.html)
         const here = location.pathname.split('/').pop() || 'dashboard_s.html';
         if (here !== home) location.replace(home);
       }
     })();
     </script>
+    
     
     
     
