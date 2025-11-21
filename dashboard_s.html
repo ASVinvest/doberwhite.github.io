@@ -53,99 +53,79 @@
   <!-- ECharts -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 
-  <!-- Fuerza la fuente de datos SOLO para este dashboard small -->
-  <script>
-    window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';
-  </script>
+  <!-- Fuente de datos SOLO para small -->
+  <script> window.DW_DATA_URL = 'assets/data/dashboard/data_small.json'; </script>
 
   <!-- Render principal -->
   <script src="assets/js/dashboard.js"></script>
 
-  <!-- Override específico: Distribution USD con doble eje y escala simétrica -->
+  <!-- ===== Overrides SOLO para dashboard_s.html ===== -->
   <script>
     (function(){
-      // Colores locales (no dependemos de variables internas de dashboard.js)
-      const BRAND = '#00e18e';
-      const RED   = '#ef9a9a';
-      const GRAY  = '#cbd5e1';
-      const AXIS  = '#9aa0a6';
-      const GRID  = '#eaecef';
+      // Paleta fija por ticker: evita colores duplicados en ALLOCATION
+      // Incluye ambos alias del índice: NAS100 y NDX100
+      const PIE_MAP = {
+        'GBPUSD':'#3b82f6',   // azul
+        'XAUUSD':'#22c55e',   // verde
+        'NAS100':'#64748b',   // gris azulado
+        'NDX100':'#64748b',   // mismo color para alias
+        'USDJPY':'#8b5cf6',   // violeta (diferente a GBPUSD)
+        'BTCUSD':'#ef4444',   // rojo
+        'EURUSD':'#f59e0b'    // naranja (por si aparece)
+      };
 
-      // Reemplaza la función global usada por dashboard.js
+      // === Override pie (Allocation) ===
+      window.optPie = function(labels, values){
+        const total = values.reduce((a,b)=>a+b,0) || 1;
+        return {
+          legend:{ bottom: 0, itemWidth:12, itemHeight:12, textStyle:{ color:'#444' },
+            formatter:(name)=>{ const i=labels.indexOf(name); const p=Math.round(values[i]*100/total); return `${name}  ${p}%`; } },
+          tooltip:{ trigger:'item', formatter: ({name,percent}) => `${name}: ${percent}%` },
+          series:[{
+            type:'pie', radius:['46%','68%'], center:['50%','44%'], label:{ show:false },
+            data: labels.map((n,i)=>({ name:n, value:values[i], itemStyle:{ color: PIE_MAP[n] || '#94a3b8' } }))
+          }]
+        };
+      };
+
+      // === Override Distribution USD: un solo eje, sin líneas y cero compartido ===
+      const brand = '#00e18e', red = '#ef9a9a', gray = '#cbd5e1';
       window.optDist = function(d){
-        const maxCount = Math.max(...(d.counts||[0]), 0);
-        const absMaxP  = Math.max(...(d.pnl||[0]).map(v => Math.abs(v)), 1);
-        const pad = x => Math.ceil(x * 1.15);
-
-        const barLabelTop = { show:true, position:'top', fontSize:10, color:'#4b5563',
-          formatter:p => (new Intl.NumberFormat('es-CL',{maximumFractionDigits:0})).format(p.value ?? 0) };
+        const maxCount = Math.max(...d.counts, 0);
+        const minPnl   = Math.min(...d.pnl, 0);
+        const maxAbs   = Math.max(maxCount, Math.abs(minPnl));
+        const head     = Math.ceil(maxAbs * 1.15);
 
         return {
-          grid: { left: 40, right: 20, top: 54, bottom: 36, containLabel: true },
-          legend: {
-            top: 8, right: 8,
-            data: ['n°','P&L'],
-            textStyle: { color:'#444' }
-          },
-          tooltip: { trigger:'axis' },
+          grid: { left: 36, right: 16, top: 36, bottom: 28, containLabel: true },
+          legend:{ top:6, right:8, data:['n°','P&L'], textStyle:{ color:'#444' } },
+          tooltip:{ trigger:'axis' },
           xAxis: {
-            type:'category',
-            data: d.labels || [],
-            axisLabel:{ color:'#555', interval:0, hideOverlap:true },
+            type:'category', data:d.labels,
+            axisLabel:{ color:'#555', interval:0, hideOverlap:false, margin:10 },
             axisTick:{ alignWithLabel:true },
-            axisLine:{ lineStyle:{ color:AXIS } }
+            axisLine:{ onZero:true, lineStyle:{ color:'#9aa0a6' } }
           },
-          yAxis: [
-            // Izquierda: n°
-            {
-              type:'value',
-              min: 0,
-              max: pad(maxCount),
-              axisLabel:{ color:'#555' },
-              axisTick:{ show:false },
-              splitLine:{ lineStyle:{ color:GRID } }
-            },
-            // Derecha: P&L con escala simétrica ±max(|P&L|)
-            {
-              type:'value',
-              min: -pad(absMaxP),
-              max:  pad(absMaxP),
-              axisLabel:{ color:'#555' },
-              axisTick:{ show:false },
-              splitLine:{ show:false }
-            }
-          ],
-          series: [
-            {
-              name:'n°',
-              type:'bar',
-              yAxisIndex: 0,
-              barMaxWidth: 26,
-              itemStyle:{ color: GRAY },
-              label: barLabelTop,
-              data: (d.counts || []).map(v => Number(v) || 0),
-              z: 1
-            },
-            {
-              name:'P&L',
-              type:'bar',
-              yAxisIndex: 1,
-              barMaxWidth: 26,
-              itemStyle:{ color: params => (params.value >= 0 ? BRAND : RED) },
-              label: { show:true, position:'top', fontSize:10, color:'#4b5563',
-                       formatter:p => (new Intl.NumberFormat('es-CL',{maximumFractionDigits:2}))
-                                      .format(p.value ?? 0) },
-              data: (d.pnl || []).map(v => Number(v) || 0),
-              barGap:'35%',
-              barCategoryGap:'30%',
-              z: 2
-            }
+          yAxis:{
+            type:'value', min:-head, max:head,
+            splitLine:{ show:false },
+            axisLabel:{ color:'#555' },
+            axisTick:{ show:false },
+            axisLine:{ lineStyle:{ color:'#9aa0a6' } }
+          },
+          series:[
+            { name:'n°',  type:'bar', barMaxWidth:26, itemStyle:{ color:gray  }, data:d.counts, z:1 },
+            { name:'P&L', type:'bar', barMaxWidth:26,
+              itemStyle:{ color:(p)=> (p.value<0 ? red : brand) },
+              data:d.pnl, z:2, barGap:'40%' }
           ]
         };
       };
     })();
   </script>
+  <!-- ===== Fin overrides ===== -->
 </head>
+
 <body>
   <script src="assets/js/main.js" defer></script>
   <script src="assets/js/logout.js" defer></script>
@@ -252,7 +232,7 @@
     </div>
   </footer>
 
-  <!-- Profitability a 1 decimal (usa la MISMA fuente que dashboard.js) -->
+  <!-- Profitability a 1 decimal -->
   <script>
   (async function () {
     const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
