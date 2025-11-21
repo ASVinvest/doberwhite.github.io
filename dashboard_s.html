@@ -57,8 +57,94 @@
   <script>
     window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';
   </script>
-  <!-- Render principal (debe cargarse DESPUÉS de definir DW_DATA_URL) -->
+
+  <!-- Render principal -->
   <script src="assets/js/dashboard.js"></script>
+
+  <!-- Override específico: Distribution USD con doble eje y escala simétrica -->
+  <script>
+    (function(){
+      // Colores locales (no dependemos de variables internas de dashboard.js)
+      const BRAND = '#00e18e';
+      const RED   = '#ef9a9a';
+      const GRAY  = '#cbd5e1';
+      const AXIS  = '#9aa0a6';
+      const GRID  = '#eaecef';
+
+      // Reemplaza la función global usada por dashboard.js
+      window.optDist = function(d){
+        const maxCount = Math.max(...(d.counts||[0]), 0);
+        const absMaxP  = Math.max(...(d.pnl||[0]).map(v => Math.abs(v)), 1);
+        const pad = x => Math.ceil(x * 1.15);
+
+        const barLabelTop = { show:true, position:'top', fontSize:10, color:'#4b5563',
+          formatter:p => (new Intl.NumberFormat('es-CL',{maximumFractionDigits:0})).format(p.value ?? 0) };
+
+        return {
+          grid: { left: 40, right: 20, top: 54, bottom: 36, containLabel: true },
+          legend: {
+            top: 8, right: 8,
+            data: ['n°','P&L'],
+            textStyle: { color:'#444' }
+          },
+          tooltip: { trigger:'axis' },
+          xAxis: {
+            type:'category',
+            data: d.labels || [],
+            axisLabel:{ color:'#555', interval:0, hideOverlap:true },
+            axisTick:{ alignWithLabel:true },
+            axisLine:{ lineStyle:{ color:AXIS } }
+          },
+          yAxis: [
+            // Izquierda: n°
+            {
+              type:'value',
+              min: 0,
+              max: pad(maxCount),
+              axisLabel:{ color:'#555' },
+              axisTick:{ show:false },
+              splitLine:{ lineStyle:{ color:GRID } }
+            },
+            // Derecha: P&L con escala simétrica ±max(|P&L|)
+            {
+              type:'value',
+              min: -pad(absMaxP),
+              max:  pad(absMaxP),
+              axisLabel:{ color:'#555' },
+              axisTick:{ show:false },
+              splitLine:{ show:false }
+            }
+          ],
+          series: [
+            {
+              name:'n°',
+              type:'bar',
+              yAxisIndex: 0,
+              barMaxWidth: 26,
+              itemStyle:{ color: GRAY },
+              label: barLabelTop,
+              data: (d.counts || []).map(v => Number(v) || 0),
+              z: 1
+            },
+            {
+              name:'P&L',
+              type:'bar',
+              yAxisIndex: 1,
+              barMaxWidth: 26,
+              itemStyle:{ color: params => (params.value >= 0 ? BRAND : RED) },
+              label: { show:true, position:'top', fontSize:10, color:'#4b5563',
+                       formatter:p => (new Intl.NumberFormat('es-CL',{maximumFractionDigits:2}))
+                                      .format(p.value ?? 0) },
+              data: (d.pnl || []).map(v => Number(v) || 0),
+              barGap:'35%',
+              barCategoryGap:'30%',
+              z: 2
+            }
+          ]
+        };
+      };
+    })();
+  </script>
 </head>
 <body>
   <script src="assets/js/main.js" defer></script>
@@ -166,89 +252,7 @@
     </div>
   </footer>
 
-  <!-- Tweaks small-only: Allocation colores únicos + Distribution USD conserva “n°” y P&L negativo en rojo -->
-  <script>
-    (function(){
-      const BRAND = '#00e18e', RED = '#ef9a9a', GRAY = '#cbd5e1';
-
-      function onChartReady(id, cb){
-        const el = document.getElementById(id);
-        if(!el) return;
-        const tick = () =>{
-          const ch = echarts.getInstanceByDom(el);
-          if(ch){ cb(ch); }
-          else   { requestAnimationFrame(tick); }
-        };
-        tick();
-      }
-
-      // 1) Allocation: asigna colores únicos por activo
-      onChartReady('ch_allocation', function(chart){
-        const opt = chart.getOption();
-        const series = opt.series && opt.series[0];
-        if(!series) return;
-
-        const data = series.data || [];
-        const PAL = {
-          'GBPUSD':'#3b82f6',   // azul
-          'USDJPY':'#7c3aed',   // violeta (evita colisión con NAS100)
-          'XAUUSD':'#22c55e',   // verde
-          'NAS100':'#64748b'    // gris azulado
-        };
-        series.data = data.map(d => {
-          const name = (typeof d === 'object') ? d.name : d;
-          const value = (typeof d === 'object') ? d.value : d;
-          return { name, value, itemStyle:{ color: PAL[name] || '#94a3b8' } };
-        });
-        chart.setOption(opt, false);
-      });
-
-      // 2) Distribution USD: mantiene serie "n°" y pinta P&L negativo en rojo
-      onChartReady('ch_distribution', function(chart){
-        const opt = chart.getOption();
-
-        // Asegura leyenda con ambas series
-        if(opt.legend && opt.legend[0]){
-          const L = new Set(opt.legend[0].data || []);
-          L.add('n°'); L.add('P&L');
-          opt.legend[0].data = Array.from(L);
-        }
-
-        // Localiza series
-        const iCounts = (opt.series || []).findIndex(s => s.name === 'n°');
-        const iPL     = (opt.series || []).findIndex(s => s.name === 'P&L');
-
-        // Si falta "n°", crea una mínima para no perder el conteo visual (valores 0)
-        if(iCounts === -1){
-          const cats = (opt.xAxis && opt.xAxis[0] && opt.xAxis[0].data) || ['buy','sell'];
-          (opt.series = opt.series || []).unshift({
-            name:'n°', type:'bar', barMaxWidth:26, z:1,
-            itemStyle:{ color: GRAY },
-            label:{ show:true, position:'top', fontSize:10, color:'#6b7280' },
-            data: cats.map(() => 0)
-          });
-        } else {
-          // Colorea "n°" en gris por si otro script lo cambió
-          opt.series[iCounts].itemStyle = { color: GRAY };
-          opt.series[iCounts].label = { show:true, position:'top', fontSize:10, color:'#6b7280' };
-        }
-
-        // Recolorea P&L según signo (verde / rojo)
-        if(iPL !== -1){
-          const raw = opt.series[iPL].data || [];
-          const vals = raw.map(v => (typeof v === 'object') ? v.value : v);
-          opt.series[iPL].data = vals.map(v => ({ value:v, itemStyle:{ color: v >= 0 ? BRAND : RED }}));
-          // Asegura que P&L esté en el segundo eje si tu opción original lo usa
-          opt.series[iPL].yAxisIndex = 1;
-          opt.series[iPL].barMaxWidth = 26;
-        }
-
-        chart.setOption(opt, false); // merge, no borra series
-      });
-    })();
-  </script>
-
-  <!-- Profitability a 1 decimal (usa la misma fuente de dashboard.js) -->
+  <!-- Profitability a 1 decimal (usa la MISMA fuente que dashboard.js) -->
   <script>
   (async function () {
     const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
