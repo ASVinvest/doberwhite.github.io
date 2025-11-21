@@ -1,8 +1,8 @@
+// assets/js/login.js
 (async function(){
   const form = document.getElementById('dw-login');
   const err  = document.getElementById('err');
 
-  // CSV con cabecera: email,password,active,scope,home
   const CSV_PATH = 'assets/data/dashboard/users.csv?v=' + Date.now();
 
   const clean = s => (s||'')
@@ -50,13 +50,27 @@
     return users;
   }
 
-  // lee ?next=...
+  // seguridad: sólo permitimos como next estas dos páginas
+  function basePage(p){
+    if(!p) return '';
+    try{
+      const name = p.split('?')[0].split('#')[0].split('/').pop().trim();
+      return name;
+    }catch(e){ return ''; }
+  }
   function getNext(){
     try{
       const u = new URL(location.href);
-      const n = u.searchParams.get('next') || '';
-      return n.trim();
+      return basePage(u.searchParams.get('next') || '');
     }catch(e){ return ''; }
+  }
+
+  // lo que cada rol puede ver
+  function isAllowed(scope, page){
+    if(!page) return false;
+    if(scope === 'small') return page === 'dashboard_s.html';
+    if(scope === 'main' || scope === 'admin') return page === 'dashboard.html';
+    return false;
   }
 
   let users = [];
@@ -81,9 +95,12 @@
     localStorage.setItem('dw_scope', u.scope);
     localStorage.setItem('dw_home',  u.home);
 
-    const next = getNext();
-    // Si next existe, respétalo; si no, al home del usuario
-    const target = next ? next : u.home;
+    // decide destino
+    const req = getNext();                            // lo que pidió la URL
+    const target = isAllowed(u.scope, req) ? req      // si está permitido, vamos ahí
+                  : (isAllowed(u.scope, u.home) ? u.home  // si no, a su home válido
+                  : (u.scope === 'small' ? 'dashboard_s.html' : 'dashboard.html')); // fallback
+
     window.location.href = target;
   });
 })();
