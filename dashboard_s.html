@@ -151,41 +151,54 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
   <script src="/assets/js/dashboard.js?v=2025-10-28-03"></script>
 
-  <!-- Profitability a 1 decimal (si usas mismo JSON, deja igual;
-       si usas otro JSON para small, cambia la URL a tu data pequeña) -->
-  <script>
-    (async function () {
-      const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-      let json = null;
+  <!-- Profitability a 1 decimal (sincronizado con la misma fuente del dashboard) -->
+<script>
+  (async function () {
+    const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  
+    // 1) misma URL que usa dashboard.js si la definiste en el <head>
+    const primary = (typeof window !== 'undefined' ? window.DW_DATA_URL : null);
+  
+    // 2) prioridad: small -> (fallback) normal
+    const CANDIDATES = [
+      primary,
+      'assets/data/dashboard/data_small.json',
+      'assets/data/dashboard/data.json'
+    ].filter(Boolean);
+  
+    let json = null;
+    for (const url of CANDIDATES) {
       try {
-        // Si small usa otro JSON, ponlo aquí (por ejemplo):
-        // const res = await fetch('assets/data/dashboard/data_small.json');
-        const res = await fetch('assets/data/dashboard/data_small.json');
-        if (res.ok) json = await res.json();
-      } catch (e) {}
-      function apply(val) {
-        const ul = document.getElementById('dw-kpis');
-        if (!ul) return false;
-        const li = [...ul.querySelectorAll('li')]
-          .find(x => x.querySelector('span:first-child')?.textContent?.trim() === 'Profitability');
-        if (!li) return false;
-        const value = Number(val);
-        if (!Number.isFinite(value)) return false;
-        li.querySelector('span:last-child').textContent = nf1.format(value) + '%';
-        return true;
-      }
-      if (json && json.kpis && typeof json.kpis["Profitability"] === 'number') {
-        if (apply(json.kpis["Profitability"])) return;
-      }
+        const res = await fetch(url + '?v=' + Date.now(), { cache: 'no-store' });
+        if (res.ok) { json = await res.json(); break; }
+      } catch (_) {}
+    }
+  
+    function apply(val) {
       const ul = document.getElementById('dw-kpis');
-      if (!ul) return;
-      const obs = new MutationObserver(() => {
-        if (json?.kpis?.["Profitability"] != null && apply(json.kpis["Profitability"])) {
-          obs.disconnect();
-        }
-      });
-      obs.observe(ul, { childList: true, subtree: true, characterData: true });
-    })();
-  </script>
+      if (!ul) return false;
+      const li = [...ul.querySelectorAll('li')]
+        .find(x => x.querySelector('span:first-child')?.textContent?.trim() === 'Profitability');
+      if (!li) return false;
+      const value = Number(val);
+      if (!Number.isFinite(value)) return false;
+      li.querySelector('span:last-child').textContent = nf1.format(value) + '%';
+      return true;
+    }
+  
+    // aplica cuando esté pintado el UL
+    if (json && json.kpis && typeof json.kpis["Profitability"] === 'number') {
+      if (apply(json.kpis["Profitability"])) return;
+    }
+    const ul = document.getElementById('dw-kpis');
+    if (!ul) return;
+    const obs = new MutationObserver(() => {
+      if (json?.kpis?.["Profitability"] != null && apply(json.kpis["Profitability"])) {
+        obs.disconnect();
+      }
+    });
+    obs.observe(ul, { childList: true, subtree: true, characterData: true });
+  })();
+  </script>  
 </body>
 </html>
