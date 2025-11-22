@@ -23,6 +23,32 @@
     .feature h3{margin:0 0 6px;font-size:18px;font-weight:800}
     .feature ul{margin:10px 0 0 18px;color:var(--muted);font-size:14px}
 
+    /* CTA botón Sala Privada dentro de la primera tarjeta */
+    .feature .cta-sala{
+      margin-top:14px;
+    }
+    .feature .btn-sala{
+      display:block;
+      width:100%;
+      text-align:center;
+      padding:10px 14px;
+      border-radius:999px;
+      border:none;
+      background:#00e18e;          /* verde marca */
+      color:#000;                  /* texto oscuro, corporativo */
+      font-size:14px;
+      font-weight:700;
+      text-decoration:none;
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,.18);
+      transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;
+    }
+    .feature .btn-sala:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+      box-shadow:0 10px 26px rgba(0,0,0,.22);
+    }
+
     .kpis{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
     @media(max-width:960px){.kpis{grid-template-columns:1fr 1fr}}
     @media(max-width:640px){.kpis{grid-template-columns:1fr}}
@@ -65,9 +91,6 @@
       <div>
         <h1>Servicios particulares</h1>
         <p class="sub">Orientación, Control y gestión de posiciones</p>
-       <!-- <div class="value" style="margin-top:16px">
-          Metodología ASV SYNC.
-        </div>-->
       </div>
       <div>
         <img src="images/particulares.png" alt="Gestión para particulares">
@@ -90,10 +113,16 @@
         <div class="body">
           <h3>Servicios privados</h3>
           <ul>
-            <li>Salas privadas de operación Retail</li>
-            <li>Asesoría sobre activos de renta variable </li>
-            <li>Contratos AD-Hoc desde USD 10.000</li>
-          </ul>
+            <li>Acceso a sala privada de análisis</li>
+              <li>Mentoría sobre el análisis pre market</li>
+              <li>Conocerás la gestión de riesgo profesional</ul>
+
+          <!-- CTA Sala Privada: botón verde debajo del listado -->
+          <div class="cta-sala">
+            <a href="sala_trading_acceso.html" class="btn-sala">
+              Ver planes y acceso
+            </a>
+          </div>
         </div>
       </article>
 
@@ -109,9 +138,8 @@
           <h3>Guardrails de riesgo</h3>
           <ul>
             <li>En ningún momento accedemos a tu dinero</li>
-            <li>No solicitamos datos de cuenta personal del broker</li>
-            <li>Operamos exclusivamebte sobre tu plataforma de trading</li>
-            <li>Topes de drawdown y control de exposición optimizados</li>
+            <li>No solicitamos datos de cuenta personal</li>
+            <li>Topes de drawdown y control de exposición</li>
           </ul>
         </div>
       </article>
@@ -127,7 +155,7 @@
         <div class="body">
           <h3>Informes regulares & control</h3>
           <ul>
-            <li>Dashboard On line Mobile, para que sigas la performance.</li>
+            <li>Dashboard On line Mobile/Desktop</li>
             <li>Verificación externa (FXBlue) cuando aplica</li>
             <li>Informes claros:Trimestral/Semestral/Anual</li>
           </ul>
