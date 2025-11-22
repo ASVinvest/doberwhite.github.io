@@ -49,14 +49,9 @@
     }
     .dw-grid{
       display:grid;
-      grid-template-columns:minmax(0,2fr) minmax(0,1.2fr);
+      grid-template-columns:minmax(0,1fr);
       gap:24px;
       align-items:flex-start;
-    }
-    @media (max-width:900px){
-      .dw-grid{
-        grid-template-columns:1fr;
-      }
     }
     .dw-card{
       background:
@@ -75,38 +70,6 @@
       font-size:14px;
       color:var(--dw-muted);
       margin-bottom:10px;
-    }
-    .dw-columns{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
-      margin-top:8px;
-    }
-    @media (max-width:700px){
-      .dw-columns{
-        grid-template-columns:1fr;
-      }
-    }
-    .dw-block-title{
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      color:var(--dw-muted);
-      margin-bottom:4px;
-    }
-    .dw-list{
-      margin:4px 0 0;
-      padding-left:18px;
-      font-size:13px;
-      color:var(--dw-text);
-    }
-    .dw-list li{
-      margin-bottom:4px;
-    }
-    .dw-micro{
-      font-size:11px;
-      color:var(--dw-muted);
-      margin-top:10px;
     }
     .dw-plan-header{
       display:flex;
@@ -221,41 +184,6 @@
     </header>
 
     <main class="dw-grid">
-      <section class="dw-card">
-        <h2>Qué incluye tu suscripción</h2>
-        <p>
-          La suscripción mensual te da acceso a la Sala Privada de Mentoría &amp; Análisis
-          y a toda la estructura que soporta los estudios de mercado en vivo.
-        </p>
-
-        <div class="dw-columns">
-          <div>
-            <div class="dw-block-title">Dentro de la Sala</div>
-            <ul class="dw-list">
-              <li>Sesiones grupales en vivo de análisis pre-market (formato aproximado 60–70 minutos), lunes a jueves.</li>
-              <li>Lectura de contexto en índices, divisas, metales y otros mercados, con visión multi–marco temporal.</li>
-              <li>Planteamiento de escenarios probables: qué podría hacer el precio y por qué, sin indicar puntos concretos de entrada o salida.</li>
-              <li>Revisión de comportamientos del mercado y de operaciones pasadas como material de estudio.</li>
-            </ul>
-          </div>
-          <div>
-            <div class="dw-block-title">Marco de riesgo</div>
-            <ul class="dw-list">
-              <li>Énfasis en principios de gestión de riesgo por operación y riesgo agregado.</li>
-              <li>Discusión sobre tamaño de posición, rachas de operaciones y preservación de capital.</li>
-              <li>Refuerzo constante de una mentalidad de largo plazo y procesos repetibles.</li>
-              <li>Espacio para preguntas orientadas a que ajustes tu propio plan de trading, sin recomendaciones individuales.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="dw-micro">
-          El objetivo no es seguir a otro trader ni perseguir “el trade del día”, sino
-          desarrollar un criterio propio y una curva de aprendizaje que te permita
-          construir una equity sana y sostenible en el tiempo.
-        </div>
-      </section>
-
       <aside class="dw-card">
         <div class="dw-plan-header">
           <div>
@@ -309,4 +237,9 @@
       no constituyen asesoría de inversión regulada, recomendación personalizada ni
       invitación a comprar o vender instrumentos financieros. No se entregan señales de
       trading ni se gestiona capital de terceros. El rendimiento pasado no garantiza
-      resultados futuros. Opera siempre
+      resultados futuros. Opera siempre con capital cuyo riesgo estés plenamente
+      dispuesto a asumir.
+    </section>
+  </div>
+</body>
+</html>
