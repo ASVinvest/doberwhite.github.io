@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Servicios para Inversores Particulares — DoberWhite Capital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Estilos globales del sitio -->
+  <link rel="stylesheet" href="assets/css/main.css">
+
+  <style>
+    :root{
+      --dw-bg:#050816;
+      --dw-bg-soft:#0b1020;
+      --dw-card:#070b16;
+      --dw-border:rgba(148,163,184,.45);
+      --dw-green:#00e18e;
+      --dw-green-soft:rgba(0,225,142,.12);
+      --dw-text:#e5e7eb;
+      --dw-muted:#9ca3af;
+    }
+
+    body{
+      background:radial-gradient(circle at top left,rgba(0,225,142,.08),transparent 55%),
+                 radial-gradient(circle at bottom right,#020617,#000);
+      color:var(--dw-text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      margin:0;
+    }
+
+    .dw-shell{
+      max-width:1120px;
+      margin:0 auto;
+      padding:24px 16px 40px;
+    }
+
+    /* Topbar simple (ajusta si ya tienes un header global) */
+    .dw-topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .dw-brand{
+      font-size:13px;
+      letter-spacing:.25em;
+      text-transform:uppercase;
+      color:var(--dw-muted);
+    }
+    .dw-brand strong{
+      color:var(--dw-text);
+      font-weight:600;
+    }
+    .dw-nav{
+      display:flex;
+      gap:14px;
+      font-size:13px;
+    }
+    .dw-nav a{
+      text-decoration:none;
+      color:var(--dw-muted);
+    }
+    .dw-nav a:hover{
+      color:var(--dw-text);
+    }
+    .dw-nav a.active{
+      color:var(--dw-text);
+      border-bottom:1px solid var(--dw-green);
+      padding-bottom:2px;
+    }
+
+    /* Hero */
+    .dw-hero-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:4px 12px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--dw-green);
+      background:rgba(15,23,42,.85);
+      margin-bottom:10px;
+    }
+    .dw-hero{
+      margin-bottom:26px;
+    }
+    .dw-hero h1{
+      font-size:28px;
+      margin:0 0 8px;
+    }
+    .dw-hero p{
+      margin:0;
+      max-width:640px;
+      font-size:14px;
+      color:var(--dw-muted);
+    }
+    .dw-hero-sub{
+      margin-top:8px;
+      font-size:13px;
+      color:var(--dw-text);
+      max-width:640px;
+    }
+
+    /* Botones hero */
+    .dw-hero-actions{
+      margin-top:16px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .dw-btn-primary{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 16px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg,var(--dw-green),#4ade80);
+      color:#020617;
+      font-size:13px;
+      font-weight:600;
+      text-decoration:none;
+      cursor:pointer;
+      box-shadow:0 12px 32px rgba(34,197,94,.55);
+      transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;
+    }
+    .dw-btn-primary:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+      box-shadow:0 16px 45px rgba(34,197,94,.7);
+    }
+    .dw-btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:7px 14px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      background:transparent;
+      color:var(--dw-muted);
+      font-size:13px;
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .dw-btn-ghost:hover{
+      color:var(--dw-text);
+      border-color:var(--dw-green);
+    }
+
+    /* Sección servicios */
+    .dw-section{
+      margin-top:26px;
+    }
+    .dw-section h2{
+      font-size:20px;
+      margin:0 0 4px;
+    }
+    .dw-section p.dw-section-sub{
+      margin:0 0 16px;
+      font-size:13px;
+      color:var(--dw-muted);
+    }
+    .dw-service-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:18px;
+    }
+    @media (max-width:900px){
+      .dw-service-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    .dw-service-card{
+      background:
+        radial-gradient(circle at top left,rgba(0,225,142,.08),transparent 60%),
+        linear-gradient(to bottom right,rgba(15,23,42,.98),var(--dw-bg-soft));
+      border-radius:16px;
+      border:1px solid var(--dw-border);
+      padding:14px 14px 12px;
+    }
+    .dw-service-card h3{
+      font-size:16px;
+      margin:0 0 6px;
+    }
+    .dw-service-card p{
+      margin:0 0 8px;
+      font-size:13px;
+      color:var(--dw-muted);
+    }
+    .dw-service-card ul{
+      margin:0;
+      padding-left:16px;
+      font-size:12px;
+      color:var(--dw-text);
+    }
+    .dw-service-card li{
+      margin-bottom:4px;
+    }
+
+    /* CTA Sala Privada */
+    .dw-section-sala-cta{
+      margin:40px 0 10px;
+    }
+    .dw-sala-cta-inner{
+      display:grid;
+      grid-template-columns:minmax(0,2fr) minmax(0,1.2fr);
+      gap:24px;
+      padding:20px 18px;
+      border-radius:18px;
+      background:radial-gradient(circle at top left,rgba(0,225,142,.10),transparent 60%),
+                 linear-gradient(to bottom right,#020617,#020617);
+      border:1px solid rgba(148,163,184,.45);
+    }
+    @media (max-width:900px){
+      .dw-sala-cta-inner{
+        grid-template-columns:1fr;
+      }
+    }
+    .dw-sala-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--dw-green);
+    }
+    .dw-sala-cta-copy h2{
+      font-size:22px;
+      margin:6px 0 8px;
+    }
+    .dw-sala-cta-copy p{
+      font-size:14px;
+      color:var(--dw-muted);
+      margin:0 0 8px;
+    }
+    .dw-sala-cta-copy ul{
+      margin:6px 0 0;
+      padding-left:18px;
+      font-size:13px;
+      color:var(--dw-text);
+    }
+    .dw-sala-cta-copy li{
+      margin-bottom:4px;
+    }
+    .dw-sala-steps{
+      margin-top:10px;
+      font-size:11px;
+      color:var(--dw-muted);
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .dw-sala-cta-box{
+      border-radius:16px;
+      padding:14px 14px 12px;
+      background:rgba(15,23,42,.92);
+      border:1px solid rgba(148,163,184,.55);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .dw-sala-cta-box h3{
+      font-size:16px;
+      margin:0;
+    }
+    .dw-sala-cta-box p{
+      font-size:13px;
+      color:var(--dw-muted);
+      margin:0;
+    }
+    .dw-sala-price{
+      margin-top:4px;
+      font-size:12px;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .dw-sala-price-main{
+      font-weight:600;
+      color:var(--dw-text);
+    }
+    .dw-sala-price-note{
+      color:var(--dw-muted);
+    }
+    .dw-sala-btn{
+      margin-top:10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 14px;
+      border-radius:999px;
+      background:linear-gradient(135deg,#00e18e,#4ade80);
+      color:#020617;
+      font-size:13px;
+      font-weight:600;
+      text-decoration:none;
+      box-shadow:0 12px 32px rgba(34,197,94,.55);
+      transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;
+    }
+    .dw-sala-btn:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+      box-shadow:0 16px 45px rgba(34,197,94,.7);
+    }
+    .dw-sala-note{
+      font-size:11px;
+      color:var(--dw-muted);
+      margin-top:6px;
+    }
+
+    /* Cierre */
+    .dw-footer-cta{
+      margin-top:20px;
+      font-size:12px;
+      color:var(--dw-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="dw-shell">
+
+    <!-- Header / navegación (ajusta según tu layout real) -->
+    <header class="dw-topbar">
+      <div class="dw-brand">
+        <strong>DoberWhite Capital</strong>
+      </div>
+      <nav class="dw-nav">
+        <a href="index.html">Inicio</a>
+        <a href="particulares.html" class="active">Particulares</a>
+        <a href="corporativo.html">Corporativo</a>
+        <a href="sala_trading_acceso.html">Sala Privada</a>
+        <a href="contacto.html">Contacto</a>
+      </nav>
+    </header>
+
+    <!-- Hero -->
+    <div class="dw-hero-tag">Servicios para inversores particulares</div>
+
+    <section class="dw-hero">
+      <h1>Servicios para inversores particulares</h1>
+      <p>
+        Acompañamos a traders e inversores particulares que quieren dejar de improvisar
+        y empezar a gestionar su capital con estándares cercanos a los grandes fondos.
+      </p>
+      <div class="dw-hero-sub">
+        Análisis técnico, modelos cuantitativos y gestión de riesgo explicada con claridad:
+        sin promesas irreales, con foco en proteger primero y crecer después.
+      </div>
+
+      <div class="dw-hero-actions">
+        <a href="contacto.html" class="dw-btn-primary">Agendar una llamada exploratoria</a>
+        <a href="#servicios-particulares" class="dw-btn-ghost">Ver todos los servicios ↓</a>
+      </div>
+    </section>
+
+    <!-- Servicios principales -->
+    <section id="servicios-particulares" class="dw-section">
+      <h2>Qué podemos hacer por ti</h2>
+      <p class="dw-section-sub">
+        Diseñamos nuestros servicios para ordenar tu proceso completo: desde la lectura del gráfico
+        hasta el tamaño de cada operación y la gestión de tus rachas.
+      </p>
+
+      <div class="dw-service-grid">
+        <article class="dw-service-card">
+          <h3>Análisis técnico aplicado a tu caso</h3>
+          <p>
+            Revisamos tus activos, tu horizonte de inversión y tu tolerancia al riesgo
+            para aterrizar escenarios realistas.
+          </p>
+          <ul>
+            <li>Lectura multi–marco temporal.</li>
+            <li>Zonas clave de soporte y resistencia.</li>
+            <li>Niveles de invalidación claros para cada hipótesis.</li>
+          </ul>
+        </article>
+
+        <article class="dw-service-card">
+          <h3>Mentoría 1:1 orientada a proceso</h3>
+          <p>
+            No se trata solo de “señales”, sino de construir la forma en que decides
+            frente a cada gráfico.
+          </p>
+          <ul>
+            <li>Revisión de tu histórico y de tu curva de equity.</li>
+            <li>Definición de reglas simples y medibles.</li>
+            <li>Acompañamiento para consolidar hábitos ganadores.</li>
+          </ul>
+        </article>
+
+        <article class="dw-service-card">
+          <h3>Plan de riesgo y capital</h3>
+          <p>
+            Traducimos tu situación financiera en un plan de riesgo concreto,
+            alineado con tus metas y tu psicología.
+          </p>
+          <ul>
+            <li>Definición de riesgo por operación y por día.</li>
+            <li>Escenarios de drawdown aceptable.</li>
+            <li>Metas de crecimiento realistas en el tiempo.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- CTA Sala Privada de Trading -->
+    <section class="dw-section-sala-cta">
+      <div class="dw-sala-cta-inner">
+        <div class="dw-sala-cta-copy">
+          <div class="dw-sala-pill">Sala privada · Acceso mensual</div>
+          <h2>Opera acompañado como un desk profesional</h2>
+          <p>
+            Para traders particulares que ya dominan lo básico, pero quieren dejar de operar
+            en solitario y alinear sus decisiones a una lógica similar a la de una mesa
+            de dinero profesional.
+          </p>
+          <ul>
+            <li>Sesiones en vivo 4 días a la semana (referencia 09:00–11:00, GMT-3).</li>
+            <li>Setups explicados en tiempo real: contexto, entrada e invalidación.</li>
+            <li>Enfoque permanente en protección de capital y crecimiento compuesto.</li>
+          </ul>
+          <div class="dw-sala-steps">
+            <span>Paso 1: Revisa el plan de la Sala.</span>
+            <span>Paso 2: Realiza el pago mensual.</span>
+            <span>Paso 3: Recibe tus credenciales y accede a la Sala Privada.</span>
+          </div>
+        </div>
+
+        <aside class="dw-sala-cta-box">
+          <h3>Acceso Sala Privada</h3>
+          <p>Suscripción mensual para traders particulares.</p>
+          <div class="dw-sala-price">
+            <span class="dw-sala-price-main">Plan Mensual Sala Privada</span>
+            <span class="dw-sala-price-note">
+              Precio y condiciones detalladas en la siguiente página.
+            </span>
+          </div>
+          <a href="sala_trading_acceso.html" class="dw-sala-btn">
+            Ver planes y acceso
+          </a>
+          <p class="dw-sala-note">
+            Tras el pago recibirás, vía correo, tus credenciales para entrar a la Sala Privada
+            de Trading y el detalle de horarios de sesión.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Cierre -->
+    <section class="dw-footer-cta">
+      ¿Aún no estás seguro de si la Sala es para ti?
+      Podemos revisar tu situación en una llamada corta y ver si tiene sentido que des
+      este paso ahora o más adelante.
+    </section>
+
+  </div>
+</body>
+</html>
