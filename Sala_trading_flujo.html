@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Flujo Sala Privada de Trading — DoberWhite Capital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root{
+      --dw-bg:#050816;
+      --dw-bg-soft:#0b1020;
+      --dw-card:#070b16;
+      --dw-border:rgba(148,163,184,.45);
+      --dw-green:#00e18e;
+      --dw-green-soft:rgba(0,225,142,.12);
+      --dw-text:#e5e7eb;
+      --dw-muted:#9ca3af;
+      --dw-accent:#4ade80;
+    }
+
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      background:radial-gradient(circle at top left,rgba(0,225,142,.08),transparent 55%),
+                 radial-gradient(circle at bottom right,#020617,#000);
+      color:var(--dw-text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    .dw-shell{
+      max-width:1120px;
+      margin:0 auto;
+      padding:24px 16px 40px;
+    }
+
+    .dw-topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .dw-brand{
+      font-size:13px;
+      letter-spacing:.25em;
+      text-transform:uppercase;
+      color:var(--dw-muted);
+    }
+    .dw-brand strong{color:var(--dw-text);}
+
+    .dw-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:4px 12px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--dw-green);
+      background:rgba(15,23,42,.85);
+      margin-bottom:10px;
+    }
+
+    .dw-hero h1{
+      font-size:26px;
+      margin:0 0 8px;
+    }
+    .dw-hero p{
+      margin:0;
+      max-width:640px;
+      font-size:14px;
+      color:var(--dw-muted);
+    }
+
+    /* Layout del flujo */
+    .dw-flow{
+      margin-top:22px;
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) minmax(0,2fr);
+      gap:20px;
+    }
+    @media (max-width:900px){
+      .dw-flow{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .dw-card{
+      background:
+        radial-gradient(circle at top left,rgba(0,225,142,.10),transparent 60%),
+        linear-gradient(to bottom right,rgba(15,23,42,.98),var(--dw-bg-soft));
+      border-radius:18px;
+      border:1px solid var(--dw-border);
+      padding:16px 16px 14px;
+      box-shadow:0 18px 45px rgba(15,23,42,.85);
+    }
+
+    /* Columna izquierda: pasos */
+    .dw-steps-title{
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      color:var(--dw-muted);
+      margin-bottom:10px;
+    }
+
+    .dw-steps-list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .dw-step-btn{
+      width:100%;
+      text-align:left;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(15,23,42,.9);
+      color:var(--dw-text);
+      font-size:13px;
+      padding:8px 12px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      transition:background .12s ease,border-color .12s ease,transform .08s ease;
+    }
+    .dw-step-btn:hover{
+      border-color:var(--dw-green);
+      transform:translateY(-1px);
+    }
+    .dw-step-btn.active{
+      background:linear-gradient(135deg,var(--dw-green-soft),rgba(15,23,42,1));
+      border-color:var(--dw-green);
+    }
+
+    .dw-step-index{
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:11px;
+      font-weight:600;
+      background:rgba(15,23,42,1);
+      border:1px solid rgba(148,163,184,.6);
+    }
+    .dw-step-btn.active .dw-step-index{
+      background:var(--dw-green);
+      color:#020617;
+      border-color:var(--dw-accent);
+    }
+
+    .dw-step-main{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .dw-step-title{
+      font-size:13px;
+      font-weight:600;
+    }
+    .dw-step-sub{
+      font-size:11px;
+      color:var(--dw-muted);
+    }
+
+    /* Columna derecha: panel de detalle */
+    .dw-panel{
+      display:none;
+      animation:fadeIn .12s ease-out;
+    }
+    .dw-panel.active{
+      display:block;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(4px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    .dw-panel-tag{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      color:var(--dw-muted);
+      margin-bottom:4px;
+    }
+    .dw-panel h2{
+      font-size:18px;
+      margin:0 0 6px;
+    }
+    .dw-panel p{
+      font-size:14px;
+      color:var(--dw-muted);
+      margin:0 0 8px;
+    }
+    .dw-panel ul{
+      margin:4px 0 0;
+      padding-left:18px;
+      font-size:13px;
+    }
+    .dw-panel li{
+      margin-bottom:4px;
+    }
+
+    .dw-panel-links{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--dw-muted);
+    }
+    .dw-chip{
+      display:inline-flex;
+      align-items:center;
+      padding:3px 9px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      font-size:11px;
+      margin-right:6px;
+      margin-top:4px;
+    }
+
+    .dw-footer-note{
+      margin-top:20px;
+      font-size:11px;
+      color:var(--dw-muted);
+      max-width:800px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dw-shell">
+    <div class="dw-topbar">
+      <div class="dw-brand">
+        <strong>DoberWhite Capital</strong> · Funnel Sala Privada
+      </div>
+    </div>
+
+    <div class="dw-pill">
+      Funnel · Particulares → Pago → Acceso Sala Privada
+    </div>
+
+    <header class="dw-hero">
+      <h1>Flujo completo de acceso a la Sala Privada de Trading</h1>
+      <p>
+        Usa este flujo como guía para alinear páginas, CTAs y automatizaciones:
+        desde la vista de servicios para particulares hasta el acceso restringido
+        a <code>sala_trading.html</code>.
+      </p>
+    </header>
+
+    <main class="dw-flow">
+      <!-- IZQUIERDA: PASOS CLICKABLES -->
+      <section class="dw-card">
+        <div class="dw-steps-title">Pasos del flujo</div>
+        <div class="dw-steps-list">
+          <button class="dw-step-btn active" data-step="1">
+            <div class="dw-step-index">1</div>
+            <div class="dw-step-main">
+              <div class="dw-step-title">Particulares → CTA Sala Privada</div>
+              <div class="dw-step-sub">El usuario descubre la sala en particulares.html</div>
+            </div>
+          </button>
+          <button class="dw-step-btn" data-step="2">
+            <div class="dw-step-index">2</div>
+            <div class="dw-step-main">
+              <div class="dw-step-title">Página intermedia de acceso</div>
+              <div class="dw-step-sub">sala_trading_acceso.html, detalle del plan</div>
+            </div>
+          </button>
+          <button class="dw-step-btn" data-step="3">
+            <div class="dw-step-index">3</div>
+            <div class="dw-step-main">
+              <div class="dw-step-title">Pasarela de pago</div>
+              <div class="dw-step-sub">Stripe / MercadoPago / pasarela que elijas</div>
+            </div>
+          </button>
+          <button class="dw-step-btn" data-step="4">
+            <div class="dw-step-index">4</div>
+            <div class="dw-step-main">
+              <div class="dw-step-title">Alta de usuario + credenciales</div>
+              <div class="dw-step-sub">Correo de bienvenida y acceso al portal</div>
+            </div>
+          </button>
+          <button class="dw-step-btn" data-step="5">
+            <div class="dw-step-index">5</div>
+            <div class="dw-step-main">
+              <div class="dw-step-title">Login y scope de Sala</div>
+              <div class="dw-step-sub">login.html con dw_scope = "room"</div>
+            </div>
+          </button>
+          <button class="dw-step-btn" data-step="6">
+            <div class="dw-step-index">6</div>
+            <div class="dw-step-main">
+              <div class="dw-step-title">Acceso a sala_trading.html</div>
+              <div class="dw-step-sub">Sala privada restringida a miembros activos</div>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- DERECHA: DETALLE INTERACTIVO -->
+      <section class="dw-card">
+        <!-- Panel 1 -->
+        <div class="dw-panel active" data-step="1">
+          <div class="dw-panel-tag">Paso 1 · Entrada al funnel</div>
+          <h2>Particulares → CTA hacia la Sala Privada</h2>
+          <p>
+            El usuario llega a <code>particulares.html</code>, revisa tus servicios y
+            encuentra un bloque destacado que presenta la Sala Privada de Trading:
+          </p>
+          <ul>
+            <li>Copy orientado a traders particulares que quieren subir de nivel.</li>
+            <li>Bullets claros: sesiones en vivo, gestión de riesgo, enfoque institucional.</li>
+            <li>CTA principal: <strong>“Ver planes y acceso”</strong>.</li>
+          </ul>
+          <div class="dw-panel-links">
+            <span class="dw-chip">Página origen: <code>particulares.html</code></span>
+            <span class="dw-chip">CTA: link a <code>sala_trading_acceso.html</code></span>
+          </div>
+        </div>
+
+        <!-- Panel 2 -->
+        <div class="dw-panel" data-step="2">
+          <div class="dw-panel-tag">Paso 2 · Página intermedia</div>
+          <h2>Página de acceso: sala_trading_acceso.html</h2>
+          <p>
+            Aquí el usuario aterriza en una página 100% enfocada en el plan de la Sala Privada:
+          </p>
+          <ul>
+            <li>Qué incluye la suscripción mensual (sesiones, enfoque, marco de riesgo).</li>
+            <li>Para quién está pensado el servicio (traders particulares serios).</li>
+            <li>Bloque de precio/condiciones + CTA de pago.</li>
+          </ul>
+          <div class="dw-panel-links">
+            <span class="dw-chip">Página: <code>sala_trading_acceso.html</code></span>
+            <span class="dw-chip">CTA: botón → pasarela de pago</span>
+          </div>
+        </div>
+
+        <!-- Panel 3 -->
+        <div class="dw-panel" data-step="3">
+          <div class="dw-panel-tag">Paso 3 · Pago</div>
+          <h2>Pasarela de pago (Stripe / MercadoPago / otro)</h2>
+          <p>
+            El botón de <strong>“Pagar suscripción mensual”</strong> abre tu checkout
+            en una pasarela de pago externa:
+          </p>
+          <ul>
+            <li>Plan recurrente mensual para el acceso a la Sala.</li>
+            <li>Pasarela se encarga de cobro, facturación y renovaciones.</li>
+            <li>Al confirmarse el pago, tu backend dispara el flujo de alta de usuario.</li>
+          </ul>
+          <div class="dw-panel-links">
+            <span class="dw-chip">Checkout: URL de tu pasarela</span>
+            <span class="dw-chip">Evento clave: pago exitoso</span>
+          </div>
+        </div>
+
+        <!-- Panel 4 -->
+        <div class="dw-panel" data-step="4">
+          <div class="dw-panel-tag">Paso 4 · Alta de usuario</div>
+          <h2>Alta de usuario y envío de credenciales</h2>
+          <p>
+            Una vez confirmado el pago, el sistema debe dar de alta al cliente en tu portal:
+          </p>
+          <ul>
+            <li>Crear usuario en tu base (email + nombre + estado = “activo Sala”).</li>
+            <li>Definir <code>dw_scope = "room"</code> (o similar) para controlar el acceso.</li>
+            <li>Enviar correo de bienvenida con:
+              <ul>
+                <li>Confirmación de la suscripción.</li>
+                <li>Instrucciones para acceder a la web (login.html).</li>
+                <li>Breve explicación de horarios y normas de la Sala.</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="dw-panel-links">
+            <span class="dw-chip">Automatización: webhook / backend tras pago</span>
+            <span class="dw-chip">Salida: usuario creado + correo enviado</span>
+          </div>
+        </div>
+
+        <!-- Panel 5 -->
+        <div class="dw-panel" data-step="5">
+          <div class="dw-panel-tag">Paso 5 · Login y permisos</div>
+          <h2>Login en la web y asignación de scope</h2>
+          <p>
+            El cliente accede a <code>login.html</code>, ingresa sus credenciales y,
+            al iniciar sesión, se guarda en <code>localStorage</code> algo como:
+          </p>
+          <ul>
+            <li><code>dw_auth = "ok"</code></li>
+            <li><code>dw_user = email</code></li>
+            <li><code>dw_scope = "room"</code> (o <code>"main"</code>/<code>"admin"</code> si aplica)</li>
+          </ul>
+          <p>
+            Desde aquí ya puede navegar a páginas restringidas en función del scope.
+          </p>
+          <div class="dw-panel-links">
+            <span class="dw-chip">Página: <code>login.html</code></span>
+            <span class="dw-chip">Estado: usuario autenticado + scope de Sala</span>
+          </div>
+        </div>
+
+        <!-- Panel 6 -->
+        <div class="dw-panel" data-step="6">
+          <div class="dw-panel-tag">Paso 6 · Sala restringida</div>
+          <h2>Acceso a la Sala Privada: sala_trading.html</h2>
+          <p>
+            Ahora el cliente puede entrar a <code>sala_trading.html</code>. El script
+            de gate comprueba:
+          </p>
+          <ul>
+            <li>Si <code>dw_auth === "ok"</code>.</li>
+            <li>Si <code>dw_scope</code> está entre los valores permitidos
+              (por ejemplo: <code>"admin"</code>, <code>"main"</code>, <code>"room"</code>).
+            </li>
+          </ul>
+          <p>
+            Si cumple las condiciones, ve la Sala Privada de Trading con el botón
+            directo a Zoom/Meet; si no, se le redirige a <code>login.html</code>.
+          </p>
+          <div class="dw-panel-links">
+            <span class="dw-chip">Página: <code>sala_trading.html</code></span>
+            <span class="dw-chip">Gate: login + scope autorizado</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="dw-footer-note">
+      Puedes usar este flujo como blueprint para hablar con un dev o para
+      documentar el servicio a nivel interno (DoberWhite Playbook: “Sala Privada
+      de Trading – Funnel de acceso y control de membresías”).
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const buttons = Array.from(document.querySelectorAll('.dw-step-btn'));
+      const panels  = Array.from(document.querySelectorAll('.dw-panel'));
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const step = btn.getAttribute('data-step');
+
+          // activar botón
+          buttons.forEach(b => b.classList.toggle('active', b === btn));
+          // mostrar panel correspondiente
+          panels.forEach(p => {
+            p.classList.toggle('active', p.getAttribute('data-step') === step);
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
