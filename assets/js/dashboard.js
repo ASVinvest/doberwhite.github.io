@@ -1,9 +1,11 @@
-// === Rutas candidatas por defecto (fallback robusto) =========================
+// === Rutas candidatas por defecto (PRIMERO: SMALL) ===========================
 const DEFAULT_CANDIDATES = [
-  '/assets/data/data.json',
-  'assets/data/data.json',
+  'assets/data/dashboard/data_small.json',
+  '/assets/data/dashboard/data_small.json',
+  'assets/data/dashboard/data.json',
   '/assets/data/dashboard/data.json',
-  'assets/data/dashboard/data.json'
+  'assets/data/data.json',
+  '/assets/data/data.json'
 ];
 
 // === Selector de fuente (override por query o por página) ====================
@@ -48,21 +50,22 @@ const axisY = (opts = {}) => ({
 
 // === Nº locales ==============================================================
 const nf0 = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 });
-const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); // Profitability a 1 decimal
+const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const nf2 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const cf0 = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
-// === Helpers de normalización (arregla "22,59", "$ 1.234", etc.) =============
+// === Helpers de normalización ===============================================
 function toNum(v){
   if (typeof v === 'number') return v;
   if (v == null) return 0;
-  const s = String(v)
-    .replace(/\s+/g,'')
-    .replace(/\$/g,'')
-    .replace(/[A-Za-z%]/g,'')
-    .replace(/\./g,'')           // separador de miles
-    .replace(',', '.');          // coma a punto
-  const n = Number(s);
+  const n = Number(
+    String(v)
+      .replace(/\s+/g,'')
+      .replace(/\$/g,'')
+      .replace(/[A-Za-z%]/g,'')
+      .replace(/\./g,'')   // miles
+      .replace(',', '.')   // coma -> punto
+  );
   return Number.isFinite(n) ? n : 0;
 }
 const normSeries = arr => (Array.isArray(arr) ? arr.map(toNum) : []);
@@ -133,7 +136,7 @@ function optPie(labels, values) {
       bottom: 0, itemWidth: 12, itemHeight: 12, textStyle: { color: '#444' },
       formatter: (name) => {
         const i = labels.indexOf(name);
-        const p = Math.round((values[i] * 100) / total);
+        const p = Math.round((toNum(values[i]) * 100) / total);
         return `${name}  ${p}%`;
       }
     },
@@ -176,8 +179,8 @@ function renderKPIs(k) {
   const ul = document.getElementById('dw-kpis'); if (!ul) return; ul.innerHTML = '';
   Object.entries(k).forEach(([label, raw]) => {
     const val = toNum(raw);
-    const isPct = typeof raw === 'number' || /Rate|Profitability|Wipe|%/i.test(label);
-    const isPL  = /P&L/i.test(label) || /Comission/i.test(label); // "Comission" (sic)
+    const isPct = /Rate|Profitability|Wipe|%/i.test(label);
+    const isPL  = /P&L/i.test(label) || /Comission/i.test(label);
     let txt;
     if (isPct && /Profitability/i.test(label)) {
       txt = `${nf1.format(val)}%`;
@@ -199,18 +202,20 @@ function renderKPIs(k) {
 // === Normalizador de estructura ==============================================
 function normalize(d){
   d = d || {};
+  // Soporta claves snake o camel sin romper
+  const pick = (obj, a, b) => obj?.[a] ?? obj?.[b] ?? {};
   return {
     period: d.period || { from:'', to:'' },
     kpis: d.kpis || {},
-    balance:      { labels: normLabels(d.balance?.labels),      values: normSeries(d.balance?.values) },
-    monthly:      { labels: normLabels(d.monthly?.labels),      values: normSeries(d.monthly?.values) },
-    distribution: { labels: normLabels(d.distribution?.labels), counts: normSeries(d.distribution?.counts), pnl: normSeries(d.distribution?.pnl) },
-    allocation:   { labels: normLabels(d.allocation?.labels),    values: normSeries(d.allocation?.values) },
-    plAssets:     { labels: normLabels(d.plAssets?.labels),      values: normSeries(d.plAssets?.values) },
-    wrAssets:     { labels: normLabels(d.wrAssets?.labels),      values: normSeries(d.wrAssets?.values) },
-    daysDist:     { labels: normLabels(d.daysDist?.labels),      values: normSeries(d.daysDist?.values) },
-    daysPerf:     { labels: normLabels(d.daysPerf?.labels),      values: normSeries(d.daysPerf?.values) },
-    avgPos:       { labels: normLabels(d.avgPos?.labels),        values: normSeries(d.avgPos?.values) }
+    balance:      { labels: normLabels(pick(d,'balance','balance')?.labels),      values: normSeries(pick(d,'balance','balance')?.values) },
+    monthly:      { labels: normLabels(pick(d,'monthly','monthly')?.labels),      values: normSeries(pick(d,'monthly','monthly')?.values) },
+    distribution: { labels: normLabels(pick(d,'distribution','distribution')?.labels), counts: normSeries(pick(d,'distribution','distribution')?.counts), pnl: normSeries(pick(d,'distribution','distribution')?.pnl) },
+    allocation:   { labels: normLabels(pick(d,'allocation','allocation')?.labels),    values: normSeries(pick(d,'allocation','allocation')?.values) },
+    plAssets:     { labels: normLabels(pick(d,'plAssets','pl_assets')?.labels),      values: normSeries(pick(d,'plAssets','pl_assets')?.values) },
+    wrAssets:     { labels: normLabels(pick(d,'wrAssets','wr_assets')?.labels),      values: normSeries(pick(d,'wrAssets','wr_assets')?.values) },
+    daysDist:     { labels: normLabels(pick(d,'daysDist','days_dist')?.labels),      values: normSeries(pick(d,'daysDist','days_dist')?.values) },
+    daysPerf:     { labels: normLabels(pick(d,'daysPerf','days_perf')?.labels),      values: normSeries(pick(d,'daysPerf','days_perf')?.values) },
+    avgPos:       { labels: normLabels(pick(d,'avgPos','avg_pos')?.labels),          values: normSeries(pick(d,'avgPos','avg_pos')?.values) }
   };
 }
 
@@ -254,5 +259,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   alert('No pude cargar datos: revisa DW_DATA_URL o rutas por defecto.');
 });
-<script>window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';</script>
-<script src="assets/js/dashboard.js?v=fix-normalize"></script>
