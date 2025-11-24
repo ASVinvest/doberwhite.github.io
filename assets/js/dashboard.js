@@ -52,11 +52,27 @@ const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFr
 const nf2 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const cf0 = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
+// === Helpers de normalización (arregla "22,59", "$ 1.234", etc.) =============
+function toNum(v){
+  if (typeof v === 'number') return v;
+  if (v == null) return 0;
+  const s = String(v)
+    .replace(/\s+/g,'')
+    .replace(/\$/g,'')
+    .replace(/[A-Za-z%]/g,'')
+    .replace(/\./g,'')           // separador de miles
+    .replace(',', '.');          // coma a punto
+  const n = Number(s);
+  return Number.isFinite(n) ? n : 0;
+}
+const normSeries = arr => (Array.isArray(arr) ? arr.map(toNum) : []);
+const normLabels = arr => (Array.isArray(arr) ? arr : []);
+
 // === Labels ==================================================================
-const barLabelTop      = { show: true, position: 'top',   fontSize: 10, color: '#4b5563', formatter: p => nf2.format(p.value ?? p.data?.value ?? 0) };
-const barLabelTopPct   = { show: true, position: 'top',   fontSize: 10, color: '#4b5563', formatter: p => `${nf2.format(p.value ?? p.data?.value ?? 0)}%` };
-const barLabelRight    = { show: true, position: 'right', fontSize: 10, color: '#4b5563', formatter: p => nf2.format(p.value ?? p.data?.value ?? 0) };
-const barLabelRightPct = { show: true, position: 'right', fontSize: 10, color: '#4b5563', formatter: p => `${nf2.format(p.value ?? p.data?.value ?? 0)}%` };
+const barLabelTop      = { show: true, position: 'top',   fontSize: 10, color: '#4b5563', formatter: p => nf2.format(toNum(p.value ?? p.data?.value ?? 0)) };
+const barLabelTopPct   = { show: true, position: 'top',   fontSize: 10, color: '#4b5563', formatter: p => `${nf2.format(toNum(p.value ?? p.data?.value ?? 0))}%` };
+const barLabelRight    = { show: true, position: 'right', fontSize: 10, color: '#4b5563', formatter: p => nf2.format(toNum(p.value ?? p.data?.value ?? 0)) };
+const barLabelRightPct = { show: true, position: 'right', fontSize: 10, color: '#4b5563', formatter: p => `${nf2.format(toNum(p.value ?? p.data?.value ?? 0))}%` };
 
 // === Render helper (notMerge=true) ===========================================
 function render(id, option) {
@@ -90,7 +106,7 @@ function optBar(labels, values, opts = {}) {
     tooltip: { trigger: 'axis' },
     series: [{
       type: 'bar', barMaxWidth: 28, label: (opts.percent ? barLabelTopPct : barLabelTop),
-      data: values.map(v => ({ value: v, itemStyle: { color: v >= 0 ? brand : red } }))
+      data: values.map(v => ({ value: toNum(v), itemStyle: { color: toNum(v) >= 0 ? brand : red } }))
     }]
   };
 }
@@ -103,7 +119,7 @@ function optBarH(labels, values, opts = {}) {
     tooltip: { trigger: 'axis' },
     series: [{
       type: 'bar', barMaxWidth: 22, label: (opts.percent ? barLabelRightPct : barLabelRight),
-      data: values.map(v => ({ value: v, itemStyle: { color: v >= 0 ? brand : red } }))
+      data: values.map(v => ({ value: toNum(v), itemStyle: { color: toNum(v) >= 0 ? brand : red } }))
     }]
   };
 }
@@ -117,7 +133,7 @@ function optPie(labels, values) {
       bottom: 0, itemWidth: 12, itemHeight: 12, textStyle: { color: '#444' },
       formatter: (name) => {
         const i = labels.indexOf(name);
-        const p = Math.round(values[i] * 100 / total);
+        const p = Math.round((values[i] * 100) / total);
         return `${name}  ${p}%`;
       }
     },
@@ -125,30 +141,32 @@ function optPie(labels, values) {
     series: [{
       type: 'pie', radius: ['46%', '68%'], center: ['50%', '44%'],
       label: { show: false },
-      data: labels.map((n, i) => ({ name: n, value: values[i], itemStyle: { color: PALETTE[n] || '#94a3b8' } }))
+      data: labels.map((n, i) => ({ name: n, value: toNum(values[i]), itemStyle: { color: PALETTE[n] || '#94a3b8' } }))
     }]
   };
 }
 
 // Distribution USD
 function optDist(d) {
-  const maxCount = Math.max(...d.counts, 0);
-  const maxPnl   = Math.max(...d.pnl, 0);
+  const counts = normSeries(d.counts);
+  const pnl    = normSeries(d.pnl);
+  const maxCount = Math.max(...counts, 0);
+  const maxPnl   = Math.max(...pnl, 0);
   const head = x => Math.ceil(x * 1.15);
   return {
     grid: { ...baseGrid, top: 60 },
     legend: { top: 6, right: 8, data: ['n°', 'P&L'], textStyle: { color: '#444' } },
     tooltip: { trigger: 'axis' },
-    xAxis: axisX(d.labels, { showAll: true }),
+    xAxis: axisX(normLabels(d.labels), { showAll: true }),
     yAxis: [
       { ...axisY({ hideLabels: true }), max: head(maxCount) },
       { ...axisY({ hideLabels: true }), name: 'P&L', max: head(maxPnl) }
     ],
     series: [
       { name: 'n°',  type: 'bar', barMaxWidth: 26, itemStyle: { color: gray },
-        label: { ...barLabelTop, color: '#6b7280' }, data: d.counts, z: 1 },
+        label: { ...barLabelTop, color: '#6b7280' }, data: counts, z: 1 },
       { name: 'P&L', type: 'bar', yAxisIndex: 1, barMaxWidth: 26, itemStyle: { color: brand },
-        label: barLabelTop, data: d.pnl, barGap: '35%', barCategoryGap: '30%', z: 2 }
+        label: barLabelTop, data: pnl, barGap: '35%', barCategoryGap: '30%', z: 2 }
     ]
   };
 }
@@ -156,13 +174,15 @@ function optDist(d) {
 // === KPIs ====================================================================
 function renderKPIs(k) {
   const ul = document.getElementById('dw-kpis'); if (!ul) return; ul.innerHTML = '';
-  Object.entries(k).forEach(([label, val]) => {
-    const isPct = typeof val === 'number' && (label.includes('%') || /Rate|Profitability|Wipe/i.test(label));
+  Object.entries(k).forEach(([label, raw]) => {
+    const val = toNum(raw);
+    const isPct = typeof raw === 'number' || /Rate|Profitability|Wipe|%/i.test(label);
     const isPL  = /P&L/i.test(label) || /Comission/i.test(label); // "Comission" (sic)
     let txt;
-    if (isPct) {
-      const use1 = /Profitability/i.test(label); // Profitability con 1 decimal
-      txt = `${(use1 ? nf1 : nf0).format(val)}%`;
+    if (isPct && /Profitability/i.test(label)) {
+      txt = `${nf1.format(val)}%`;
+    } else if (isPct) {
+      txt = `${nf0.format(val)}%`;
     } else if (isPL) {
       const signed = /P&L/i.test(label) ? (val >= 0 ? '+' : '-') : '';
       txt = /Comission/i.test(label) ? cf0.format(val) : `${signed}${cf0.format(Math.abs(val))}`;
@@ -176,8 +196,28 @@ function renderKPIs(k) {
   });
 }
 
+// === Normalizador de estructura ==============================================
+function normalize(d){
+  d = d || {};
+  return {
+    period: d.period || { from:'', to:'' },
+    kpis: d.kpis || {},
+    balance:      { labels: normLabels(d.balance?.labels),      values: normSeries(d.balance?.values) },
+    monthly:      { labels: normLabels(d.monthly?.labels),      values: normSeries(d.monthly?.values) },
+    distribution: { labels: normLabels(d.distribution?.labels), counts: normSeries(d.distribution?.counts), pnl: normSeries(d.distribution?.pnl) },
+    allocation:   { labels: normLabels(d.allocation?.labels),    values: normSeries(d.allocation?.values) },
+    plAssets:     { labels: normLabels(d.plAssets?.labels),      values: normSeries(d.plAssets?.values) },
+    wrAssets:     { labels: normLabels(d.wrAssets?.labels),      values: normSeries(d.wrAssets?.values) },
+    daysDist:     { labels: normLabels(d.daysDist?.labels),      values: normSeries(d.daysDist?.values) },
+    daysPerf:     { labels: normLabels(d.daysPerf?.labels),      values: normSeries(d.daysPerf?.values) },
+    avgPos:       { labels: normLabels(d.avgPos?.labels),        values: normSeries(d.avgPos?.values) }
+  };
+}
+
 // === Draw ====================================================================
-function draw(d) {
+function draw(drawData) {
+  const d = normalize(drawData);
+
   const per = document.getElementById('dw-periodo');
   if (per) per.textContent = `From : ${d.period.from}  →  ${d.period.to}`;
   renderKPIs(d.kpis);
@@ -199,11 +239,20 @@ function draw(d) {
 
 // === Boot ====================================================================
 document.addEventListener('DOMContentLoaded', async () => {
-  for (const url of CANDIDATES) {
+  for (const url0 of CANDIDATES) {
     try {
-      const r = await fetch(url + '?v=' + Date.now(), { cache: 'no-store' });
-      if (r.ok) { draw(await r.json()); return; }
-    } catch (e) {}
+      const url = url0 + (url0.includes('?') ? '&' : '?') + 'v=' + Date.now();
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) { console.warn('Fuente no OK', url0, r.status); continue; }
+      const data = await r.json();
+      console.info('Dashboard data source:', url0);
+      draw(data);
+      return;
+    } catch (e) {
+      console.error('Error cargando', url0, e);
+    }
   }
-  console.warn('No se encontró data.json en rutas candidatas u override.');
+  alert('No pude cargar datos: revisa DW_DATA_URL o rutas por defecto.');
 });
+<script>window.DW_DATA_URL = 'assets/data/dashboard/data_small.json';</script>
+<script src="assets/js/dashboard.js?v=fix-normalize"></script>
