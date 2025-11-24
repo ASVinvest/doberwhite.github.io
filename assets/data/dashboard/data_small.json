@@ -1,9 +1,10 @@
 {
-  "period": "From : Jul-25 → 24-11-2025",
+  "period": { "from": "Jul-25", "to": "24-11-2025" },
+
   "kpis": {
     "Win Rate": 42,
     "Profitability": -2.1,
-    "R:R": 1.1,
+    "Risk Benefit": 1.1,
     "N° Trades": 67,
     "N° Trades Win": 28,
     "N° Trades Loss": 39,
@@ -14,44 +15,50 @@
     "% Average SL": 56,
     "Comission": -13
   },
-  "charts": {
-    "balance": {
-      "labels": ["jul-25", "ago-25", "sept-25", "oct-25", "nov-25"],
-      "values": [1993, 2019, 1963, 1954, 1958]
-    },
-    "monthly": {
-      "labels": ["jul", "ago", "sept", "oct", "nov"],
-      "values": [-7.25, 26.55, -56.54, -8.91, 3.75]
-    },
-    "distribution": {
-      "labels": ["buy", "sell"],
-      "counts": [61, 6],
-      "pnl": [-17.92, -24.48]
-    },
-    "allocation": {
-      "labels": ["GBPUSD", "NAS100", "USDJPY", "XAUUSD"],
-      "values": [13, 37, 28, 21]
-    },
-    "pl_assets": {
-      "labels": ["USDJPY", "GBPUSD", "NAS100", "XAUUSD"],
-      "values": [22.59, -11.33, -26.05, -27.61]
-    },
-    "win_rate_assets": {
-      "labels": ["XAUUSD", "NAS100", "GBPUSD", "USDJPY"],
-      "values": [33, 36, 36, 58]
-    },
-    "days_distribution": {
-      "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-      "values": [37, 13, 19, 16, 13]
-    },
-    "days_performance": {
-      "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-      "values": [48, 22, 31, 45, 56]
-    },
-    "avg_position": {
-      "labels": ["NAS100", "USDJPY", "GBPUSD", "XAUUSD"],
-      "values": [0.12, 0.05, 0.05, 0.01]
-    }
+
+  "balance": {
+    "labels": ["jul-25","ago-25","sept-25","oct-25","nov-25"],
+    "values": [1993, 2019, 1963, 1954, 1958]
   },
-  "last_update": "2025-11-24"
+
+  "monthly": {
+    "labels": ["jul","ago","sept","oct","nov"],
+    "values": [-7.25, 26.55, -56.54, -8.91, 3.75]
+  },
+
+  "distribution": {
+    "labels": ["buy","sell"],
+    "counts": [61, 6],
+    "pnl": [-17.92, -24.48]
+  },
+
+  "allocation": {
+    "labels": ["GBPUSD","NAS100","USDJPY","XAUUSD"],
+    "values": [13, 37, 28, 21]
+  },
+
+  "pl_assets": {
+    "labels": ["NAS100","XAUUSD","GBPUSD","USDJPY"],
+    "values": [-26.05, -27.61, -11.33, 22.59]
+  },
+
+  "win_rate_assets": {
+    "labels": ["XAUUSD","NAS100","GBPUSD","USDJPY"],
+    "values": [33, 36, 36, 58]
+  },
+
+  "days_distribution_pct": {
+    "labels": ["Lunes","Martes","Miércoles","Jueves","Viernes"],
+    "values": [37, 13, 19, 16, 13]
+  },
+
+  "days_performance_pct": {
+    "labels": ["Lunes","Martes","Miércoles","Jueves","Viernes"],
+    "values": [48, 22, 31, 45, 56]
+  },
+
+  "avg_position": {
+    "labels": ["NAS100","USDJPY","GBPUSD","XAUUSD"],
+    "values": [0.12, 0.05, 0.05, 0.01]
+  }
 }
