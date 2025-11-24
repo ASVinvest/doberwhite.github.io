@@ -1,11 +1,9 @@
-// === Rutas candidatas por defecto (PRIMERO: SMALL) ===========================
+// === Rutas candidatas por defecto (fallback robusto) =========================
 const DEFAULT_CANDIDATES = [
-  'assets/data/dashboard/data_small.json',
-  '/assets/data/dashboard/data_small.json',
-  'assets/data/dashboard/data.json',
-  '/assets/data/dashboard/data.json',
+  '/assets/data/data.json',
   'assets/data/data.json',
-  '/assets/data/data.json'
+  '/assets/data/dashboard/data.json',
+  'assets/data/dashboard/data.json'
 ];
 
 // === Selector de fuente (override por query o por página) ====================
@@ -50,32 +48,43 @@ const axisY = (opts = {}) => ({
 
 // === Nº locales ==============================================================
 const nf0 = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 });
-const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const nf1 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); // Profitability a 1 decimal
 const nf2 = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const cf0 = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
-// === Helpers de normalización ===============================================
-function toNum(v){
-  if (typeof v === 'number') return v;
-  if (v == null) return 0;
-  const n = Number(
-    String(v)
-      .replace(/\s+/g,'')
-      .replace(/\$/g,'')
-      .replace(/[A-Za-z%]/g,'')
-      .replace(/\./g,'')   // miles
-      .replace(',', '.')   // coma -> punto
-  );
-  return Number.isFinite(n) ? n : 0;
-}
-const normSeries = arr => (Array.isArray(arr) ? arr.map(toNum) : []);
-const normLabels = arr => (Array.isArray(arr) ? arr : []);
-
 // === Labels ==================================================================
-const barLabelTop      = { show: true, position: 'top',   fontSize: 10, color: '#4b5563', formatter: p => nf2.format(toNum(p.value ?? p.data?.value ?? 0)) };
-const barLabelTopPct   = { show: true, position: 'top',   fontSize: 10, color: '#4b5563', formatter: p => `${nf2.format(toNum(p.value ?? p.data?.value ?? 0))}%` };
-const barLabelRight    = { show: true, position: 'right', fontSize: 10, color: '#4b5563', formatter: p => nf2.format(toNum(p.value ?? p.data?.value ?? 0)) };
-const barLabelRightPct = { show: true, position: 'right', fontSize: 10, color: '#4b5563', formatter: p => `${nf2.format(toNum(p.value ?? p.data?.value ?? 0))}%` };
+const barLabelTop      = { show: true, position: 'top',   fontSize: 10, color: '#4b5563', formatter: p => nf2.format(p.value ?? p.data?.value ?? 0) };
+const barLabelTopPct   = { show: true, position: 'top',   fontSize: 10, color: '#4b5563', formatter: p => `${nf2.format(p.value ?? p.data?.value ?? 0)}%` };
+const barLabelRight    = { show: true, position: 'right', fontSize: 10, color: '#4b5563', formatter: p => nf2.format(p.value ?? p.data?.value ?? 0) };
+const barLabelRightPct = { show: true, position: 'right', fontSize: 10, color: '#4b5563', formatter: p => `${nf2.format(p.value ?? p.data?.value ?? 0)}%` };
+
+// === Helpers de saneo ========================================================
+function toNum(v) {
+  if (v == null) return 0;
+  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;
+  if (typeof v === 'string') {
+    const s = v
+      .replace(/\s+/g, '')
+      .replace(/[%,$€₿]|US\$|USD/gi, '')
+      .replace(',', '.');
+    const n = parseFloat(s);
+    return Number.isFinite(n) ? n : 0;
+  }
+  return 0;
+}
+const mapNums = arr => (Array.isArray(arr) ? arr.map(toNum) : []);
+
+function section(d, keys, def = { labels: [], values: [] }) {
+  for (const k of keys) {
+    if (d && d[k]) return d[k];
+  }
+  return def;
+}
+function ensureCats(sec, fallback) {
+  const labels = (sec.labels && sec.labels.length) ? sec.labels : (fallback || []);
+  const values = mapNums(sec.values);
+  return { labels, values };
+}
 
 // === Render helper (notMerge=true) ===========================================
 function render(id, option) {
@@ -109,7 +118,7 @@ function optBar(labels, values, opts = {}) {
     tooltip: { trigger: 'axis' },
     series: [{
       type: 'bar', barMaxWidth: 28, label: (opts.percent ? barLabelTopPct : barLabelTop),
-      data: values.map(v => ({ value: toNum(v), itemStyle: { color: toNum(v) >= 0 ? brand : red } }))
+      data: values.map(v => ({ value: v, itemStyle: { color: v >= 0 ? brand : red } }))
     }]
   };
 }
@@ -122,13 +131,13 @@ function optBarH(labels, values, opts = {}) {
     tooltip: { trigger: 'axis' },
     series: [{
       type: 'bar', barMaxWidth: 22, label: (opts.percent ? barLabelRightPct : barLabelRight),
-      data: values.map(v => ({ value: toNum(v), itemStyle: { color: toNum(v) >= 0 ? brand : red } }))
+      data: values.map(v => ({ value: v, itemStyle: { color: v >= 0 ? brand : red } }))
     }]
   };
 }
 
 // Allocation (donut)
-const PALETTE = { GBPUSD: '#3b82f6', XAUUSD: '#22c55e', NDX100: '#f59e0b', BTCUSD: '#ef4444' };
+const PALETTE = { GBPUSD: '#3b82f6', XAUUSD: '#22c55e', NDX100: '#f59e0b', BTCUSD: '#ef4444', USDJPY: '#22d3ee', NAS100: '#f59e0b' };
 function optPie(labels, values) {
   const total = values.reduce((a, b) => a + b, 0) || 1;
   return {
@@ -136,7 +145,7 @@ function optPie(labels, values) {
       bottom: 0, itemWidth: 12, itemHeight: 12, textStyle: { color: '#444' },
       formatter: (name) => {
         const i = labels.indexOf(name);
-        const p = Math.round((toNum(values[i]) * 100) / total);
+        const p = Math.round((values[i] || 0) * 100 / total);
         return `${name}  ${p}%`;
       }
     },
@@ -144,15 +153,15 @@ function optPie(labels, values) {
     series: [{
       type: 'pie', radius: ['46%', '68%'], center: ['50%', '44%'],
       label: { show: false },
-      data: labels.map((n, i) => ({ name: n, value: toNum(values[i]), itemStyle: { color: PALETTE[n] || '#94a3b8' } }))
+      data: labels.map((n, i) => ({ name: n, value: values[i], itemStyle: { color: PALETTE[n] || '#94a3b8' } }))
     }]
   };
 }
 
 // Distribution USD
 function optDist(d) {
-  const counts = normSeries(d.counts);
-  const pnl    = normSeries(d.pnl);
+  const counts = mapNums(d.counts);
+  const pnl    = mapNums(d.pnl);
   const maxCount = Math.max(...counts, 0);
   const maxPnl   = Math.max(...pnl, 0);
   const head = x => Math.ceil(x * 1.15);
@@ -160,7 +169,7 @@ function optDist(d) {
     grid: { ...baseGrid, top: 60 },
     legend: { top: 6, right: 8, data: ['n°', 'P&L'], textStyle: { color: '#444' } },
     tooltip: { trigger: 'axis' },
-    xAxis: axisX(normLabels(d.labels), { showAll: true }),
+    xAxis: axisX(d.labels || [], { showAll: true }),
     yAxis: [
       { ...axisY({ hideLabels: true }), max: head(maxCount) },
       { ...axisY({ hideLabels: true }), name: 'P&L', max: head(maxPnl) }
@@ -168,7 +177,8 @@ function optDist(d) {
     series: [
       { name: 'n°',  type: 'bar', barMaxWidth: 26, itemStyle: { color: gray },
         label: { ...barLabelTop, color: '#6b7280' }, data: counts, z: 1 },
-      { name: 'P&L', type: 'bar', yAxisIndex: 1, barMaxWidth: 26, itemStyle: { color: brand },
+      { name: 'P&L', type: 'bar', yAxisIndex: 1, barMaxWidth: 26,
+        itemStyle: { color: (p) => (toNum(p.value) < 0 ? red : brand) },
         label: barLabelTop, data: pnl, barGap: '35%', barCategoryGap: '30%', z: 2 }
     ]
   };
@@ -177,66 +187,79 @@ function optDist(d) {
 // === KPIs ====================================================================
 function renderKPIs(k) {
   const ul = document.getElementById('dw-kpis'); if (!ul) return; ul.innerHTML = '';
-  Object.entries(k).forEach(([label, raw]) => {
-    const val = toNum(raw);
-    const isPct = /Rate|Profitability|Wipe|%/i.test(label);
+  Object.entries(k).forEach(([label, val]) => {
+    const num = toNum(val);
+    const isPct = typeof val === 'number' || (typeof val === 'string' && /%/.test(val))
+      ? (label.includes('%') || /Rate|Profitability|Wipe/i.test(label))
+      : false;
     const isPL  = /P&L/i.test(label) || /Comission/i.test(label);
     let txt;
-    if (isPct && /Profitability/i.test(label)) {
-      txt = `${nf1.format(val)}%`;
-    } else if (isPct) {
-      txt = `${nf0.format(val)}%`;
+    if (isPct) {
+      const use1 = /Profitability/i.test(label);
+      txt = `${(use1 ? nf1 : nf0).format(num)}%`;
     } else if (isPL) {
-      const signed = /P&L/i.test(label) ? (val >= 0 ? '+' : '-') : '';
-      txt = /Comission/i.test(label) ? cf0.format(val) : `${signed}${cf0.format(Math.abs(val))}`;
+      const signed = /P&L/i.test(label) ? (num >= 0 ? '+' : '-') : '';
+      txt = /Comission/i.test(label) ? cf0.format(num) : `${signed}${cf0.format(Math.abs(num))}`;
     } else {
-      txt = Number.isInteger(val) ? nf0.format(val) : nf2.format(val);
+      txt = Number.isInteger(num) ? nf0.format(num) : nf2.format(num);
     }
     ul.insertAdjacentHTML(
       'beforeend',
-      `<li><span>${label}</span><span class="${/P&L/i.test(label) && val < 0 ? 'neg' : ''}">${txt}</span></li>`
+      `<li><span>${label}</span><span class="${/P&L/i.test(label) && num < 0 ? 'neg' : ''}">${txt}</span></li>`
     );
   });
 }
 
-// === Normalizador de estructura ==============================================
-function normalize(d){
-  d = d || {};
-  // Soporta claves snake o camel sin romper
-  const pick = (obj, a, b) => obj?.[a] ?? obj?.[b] ?? {};
-  return {
-    period: d.period || { from:'', to:'' },
-    kpis: d.kpis || {},
-    balance:      { labels: normLabels(pick(d,'balance','balance')?.labels),      values: normSeries(pick(d,'balance','balance')?.values) },
-    monthly:      { labels: normLabels(pick(d,'monthly','monthly')?.labels),      values: normSeries(pick(d,'monthly','monthly')?.values) },
-    distribution: { labels: normLabels(pick(d,'distribution','distribution')?.labels), counts: normSeries(pick(d,'distribution','distribution')?.counts), pnl: normSeries(pick(d,'distribution','distribution')?.pnl) },
-    allocation:   { labels: normLabels(pick(d,'allocation','allocation')?.labels),    values: normSeries(pick(d,'allocation','allocation')?.values) },
-    plAssets:     { labels: normLabels(pick(d,'plAssets','pl_assets')?.labels),      values: normSeries(pick(d,'plAssets','pl_assets')?.values) },
-    wrAssets:     { labels: normLabels(pick(d,'wrAssets','wr_assets')?.labels),      values: normSeries(pick(d,'wrAssets','wr_assets')?.values) },
-    daysDist:     { labels: normLabels(pick(d,'daysDist','days_dist')?.labels),      values: normSeries(pick(d,'daysDist','days_dist')?.values) },
-    daysPerf:     { labels: normLabels(pick(d,'daysPerf','days_perf')?.labels),      values: normSeries(pick(d,'daysPerf','days_perf')?.values) },
-    avgPos:       { labels: normLabels(pick(d,'avgPos','avg_pos')?.labels),          values: normSeries(pick(d,'avgPos','avg_pos')?.values) }
-  };
-}
-
 // === Draw ====================================================================
-function draw(drawData) {
-  const d = normalize(drawData);
-
+function draw(dRaw) {
+  // Aliases seguros + saneo de números
+  const d = structuredClone(dRaw || {});
   const per = document.getElementById('dw-periodo');
-  if (per) per.textContent = `From : ${d.period.from}  →  ${d.period.to}`;
-  renderKPIs(d.kpis);
+  if (per && d.period) per.textContent = `From : ${d.period.from}  →  ${d.period.to}`;
 
-  render('ch_balance',      optLine(d.balance.labels, d.balance.values));
-  render('ch_monthly',      optBar(d.monthly.labels, d.monthly.values, { hideValueAxisLabels: false }));
-  render('ch_distribution', optDist(d.distribution));
-  render('ch_allocation',   optPie(d.allocation.labels, d.allocation.values));
-  render('ch_pl_assets',    optBarH(d.plAssets.labels, d.plAssets.values, { hideValueAxisLabels: true }));
-  render('ch_wr_assets',    optBar(d.wrAssets.labels, d.wrAssets.values, { hideValueAxisLabels: true, showAllCats: true, percent: true }));
-  render('ch_days_dist',    optBar(d.daysDist.labels, d.daysDist.values, { hideValueAxisLabels: true, showAllCats: true, percent: true }));
-  render('ch_days_perf',    optBar(d.daysPerf.labels, d.daysPerf.values, { hideValueAxisLabels: true, showAllCats: true, percent: true }));
-  render('ch_avg_pos',      optBarH(d.avgPos.labels, d.avgPos.values, { hideValueAxisLabels: true }));
+  // KPIs
+  if (d.kpis) renderKPIs(d.kpis);
 
+  // P&L
+  const balance = d.balance || { labels: [], values: [] };
+  render('ch_balance', optLine(balance.labels || [], mapNums(balance.values)));
+
+  const monthly = d.monthly || { labels: [], values: [] };
+  render('ch_monthly', optBar(monthly.labels || [], mapNums(monthly.values), { hideValueAxisLabels: false }));
+
+  const dist = d.distribution || { labels: [], counts: [], pnl: [] };
+  render('ch_distribution', optDist(dist));
+
+  // Assets
+  const alloc  = d.allocation || { labels: [], values: [] };
+  render('ch_allocation', optPie(alloc.labels || [], mapNums(alloc.values)));
+
+  const plSec  = section(d, ['plAssets','plUSD','pl_usd'], { labels: [], values: [] });
+  render('ch_pl_assets', optBarH(plSec.labels || [], mapNums(plSec.values), { hideValueAxisLabels: true }));
+
+  const wrSec  = ensureCats(section(d, ['wrAssets','winRate','winrate','wr'], { labels: [], values: [] }),
+                           ['A','B','C','D']);
+  render('ch_wr_assets', optBar(wrSec.labels, wrSec.values, {
+    hideValueAxisLabels: true, showAllCats: true, percent: true
+  }));
+
+  // Misc
+  const daysDist = ensureCats(section(d, ['daysDist','daysDistribution','tradingDays'], { labels: [], values: [] }),
+                              ['Lunes','Martes','Miércoles','Jueves','Viernes']);
+  render('ch_days_dist', optBar(daysDist.labels, daysDist.values, {
+    hideValueAxisLabels: true, showAllCats: true, percent: true
+  }));
+
+  const daysPerf = ensureCats(section(d, ['daysPerf','performanceDay','dayPerf'], { labels: [], values: [] }),
+                              ['Lunes','Martes','Miércoles','Jueves','Viernes']);
+  render('ch_days_perf', optBar(daysPerf.labels, daysPerf.values, {
+    hideValueAxisLabels: true, showAllCats: true, percent: true
+  }));
+
+  const avgPos = ensureCats(section(d, ['avgPos','averagePosition','avgPosition'], { labels: [], values: [] }), []);
+  render('ch_avg_pos', optBarH(avgPos.labels, avgPos.values, { hideValueAxisLabels: true }));
+
+  // Resize
   window.addEventListener('resize', () =>
     document.querySelectorAll('.dw-chart').forEach(el => echarts.getInstanceByDom(el)?.resize())
   );
@@ -244,18 +267,11 @@ function draw(drawData) {
 
 // === Boot ====================================================================
 document.addEventListener('DOMContentLoaded', async () => {
-  for (const url0 of CANDIDATES) {
+  for (const url of CANDIDATES) {
     try {
-      const url = url0 + (url0.includes('?') ? '&' : '?') + 'v=' + Date.now();
-      const r = await fetch(url, { cache: 'no-store' });
-      if (!r.ok) { console.warn('Fuente no OK', url0, r.status); continue; }
-      const data = await r.json();
-      console.info('Dashboard data source:', url0);
-      draw(data);
-      return;
-    } catch (e) {
-      console.error('Error cargando', url0, e);
-    }
+      const r = await fetch(url + '?v=' + Date.now(), { cache: 'no-store' });
+      if (r.ok) { draw(await r.json()); return; }
+    } catch (e) {}
   }
-  alert('No pude cargar datos: revisa DW_DATA_URL o rutas por defecto.');
+  console.warn('No se encontró data.json en rutas candidatas u override.');
 });
