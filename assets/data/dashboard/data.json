@@ -34,23 +34,23 @@
     "labels": ["XAUUSD", "USDJPY", "NDX100", "GBPUSD"],
     "values": [31, 28, 39, 2]
   },
-  "pl_assets": {
+  "plAssets": {
     "labels": ["BTCUSD", "GBPUSD", "NDX100", "USDJPY", "XAUUSD"],
     "values": [-14.19, 299.51, 25.77, -6.74, 540.21]
   },
-  "wr_assets": {
+  "wrAssets": {
     "labels": ["BTCUSD", "GBPUSD", "NDX100", "USDJPY", "XAUUSD"],
     "values": [0, 30, 45, 0, 45]
   },
-  "days_dist": {
+  "daysDist": {
     "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
     "values": [24, 23, 20, 21, 13]
   },
-  "days_perf": {
+  "daysPerf": {
     "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
     "values": [42, 35, 51, 36, 31]
   },
-  "avg_pos": {
+  "avgPos": {
     "labels": ["BTCUSD", "GBPUSD", "NDX100", "USDJPY", "XAUUSD"],
     "values": [0.01, 0.21, 0.13, 0.10, 0.07]
   }
