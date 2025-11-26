@@ -1,55 +1,55 @@
 {
-  "period": { "from": "13-10-2025", "to": "24-11-2025" },
+  "period": { "from": "13-10-2025", "to": "25-11-2025" },
 
   "kpis": {
     "Win Rate": 39,
     "Profitability": 1.7,
     "Risk Benefit": 2.1,
-    "N° Trades": 203,
-    "N° Trades Win": 80,
-    "N° Trades Loss": 123,
-    "P&L (USD)": 845,
-    "Win Average": 42.8,
-    "Loss Average": -20.2,
+    "N° Trades": 211,
+    "N° Trades Win": 83,
+    "N° Trades Loss": 128,
+    "P&L (USD)": 842,
+    "Win Average": 42.7,
+    "Loss Average": -20.3,
     "WipeOut": 0,
-    "% Average SL": 20,
-    "Comission": 96
+    "% Average SL": 21,
+    "Comission": 98
   },
 
   "balance": {
     "labels": ["oct-25", "nov-25"],
-    "values": [50642, 50845]
+    "values": [50642, 50842]
   },
 
   "monthly": {
     "labels": ["oct", "nov"],
-    "values": [642.03, 202.53]
+    "values": [642.03, 199.93]
   },
 
   "distribution": {
     "labels": ["buy", "sell"],
-    "counts": [128, 75],
-    "pnl": [421.54, 423.02]
+    "counts": [132, 79],
+    "pnl": [313.47, 528.49]
   },
 
   "allocation": {
-    "labels": ["XAUUSD", "GBPUSD", "NDX100", "BTCUSD", "USDJPY"],
-    "values": [31, 28, 39, 1, 0]
+    "labels": ["XAUUSD", "GBPUSD", "NDX100", "USDJPY", "BTCUSD"],
+    "values": [39, 30, 27, 3, 1]
   },
 
   "plAssets": {
-    "labels": ["BTCUSD", "GBPUSD", "NDX100", "USDJPY", "XAUUSD"],
-    "values": [-14.19, 299.51, 25.77, -6.74, 540.21]
+    "labels": ["XAUUSD", "GBPUSD", "NDX100", "USDJPY", "BTCUSD"],
+    "values": [458.04, 296.00, 100.99, 1.12, -14.19]
   },
 
   "wrAssets": {
     "labels": ["XAUUSD", "USDJPY", "NDX100", "GBPUSD", "BTCUSD"],
-    "values": [45, 0, 40, 30, 0]
+    "values": [43, 67, 45, 30, 0]
   },
 
   "daysDist": {
     "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-    "values": [24, 23, 20, 21, 13]
+    "values": [23, 26, 19, 20, 12]
   },
 
   "daysPerf": {
@@ -59,6 +59,6 @@
 
   "avgPos": {
     "labels": ["BTCUSD", "GBPUSD", "NDX100", "USDJPY", "XAUUSD"],
-    "values": [0.01, 0.21, 0.13, 0.10, 0.07]
+    "values": [0.01, 0.21, 0.13, 0.09, 0.07]
   }
 }
