@@ -39,12 +39,12 @@
 
   "plAssets": {
     "labels": ["XAUUSD", "GBPUSD", "NDX100", "USDJPY", "BTCUSD"],
-    "values": [458.04, 296.00, 100.99, 1.12, -14.19]
+    "values": [458.04, 296.0, 100.99, 1.12, -14.19]
   },
 
   "wrAssets": {
-    "labels": ["XAUUSD", "USDJPY", "NDX100", "GBPUSD", "BTCUSD"],
-    "values": [43, 67, 45, 30, 0]
+    "labels": ["XAUUSD", "GBPUSD", "NDX100", "USDJPY", "BTCUSD"],
+    "values": [43, 30, 45, 67, 0]
   },
 
   "daysDist": {
