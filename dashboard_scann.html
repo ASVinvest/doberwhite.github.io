@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>DoberWhite · Market scanner Nasdaq</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --dw-bg: #050816;
+      --dw-bg-soft: #0b1020;
+      --dw-card: #070b16;
+      --dw-border: rgba(148, 163, 184, 0.25);
+      --dw-border-soft: rgba(148, 163, 184, 0.12);
+      --dw-accent: #22c55e;
+      --dw-accent-soft: rgba(34, 197, 94, 0.12);
+      --dw-text-main: #e5e7eb;
+      --dw-text-soft: #9ca3af;
+      --dw-text-muted: #6b7280;
+      --dw-danger: #f97373;
+      --dw-danger-soft: rgba(248, 113, 113, 0.12);
+      --dw-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Inter", "Segoe UI", sans-serif;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.95);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--dw-font-sans);
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
+      color: var(--dw-text-main);
+      display: flex;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1440px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Header */
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #020617, #020617 55%, #030712 100%);
+      border: 1px solid var(--dw-border-soft);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .app-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #22c55e 0, #16a34a 45%, #065f46 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ecfdf5;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 0 0 1px rgba(22, 163, 74, 0.6), 0 12px 25px rgba(22, 163, 74, 0.75);
+    }
+
+    .app-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .app-title-main {
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      font-size: 18px;
+    }
+
+    .app-title-sub {
+      font-size: 12px;
+      color: var(--dw-text-soft);
+    }
+
+    .app-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+    }
+
+    .last-update {
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--dw-border-soft);
+      color: var(--dw-text-soft);
+    }
+
+    .last-update span {
+      color: var(--dw-text-main);
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #ecfdf5;
+      background: radial-gradient(circle at 20% 0, #22c55e 0, #22c55e 35%, #15803d 100%);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.55), 0 12px 20px rgba(22, 163, 74, 0.8);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn-primary-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.7);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    /* Layout superior */
+
+    .layout-top {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
+      gap: 18px;
+      min-height: 280px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--dw-border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--dw-text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* Vista de mercado (arriba izquierda) */
+
+    .market-view {
+      position: relative;
+      border-radius: 12px;
+      border: 1px solid var(--dw-border-soft);
+      background: radial-gradient(circle at top left, #020617 0, #020617 30%, #020617 100%);
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dw-text-muted);
+      font-size: 12px;
+      padding: 10px 14px;
+    }
+
+    .market-empty {
+      text-align: center;
+      max-width: 540px;
+      line-height: 1.5;
+    }
+
+    /* Tarjeta de estado (arriba derecha) */
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .status-pill-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .status-mode {
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--dw-border-soft);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--dw-text-soft);
+    }
+
+    .status-pill {
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      color: var(--dw-text-soft);
+    }
+
+    .status-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #22c55e 0, #16a34a 50%, #15803d 100%);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.6);
+    }
+
+    .stat-card {
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--dw-border-soft);
+      background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--dw-text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .stat-footnote {
+      font-size: 10px;
+      color: var(--dw-text-soft);
+    }
+
+    .stat-value--good {
+      color: #4ade80;
+    }
+
+    .stat-value--bad {
+      color: var(--dw-danger);
+    }
+
+    .status-note {
+      margin-top: 10px;
+      font-size: 10px;
+      color: var(--dw-text-muted);
+      line-height: 1.4;
+    }
+
+    /* Layout inferior */
+
+    .layout-bottom {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
+      gap: 18px;
+      min-height: 220px;
+    }
+
+    .scanner-header-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    /* Botones de segmento */
+
+    .segment-toggle-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .segment-btn {
+      padding: 5px 10px;
+      font-size: 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--dw-border-soft);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--dw-text-soft);
+      cursor: pointer;
+      outline: none;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .segment-btn--active {
+      border-color: rgba(34, 197, 94, 0.8);
+      background: var(--dw-accent-soft);
+      color: #bbf7d0;
+    }
+
+    .scanner-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scanner-search input {
+      flex: 1;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--dw-border-soft);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--dw-text-main);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .scanner-search input::placeholder {
+      color: var(--dw-text-muted);
+    }
+
+    .scanner-table-wrapper {
+      border-radius: 12px;
+      border: 1px solid var(--dw-border-soft);
+      overflow: hidden;
+      background: rgba(15, 23, 42, 0.7);
+      max-height: 260px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scanner-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .scanner-table thead {
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .scanner-table th,
+    .scanner-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .scanner-table th {
+      font-weight: 500;
+      color: var(--dw-text-soft);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .scanner-table tbody {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .scanner-table tr:nth-child(even) td {
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .scanner-table tr:hover td {
+      background: rgba(30, 64, 175, 0.35);
+      cursor: pointer;
+    }
+
+    .chip-status {
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      border: 1px solid transparent;
+    }
+
+    .chip-status--win {
+      background: var(--dw-accent-soft);
+      border-color: rgba(34, 197, 94, 0.8);
+      color: #bbf7d0;
+    }
+
+    .chip-status--loss {
+      background: var(--dw-danger-soft);
+      border-color: rgba(248, 113, 113, 0.8);
+      color: #fecaca;
+    }
+
+    /* Panel de instrumento */
+
+    .instrument-body {
+      border-radius: 12px;
+      border: 1px solid var(--dw-border-soft);
+      padding: 10px 12px;
+      background: rgba(15, 23, 42, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 200px;
+    }
+
+    .instrument-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .instrument-sub {
+      font-size: 11px;
+      color: var(--dw-text-soft);
+      margin-bottom: 2px;
+    }
+
+    .instrument-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 18px;
+      font-size: 11px;
+    }
+
+    .instrument-meta dt {
+      color: var(--dw-text-muted);
+      margin-bottom: 2px;
+    }
+
+    .instrument-meta dd {
+      margin: 0;
+      color: var(--dw-text-main);
+      font-weight: 500;
+    }
+
+    .instrument-note {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--dw-text-soft);
+      line-height: 1.45;
+    }
+
+    .instrument-note span {
+      color: var(--dw-accent);
+      font-weight: 500;
+    }
+
+    .text-muted {
+      color: var(--dw-text-muted);
+    }
+
+    @media (max-width: 1040px) {
+      .layout-top,
+      .layout-bottom {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="app-header">
+      <div class="app-header-left">
+        <div class="logo-pill">DW</div>
+        <div class="app-title">
+          <div class="app-title-main">DoberWhite · Market scanner Nasdaq</div>
+          <div class="app-title-sub" id="app-subtitle">
+            Vista intradía para stocks USA (M5). Más adelante sumamos IPSA, forex e índices.
+          </div>
+        </div>
+      </div>
+      <div class="app-header-right">
+        <div class="last-update">
+          Última actualización:
+          <span id="last-update-label">—</span>
+        </div>
+        <button id="btn-scan" class="btn-primary">
+          <span class="btn-primary-icon">▶</span>
+          Analizar / Actualizar scan
+        </button>
+      </div>
+    </header>
+
+    <!-- Layout superior -->
+    <section class="layout-top">
+      <!-- Vista del mercado -->
+      <article class="card">
+        <div class="card-title">Vista del mercado</div>
+        <div class="card-subtitle">
+          Últimas 100 velas del instrumento seleccionado (M5).
+        </div>
+        <div id="market-view" class="market-view">
+          <div id="market-empty" class="market-empty">
+            Sin setups activos en este scan. Cuando se detecte un instrumento, selecciónalo
+            en la tabla inferior para ver sus 100 últimas velas.
+          </div>
+        </div>
+      </article>
+
+      <!-- Estado del scan -->
+      <article class="card">
+        <div class="card-title">Estado del scan</div>
+        <div class="card-subtitle">
+          Resumen rápido del barrido actual según la regla Doberwhite Capital
+        </div>
+
+        <div class="status-pill-row">
+          <div class="status-pill">
+            <span class="status-pill-dot"></span>
+            <span id="feed-status-label">Feed conectado con avisos</span>
+          </div>
+          <div class="status-mode">
+            Modo: <span id="mode-label">Última sesión</span>
+          </div>
+        </div>
+
+        <div class="status-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total scan</div>
+            <div id="stat-total" class="stat-value">0</div>
+            <div class="stat-footnote">Número de instrumentos evaluados en este barrido.</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Setups activados</div>
+            <div id="stat-setups" class="stat-value">0</div>
+            <div class="stat-footnote">
+              Instrumentos que cumplen la regla Doberwhite Capital al menos una vez hoy.
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Setup Win</div>
+            <div id="stat-win" class="stat-value stat-value--good">0</div>
+            <div class="stat-footnote">
+              Setups activos cuyo último precio está en positivo respecto al nivel de entrada.
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Setup Loss</div>
+            <div id="stat-loss" class="stat-value stat-value--bad">0</div>
+            <div class="stat-footnote">
+              Setups activos que se encuentran por debajo del precio de entrada.
+            </div>
+          </div>
+        </div>
+
+        <div class="status-grid" style="margin-top: 10px;">
+          <div class="stat-card" style="grid-column: 1 / -1;">
+            <div class="stat-label">WR Scan</div>
+            <div id="stat-wr" class="stat-value">—</div>
+            <div class="stat-footnote">
+              Win rate estimado del conjunto de setups (mock de diseño, luego se conecta a tu backtest real).
+            </div>
+          </div>
+        </div>
+
+        <div class="status-note">
+          Nota: fuera de horario regular, el botón <span>Analizar / Actualizar scan</span> fuerza el modo
+          <span>Última sesión</span>. Si el proveedor limita el acceso intradía (HTTP 403), el scanner caerá de forma elegante a métricas diarias básicas. En ningún caso se trata de recomendaciones de compra y venta, solo son análisis.
+        </div>
+      </article>
+    </section>
+
+    <!-- Layout inferior -->
+    <section class="layout-bottom">
+      <!-- Tabla del scanner -->
+      <article class="card">
+        <div class="card-title">Scanner intradía por segmento</div>
+        <div class="card-subtitle" id="scanner-subtitle">
+          Por ahora activo sólo Stocks USA en M5. Más adelante agregamos Chile (IPSA), forex e índices.
+        </div>
+
+        <div class="scanner-header-row">
+          <div class="segment-toggle-row">
+            <button class="segment-btn segment-btn--active" data-segment="stocks">
+              Stocks USA
+            </button>
+            <button class="segment-btn" data-segment="fx">
+              FX majors
+            </button>
+          </div>
+          <div class="scanner-search">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Buscar ticker o nombre..."
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <div class="scanner-table-wrapper">
+          <table class="scanner-table">
+            <thead>
+              <tr>
+                <th>Hora In Setup</th>
+                <th>Instrumento</th>
+                <th>Dirección</th>
+                <th>Precio mínimo</th>
+                <th>Precio cierre scan</th>
+                <th>Último precio</th>
+                <th>Estatus</th>
+                <th>R:R</th>
+              </tr>
+            </thead>
+            <tbody id="scanner-tbody">
+              <tr>
+                <td colspan="8" class="text-muted">
+                  Aún no se ha ejecutado el scan de hoy.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- Detalle de instrumento -->
+      <article class="card">
+        <div class="card-title">Sin instrumento seleccionado</div>
+        <div class="card-subtitle">
+          Haz clic en una fila de la tabla para ver el resumen técnico.
+        </div>
+
+        <div class="instrument-body">
+          <div class="instrument-title" id="detail-title">—</div>
+          <div class="instrument-sub" id="detail-sub">Selecciona un símbolo del scanner.</div>
+
+          <dl class="instrument-meta">
+            <div>
+              <dt>Dirección</dt>
+              <dd id="detail-direction">—</dd>
+            </div>
+            <div>
+              <dt>Volatilidad</dt>
+              <dd id="detail-volatility">—</dd>
+            </div>
+            <div>
+              <dt>Volumen</dt>
+              <dd id="detail-volume">—</dd>
+            </div>
+            <div>
+              <dt>Estado setup</dt>
+              <dd id="detail-setup-state">—</dd>
+            </div>
+          </dl>
+
+          <div class="instrument-note" id="detail-note">
+            Cuando se detecte un setup, aquí verás el comentario DoberWhite para ese símbolo.
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <script>
+    const scanButton = document.getElementById("btn-scan");
+    const lastUpdateLabel = document.getElementById("last-update-label");
+
+    const statTotal = document.getElementById("stat-total");
+    const statSetups = document.getElementById("stat-setups");
+    const statWin = document.getElementById("stat-win");
+    const statLoss = document.getElementById("stat-loss");
+    const statWr = document.getElementById("stat-wr");
+
+    const tbody = document.getElementById("scanner-tbody");
+    const searchInput = document.getElementById("search-input");
+
+    const detailTitle = document.getElementById("detail-title");
+    const detailSub = document.getElementById("detail-sub");
+    const detailDirection = document.getElementById("detail-direction");
+    const detailVolatility = document.getElementById("detail-volatility");
+    const detailVolume = document.getElementById("detail-volume");
+    const detailSetupState = document.getElementById("detail-setup-state");
+    const detailNote = document.getElementById("detail-note");
+
+    const marketView = document.getElementById("market-view");
+    const marketEmpty = document.getElementById("market-empty");
+
+    const appSubtitle = document.getElementById("app-subtitle");
+    const scannerSubtitle = document.getElementById("scanner-subtitle");
+    const segmentButtons = document.querySelectorAll(".segment-btn");
+
+    let currentItems = [];
+    let filteredItems = [];
+    let currentSegment = "stocks"; // "stocks" o "fx"
+
+    function formatNumber(value, decimals = 2) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "—";
+      return num.toLocaleString("en-US", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+    }
+
+    function formatTime(isoString) {
+      if (!isoString) return "—";
+      const d = new Date(isoString);
+      if (Number.isNaN(d.getTime())) return "—";
+      return d.toLocaleTimeString("es-CL", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    function formatDateTime(isoString) {
+      if (!isoString) return "—";
+      const d = new Date(isoString);
+      if (Number.isNaN(d.getTime())) return "—";
+      return d.toLocaleString("es-CL", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    function updateSegmentTexts() {
+      if (currentSegment === "stocks") {
+        appSubtitle.textContent =
+          "Vista intradía para stocks USA (M5). Más adelante sumamos IPSA, forex e índices.";
+        scannerSubtitle.textContent =
+          "Por ahora activo sólo Stocks USA en M5. Más adelante agregamos Chile (IPSA), forex e índices.";
+      } else if (currentSegment === "fx") {
+        appSubtitle.textContent =
+          "Segmento: FX majors (M15). Útil cuando USA está cerrado o con baja actividad.";
+        scannerSubtitle.textContent =
+          "Selecciona pares mayores de forex. El scan manual aplica la regla EMA DW + RSI sobre M15.";
+      }
+    }
+
+    function enrichItems(rawItems) {
+      if (!Array.isArray(rawItems)) return [];
+      const out = [];
+
+      for (const item of rawItems) {
+        const refLow =
+          item.ref_low !== undefined && item.ref_low !== null
+            ? Number(item.ref_low)
+            : null;
+        const refClose =
+          item.ref_close !== undefined && item.ref_close !== null
+            ? Number(item.ref_close)
+            : null;
+        const lastPrice =
+          item.last_price !== undefined && item.last_price !== null
+            ? Number(item.last_price)
+            : null;
+
+        let status = item.status;
+        let rr = item.rr;
+        let hasSetup = false;
+
+        if (
+          refLow !== null &&
+          refClose !== null &&
+          Number.isFinite(refLow) &&
+          Number.isFinite(refClose)
+        ) {
+          hasSetup = true;
+
+          // Si backend no mandara status/rr, los calculamos acá:
+          if (lastPrice !== null && Number.isFinite(lastPrice)) {
+            if (status === undefined || status === null) {
+              status = lastPrice >= refClose ? 1 : 0;
+            }
+            const risk = refClose - refLow;
+            const gain = lastPrice - refClose;
+            if ((rr === undefined || rr === null) && risk > 0) {
+              rr = gain / risk;
+            }
+          }
+        }
+
+        out.push({
+          ...item,
+          _refLow: refLow,
+          _refClose: refClose,
+          _lastPrice: lastPrice,
+          _status: status,
+          _rr: rr,
+          _hasSetup: hasSetup,
+        });
+      }
+
+      return out;
+    }
+
+    function renderScan(data) {
+      currentItems = enrichItems(data.items || []);
+      filteredItems = currentItems;
+
+      const totalScanned = data.summary?.scanned ?? currentItems.length ?? 0;
+      const setupsActivated = currentItems.filter((it) => it._hasSetup).length;
+      const setupsWin = currentItems.filter(
+        (it) => it._hasSetup && it._status === 1
+      ).length;
+      const setupsLoss = currentItems.filter(
+        (it) => it._hasSetup && it._status === 0
+      ).length;
+
+      statTotal.textContent = totalScanned;
+      statSetups.textContent = setupsActivated;
+      statWin.textContent = setupsWin;
+      statLoss.textContent = setupsLoss;
+
+      if (setupsActivated > 0) {
+        const wr = (setupsWin / setupsActivated) * 100;
+        statWr.textContent = wr.toFixed(1) + "%";
+      } else {
+        statWr.textContent = "—";
+      }
+
+      lastUpdateLabel.textContent = formatDateTime(data.as_of);
+
+      renderTable();
+      clearInstrumentDetail();
+
+      if (!currentItems.some((it) => it._hasSetup) && marketEmpty) {
+        marketEmpty.style.display = "block";
+      }
+    }
+
+    function renderTable() {
+      const rows = [];
+
+      if (!filteredItems.length) {
+        rows.push(
+          `<tr><td colspan="8" class="text-muted">Sin resultados para el filtro aplicado.</td></tr>`
+        );
+      } else {
+        for (const item of filteredItems) {
+          const setupTime = formatTime(item.setup_time);
+          const statusChip =
+            item._status === 1
+              ? '<span class="chip-status chip-status--win">1</span>'
+              : item._status === 0
+              ? '<span class="chip-status chip-status--loss">0</span>'
+              : "—";
+
+          const rrDisplay =
+            item._rr !== null && item._rr !== undefined
+              ? formatNumber(item._rr, 2)
+              : "—";
+
+          const direction = item.direction || "N/D";
+
+          rows.push(`
+            <tr data-symbol="${item.symbol}">
+              <td>${setupTime}</td>
+              <td>${item.symbol || "—"}</td>
+              <td>${direction}</td>
+              <td>${formatNumber(item._refLow)}</td>
+              <td>${formatNumber(item._refClose)}</td>
+              <td>${formatNumber(item._lastPrice)}</td>
+              <td>${statusChip}</td>
+              <td>${rrDisplay}</td>
+            </tr>
+          `);
+        }
+      }
+
+      tbody.innerHTML = rows.join("");
+
+      tbody.querySelectorAll("tr[data-symbol]").forEach((tr) => {
+        tr.addEventListener("click", () => {
+          const symbol = tr.getAttribute("data-symbol");
+          selectInstrument(symbol);
+        });
+      });
+    }
+
+    function clearInstrumentDetail() {
+      detailTitle.textContent = "Sin instrumento seleccionado";
+      detailSub.textContent =
+        "Haz clic en una fila de la tabla para ver el resumen técnico.";
+      detailDirection.textContent = "—";
+      detailVolatility.textContent = "—";
+      detailVolume.textContent = "—";
+      detailSetupState.textContent = "—";
+      detailNote.textContent =
+        "Cuando se detecte un setup, aquí verás el comentario DoberWhite para ese símbolo.";
+
+      if (marketEmpty) {
+        marketEmpty.style.display = "block";
+      }
+    }
+
+    function selectInstrument(symbol) {
+      const item = currentItems.find((it) => it.symbol === symbol);
+      if (!item) return;
+
+      detailTitle.textContent = item.symbol || "—";
+      detailSub.textContent =
+        item.name ||
+        (currentSegment === "fx"
+          ? "Par mayor del segmento FX."
+          : "Instrumento del segmento stocks USA.");
+
+      detailDirection.textContent = item.direction || "N/D";
+      detailVolatility.textContent = item.volatility || "N/D";
+      detailVolume.textContent =
+        item.volume !== null && item.volume !== undefined
+          ? formatNumber(item.volume, 0)
+          : "N/D";
+
+      if (!item._hasSetup) {
+        detailSetupState.textContent = "Sin setup detectado hoy.";
+      } else if (item._status === 1) {
+        detailSetupState.textContent = "Setup en positivo (Status = 1).";
+      } else if (item._status === 0) {
+        detailSetupState.textContent = "Setup en negativo (Status = 0).";
+      } else {
+        detailSetupState.textContent = "Setup registrado sin status calculado.";
+      }
+
+      detailNote.textContent =
+        item.setup ||
+        "Comentario de diseño: aquí luego se inyecta el análisis cualitativo (contexto de tendencia mayor, zonas clave, riesgos y recordatorios de gestión de posición).";
+
+      if (marketEmpty) {
+        marketEmpty.style.display = "block";
+      }
+    }
+
+    // Filtro por texto
+    searchInput.addEventListener("input", () => {
+      const term = searchInput.value.trim().toLowerCase();
+      if (!term) {
+        filteredItems = currentItems;
+      } else {
+        filteredItems = currentItems.filter((it) => {
+          const sym = (it.symbol || "").toLowerCase();
+          const name = (it.name || "").toLowerCase();
+          return sym.includes(term) || name.includes(term);
+        });
+      }
+      renderTable();
+    });
+
+    async function runScan(mode = "intraday") {
+      scanButton.disabled = true;
+      scanButton.innerHTML =
+        '<span class="btn-primary-icon">⏳</span>Escaneando...';
+
+      try {
+        let basePath;
+        if (currentSegment === "fx") {
+          basePath = "/api/fx/scan";
+        } else {
+          basePath = "/api/stocks/scan";
+        }
+
+        const url = `${basePath}?mode=${encodeURIComponent(mode)}`;
+        const resp = await fetch(url);
+        if (!resp.ok) {
+          throw new Error("HTTP " + resp.status);
+        }
+        const data = await resp.json();
+        renderScan(data);
+      } catch (err) {
+        console.error("Error al ejecutar scan:", err);
+        alert(
+          "No se pudo ejecutar el scan. Revisa que el backend esté levantado y el proveedor de datos responda correctamente."
+        );
+      } finally {
+        scanButton.disabled = false;
+        scanButton.innerHTML =
+          '<span class="btn-primary-icon">▶</span>Analizar / Actualizar scan';
+      }
+    }
+
+    scanButton.addEventListener("click", () => {
+      // Para stocks usamos "last" (última sesión). Para FX podrías luego usar "intraday"
+      const mode = currentSegment === "fx" ? "intraday" : "last";
+      runScan(mode);
+    });
+
+    // Cambio de segmento (Stocks / FX)
+    segmentButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const seg = btn.dataset.segment;
+        if (!seg || seg === currentSegment) return;
+
+        currentSegment = seg;
+
+        segmentButtons.forEach((b) =>
+          b.classList.toggle("segment-btn--active", b === btn)
+        );
+
+        // Reset de tabla/detalle al cambiar segmento
+        currentItems = [];
+        filteredItems = [];
+        tbody.innerHTML =
+          '<tr><td colspan="8" class="text-muted">Aún no se ha ejecutado el scan de hoy.</td></tr>';
+        clearInstrumentDetail();
+        updateSegmentTexts();
+      });
+    });
+
+    // Estado inicial de textos
+    updateSegmentTexts();
+
+    // Si quisieras que cargue algo automáticamente al abrir:
+    // runScan("intraday");
+  </script>
+</body>
+</html>
