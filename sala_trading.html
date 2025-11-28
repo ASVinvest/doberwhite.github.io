@@ -8,7 +8,11 @@
   <!-- Estilos globales del sitio -->
   <link rel="stylesheet" href="assets/css/main.css">
 
-  <!-- Estilos específicos de esta página -->
+  <!-- CSS Zoom Meeting SDK (client view) -->
+  <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.17.0/css/bootstrap.css" />
+  <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.17.0/css/react-select.css" />
+
+  <!-- Estilo específico de esta página -->
   <style>
     :root {
       --dw-bg: #050816;
@@ -287,18 +291,12 @@
       color: var(--dw-text);
     }
 
-    /* Contenedor raíz del Zoom SDK (lo mostramos solo al entrar) */
+    /* Zoom root oculto hasta que se une a la reunión */
     #zmmtg-root {
-      display: none; /* se cambia a block cuando se inicia la reunión */
-      position: fixed;
-      inset: 0;
+      display: none;
       z-index: 9999;
     }
   </style>
-
-  <!-- CSS del Zoom Meeting SDK (Client View) -->
-  <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.17.0/css/bootstrap.css" />
-  <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.17.0/css/react-select.css" />
 </head>
 <body>
   <div class="dw-shell">
@@ -372,7 +370,7 @@
           <div>
             <h2>Acceso en vivo</h2>
             <div class="dw-side-sub">
-              Conexión embebida a la sala virtual de DoberWhite.
+              La reunión se abre directamente dentro de este sitio.
             </div>
           </div>
           <div class="dw-badge">Miembros activos</div>
@@ -386,24 +384,23 @@
         <div class="dw-access-box">
           <div>
             <strong>Entrar a la próxima sesión</strong><br>
-            La reunión se ejecuta dentro de esta misma página. Al entrar, se abrirá
-            el panel de Zoom embebido sobre DoberWhite.
+            Al presionar el botón, la sala Zoom se carga dentro de esta misma página.
           </div>
 
-          <!-- Botón que dispara el Zoom Meeting SDK embebido -->
-          <button type="button" class="dw-btn" id="dwJoinBtn">
-            <span>Acceso sala</span> Trading room en vivo
-          </button>
+          <!-- Botón que lanza el Meeting SDK dentro del dominio doberwhite.com -->
+          <a href="#" class="dw-btn" onclick="getSignature(); return false;">
+            <span>Entrar ahora</span> Sala privada en vivo
+          </a>
 
           <div class="dw-access-note">
-            • Se solicitará la clave de acceso antes de entrar (hábitaul: <strong>085300</strong>).<br>
-            • El acceso es personal e intransferible.
+            • El acceso está restringido a cuentas autorizadas por DoberWhite.<br>
+            • No compartas tu enlace ni tus credenciales de Zoom.
           </div>
         </div>
 
         <div class="dw-warning">
           La participación en la sala implica exposición al riesgo de mercado.
-          Asegúrate de operar solo con capital que estés dispuesto a arriesgar.
+          Opera solo con capital que estés dispuesto a arriesgar.
         </div>
       </aside>
     </main>
@@ -417,10 +414,10 @@
     </section>
   </div>
 
-  <!-- Contenedor raíz que usará el Zoom Meeting SDK -->
+  <!-- Contenedor que usa Zoom internamente para el client view -->
   <div id="zmmtg-root"></div>
 
-  <!-- JS del Zoom Meeting SDK (Client View) -->
+  <!-- JS Zoom Meeting SDK (client view) -->
   <script src="https://source.zoom.us/2.17.0/lib/vendor/react.min.js"></script>
   <script src="https://source.zoom.us/2.17.0/lib/vendor/react-dom.min.js"></script>
   <script src="https://source.zoom.us/2.17.0/lib/vendor/redux.min.js"></script>
@@ -429,102 +426,94 @@
   <script src="https://source.zoom.us/zoom-meeting-2.17.0.min.js"></script>
 
   <script>
-    // ==========================
-    //  CONFIG ZOOM MEETING SDK
-    // ==========================
-
-    // ⚠️ PON AQUÍ tu endpoint real de firma (Meeting SDK Auth Endpoint)
-    // Ejemplo local con Flask: "http://localhost:5000/zoom-signature"
-    const authEndpoint = "https://TU-DOMINIO-O-SERVIDOR/zoom-signature";
-
-    // ⚠️ PON AQUÍ tu SDK KEY (Client ID del Meeting SDK)
-    const sdkKey = "TU_ZOOM_SDK_KEY";
-
-    // Usamos las credenciales de reunión que me diste
-    const meetingNumber = "85865350255";
-    const role = 0; // 0 = participante, 1 = host
-
-    const userName = "Miembro Sala DoberWhite";
-    const userEmail = ""; // opcional
-    const registrantToken = "";
-    const zakToken = "";
-
-    // Cuando el usuario abandona la reunión, vuelve a la misma página
-    const leaveUrl = "sala_trading.html";
-
-    // Inicialización básica del SDK
-    ZoomMtg.setZoomJSLib("https://source.zoom.us/2.17.0/lib", "/av");
+    // Configuración Zoom Meeting SDK
+    ZoomMtg.setZoomJSLib('https://source.zoom.us/2.17.0/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareWebSDK();
-    ZoomMtg.i18n.load("es-ES");
-    ZoomMtg.i18n.reload("es-ES");
+    ZoomMtg.i18n.load('es-ES');
+    ZoomMtg.i18n.reload('es-ES');
 
-    async function getSignatureAndJoin(passWord) {
-      try {
-        const resp = await fetch(authEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            meetingNumber: meetingNumber,
-            role: role
-          })
-        });
+    // 👉 ENDPOINT de tu backend que genera la firma (signature)
+    // Usa aquí la URL donde tengas desplegado el código que firma (por ejemplo en Render/Heroku).
+    const authEndpoint = 'https://TU_BACKEND/zoom-signature';
 
-        const data = await resp.json();
+    // 👉 SDK KEY: pega aquí tu Meeting SDK Key EXACTA desde el panel de Zoom
+    const sdkKey = 'AQUI_TU_SDK_KEY';
 
+    // Datos de la reunión que me pasaste
+    const meetingNumber = '85865350255'; // sin espacios
+    const passWord      = '085300';
+    const role          = 0; // 0 = participante, 1 = host
+
+    // Datos de usuario que verán en Zoom
+    const userName  = 'Miembro DoberWhite';
+    const userEmail = '';          // opcional si tu reunión no exige registro
+    const registrantToken = '';    // deja vacío salvo que Zoom lo exija
+    const zakToken        = '';    // no necesario como participante
+
+    // Cuando el usuario salga de la reunión:
+    const leaveUrl = 'https://www.doberwhite.com/sala_trading.html';
+
+    function getSignature() {
+      // Pide la firma al backend
+      fetch(authEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          meetingNumber: meetingNumber,
+          role: role
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
         if (!data.signature) {
-          console.error("Respuesta de firma inválida:", data);
-          alert("No se pudo generar la firma de acceso a Zoom (signature). Revisa el endpoint del servidor.");
+          console.error('No se recibió signature desde el backend:', data);
+          alert('No se pudo obtener autorización para la sala (signature). Revisa el backend.');
           return;
         }
-
-        startMeeting(data.signature, passWord);
-      } catch (err) {
-        console.error("Error al obtener la firma:", err);
-        alert("Error al conectarse al servidor de firma de Zoom.");
-      }
-    }
-
-    function startMeeting(signature, passWord) {
-      // Mostramos el contenedor del SDK (ocupa toda la pantalla)
-      const root = document.getElementById("zmmtg-root");
-      root.style.display = "block";
-
-      ZoomMtg.init({
-        leaveUrl: leaveUrl,
-        success: function () {
-          ZoomMtg.join({
-            signature: signature,
-            sdkKey: sdkKey,
-            meetingNumber: meetingNumber,
-            userName: userName,
-            userEmail: userEmail,
-            passWord: passWord, // lo que escribió el usuario (ej: 085300)
-            tk: registrantToken,
-            zak: zakToken,
-            success: function (res) {
-              console.log("JOIN SUCCESS", res);
-            },
-            error: function (err) {
-              console.error("JOIN ERROR", err);
-              alert("No se pudo entrar a la sala. Revisa ID y clave de acceso.");
-            }
-          });
-        },
-        error: function (err) {
-          console.error("INIT ERROR", err);
-          alert("Error al inicializar el SDK de Zoom.");
-        }
+        startMeeting(data.signature);
+      })
+      .catch(error => {
+        console.error('Error al pedir signature:', error);
+        alert('Error al conectar con el servidor de firma (authEndpoint).');
       });
     }
 
-    document.getElementById("dwJoinBtn").addEventListener("click", function () {
-      const passWord = prompt("Ingresa la clave de acceso de la sala (habitual: 085300):", "");
-      if (!passWord) {
-        return; // usuario canceló
-      }
-      getSignatureAndJoin(passWord.trim());
-    });
+    function startMeeting(signature) {
+      // Mostrar el contenedor de Zoom
+      const root = document.getElementById('zmmtg-root');
+      if (root) root.style.display = 'block';
+
+      ZoomMtg.init({
+        leaveUrl: leaveUrl,
+        success: (success) => {
+          console.log('ZoomMtg.init success', success);
+          ZoomMtg.join({
+            signature:      signature,
+            sdkKey:         sdkKey,
+            meetingNumber:  meetingNumber,
+            passWord:       passWord,
+            userName:       userName,
+            userEmail:      userEmail,
+            tk:             registrantToken,
+            zak:            zakToken,
+            success: (joinSuccess) => {
+              console.log('ZoomMtg.join success', joinSuccess);
+            },
+            error: (joinError) => {
+              console.error('Error al unirse a la reunión:', joinError);
+              alert('No se pudo entrar a la sala. Revisa meetingNumber, passcode o permisos del SDK.');
+            }
+          });
+        },
+        error: (initError) => {
+          console.error('Error al inicializar ZoomMtg:', initError);
+          alert('No se pudo inicializar el cliente Zoom en esta página.');
+        }
+      });
+    }
   </script>
 </body>
 </html>
