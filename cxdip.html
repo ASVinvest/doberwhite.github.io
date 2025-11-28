@@ -232,7 +232,7 @@
       color: var(--text-muted);
     }
 
-    /* ===== HERO PANEL TECH CXDIP (CLARO) ===== */
+    /* HERO PANEL (DISPOSITIVO) */
 
     .hero-right {
       display: flex;
@@ -396,8 +396,6 @@
       color: #6b7280;
     }
 
-    /* ANIMACIONES PANEL HERO */
-
     @keyframes pulseGlow {
       0%   { opacity: 0.7; transform: scale(0.98); }
       50%  { opacity: 0.25; transform: scale(1.03); }
@@ -525,7 +523,7 @@
       color: var(--text-muted);
     }
 
-    /* ===== PANEL 1: NPS ANIMADO ===== */
+    /* PANEL 1: NPS (barras apiladas rojo/amarillo/verde) */
 
     .panel-mockup--nps {
       background: radial-gradient(circle at top, #eff6ff, #e0f2fe);
@@ -574,16 +572,14 @@
 
     .nps-bar {
       width: 16%;
+      height: 72px;
       border-radius: 999px 999px 0 0;
-      background: linear-gradient(
-        to top,
-        #ef4444 0%,
-        #ef4444 40%,
-        #facc15 40%,
-        #facc15 70%,
-        #22c55e 70%,
-        #22c55e 100%
-      );
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
       transform-origin: bottom;
       animation: npsWave 3.2s ease-in-out infinite;
     }
@@ -593,6 +589,25 @@
     .nps-bar:nth-child(3) { animation-delay: -1.2s; }
     .nps-bar:nth-child(4) { animation-delay: -1.7s; }
     .nps-bar:nth-child(5) { animation-delay: -2.1s; }
+
+    .nps-bar-seg {
+      width: 100%;
+    }
+
+    .nps-bar-seg--det {
+      background: #ef4444;    /* rojo */
+      height: 35%;
+    }
+
+    .nps-bar-seg--pas {
+      background: #facc15;    /* amarillo (pasivos) */
+      height: 25%;
+    }
+
+    .nps-bar-seg--pro {
+      background: #22c55e;    /* verde (promotores) */
+      height: 40%;
+    }
 
     .nps-legend {
       display: flex;
@@ -616,12 +631,12 @@
     .nps-dot--pro { background: #22c55e; }
 
     @keyframes npsWave {
-      0%   { height: 40%; }
-      50%  { height: 85%; }
-      100% { height: 55%; }
+      0%   { transform: scaleY(0.7); }
+      50%  { transform: scaleY(1.1); }
+      100% { transform: scaleY(0.85); }
     }
 
-    /* ===== PANEL 2: MAPA CX DETALLE ===== */
+    /* PANEL 2: MAPA CX DETALLE (puntos separados + drivers) */
 
     .panel-mockup--map {
       background: radial-gradient(circle at 20% 0%, #dbeafe, #eff6ff 40%, #e5e7eb 100%);
@@ -658,9 +673,10 @@
       color: #0f172a;
     }
 
-    .map-point--1 { top: 18%; left: 18%; }
-    .map-point--2 { top: 52%; left: 55%; }
-    .map-point--3 { bottom: 12%; right: 16%; }
+    /* extremos y centro para poder clickear bien los tres */
+    .map-point--1 { top: 16%; left: 8%; }
+    .map-point--2 { top: 44%; left: 48%; }
+    .map-point--3 { bottom: 14%; right: 10%; }
 
     .map-pulse {
       position: relative;
@@ -768,7 +784,7 @@
       100% { transform: scale(1.25); opacity: 0; }
     }
 
-    /* ===== PANEL 3: OPS & SALES ===== */
+    /* PANEL 3: OPS & SALES (el que te gustó) */
 
     .panel-mockup--ops {
       background: radial-gradient(circle at top, #e0f2fe, #eff6ff);
@@ -1192,11 +1208,31 @@
                 <div class="nps-axis-x"></div>
                 <div class="nps-axis-y"></div>
                 <div class="nps-bars">
-                  <div class="nps-bar"></div>
-                  <div class="nps-bar"></div>
-                  <div class="nps-bar"></div>
-                  <div class="nps-bar"></div>
-                  <div class="nps-bar"></div>
+                  <div class="nps-bar">
+                    <div class="nps-bar-seg nps-bar-seg--det"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pas"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pro"></div>
+                  </div>
+                  <div class="nps-bar">
+                    <div class="nps-bar-seg nps-bar-seg--det"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pas"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pro"></div>
+                  </div>
+                  <div class="nps-bar">
+                    <div class="nps-bar-seg nps-bar-seg--det"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pas"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pro"></div>
+                  </div>
+                  <div class="nps-bar">
+                    <div class="nps-bar-seg nps-bar-seg--det"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pas"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pro"></div>
+                  </div>
+                  <div class="nps-bar">
+                    <div class="nps-bar-seg nps-bar-seg--det"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pas"></div>
+                    <div class="nps-bar-seg nps-bar-seg--pro"></div>
+                  </div>
                 </div>
               </div>
               <div class="nps-legend">
@@ -1205,13 +1241,14 @@
                 <span><span class="nps-dot nps-dot--pro"></span> Promotores</span>
               </div>
               <div class="panel-caption">
-                Aquí va la captura real de tu panel de CX.
+                Panel interactivo
               </div>
             </div>
             <div class="panel-tags">
               <span>NPS relacional</span>
-              <span>/NPS transaccional</span>
-              <span>/Motivos y verbatim clave</span>
+              <span>/ NPS transaccional</span>
+              <span>/ Motivos claves</span>
+              <span>/ Versión Mobile</span>
             </div>
           </div>
 
@@ -1229,9 +1266,9 @@
                   <details class="map-bubble">
                     <summary class="map-label">NPS 78</summary>
                     <div class="map-drivers">
-                      <span>Rapidez en caja</span>
-                      <span>Amabilidad del equipo</span>
-                      <span>Claridad de la información</span>
+                      <span>33% Rapidez en caja</span>
+                      <span>10% Amabilidad del equipo</span>
+                      <span>60% Claridad de la información</span>
                     </div>
                   </details>
                 </div>
@@ -1243,13 +1280,12 @@
                   <details class="map-bubble">
                     <summary class="map-label">NPS 42</summary>
                     <div class="map-drivers">
-                      <span>Tiempos de espera altos</span>
-                      <span>Problemas en resolución</span>
-                      <span>Inconsistencia en la atención</span>
+                      <span>70% Tiempos de espera altos</span>
+                      <span>5% Problemas en resolución</span>
+                      <span>2% Inconsistencia en la atención</span>
                     </div>
                   </details>
                 </div>
-
                 <div class="map-point map-point--3">
                   <div class="map-pulse">
                     <div class="map-dot"></div>
@@ -1257,25 +1293,23 @@
                   <details class="map-bubble">
                     <summary class="map-label">NPS 65</summary>
                     <div class="map-drivers">
-                      <span>Buena experiencia digital</span>
-                      <span>Horarios convenientes</span>
-                      <span>Ambiente de sucursal</span>
+                      <span>65% Buena experiencia digital</span>
+                      <span>23% Horarios convenientes</span>
+                      <span>10% Ambiente de sucursal</span>
                     </div>
                   </details>
                 </div>
 
                 <div class="map-strip">
-                  <span>Puntos rojos y verdes por NPS</span>
-                  <span>Abre un punto para ver drivers →</span>
+                  <span</span>
+                  <span></span>
                 </div>
               </div>
-              <div class="panel-caption">
-                Mapa, ranking y alertas por local/región, hasta ejecutivo.
-              </div>
+              
             </div>
             <div class="panel-tags">
-              <span>Mapa sucursales</span>
-              <span>/Detalle ejecutivos/</span>
+              <span>Detalle de sucursales</span>
+              <span>/ Detalle ejecutivos/ </span>
               <span>Tiempos &amp; reclamos</span>
             </div>
           </div>
@@ -1319,8 +1353,8 @@
             </div>
             <div class="panel-tags">
               <span>Cumplimiento de metas</span>
-              <span>Gestión de la red</span>
-              <span>Panel Mobile</span>
+              <span>/ Gestión de la red</span>
+              <span>/ Panel Mobile</span>
             </div>
           </div>
         </div>
@@ -1390,7 +1424,7 @@
       <div class="container">
         <h2 class="cta-title">¿Te imaginas ver todo esto en un solo panel?</h2>
         <p class="cta-text">
-          Agenda una demo de 30 minutos y te mostramos cómo se vería CXDIP con tus propios datos.
+          Agenda una demo de 30 minutos y podemos revisar la vista que necesitas.
         </p>
         <button class="btn-primary" type="button">
           Agenda una demo
@@ -1413,7 +1447,7 @@
         <a href="#por-que">Por qué CXDIP</a>
       </div>
       <div class="footer-right">
-        <span></span>
+        <span>LinkedIn</span>
       </div>
     </div>
   </footer>
