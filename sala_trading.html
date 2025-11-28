@@ -12,7 +12,6 @@
   <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.17.0/css/bootstrap.css" />
   <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.17.0/css/react-select.css" />
 
-  <!-- Estilo específico de esta página -->
   <style>
     :root {
       --dw-bg: #050816;
@@ -39,7 +38,6 @@
       padding: 24px 16px 40px;
     }
 
-    /* Header simple, alineado con la marca */
     .dw-topbar {
       display: flex;
       align-items: center;
@@ -111,7 +109,6 @@
       color: var(--dw-text);
     }
 
-    /* Grid principal: info + panel de acceso */
     .dw-grid {
       display: grid;
       grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
@@ -184,7 +181,6 @@
       margin-top: 10px;
     }
 
-    /* Panel derecho: acceso en vivo */
     .dw-side-header {
       display: flex;
       justify-content: space-between;
@@ -291,7 +287,6 @@
       color: var(--dw-text);
     }
 
-    /* Zoom root oculto hasta que se une a la reunión */
     #zmmtg-root {
       display: none;
       z-index: 9999;
@@ -300,8 +295,6 @@
 </head>
 <body>
   <div class="dw-shell">
-
-    <!-- Header minimal corporativo -->
     <div class="dw-topbar">
       <div class="dw-brand">
         <strong>DoberWhite Capital</strong> · Sala privada
@@ -309,7 +302,6 @@
       <a href="index.html" class="dw-top-link">← Volver al inicio</a>
     </div>
 
-    <!-- Hero -->
     <div class="dw-pill">
       Sala privada · Entorno tipo mesa de dinero
     </div>
@@ -327,9 +319,7 @@
       </div>
     </header>
 
-    <!-- Grid principal -->
     <main class="dw-grid">
-      <!-- Columna izquierda: narrativa y propuesta de valor -->
       <section class="dw-card">
         <h2>¿Qué ocurre dentro de la Sala?</h2>
         <p>
@@ -364,7 +354,6 @@
         </div>
       </section>
 
-      <!-- Columna derecha: acceso y detalles operativos -->
       <aside class="dw-card">
         <div class="dw-side-header">
           <div>
@@ -387,7 +376,6 @@
             Al presionar el botón, la sala Zoom se carga dentro de esta misma página.
           </div>
 
-          <!-- Botón que lanza el Meeting SDK dentro del dominio doberwhite.com -->
           <a href="#" class="dw-btn" onclick="getSignature(); return false;">
             <span>Entrar ahora</span> Sala privada en vivo
           </a>
@@ -405,7 +393,6 @@
       </aside>
     </main>
 
-    <!-- Nota de cumplimiento / disclaimer -->
     <section class="dw-footer-note">
       <strong>Disclaimer:</strong> Todo el contenido compartido en la Sala Privada de Trading
       tiene fines educativos e informativos. No constituye recomendación personalizada
@@ -414,10 +401,10 @@
     </section>
   </div>
 
-  <!-- Contenedor que usa Zoom internamente para el client view -->
+  <!-- Contenedor del cliente Zoom -->
   <div id="zmmtg-root"></div>
 
-  <!-- JS Zoom Meeting SDK (client view) -->
+  <!-- JS Zoom Meeting SDK -->
   <script src="https://source.zoom.us/2.17.0/lib/vendor/react.min.js"></script>
   <script src="https://source.zoom.us/2.17.0/lib/vendor/react-dom.min.js"></script>
   <script src="https://source.zoom.us/2.17.0/lib/vendor/redux.min.js"></script>
@@ -426,91 +413,83 @@
   <script src="https://source.zoom.us/zoom-meeting-2.17.0.min.js"></script>
 
   <script>
-    // Configuración Zoom Meeting SDK
-    ZoomMtg.setZoomJSLib('https://source.zoom.us/2.17.0/lib', '/av');
+    ZoomMtg.setZoomJSLib("https://source.zoom.us/2.17.0/lib", "/av");
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareWebSDK();
-    ZoomMtg.i18n.load('es-ES');
-    ZoomMtg.i18n.reload('es-ES');
+    ZoomMtg.i18n.load("es-ES");
+    ZoomMtg.i18n.reload("es-ES");
 
-    // 👉 ENDPOINT de tu backend que genera la firma (signature)
-    // Usa aquí la URL donde tengas desplegado el código que firma (por ejemplo en Render/Heroku).
-    const authEndpoint = 'https://TU_BACKEND/zoom-signature';
+    // ⚠️ URL donde está desplegado zoom_signature.py
+    const authEndpoint = "https://www.doberwhite.com/zoom-signature";
 
-    // 👉 SDK KEY: pega aquí tu Meeting SDK Key EXACTA desde el panel de Zoom
-    const sdkKey = 'AQUI_TU_SDK_KEY';
+    // ⚠️ Tu Meeting SDK Key = Client ID de la app
+    const sdkKey = "PEGA_AQUI_TU_CLIENT_ID_COMPLETO";
 
-    // Datos de la reunión que me pasaste
-    const meetingNumber = '85865350255'; // sin espacios
-    const passWord      = '085300';
-    const role          = 0; // 0 = participante, 1 = host
+    const meetingNumber = "85865350255";
+    const passWord      = "085300";
+    const role          = 0; // 0 participante, 1 host
 
-    // Datos de usuario que verán en Zoom
-    const userName  = 'Miembro DoberWhite';
-    const userEmail = '';          // opcional si tu reunión no exige registro
-    const registrantToken = '';    // deja vacío salvo que Zoom lo exija
-    const zakToken        = '';    // no necesario como participante
+    const userName  = "Miembro DoberWhite";
+    const userEmail = "";
+    const registrantToken = "";
+    const zakToken        = "";
 
-    // Cuando el usuario salga de la reunión:
-    const leaveUrl = 'https://www.doberwhite.com/sala_trading.html';
+    const leaveUrl = "https://www.doberwhite.com/sala_trading.html";
 
     function getSignature() {
-      // Pide la firma al backend
       fetch(authEndpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           meetingNumber: meetingNumber,
           role: role
         })
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
         if (!data.signature) {
-          console.error('No se recibió signature desde el backend:', data);
-          alert('No se pudo obtener autorización para la sala (signature). Revisa el backend.');
+          alert("No se recibió la firma de Zoom (signature). Revisa el backend.");
+          console.error("Respuesta sin signature:", data);
           return;
         }
         startMeeting(data.signature);
       })
-      .catch(error => {
-        console.error('Error al pedir signature:', error);
-        alert('Error al conectar con el servidor de firma (authEndpoint).');
+      .catch(err => {
+        console.error("Error al conectar al servidor de firma:", err);
+        alert("Error al conectarse al servidor de firma de Zoom.");
       });
     }
 
     function startMeeting(signature) {
-      // Mostrar el contenedor de Zoom
-      const root = document.getElementById('zmmtg-root');
-      if (root) root.style.display = 'block';
+      const root = document.getElementById("zmmtg-root");
+      if (root) root.style.display = "block";
 
       ZoomMtg.init({
         leaveUrl: leaveUrl,
-        success: (success) => {
-          console.log('ZoomMtg.init success', success);
+        success: function () {
           ZoomMtg.join({
-            signature:      signature,
-            sdkKey:         sdkKey,
-            meetingNumber:  meetingNumber,
-            passWord:       passWord,
-            userName:       userName,
-            userEmail:      userEmail,
-            tk:             registrantToken,
-            zak:            zakToken,
-            success: (joinSuccess) => {
-              console.log('ZoomMtg.join success', joinSuccess);
+            signature:     signature,
+            sdkKey:        sdkKey,
+            meetingNumber: meetingNumber,
+            passWord:      passWord,
+            userName:      userName,
+            userEmail:     userEmail,
+            tk:            registrantToken,
+            zak:           zakToken,
+            success: function (res) {
+              console.log("JOIN success", res);
             },
-            error: (joinError) => {
-              console.error('Error al unirse a la reunión:', joinError);
-              alert('No se pudo entrar a la sala. Revisa meetingNumber, passcode o permisos del SDK.');
+            error: function (err) {
+              console.error("JOIN error", err);
+              alert("No se pudo entrar a la sala. Revisa meetingNumber, passcode o permisos del SDK.");
             }
           });
         },
-        error: (initError) => {
-          console.error('Error al inicializar ZoomMtg:', initError);
-          alert('No se pudo inicializar el cliente Zoom en esta página.');
+        error: function (err) {
+          console.error("INIT error", err);
+          alert("No se pudo inicializar el cliente Zoom en esta página.");
         }
       });
     }
