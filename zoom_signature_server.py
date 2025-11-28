@@ -1,32 +1,28 @@
-#!/usr/bin/env python3
-# zoom_signature_server.py
-# Mini API que genera la firma JWT para el Zoom Meeting SDK
-
+# zoom_signature.py
 import os
 import time
+
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-import jwt  # PyJWT
+import jwt  # pip install pyjwt
+
+SDK_KEY = os.environ.get("ZOOM_SDK_KEY")
+SDK_SECRET = os.environ.get("ZOOM_SDK_SECRET")
 
 app = Flask(__name__)
-CORS(app)
-
-# PON AQUÍ tus credenciales del Meeting SDK
-SDK_KEY = os.environ.get("ZOOM_MEETING_SDK_KEY", "TU_SDK_KEY_AQUI")
-SDK_SECRET = os.environ.get("ZOOM_MEETING_SDK_SECRET", "TU_SDK_SECRET_AQUI")
 
 
 @app.post("/zoom-signature")
 def zoom_signature():
-    data = request.get_json(force=True) or {}
-    meeting_number = str(data.get("meetingNumber", "")).strip()
-    role = int(data.get("role", 0))  # 0 = participante, 1 = host
+    data = request.get_json() or {}
+    meeting_number = str(data.get("meetingNumber"))
+    role = int(data.get("role", 0))  # 0 = asistente, 1 = host
 
-    if not meeting_number:
-        return jsonify({"error": "meetingNumber requerido"}), 400
+    if not meeting_number or not SDK_KEY or not SDK_SECRET:
+        return jsonify({"error": "config incompleta"}), 400
 
-    iat = int(time.time())
-    exp = iat + 60 * 60 * 2  # 2 horas
+    iat = int(time.time()) - 30
+    exp = iat + 60 * 60 * 2   # 2 horas
+    token_exp = exp
 
     payload = {
         "sdkKey": SDK_KEY,
@@ -34,19 +30,15 @@ def zoom_signature():
         "role": role,
         "iat": iat,
         "exp": exp,
-        "tokenExp": exp,
+        "tokenExp": token_exp,
     }
 
-    token = jwt.encode(
-        payload,
-        SDK_SECRET,
-        algorithm="HS256",
-        headers={"alg": "HS256", "typ": "JWT"},
-    )
+    signature = jwt.encode(payload, SDK_SECRET, algorithm="HS256")
 
-    return jsonify({"signature": token, "sdkKey": SDK_KEY})
+    return jsonify({"signature": signature})
 
 
 if __name__ == "__main__":
-    # En producción puedes quitar debug=True
-    app.run(host="0.0.0.0", port=4000, debug=True)
+    # export ZOOM_SDK_KEY="TU_CLIENT_ID"
+    # export ZOOM_SDK_SECRET="TU_CLIENT_SECRET"
+    app.run(host="0.0.0.0", port=5000, debug=True)
