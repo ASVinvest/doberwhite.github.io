@@ -449,10 +449,10 @@
       const userEmail = "";
 
       // Endpoint del backend de firmas (Render)
-      // Cambia "tu-servicio" por el nombre real de tu servicio en Render:
-      const SIGNATURE_ENDPOINT = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-        ? "http://127.0.0.1:5000/signature"
-        : "https://tu-servicio.onrender.com/signature";
+      const SIGNATURE_ENDPOINT =
+        (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+          ? "http://127.0.0.1:5000/signature"
+          : "https://doberwhite-zoom-signature.onrender.com/signature";
 
       async function getSignature(meetingNumber, role) {
         console.log("[DW] Solicitando firma a", SIGNATURE_ENDPOINT);
