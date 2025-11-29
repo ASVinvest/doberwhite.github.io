@@ -1,0 +1,16 @@
+SDK_KEY    = H7CSfl3vTPWzVmudtpPSmA
+SDK_SECRET = OLIsEjEdayl6AH7DYAwJ7R6nyoZuSQgU
+MEETING_ID = 85865350255      (el de tu sala)
+PASSCODE   = "085300"    (el que definiste en Zoom)
+
+
+pip install flask pyjwt
+export ZOOM_SDK_KEY="H7CSfl3vTPWzVmudtpPSmA"
+export ZOOM_SDK_SECRET="OLIsEjEdayl6AH7DYAwJ7R6nyoZuSQgU"
+python zoom_signature.py
+
+
+token zoom: L7URPVZORC-uEJhpx4QGEQ
+
+clave reunion:085300
+id:reunion: 858 6535 0255

@@ -414,7 +414,7 @@
   <script src="https://source.zoom.us/3.10.1/lib/vendor/redux.min.js"></script>
   <script src="https://source.zoom.us/3.10.1/lib/vendor/redux-thunk.min.js"></script>
   <script src="https://source.zoom.us/3.10.1/lib/vendor/lodash.min.js"></script>
-  <script src="https://source.zoom.us/zoom-meeting-3.10.1.min.js"></script>
+  <script src="https://source.zoom.us/3.10.1/zoom-meeting-3.10.1.min.js"></script>
 
   <script>
     window.addEventListener("DOMContentLoaded", function () {
@@ -439,7 +439,7 @@
       ZoomMtg.i18n.load("es-ES");
       ZoomMtg.i18n.reload("es-ES");
 
-      // ⚠️ RELLENA con tu Client ID del Meeting SDK (no el secret)
+      // ⚠️ Usa aquí tu Zoom Meeting SDK KEY (client ID del SDK, no el secret)
       const sdkKey = "H7CSfl3vTPWzVmudtpPSmA";
 
       const meetingNumber = "85865350255";
@@ -448,18 +448,19 @@
       const userName  = "Miembro DoberWhite";
       const userEmail = "";
 
-      // Para pruebas locales vs producción
-      const authEndpoint = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-        ? "http://127.0.0.1:5000/zoom-signature"
-        : "https://TU_BACKEND_PUBLICO/zoom-signature"; // <-- cuando lo publiques
+      // Endpoint del backend de firmas (Render)
+      // Cambia "tu-servicio" por el nombre real de tu servicio en Render:
+      const SIGNATURE_ENDPOINT = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+        ? "http://127.0.0.1:5000/signature"
+        : "https://tu-servicio.onrender.com/signature";
 
-      async function getSignature() {
-        console.log("[DW] Solicitando firma a", authEndpoint);
+      async function getSignature(meetingNumber, role) {
+        console.log("[DW] Solicitando firma a", SIGNATURE_ENDPOINT);
 
-        const res = await fetch(authEndpoint, {
+        const res = await fetch(SIGNATURE_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ meetingNumber, role: 0 })
+          body: JSON.stringify({ meetingNumber: String(meetingNumber), role: Number(role) })
         });
 
         if (!res.ok) {
@@ -480,7 +481,7 @@
         if (container) container.style.display = "block";
 
         try {
-          const signature = await getSignature();
+          const signature = await getSignature(meetingNumber, 0);
 
           console.log("[DW] Inicializando ZoomMtg.init...");
           ZoomMtg.init({
@@ -513,7 +514,7 @@
           });
         } catch (e) {
           console.error("[DW] Error general en flujo de acceso", e);
-          alert("Error al conectarse al servidor de firma de Zoom.\n\n¿Está corriendo zoom_signature.py en el endpoint configurado?");
+          alert("Error al conectarse al servidor de firma de Zoom.\n\n¿Está corriendo el backend en el endpoint configurado?");
         }
       });
     });
