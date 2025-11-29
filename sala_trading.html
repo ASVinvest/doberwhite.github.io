@@ -8,18 +8,6 @@
   <!-- Estilos globales del sitio -->
   <link rel="stylesheet" href="assets/css/main.css">
 
-  <!-- CSS mínimo recomendado de Zoom (opcional pero ayuda al layout interno) -->
-  <link
-    type="text/css"
-    rel="stylesheet"
-    href="https://source.zoom.us/3.10.1/css/bootstrap.css"
-  />
-  <link
-    type="text/css"
-    rel="stylesheet"
-    href="https://source.zoom.us/3.10.1/css/react-select.css"
-  />
-
   <style>
     :root {
       --dw-bg: #050816;
@@ -302,13 +290,12 @@
       background: #020617;
       border-radius: 18px;
       overflow: hidden;
-      display: none; /* se muestra al hacer click */
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="dw-shell">
-
     <div class="dw-topbar">
       <div class="dw-brand">
         <strong>DoberWhite Capital</strong> · Sala privada
@@ -381,7 +368,7 @@
 
         <div class="dw-slot">
           <strong>Horario de referencia:</strong> 09:00–11:00 (GMT-3) · Lunes a jueves<br>
-          <span>(La programación exacta de cada bloque se confirma por correo a los suscriptores.)</span>
+          <span>(La programación exacta se confirma por correo a los suscriptores.)</span>
         </div>
 
         <div class="dw-access-box">
@@ -419,7 +406,7 @@
     </section>
   </div>
 
-  <!-- Scripts Zoom Meeting SDK -->
+  <!-- Zoom Meeting SDK desde CDN (client view) -->
   <script src="https://source.zoom.us/3.10.1/lib/vendor/react.min.js"></script>
   <script src="https://source.zoom.us/3.10.1/lib/vendor/react-dom.min.js"></script>
   <script src="https://source.zoom.us/3.10.1/lib/vendor/redux.min.js"></script>
@@ -428,30 +415,47 @@
   <script src="https://source.zoom.us/zoom-meeting-3.10.1.min.js"></script>
 
   <script>
-    window.addEventListener("DOMContentLoaded", function () {
-      console.log("[DW] Script de sala cargado");
+    window.addEventListener("load", function () {
+      const SDK_VERSION = "3.10.1";
+      console.log("[DW] Sala Trading · JS cargado. Versión SDK esperada:", SDK_VERSION);
 
       const btn = document.getElementById("joinMeeting");
       if (!btn) {
-        console.error("[DW] No se encontró el botón joinMeeting");
-        alert("Error técnico: no se encontró el botón de acceso.");
+        console.error("[DW] No se encontró el botón #joinMeeting");
         return;
       }
 
-      // Datos fijos de la reunión
-      const sdkKey        = "H7CSfl3vTPWzVmudtpPSmA";   // Client ID Meeting SDK
+      if (typeof ZoomMtg === "undefined") {
+        console.error("[DW] ZoomMtg es undefined. El navegador NO ha cargado zoom-meeting-" + SDK_VERSION + ".min.js desde https://source.zoom.us");
+        alert(
+          "No se pudo cargar el cliente web de Zoom (SDK).\n\n" +
+          "Esto no es un error de la página, sino que tu navegador está bloqueando los scripts de https://source.zoom.us.\n\n" +
+          "Prueba:\n" +
+          "  1) Abrir esta página en una ventana de incógnito SIN extensiones.\n" +
+          "  2) Desactivar AdBlock / uBlock / Brave Shields para doberwhite.com.\n" +
+          "  3) Si usas Cloudflare, desactivar Rocket Loader y la minificación de JS para esta página."
+        );
+        return;
+      }
+
+      ZoomMtg.setZoomJSLib("https://source.zoom.us/3.10.1/lib", "/av");
+      ZoomMtg.preLoadWasm();
+      ZoomMtg.prepareWebSDK();
+      ZoomMtg.i18n.load("es-ES");
+      ZoomMtg.i18n.reload("es-ES");
+
+      const sdkKey        = "H7CSfl3vTPWzVmudtpPSmA";
       const meetingNumber = "85865350255";
       const passWord      = "085300";
       const userName      = "Miembro DoberWhite";
       const userEmail     = "";
 
-      // Endpoint en Render que genera la firma
-      const authEndpoint  = "https://doberwhite-zoom-signature.onrender.com/zoom-signature";
+      // Tu backend en Render:
+      const SIGNATURE_ENDPOINT = "https://doberwhite-zoom-signature.onrender.com/zoom-signature";
 
       async function getSignature() {
-        console.log("[DW] Solicitando firma a", authEndpoint);
-
-        const res = await fetch(authEndpoint, {
+        console.log("[DW] Pidiendo firma a:", SIGNATURE_ENDPOINT);
+        const res = await fetch(SIGNATURE_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ meetingNumber, role: 0 })
@@ -459,60 +463,41 @@
 
         if (!res.ok) {
           const text = await res.text().catch(() => "");
-          console.error("[DW] Respuesta NO OK del servidor de firma:", res.status, text);
+          console.error("[DW] Error HTTP del servidor de firma:", res.status, text);
           throw new Error("Servidor de firma respondió con error");
         }
 
         const data = await res.json();
-        console.log("[DW] Firma recibida OK");
+        console.log("[DW] Firma recibida correctamente");
         return data.signature;
       }
 
       btn.addEventListener("click", async function () {
         console.log("[DW] Click en botón Acceso sala");
 
-        // Mostrar contenedor Zoom
         const container = document.getElementById("meetingSDKElement");
         if (container) {
           container.style.display = "block";
         }
 
-        // Verificar que el SDK realmente cargó
-        if (typeof ZoomMtg === "undefined") {
-          console.error("[DW] ZoomMtg NO está definido. El SDK no se cargó.");
-          alert(
-            "No se pudo cargar el cliente web de Zoom (SDK).\n\n" +
-            "Revisa conexión, bloqueadores de contenido (AdBlock, Brave, uBlock) " +
-            "o reglas de seguridad que puedan estar bloqueando https://source.zoom.us."
-          );
-          return;
-        }
-
         try {
-          // Configuración base del SDK
-          ZoomMtg.setZoomJSLib("https://source.zoom.us/3.10.1/lib", "/av");
-          ZoomMtg.preLoadWasm();
-          ZoomMtg.prepareWebSDK();
-          ZoomMtg.i18n.load("es-ES");
-          ZoomMtg.i18n.reload("es-ES");
-
           const signature = await getSignature();
 
           console.log("[DW] Inicializando ZoomMtg.init...");
           ZoomMtg.init({
-            zoomAppRoot: document.getElementById("meetingSDKElement"),
+            zoomAppRoot: container,
             leaveUrl: "https://www.doberwhite.com/sala_trading.html",
             language: "es-ES",
             success: function () {
               console.log("[DW] ZoomMtg.init OK, haciendo join...");
 
               ZoomMtg.join({
-                signature:      signature,
-                sdkKey:         sdkKey,
-                meetingNumber:  meetingNumber,
-                userName:       userName,
-                userEmail:      userEmail,
-                passWord:       passWord,
+                signature,
+                sdkKey,
+                meetingNumber,
+                userName,
+                userEmail,
+                passWord,
                 success: function (res) {
                   console.log("[DW] join success", res);
                 },
@@ -529,15 +514,10 @@
           });
         } catch (e) {
           console.error("[DW] Error general en flujo de acceso", e);
-          alert(
-            "Error al conectarse al servidor de firma de Zoom.\n\n" +
-            "Verifica que el servicio en Render esté arriba y respondiendo en:\n" +
-            authEndpoint
-          );
+          alert("Error al conectarse al servidor de firma de Zoom.\n\nVerifica que el servicio en Render esté arriba.");
         }
       });
     });
   </script>
 </body>
 </html>
-
