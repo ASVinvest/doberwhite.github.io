@@ -17,8 +17,8 @@
   },
 
   "balance": {
-    "labels": ["jul-25", "ago-25", "sept-25", "oct-25", "nov-25"],
-    "values": [1993, 2019, 1963, 1954, 1967]
+    "labels": ["jul-25", "ago-25", "sept-25", "oct-25", "nov-25", "dic-25"],
+    "values": [1993, 2019, 1963, 1954, 1967, 1976]
   },
 
   "monthly": {
