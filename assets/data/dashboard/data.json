@@ -1,64 +1,64 @@
 {
-  "period": { "from": "Jul-25", "to": "04-12-2025" },
+  "period": { "from": "13-10-2025", "to": "04-12-2025" },
 
   "kpis": {
-    "Win Rate": 45,
-    "Profitability": -1.2,
-    "Risk Benefit": 1.1,
-    "N° Trades": 71,
-    "N° Trades Win": 32,
-    "N° Trades Loss": 39,
-    "P&L (USD)": -24,
-    "Win Average": 6.5,
-    "Loss Average": -6.0,
-    "WipeOut": 13,
-    "% Average SL": 56,
-    "Comission": -13
+    "Win Rate": 40,
+    "Profitability": 1.4,
+    "Risk Benefit": 1.9,
+    "N° Trades": 246,
+    "N° Trades Win": 98,
+    "N° Trades Loss": 148,
+    "P&L (USD)": 713,
+    "Win Average": 41.8,
+    "Loss Average": -22.0,
+    "WipeOut": 1,
+    "% Average SL": 22,
+    "Comission": 120
   },
 
   "balance": {
-    "labels": ["jul-25", "ago-25", "sept-25", "oct-25", "nov-25"],
-    "values": [1993, 2019, 1963, 1954, 1967]
+    "labels": ["oct-25", "nov-25", "dic-25"],
+    "values": [50642, 50758, 50713]
   },
 
   "monthly": {
-    "labels": ["jul", "ago", "sept", "oct", "nov", "dic"],
-    "values": [-7.25, 26.55, -56.54, -8.91, 13.11, 9.36]
+    "labels": ["oct", "nov", "dic"],
+    "values": [642.03, 116.03, -44.92]
   },
 
   "distribution": {
     "labels": ["buy", "sell"],
-    "counts": [64, 7],
-    "pnl": [-3.88, -19.80]
+    "counts": [155, 91],
+    "pnl": [118.11, 595.03]
   },
 
   "allocation": {
-    "labels": ["GBPUSD", "NAS100", "USDJPY", "XAUUSD"],
-    "values": [13, 41, 27, 20]
+    "labels": ["XAUUSD", "USDJPY", "NDX100", "GBPUSD", "BTCUSD"],
+    "values": [28, 29, 37, 4, 2]
   },
 
   "plAssets": {
-    "labels": ["USDJPY", "NAS100", "GBPUSD", "XAUUSD"],
-    "values": [22.59, -7.33, -11.33, -27.61]
+    "labels": ["BTCUSD", "GBPUSD", "NDX100", "USDJPY", "XAUUSD"],
+    "values": [-67.90, 279.80, 50.60, 20.94, 471.58]
   },
 
   "wrAssets": {
     "labels": ["XAUUSD", "NAS100", "GBPUSD", "USDJPY"],
-    "values": [33, 45, 36, 58]
+    "values": [44, 46, 31, 43]
   },
 
   "daysDist": {
     "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-    "values": [35, 17, 20, 15, 13]
+    "values": [23, 25, 20, 20, 11]
   },
 
   "daysPerf": {
     "labels": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-    "values": [48, 42, 36, 45, 56]
+    "values": [42, 38, 52, 32, 32]
   },
 
   "avgPos": {
-    "labels": ["NAS100", "USDJPY", "GBPUSD", "XAUUSD"],
-    "values": [0.12, 0.05, 0.05, 0.01]
+    "labels": ["BTCUSD", "GBPUSD", "NDX100", "USDJPY", "XAUUSD"],
+    "values": [0.05, 0.20, 0.13, 0.15, 0.07]
   }
 }
