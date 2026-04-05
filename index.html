@@ -228,6 +228,7 @@
   <div class="nav-logo">DOBER<em>WHITE</em></div>
   <div class="nav-links">
     <a href="#performance">Bot Cuantitativo</a>
+    <a href="#grafico">Gráfico Live</a>
     <a href="#ipsa">Análisis IPSA</a>
     <a href="#servicios">Servicios</a>
     <a href="#analisis">Institucional</a>
@@ -294,6 +295,49 @@
     </div>
   </div>
   <div class="rr-note fi"><p><strong>Por qué un win rate de 36.91% genera +175%:</strong> el beneficio medio por operación ganadora (+0.58%) supera 2× la pérdida media por operación perdedora (−0.28%). Los sistemas tendenciales profesionales están diseñados exactamente así — cortan pérdidas rápido y dejan correr las ganancias.</p></div>
+</section>
+
+<!-- GRÁFICO LIVE BOT -->
+<section id="grafico" style="background:var(--black);padding:80px 64px;">
+  <div class="sec-eye">Señales en tiempo real</div>
+  <h2 class="sec-h2">GRÁFICO <em>EN VIVO</em></h2>
+  <p class="sec-body" style="margin-bottom:36px;">USDJPY · 1H · Sistema USDJPY_ASV_1H operando en tiempo real. Las señales de entrada y salida del bot son visibles sobre el precio. Fuente: TradingView.</p>
+
+  <div class="fi" style="position:relative;border:1px solid var(--border);background:var(--card);">
+    <!-- barra superior decorativa igual que bot-card -->
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green));z-index:1;"></div>
+    <!-- cabecera -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px 0;position:relative;z-index:1;">
+      <div>
+        <div style="font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;color:var(--silver);text-transform:uppercase;">USDJPY · ASV · 1H</div>
+        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:.1em;color:var(--muted);margin-top:3px;">Estrategia live · señales de bot visibles</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:9.5px;color:var(--green);letter-spacing:.1em;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.8s infinite;display:inline-block;"></span>
+        EN VIVO
+      </div>
+    </div>
+    <!-- iframe TradingView -->
+    <div style="padding:12px 0 0;">
+      <iframe
+        src="https://es.tradingview.com/chart/oj0Xrvcv/?theme=dark&hide_top_toolbar=0&hide_legend=0&hide_side_toolbar=0&allow_symbol_change=0&save_image=0&style=1&locale=es&utm_source=doberwhite.com&utm_medium=widget"
+        style="width:100%;height:580px;border:none;display:block;"
+        allowtransparency="true"
+        scrolling="no"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+    <!-- pie -->
+    <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:var(--font-m);font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;">Datos provistos por TradingView · Actualización en tiempo real</span>
+      <a href="https://es.tradingview.com/chart/oj0Xrvcv/" target="_blank" rel="noopener"
+         style="font-family:var(--font-m);font-size:9px;letter-spacing:.1em;color:var(--silver);text-decoration:none;text-transform:uppercase;transition:color .2s;"
+         onmouseover="this.style.color='var(--silver-lt)'" onmouseout="this.style.color='var(--silver)'">
+        Ver en TradingView →
+      </a>
+    </div>
+  </div>
 </section>
 
 <section id="ipsa">
