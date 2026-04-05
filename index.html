@@ -27,16 +27,12 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{background:var(--black);color:var(--white);font-family:var(--font-s);overflow-x:hidden}
-
-  /* TICKER */
   .ticker-wrap{background:var(--deep);border-bottom:1px solid var(--border);overflow:hidden;height:30px;display:flex;align-items:center;position:fixed;top:0;left:0;right:0;z-index:100}
   .ticker-track{display:flex;white-space:nowrap;animation:ticker 40s linear infinite}
   .ticker-item{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-m);font-size:10.5px;letter-spacing:.05em;color:var(--silver);padding:0 26px;border-right:1px solid var(--border)}
   .ticker-item b{color:var(--white);font-weight:500}
   .up{color:var(--green)} .dn{color:var(--red)}
   @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-  /* NAV */
   nav{position:fixed;top:30px;left:0;right:0;z-index:99;display:flex;justify-content:space-between;align-items:center;padding:18px 64px;background:linear-gradient(to bottom,rgba(5,7,11,.97) 65%,transparent);backdrop-filter:blur(6px)}
   .nav-logo{font-family:var(--font-d);font-size:24px;letter-spacing:.15em;color:var(--white)}
   .nav-logo em{font-style:normal;color:var(--silver-lt)}
@@ -45,8 +41,6 @@
   .nav-links a:hover{color:var(--white)}
   .nav-cta{font-family:var(--font-m);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--silver-lt);border:1px solid var(--silver);padding:8px 22px;text-decoration:none;transition:all .2s}
   .nav-cta:hover{background:var(--silver);color:var(--black)}
-
-  /* HERO */
   .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:130px 64px 90px;overflow:hidden}
   .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(180,192,210,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(180,192,210,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 75% 65% at 50% 50%,black 25%,transparent 100%)}
   .hero-glow{position:absolute;width:650px;height:650px;border-radius:50%;background:radial-gradient(circle,rgba(59,125,216,.06) 0%,transparent 68%);top:-80px;right:-60px;pointer-events:none}
@@ -65,8 +59,6 @@
   .kpi label{font-family:var(--font-m);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
   .kpi .val{font-family:var(--font-d);font-size:34px;letter-spacing:.04em;color:var(--white)}
   .kpi .val.pos{color:var(--green)}
-
-  /* BOT CARD */
   .hero-right{position:absolute;right:64px;top:50%;transform:translateY(-50%);width:370px}
   .bot-card{background:var(--card);border:1px solid var(--border);padding:26px;position:relative;overflow:hidden}
   .bot-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green))}
@@ -85,16 +77,12 @@
   .bm .mv.pos{color:var(--green)} .bm .mv.neg{color:var(--red)} .bm .mv.amber{color:var(--amber)}
   .note-inline{font-family:var(--font-m);font-size:8.5px;color:var(--muted);letter-spacing:.08em;line-height:1.5;margin-bottom:12px;border-top:1px solid var(--border);padding-top:10px}
   .chart-lbl{font-family:var(--font-m);font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
-
-  /* SECTIONS */
   section{padding:100px 64px}
   .sec-eye{font-family:var(--font-m);font-size:10px;letter-spacing:.22em;color:var(--silver);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:11px}
   .sec-eye::before{content:'';width:28px;height:1px;background:var(--silver)}
   .sec-h2{font-family:var(--font-d);font-size:clamp(40px,4.8vw,70px);letter-spacing:.06em;color:var(--white);line-height:1;margin-bottom:22px}
   .sec-h2 em{font-style:normal;color:var(--silver-lt)}
   .sec-body{font-family:var(--font-s);font-size:18px;font-weight:300;line-height:1.72;color:var(--muted);max-width:560px}
-
-  /* PERFORMANCE — BOT */
   #performance{background:var(--deep)}
   .perf-label{font-family:var(--font-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver);margin-bottom:20px;padding:10px 14px;border:1px solid var(--border);display:inline-block}
   .perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-top:16px;align-items:start}
@@ -110,13 +98,9 @@
   .bar-f.g{background:var(--green)} .bar-f.b{background:var(--silver)} .bar-f.r{background:var(--red)}
   .pi-val{font-family:var(--font-d);font-size:28px;letter-spacing:.04em}
   .pi-val.pos{color:var(--green)} .pi-val.blue{color:var(--silver-lt)} .pi-val.wht{color:var(--white)} .pi-val.neg{color:var(--red)} .pi-val.amb{color:var(--amber)}
-
-  /* RR NOTE */
   .rr-note{background:rgba(59,125,216,.07);border:1px solid rgba(59,125,216,.2);padding:14px 18px;margin-top:24px}
   .rr-note p{font-family:var(--font-m);font-size:10px;line-height:1.6;color:rgba(185,215,255,.7);letter-spacing:.06em}
   .rr-note strong{color:var(--silver-lt);font-weight:500}
-
-  /* PERFORMANCE — IPSA */
   #ipsa{background:var(--black)}
   .ipsa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:36px}
   .ipsa-kpi{background:var(--card);border:1px solid var(--border);padding:26px 22px;position:relative;overflow:hidden;transition:border-color .25s}
@@ -142,8 +126,6 @@
   .sim-kpi .sv{font-family:var(--font-d);font-size:36px;letter-spacing:.04em}
   .sim-kpi .sv.pos{color:var(--green)} .sim-kpi .sv.wht{color:var(--white)} .sim-kpi .sv.neg{color:var(--red)}
   .sim-note{font-family:var(--font-m);font-size:9px;color:rgba(237,240,244,.25);letter-spacing:.07em;line-height:1.6;border-top:1px solid var(--border);padding-top:12px}
-
-  /* SERVICIOS */
   #servicios{background:var(--deep)}
   .srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:52px}
   .srv-card{background:var(--card);border:1px solid var(--border);padding:32px 28px;position:relative;overflow:hidden;transition:border-color .25s}
@@ -156,8 +138,6 @@
   .srv-desc{font-family:var(--font-s);font-size:15.5px;font-weight:300;line-height:1.65;color:var(--muted);margin-bottom:18px}
   .srv-tags{display:flex;flex-wrap:wrap;gap:6px}
   .srv-tag{font-family:var(--font-m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);padding:4px 10px;color:var(--silver)}
-
-  /* FILOSOFÍA */
   #filosofia{position:relative;overflow:hidden}
   .phil-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 80% at 82% 50%,rgba(59,125,216,.05),transparent)}
   .phil-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
@@ -166,8 +146,6 @@
   .pa-icon{width:34px;height:34px;flex-shrink:0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--silver);font-size:13px}
   .pa strong{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;color:var(--silver-lt);text-transform:uppercase;display:block;margin-bottom:4px}
   .pa p{font-family:var(--font-s);font-size:15.5px;font-weight:300;color:var(--muted);line-height:1.55}
-
-  /* ANÁLISIS */
   #analisis{background:var(--deep)}
   .anal-layout{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:50px;align-items:start}
   .af{background:var(--card);border:1px solid var(--border);padding:20px 22px;display:flex;align-items:center;gap:16px;margin-bottom:12px;transition:border-color .25s}
@@ -180,8 +158,6 @@
   .aq-text{font-family:var(--font-s);font-size:clamp(17px,2vw,24px);font-style:italic;font-weight:300;line-height:1.6;color:var(--white);margin-bottom:20px}
   .aq-tags{display:flex;flex-wrap:wrap;gap:9px}
   .aq-tag{font-family:var(--font-m);font-size:9px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 13px;color:var(--silver)}
-
-  /* FORMACIÓN */
   #educacion{background:var(--black)}
   .edu-tiers{display:flex;flex-direction:column;gap:12px;margin-top:48px}
   .edu-tier{background:var(--card);border:1px solid var(--border);padding:22px 26px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;transition:border-color .25s}
@@ -192,8 +168,6 @@
   .edu-desc{font-family:var(--font-s);font-size:14.5px;font-weight:300;color:var(--muted);line-height:1.5}
   .edu-badge{font-family:var(--font-m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;color:var(--silver);white-space:nowrap}
   .edu-badge.feat{border-color:var(--silver-lt);color:var(--silver-lt)}
-
-  /* MERCADOS */
   #mercados{background:var(--deep)}
   .mkt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:44px}
   .mkt-tile{background:var(--card);padding:22px;border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .25s;cursor:default}
@@ -203,25 +177,17 @@
   .mkt-chg{font-family:var(--font-m);font-size:11.5px;font-weight:500}
   .mkt-chg.pos{color:var(--green)} .mkt-chg.neg{color:var(--red)}
   .mkt-spark{position:absolute;bottom:0;right:0;width:75px;height:38px;opacity:.3}
-
-  /* CONTACTO */
   #contacto{text-align:center;position:relative;overflow:hidden}
   .contact-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(59,125,216,.06),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
   .c-tag{display:inline-block;font-family:var(--font-m);font-size:10px;letter-spacing:.2em;color:var(--silver);text-transform:uppercase;border:1px solid var(--border);padding:7px 20px;margin-bottom:28px}
   .contact-h2{font-family:var(--font-d);font-size:clamp(48px,7vw,96px);letter-spacing:.06em;color:var(--white);line-height:.95;margin-bottom:22px}
   .contact-h2 em{font-style:normal;color:var(--silver-lt)}
   .contact-sub{font-family:var(--font-s);font-size:19px;font-weight:300;font-style:italic;color:var(--muted);margin-bottom:44px}
-
-  /* FOOTER */
   footer{padding:36px 64px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--deep)}
   .f-logo{font-family:var(--font-d);font-size:19px;letter-spacing:.15em;color:var(--silver-lt)}
   .f-legal{font-family:var(--font-m);font-size:9.5px;letter-spacing:.07em;color:var(--muted);text-align:right;line-height:1.8}
-
-  /* UTIL */
   .fi{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
   .fi.on{opacity:1;transform:translateY(0)}
-  .divider-sec{height:1px;background:var(--border);margin:56px 0 48px}
-
   @media(max-width:900px){
     nav{padding:14px 22px}.nav-links{display:none}
     .hero,.hero-right{padding:110px 22px 56px}.hero-right{display:none}
@@ -235,31 +201,29 @@
 </head>
 <body>
 
-<!-- TICKER -->
 <div class="ticker-wrap">
   <div class="ticker-track">
-    <span class="ticker-item">S&amp;P 500 <b>5,218.40</b> <span class="up">▲ +0.47%</span></span>
-    <span class="ticker-item">NASDAQ <b>16,341.50</b> <span class="up">▲ +0.63%</span></span>
-    <span class="ticker-item">BTC/USD <b>$83,420</b> <span class="dn">▼ −1.12%</span></span>
-    <span class="ticker-item">USD/CLP <b>$975.40</b> <span class="dn">▼ −0.38%</span></span>
-    <span class="ticker-item">USDJPY <b>148.92</b> <span class="dn">▼ −0.22%</span></span>
-    <span class="ticker-item">IPSA <b>7,102.80</b> <span class="up">▲ +0.21%</span></span>
-    <span class="ticker-item">ORO XAU <b>$3,107</b> <span class="up">▲ +0.89%</span></span>
-    <span class="ticker-item">BRENT <b>$74.20</b> <span class="dn">▼ −0.55%</span></span>
-    <span class="ticker-item">EUR/USD <b>1.0832</b> <span class="up">▲ +0.14%</span></span>
-    <span class="ticker-item">S&amp;P 500 <b>5,218.40</b> <span class="up">▲ +0.47%</span></span>
-    <span class="ticker-item">NASDAQ <b>16,341.50</b> <span class="up">▲ +0.63%</span></span>
-    <span class="ticker-item">BTC/USD <b>$83,420</b> <span class="dn">▼ −1.12%</span></span>
-    <span class="ticker-item">USD/CLP <b>$975.40</b> <span class="dn">▼ −0.38%</span></span>
-    <span class="ticker-item">USDJPY <b>148.92</b> <span class="dn">▼ −0.22%</span></span>
-    <span class="ticker-item">IPSA <b>7,102.80</b> <span class="up">▲ +0.21%</span></span>
-    <span class="ticker-item">ORO XAU <b>$3,107</b> <span class="up">▲ +0.89%</span></span>
-    <span class="ticker-item">BRENT <b>$74.20</b> <span class="dn">▼ −0.55%</span></span>
-    <span class="ticker-item">EUR/USD <b>1.0832</b> <span class="up">▲ +0.14%</span></span>
+    <span class="ticker-item" data-sym="SP500">S&amp;P 500 <b>5,218.40</b> <span class="up">▲ +0.47%</span></span>
+    <span class="ticker-item" data-sym="NASDAQ">NASDAQ <b>16,341.50</b> <span class="up">▲ +0.63%</span></span>
+    <span class="ticker-item" data-sym="BTC">BTC/USD <b>$83,420</b> <span class="dn">▼ −1.12%</span></span>
+    <span class="ticker-item" data-sym="USDCLP">USD/CLP <b>$975.40</b> <span class="dn">▼ −0.38%</span></span>
+    <span class="ticker-item" data-sym="USDJPY">USDJPY <b>148.92</b> <span class="dn">▼ −0.22%</span></span>
+    <span class="ticker-item" data-sym="IPSA">IPSA <b>7,102.80</b> <span class="up">▲ +0.21%</span></span>
+    <span class="ticker-item" data-sym="GOLD">ORO XAU <b>$3,107</b> <span class="up">▲ +0.89%</span></span>
+    <span class="ticker-item" data-sym="BRENT">BRENT <b>$74.20</b> <span class="dn">▼ −0.55%</span></span>
+    <span class="ticker-item" data-sym="EURUSD">EUR/USD <b>1.0832</b> <span class="up">▲ +0.14%</span></span>
+    <span class="ticker-item" data-sym="SP500">S&amp;P 500 <b>5,218.40</b> <span class="up">▲ +0.47%</span></span>
+    <span class="ticker-item" data-sym="NASDAQ">NASDAQ <b>16,341.50</b> <span class="up">▲ +0.63%</span></span>
+    <span class="ticker-item" data-sym="BTC">BTC/USD <b>$83,420</b> <span class="dn">▼ −1.12%</span></span>
+    <span class="ticker-item" data-sym="USDCLP">USD/CLP <b>$975.40</b> <span class="dn">▼ −0.38%</span></span>
+    <span class="ticker-item" data-sym="USDJPY">USDJPY <b>148.92</b> <span class="dn">▼ −0.22%</span></span>
+    <span class="ticker-item" data-sym="IPSA">IPSA <b>7,102.80</b> <span class="up">▲ +0.21%</span></span>
+    <span class="ticker-item" data-sym="GOLD">ORO XAU <b>$3,107</b> <span class="up">▲ +0.89%</span></span>
+    <span class="ticker-item" data-sym="BRENT">BRENT <b>$74.20</b> <span class="dn">▼ −0.55%</span></span>
+    <span class="ticker-item" data-sym="EURUSD">EUR/USD <b>1.0832</b> <span class="up">▲ +0.14%</span></span>
   </div>
 </div>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo">DOBER<em>WHITE</em></div>
   <div class="nav-links">
@@ -272,20 +236,12 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
   <div class="eyebrow">Inversiones Boutique · Santiago de Chile · LATAM</div>
-  <h1 class="hero-h1">
-    INTELIGENCIA<br>
-    <em>APLICADA.</em><br>
-    CAPITAL<br>
-    <em>BLINDADO.</em>
-  </h1>
-  <p class="hero-sub">
-    Gestión algorítmica, análisis institucional y formación de élite para inversores y operadores de alto nivel en América Latina.
-  </p>
+  <h1 class="hero-h1">INTELIGENCIA<br><em>APLICADA.</em><br>CAPITAL<br><em>BLINDADO.</em></h1>
+  <p class="hero-sub">Gestión algorítmica, análisis institucional y formación de élite para inversores y operadores de alto nivel en América Latina.</p>
   <div class="cta-row">
     <a href="#contacto" class="btn-p">Acceso por invitación</a>
     <a href="#performance" class="btn-s">Ver track record</a>
@@ -296,15 +252,10 @@
     <div class="kpi"><label>Win rate IPSA 2025</label><div class="val pos" id="c3">0%</div></div>
     <div class="kpi"><label>RR medio análisis</label><div class="val" id="c4">0R</div></div>
   </div>
-
-  <!-- BOT CARD -->
   <div class="hero-right">
     <div class="bot-card fi" id="botcard">
       <div class="bot-head">
-        <div>
-          <div class="bot-name">USDJPY · ASV · 1H</div>
-          <div class="bot-period">1 ene 2024 – 3 abr 2026 · TradingView</div>
-        </div>
+        <div><div class="bot-name">USDJPY · ASV · 1H</div><div class="bot-period">1 ene 2024 – 3 abr 2026 · TradingView</div></div>
         <span class="bot-live"><span class="dot"></span>ACTIVO</span>
       </div>
       <div class="bot-ret">+175.26%</div>
@@ -324,7 +275,6 @@
   </div>
 </section>
 
-<!-- PERFORMANCE — BOT CUANTITATIVO -->
 <section id="performance">
   <div class="sec-eye">Sistema Algorítmico</div>
   <h2 class="sec-h2">BOT <em>USDJPY · ASV · 1H</em></h2>
@@ -336,112 +286,38 @@
       <canvas id="mainChart" height="210"></canvas>
     </div>
     <div class="perf-list">
-      <div class="pi">
-        <div class="pi-left"><div class="pi-lbl">Retorno total</div><div class="pi-sub">+$17,638 USD netos</div><div class="bar-t"><div class="bar-f g" style="width:0" data-w="88%"></div></div></div>
-        <div class="pi-val pos">+175.26%</div>
-      </div>
-      <div class="pi">
-        <div class="pi-left"><div class="pi-lbl">vs. Buy &amp; Hold USDJPY</div><div class="pi-sub">El mercado subió 10.91% en el mismo período</div><div class="bar-t"><div class="bar-f g" style="width:0" data-w="95%"></div></div></div>
-        <div class="pi-val pos">+16.05x</div>
-      </div>
-      <div class="pi">
-        <div class="pi-left"><div class="pi-lbl">Factor de Ganancias</div><div class="pi-sub">Profit factor — mayor a 1 es rentable</div><div class="bar-t"><div class="bar-f b" style="width:0" data-w="40%"></div></div></div>
-        <div class="pi-val blue">1.388</div>
-      </div>
-      <div class="pi">
-        <div class="pi-left"><div class="pi-lbl">Win Rate</div><div class="pi-sub">36.91% · 110 de 298 ops ganadoras</div><div class="bar-t"><div class="bar-f b" style="width:0" data-w="37%"></div></div></div>
-        <div class="pi-val amb">36.91%</div>
-      </div>
-      <div class="pi">
-        <div class="pi-left"><div class="pi-lbl">Máximo Drawdown</div><div class="pi-sub">Caída máxima sobre el capital</div><div class="bar-t"><div class="bar-f r" style="width:0" data-w="22%"></div></div></div>
-        <div class="pi-val neg">−20.16%</div>
-      </div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Retorno total</div><div class="pi-sub">+$17,638 USD netos</div><div class="bar-t"><div class="bar-f g" style="width:0" data-w="88%"></div></div></div><div class="pi-val pos">+175.26%</div></div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">vs. Buy &amp; Hold USDJPY</div><div class="pi-sub">El mercado subió 10.91% en el mismo período</div><div class="bar-t"><div class="bar-f g" style="width:0" data-w="95%"></div></div></div><div class="pi-val pos">+16.05x</div></div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Factor de Ganancias</div><div class="pi-sub">Profit factor — mayor a 1 es rentable</div><div class="bar-t"><div class="bar-f b" style="width:0" data-w="40%"></div></div></div><div class="pi-val blue">1.388</div></div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Win Rate</div><div class="pi-sub">36.91% · 110 de 298 ops ganadoras</div><div class="bar-t"><div class="bar-f b" style="width:0" data-w="37%"></div></div></div><div class="pi-val amb">36.91%</div></div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Máximo Drawdown</div><div class="pi-sub">Caída máxima sobre el capital</div><div class="bar-t"><div class="bar-f r" style="width:0" data-w="22%"></div></div></div><div class="pi-val neg">−20.16%</div></div>
     </div>
   </div>
-  <div class="rr-note fi">
-    <p>
-      <strong>Por qué un win rate de 36.91% genera +175%:</strong>
-      el beneficio medio por operación ganadora (+0.58%) supera 2× la pérdida media por operación perdedora (−0.28%).
-      Los sistemas tendenciales profesionales están diseñados exactamente así — cortan pérdidas rápido y dejan correr las ganancias.
-      Un win rate alto con R:R bajo es inferior a un win rate moderado con R:R asimétrico.
-    </p>
-  </div>
+  <div class="rr-note fi"><p><strong>Por qué un win rate de 36.91% genera +175%:</strong> el beneficio medio por operación ganadora (+0.58%) supera 2× la pérdida media por operación perdedora (−0.28%). Los sistemas tendenciales profesionales están diseñados exactamente así — cortan pérdidas rápido y dejan correr las ganancias.</p></div>
 </section>
 
-<!-- ANÁLISIS IPSA 2025 -->
 <section id="ipsa">
   <div class="sec-eye">Análisis Directos · Canal YouTube @ASV_Invest</div>
   <h2 class="sec-h2">IPSA <em>2025</em></h2>
   <p class="sec-body">44 ideas publicadas sobre 23 activos del IPSA. Evaluación mensual, timeframe semanal. Metodología unidireccional long. Datos auditados desde archivo de rendimiento propio.</p>
-
   <div class="ipsa-grid fi">
-    <div class="ipsa-kpi">
-      <div class="ipsa-kpi-lbl">Win Rate</div>
-      <div class="ipsa-kpi-val" id="i1">0%</div>
-      <div class="ipsa-kpi-sub">38 ganadoras · 4 perdedoras · 2 neutras</div>
-    </div>
-    <div class="ipsa-kpi">
-      <div class="ipsa-kpi-lbl">RR Medio (R-múltiplo)</div>
-      <div class="ipsa-kpi-val" id="i2">0R</div>
-      <div class="ipsa-kpi-sub">Mediana: 3.50R · Mejor: 20.34R (BCI)</div>
-    </div>
-    <div class="ipsa-kpi">
-      <div class="ipsa-kpi-lbl">Ideas ≥ 4R</div>
-      <div class="ipsa-kpi-val amb" id="i3">0%</div>
-      <div class="ipsa-kpi-sub">47.7% de ideas en zona "home run"</div>
-    </div>
-    <div class="ipsa-kpi">
-      <div class="ipsa-kpi-lbl">Ideas ≥ 2R</div>
-      <div class="ipsa-kpi-val wht" id="i4">0%</div>
-      <div class="ipsa-kpi-sub">Riesgo medio por idea: 8.72%</div>
-    </div>
+    <div class="ipsa-kpi"><div class="ipsa-kpi-lbl">Win Rate</div><div class="ipsa-kpi-val" id="i1">0%</div><div class="ipsa-kpi-sub">38 ganadoras · 4 perdedoras · 2 neutras</div></div>
+    <div class="ipsa-kpi"><div class="ipsa-kpi-lbl">RR Medio (R-múltiplo)</div><div class="ipsa-kpi-val" id="i2">0R</div><div class="ipsa-kpi-sub">Mediana: 3.50R · Mejor: 20.34R (BCI)</div></div>
+    <div class="ipsa-kpi"><div class="ipsa-kpi-lbl">Ideas ≥ 4R</div><div class="ipsa-kpi-val amb" id="i3">0%</div><div class="ipsa-kpi-sub">47.7% de ideas en zona "home run"</div></div>
+    <div class="ipsa-kpi"><div class="ipsa-kpi-lbl">Ideas ≥ 2R</div><div class="ipsa-kpi-val wht" id="i4">0%</div><div class="ipsa-kpi-sub">Riesgo medio por idea: 8.72%</div></div>
   </div>
-
   <div class="ipsa-detail fi">
     <div class="ipsa-block">
       <div class="ipsa-block-title">Rendimiento por mes · Win Rate y RR medio</div>
-      <div class="month-row">
-        <div class="month-name">Ene 2025</div>
-        <div class="month-wr pos">81.8%</div>
-        <div class="month-rr" style="color:var(--green)">6.33R</div>
-      </div>
-      <div class="month-row">
-        <div class="month-name">Feb 2025</div>
-        <div class="month-wr pos">83.3%</div>
-        <div class="month-rr" style="color:var(--green)">3.25R</div>
-      </div>
-      <div class="month-row">
-        <div class="month-name">Abr 2025</div>
-        <div class="month-wr pos">80.0%</div>
-        <div class="month-rr" style="color:var(--green)">2.77R</div>
-      </div>
-      <div class="month-row">
-        <div class="month-name">May 2025</div>
-        <div class="month-wr" style="color:var(--amber)">50.0%</div>
-        <div class="month-rr" style="color:var(--amber)">1.71R</div>
-      </div>
-      <div class="month-row">
-        <div class="month-name">Ago 2025</div>
-        <div class="month-wr pos">90.9%</div>
-        <div class="month-rr" style="color:var(--green)">3.46R</div>
-      </div>
-      <div class="month-row">
-        <div class="month-name">Sep 2025</div>
-        <div class="month-wr pos">100%</div>
-        <div class="month-rr" style="color:var(--green)">4.30R</div>
-      </div>
-      <div class="month-row">
-        <div class="month-name">Oct 2025</div>
-        <div class="month-wr pos">100%</div>
-        <div class="month-rr" style="color:var(--green)">2.57R</div>
-      </div>
-      <div class="month-row">
-        <div class="month-name">Nov 2025</div>
-        <div class="month-wr pos">100%</div>
-        <div class="month-rr" style="color:var(--green)">10.07R</div>
-      </div>
+      <div class="month-row"><div class="month-name">Ene 2025</div><div class="month-wr pos">81.8%</div><div class="month-rr" style="color:var(--green)">6.33R</div></div>
+      <div class="month-row"><div class="month-name">Feb 2025</div><div class="month-wr pos">83.3%</div><div class="month-rr" style="color:var(--green)">3.25R</div></div>
+      <div class="month-row"><div class="month-name">Abr 2025</div><div class="month-wr pos">80.0%</div><div class="month-rr" style="color:var(--green)">2.77R</div></div>
+      <div class="month-row"><div class="month-name">May 2025</div><div class="month-wr" style="color:var(--amber)">50.0%</div><div class="month-rr" style="color:var(--amber)">1.71R</div></div>
+      <div class="month-row"><div class="month-name">Ago 2025</div><div class="month-wr pos">90.9%</div><div class="month-rr" style="color:var(--green)">3.46R</div></div>
+      <div class="month-row"><div class="month-name">Sep 2025</div><div class="month-wr pos">100%</div><div class="month-rr" style="color:var(--green)">4.30R</div></div>
+      <div class="month-row"><div class="month-name">Oct 2025</div><div class="month-wr pos">100%</div><div class="month-rr" style="color:var(--green)">2.57R</div></div>
+      <div class="month-row"><div class="month-name">Nov 2025</div><div class="month-wr pos">100%</div><div class="month-rr" style="color:var(--green)">10.07R</div></div>
     </div>
-
     <div>
       <div class="ipsa-block" style="margin-bottom:12px">
         <div class="ipsa-block-title">Top activos por RR medio (≥2 apariciones)</div>
@@ -454,8 +330,6 @@
       </div>
     </div>
   </div>
-
-  <!-- SIMULACIÓN -->
   <div class="sim-card fi">
     <div style="font-family:var(--font-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver);margin-bottom:20px">Simulación monetaria · Riesgo fijo 1% por idea · Capital inicial $20.000.000 CLP</div>
     <div class="sim-row">
@@ -465,60 +339,21 @@
       <div class="sim-kpi"><label>Max. Drawdown</label><div class="sv wht">−0.62%</div></div>
       <div class="sim-kpi"><label>Prom. neto / idea</label><div class="sv wht">$840.153</div></div>
     </div>
-    <div class="sim-note">
-      Supuesto: riesgo fijo 1% del capital inicial por operación ($200.000 CLP). n=44 ideas 2025.
-      Costos aplicados: $5.000 entrada + $5.000 salida + 0.8% del monto arriesgado por lado.
-      Costos totales: $580.800 CLP. Datos desde ASV_YT_PERFORMANCE.xlsx.
-    </div>
+    <div class="sim-note">Supuesto: riesgo fijo 1% del capital inicial por operación ($200.000 CLP). n=44 ideas 2025. Costos aplicados: $5.000 entrada + $5.000 salida + 0.8% del monto arriesgado por lado. Costos totales: $580.800 CLP. Datos desde ASV_YT_PERFORMANCE.xlsx.</div>
   </div>
 </section>
 
-<!-- SERVICIOS -->
 <section id="servicios">
   <div class="sec-eye">Propuesta de valor</div>
   <h2 class="sec-h2">TRES <em>VERTICALES</em></h2>
   <p class="sec-body">Un ecosistema de servicios con track record demostrable en cada área, diseñado para distintos perfiles de cliente.</p>
   <div class="srv-grid fi">
-    <div class="srv-card">
-      <div class="srv-num">01</div>
-      <div class="srv-icon">⚡</div>
-      <div class="srv-title">TRADING ALGORÍTMICO</div>
-      <p class="srv-desc">Bot cuantitativo propio con 298 operaciones auditadas y +175% de retorno total sobre USDJPY. Gestión de portafolios con parámetros de riesgo definidos por contrato. Arquitectura MAM.</p>
-      <div class="srv-tags">
-        <span class="srv-tag">Bot 24/7</span>
-        <span class="srv-tag">MAM</span>
-        <span class="srv-tag">Risk management</span>
-        <span class="srv-tag">Reporting</span>
-      </div>
-    </div>
-    <div class="srv-card">
-      <div class="srv-num">02</div>
-      <div class="srv-icon">◎</div>
-      <div class="srv-title">ANÁLISIS INSTITUCIONAL</div>
-      <p class="srv-desc">Reportes macro y de mercado para brokers, family offices y conferencias. 86.4% de win rate verificado en IPSA 2025 con RR medio de 4.27R. Ponencias y roadshows.</p>
-      <div class="srv-tags">
-        <span class="srv-tag">Brokers</span>
-        <span class="srv-tag">Conferencias</span>
-        <span class="srv-tag">Macro LATAM</span>
-        <span class="srv-tag">Roadshows</span>
-      </div>
-    </div>
-    <div class="srv-card">
-      <div class="srv-num">03</div>
-      <div class="srv-icon">▲</div>
-      <div class="srv-title">FORMACIÓN DE ÉLITE</div>
-      <p class="srv-desc">Programas de formación avanzada en trading cuantitativo y análisis de mercados para profesionales con base previa. Misma metodología que genera los resultados públicos del canal.</p>
-      <div class="srv-tags">
-        <span class="srv-tag">Trading cuantitativo</span>
-        <span class="srv-tag">Análisis avanzado</span>
-        <span class="srv-tag">Portfolio</span>
-        <span class="srv-tag">Solo referidos</span>
-      </div>
-    </div>
+    <div class="srv-card"><div class="srv-num">01</div><div class="srv-icon">⚡</div><div class="srv-title">TRADING ALGORÍTMICO</div><p class="srv-desc">Bot cuantitativo propio con 298 operaciones auditadas y +175% de retorno total sobre USDJPY. Gestión de portafolios con parámetros de riesgo definidos por contrato. Arquitectura MAM.</p><div class="srv-tags"><span class="srv-tag">Bot 24/7</span><span class="srv-tag">MAM</span><span class="srv-tag">Risk management</span><span class="srv-tag">Reporting</span></div></div>
+    <div class="srv-card"><div class="srv-num">02</div><div class="srv-icon">◎</div><div class="srv-title">ANÁLISIS INSTITUCIONAL</div><p class="srv-desc">Reportes macro y de mercado para brokers, family offices y conferencias. 86.4% de win rate verificado en IPSA 2025 con RR medio de 4.27R. Ponencias y roadshows.</p><div class="srv-tags"><span class="srv-tag">Brokers</span><span class="srv-tag">Conferencias</span><span class="srv-tag">Macro LATAM</span><span class="srv-tag">Roadshows</span></div></div>
+    <div class="srv-card"><div class="srv-num">03</div><div class="srv-icon">▲</div><div class="srv-title">FORMACIÓN DE ÉLITE</div><p class="srv-desc">Programas de formación avanzada en trading cuantitativo y análisis de mercados para profesionales con base previa. Misma metodología que genera los resultados publicados del canal.</p><div class="srv-tags"><span class="srv-tag">Trading cuantitativo</span><span class="srv-tag">Análisis avanzado</span><span class="srv-tag">Portfolio</span><span class="srv-tag">Solo referidos</span></div></div>
   </div>
 </section>
 
-<!-- FILOSOFÍA -->
 <section id="filosofia">
   <div class="phil-bg"></div>
   <div class="phil-layout">
@@ -537,7 +372,6 @@
   </div>
 </section>
 
-<!-- ANÁLISIS INSTITUCIONAL -->
 <section id="analisis">
   <div class="sec-eye">Para Instituciones y Profesionales</div>
   <h2 class="sec-h2">ANÁLISIS <em>DE MERCADO</em></h2>
@@ -550,154 +384,200 @@
     <div class="anal-quote fi">
       <p class="aq-text">"Un buen análisis no predice el futuro. Define con precisión el escenario de riesgo y le da al inversor la ventaja de actuar antes que el mercado."</p>
       <div style="font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;color:var(--silver);text-transform:uppercase;margin-bottom:14px">Clientes y contextos</div>
-      <div class="aq-tags">
-        <span class="aq-tag">Brokers retail LATAM</span>
-        <span class="aq-tag">Family offices</span>
-        <span class="aq-tag">Fondos de inversión</span>
-        <span class="aq-tag">Conferencias</span>
-        <span class="aq-tag">Medios especializados</span>
-        <span class="aq-tag">Asesores independientes</span>
-      </div>
+      <div class="aq-tags"><span class="aq-tag">Brokers retail LATAM</span><span class="aq-tag">Family offices</span><span class="aq-tag">Fondos de inversión</span><span class="aq-tag">Conferencias</span><span class="aq-tag">Medios especializados</span><span class="aq-tag">Asesores independientes</span></div>
     </div>
   </div>
 </section>
 
-<!-- FORMACIÓN -->
 <section id="educacion">
   <div class="sec-eye">Formación Avanzada</div>
   <h2 class="sec-h2">CONOCIMIENTO <em>SIN</em> FILTROS</h2>
   <p class="sec-body" style="margin-bottom:8px">No formamos principiantes. Trabajamos con profesionales que ya operan y quieren sistematizar su metodología con herramientas cuantitativas reales — las mismas que generan los resultados publicados.</p>
   <div class="edu-tiers fi">
-    <div class="edu-tier">
-      <div class="edu-num">I</div>
-      <div><div class="edu-title">LECTURA DE MERCADO Y ANÁLISIS TÉCNICO AVANZADO</div><p class="edu-desc">Order flow, estructura de mercado, niveles institucionales. Para traders con base técnica que quieren sistematizar el análisis.</p></div>
-      <span class="edu-badge">Presencial / Online</span>
-    </div>
-    <div class="edu-tier feat">
-      <div class="edu-num">II</div>
-      <div><div class="edu-title">CONSTRUCCIÓN DE SISTEMAS ALGORÍTMICOS</div><p class="edu-desc">De la idea a la estrategia automatizada: backtesting, optimización, gestión del riesgo cuantitativo. El mismo proceso que originó el USDJPY_ASV_1H.</p></div>
-      <span class="edu-badge feat">Programa flagship</span>
-    </div>
-    <div class="edu-tier">
-      <div class="edu-num">III</div>
-      <div><div class="edu-title">MACRO LATAM PARA INVERSORES</div><p class="edu-desc">Economía política regional, tipos de cambio, renta fija local, flujos de capital. Para portafolios expuestos a LATAM.</p></div>
-      <span class="edu-badge">Solo por referidos</span>
-    </div>
+    <div class="edu-tier"><div class="edu-num">I</div><div><div class="edu-title">LECTURA DE MERCADO Y ANÁLISIS TÉCNICO AVANZADO</div><p class="edu-desc">Order flow, estructura de mercado, niveles institucionales. Para traders con base técnica que quieren sistematizar el análisis.</p></div><span class="edu-badge">Presencial / Online</span></div>
+    <div class="edu-tier feat"><div class="edu-num">II</div><div><div class="edu-title">CONSTRUCCIÓN DE SISTEMAS ALGORÍTMICOS</div><p class="edu-desc">De la idea a la estrategia automatizada: backtesting, optimización, gestión del riesgo cuantitativo. El mismo proceso que originó el USDJPY_ASV_1H.</p></div><span class="edu-badge feat">Programa flagship</span></div>
+    <div class="edu-tier"><div class="edu-num">III</div><div><div class="edu-title">MACRO LATAM PARA INVERSORES</div><p class="edu-desc">Economía política regional, tipos de cambio, renta fija local, flujos de capital. Para portafolios expuestos a LATAM.</p></div><span class="edu-badge">Solo por referidos</span></div>
   </div>
 </section>
 
-<!-- MERCADOS -->
 <section id="mercados">
   <div class="sec-eye">Radar de Mercados</div>
   <h2 class="sec-h2">COBERTURA <em>GLOBAL</em></h2>
   <div class="mkt-grid fi">
-    <div class="mkt-tile"><div class="mkt-name">S&amp;P 500</div><div class="mkt-val">5,218</div><div class="mkt-chg pos">▲ +0.47%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,33 12,26 22,28 33,17 43,21 53,9 62,13 75,7" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
-    <div class="mkt-tile"><div class="mkt-name">USDJPY</div><div class="mkt-val">148.92</div><div class="mkt-chg neg">▼ −0.22%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,7 12,11 22,9 33,17 43,13 53,21 62,27 75,31" fill="none" stroke="#D95858" stroke-width="1.5"/></svg></div>
-    <div class="mkt-tile"><div class="mkt-name">BTC / USD</div><div class="mkt-val">$83,420</div><div class="mkt-chg neg">▼ −1.12%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,9 12,13 22,17 33,14 43,19 53,21 62,25 75,29" fill="none" stroke="#D95858" stroke-width="1.5"/></svg></div>
-    <div class="mkt-tile"><div class="mkt-name">USD / CLP</div><div class="mkt-val">$975</div><div class="mkt-chg neg">▼ −0.38%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,7 12,11 22,9 33,17 43,13 53,21 62,27 75,31" fill="none" stroke="#D95858" stroke-width="1.5"/></svg></div>
-    <div class="mkt-tile"><div class="mkt-name">IPSA Chile</div><div class="mkt-val">7,102</div><div class="mkt-chg pos">▲ +0.21%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,29 12,25 22,27 33,21 43,17 53,19 62,13 75,11" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
-    <div class="mkt-tile"><div class="mkt-name">ORO XAU</div><div class="mkt-val">$3,107</div><div class="mkt-chg pos">▲ +0.89%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,31 12,27 22,21 33,17 43,15 53,11 62,9 75,5" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
-    <div class="mkt-tile"><div class="mkt-name">NASDAQ 100</div><div class="mkt-val">16,341</div><div class="mkt-chg pos">▲ +0.63%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,27 12,21 22,23 33,15 43,17 53,11 62,7 75,5" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
-    <div class="mkt-tile"><div class="mkt-name">EUR / USD</div><div class="mkt-val">1.0832</div><div class="mkt-chg pos">▲ +0.14%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,21 12,19 22,21 33,17 43,15 53,17 62,13 75,11" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="SP500"><div class="mkt-name">S&amp;P 500</div><div class="mkt-val">5,218</div><div class="mkt-chg pos">▲ +0.47%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,33 12,26 22,28 33,17 43,21 53,9 62,13 75,7" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="USDJPY"><div class="mkt-name">USDJPY</div><div class="mkt-val">148.92</div><div class="mkt-chg neg">▼ −0.22%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,7 12,11 22,9 33,17 43,13 53,21 62,27 75,31" fill="none" stroke="#D95858" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="BTC"><div class="mkt-name">BTC / USD</div><div class="mkt-val">$83,420</div><div class="mkt-chg neg">▼ −1.12%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,9 12,13 22,17 33,14 43,19 53,21 62,25 75,29" fill="none" stroke="#D95858" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="USDCLP"><div class="mkt-name">USD / CLP</div><div class="mkt-val">$975</div><div class="mkt-chg neg">▼ −0.38%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,7 12,11 22,9 33,17 43,13 53,21 62,27 75,31" fill="none" stroke="#D95858" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="IPSA"><div class="mkt-name">IPSA Chile</div><div class="mkt-val">7,102</div><div class="mkt-chg pos">▲ +0.21%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,29 12,25 22,27 33,21 43,17 53,19 62,13 75,11" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="GOLD"><div class="mkt-name">ORO XAU</div><div class="mkt-val">$3,107</div><div class="mkt-chg pos">▲ +0.89%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,31 12,27 22,21 33,17 43,15 53,11 62,9 75,5" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="NASDAQ"><div class="mkt-name">NASDAQ 100</div><div class="mkt-val">16,341</div><div class="mkt-chg pos">▲ +0.63%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,27 12,21 22,23 33,15 43,17 53,11 62,7 75,5" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="EURUSD"><div class="mkt-name">EUR / USD</div><div class="mkt-val">1.0832</div><div class="mkt-chg pos">▲ +0.14%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,21 12,19 22,21 33,17 43,15 53,17 62,13 75,11" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
   </div>
 </section>
 
-<!-- CONTACTO -->
 <section id="contacto">
   <div class="contact-glow"></div>
   <div style="position:relative">
-    <div class="c-tag">Acceso por referencia</div>
-    <h2 class="contact-h2">HABLEMOS<br><em>EN PRIVADO</em></h2>
-    <p class="contact-sub">Atendemos a un número limitado de clientes e instituciones por año.<br>Las conversaciones son confidenciales y sin compromiso.</p>
-    <a href="mailto:contacto@doberwhite.com" class="btn-p" style="display:inline-block">contacto@doberwhite.com</a>
+    <div class="c-tag">Círculo cerrado</div>
+    <h2 class="contact-h2">ACCESO POR<br><em>REFERENCIA</em></h2>
+    <p class="contact-sub" style="max-width:540px;margin-left:auto;margin-right:auto;line-height:1.75;">El acceso a Doberwhite es por referencia directa.<br>Si alguien del círculo ya te mencionó,<br>nos pondremos en contacto contigo.</p>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="f-logo">DOBERWHITE</div>
-  <div class="f-legal">
-    Santiago de Chile · LATAM<br>
-    Los rendimientos pasados no garantizan resultados futuros. Toda inversión conlleva riesgos.<br>
-    © 2025 Doberwhite Capital. Todos los derechos reservados.
-  </div>
+  <div class="f-legal">Santiago de Chile · LATAM<br>Los rendimientos pasados no garantizan resultados futuros. Toda inversión conlleva riesgos.<br>© 2025 Doberwhite Capital. Todos los derechos reservados.</div>
 </footer>
 
 <script>
-// Fade-in
+// ── Fade-in ────────────────────────────────────────────────────
 const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.12});
 document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
-
-// Bars
 const bObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.querySelectorAll('.bar-f').forEach(b=>{setTimeout(()=>b.style.width=b.dataset.w,180)})}),{threshold:.25});
 document.querySelectorAll('.perf-list').forEach(el=>bObs.observe(el));
 
-// Counters
+// ── Counters ───────────────────────────────────────────────────
 function count(el,to,dec,pre,suf){let s=null,dur=1600;requestAnimationFrame(function f(ts){if(!s)s=ts;const p=Math.min((ts-s)/dur,1);el.textContent=pre+(p*to).toFixed(dec)+suf;if(p<1)requestAnimationFrame(f)})}
-
 setTimeout(()=>{
   count(document.getElementById('c1'),175.26,2,'+','%');
   count(document.getElementById('c2'),298,0,'','');
   count(document.getElementById('c3'),86.4,1,'','%');
   count(document.getElementById('c4'),4.27,2,'','R');
-  // IPSA counters
   count(document.getElementById('i1'),86.4,1,'','%');
   count(document.getElementById('i2'),4.27,2,'','R');
   count(document.getElementById('i3'),47.7,1,'','%');
   count(document.getElementById('i4'),59.1,1,'','%');
-  // Sim counter
   count(document.getElementById('sim1'),56966747,0,'$','');
 },500);
-
 setTimeout(()=>document.getElementById('botcard').classList.add('on'),350);
 
-// Mini equity (hero) — curva creciente con retroceso inicial real del bot
+// ── Charts ─────────────────────────────────────────────────────
 (function(){
   const cv=document.getElementById('miniChart');if(!cv)return;
-  const ctx=cv.getContext('2d'),W=cv.offsetWidth||316,H=72;
-  cv.width=W;cv.height=H;
-  // Simula la forma real: baja inicial pequeña, luego tendencia alcista fuerte
+  const ctx=cv.getContext('2d'),W=cv.offsetWidth||316,H=72;cv.width=W;cv.height=H;
   const d=[100,97,99,103,107,105,112,110,117,121,118,127,133,130,140,148,153,161,158,167,175,173,180,188,193,200,198,207,215,222,228,235,241,238,248,256,262,270,265,275];
   const mn=Math.min(...d)-3,mx=Math.max(...d)+3;
   const px=i=>(i/(d.length-1))*W,py=v=>H-((v-mn)/(mx-mn))*H;
-  const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,'rgba(40,198,138,.2)');g.addColorStop(1,'rgba(40,198,138,0)');
-  ctx.beginPath();ctx.moveTo(px(0),py(d[0]));
-  d.forEach((v,i)=>ctx.lineTo(px(i),py(v)));
-  ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
-  ctx.fillStyle=g;ctx.fill();
-  ctx.beginPath();ctx.moveTo(px(0),py(d[0]));
-  d.forEach((v,i)=>ctx.lineTo(px(i),py(v)));
-  ctx.strokeStyle='#28C68A';ctx.lineWidth=1.8;ctx.stroke();
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(40,198,138,.2)');g.addColorStop(1,'rgba(40,198,138,0)');
+  ctx.beginPath();ctx.moveTo(px(0),py(d[0]));d.forEach((v,i)=>ctx.lineTo(px(i),py(v)));ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();ctx.moveTo(px(0),py(d[0]));d.forEach((v,i)=>ctx.lineTo(px(i),py(v)));ctx.strokeStyle='#28C68A';ctx.lineWidth=1.8;ctx.stroke();
 })();
-
-// Main chart — curva real bot
 (function(){
   const cv=document.getElementById('mainChart');if(!cv)return;
-  const ctx=cv.getContext('2d'),W=cv.offsetWidth||470,H=210;
-  cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d'),W=cv.offsetWidth||470,H=210;cv.width=W;cv.height=H;
   const d=[100,97,99,104,108,105,114,111,119,124,120,130,137,133,142,150,155,163,159,168,177,174,183,191,198,206,202,212,221,228,236,243,250,246,258,267,274,275];
   const mn=90,mx=285;
   const px=i=>14+(i/(d.length-1))*(W-28),py=v=>10+(1-(v-mn)/(mx-mn))*(H-26);
   ctx.strokeStyle='rgba(180,192,210,.08)';ctx.lineWidth=1;
-  [0,25,50,75,100].forEach(p=>{
-    const y=10+(1-p/100)*(H-26);
-    ctx.beginPath();ctx.moveTo(14,y);ctx.lineTo(W-14,y);ctx.stroke();
-    ctx.fillStyle='rgba(180,192,210,.3)';ctx.font='9px DM Mono,monospace';
-    ctx.fillText(p+'%',16,y-3);
-  });
-  const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,'rgba(40,198,138,.16)');g.addColorStop(1,'rgba(40,198,138,0)');
-  ctx.beginPath();ctx.moveTo(px(0),py(d[0]));
-  d.forEach((v,i)=>ctx.lineTo(px(i),py(v)));
-  ctx.lineTo(px(d.length-1),H);ctx.lineTo(px(0),H);ctx.closePath();
-  ctx.fillStyle=g;ctx.fill();
-  ctx.beginPath();ctx.moveTo(px(0),py(d[0]));
-  d.forEach((v,i)=>ctx.lineTo(px(i),py(v)));
-  ctx.strokeStyle='#28C68A';ctx.lineWidth=2.5;ctx.stroke();
-  // Label final
-  ctx.fillStyle='#28C68A';ctx.font='500 10px DM Mono,monospace';
-  ctx.fillText('+175.26%',W-68,py(d[d.length-1])-8);
+  [0,25,50,75,100].forEach(p=>{const y=10+(1-p/100)*(H-26);ctx.beginPath();ctx.moveTo(14,y);ctx.lineTo(W-14,y);ctx.stroke();ctx.fillStyle='rgba(180,192,210,.3)';ctx.font='9px DM Mono,monospace';ctx.fillText(p+'%',16,y-3);});
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(40,198,138,.16)');g.addColorStop(1,'rgba(40,198,138,0)');
+  ctx.beginPath();ctx.moveTo(px(0),py(d[0]));d.forEach((v,i)=>ctx.lineTo(px(i),py(v)));ctx.lineTo(px(d.length-1),H);ctx.lineTo(px(0),H);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();ctx.moveTo(px(0),py(d[0]));d.forEach((v,i)=>ctx.lineTo(px(i),py(v)));ctx.strokeStyle='#28C68A';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.fillStyle='#28C68A';ctx.font='500 10px DM Mono,monospace';ctx.fillText('+175.26%',W-68,py(d[d.length-1])-8);
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+//  DOBERWHITE — LIVE MARKET DATA ENGINE
+//  100% sin cuentas ni claves. Funciona al subir el archivo.
+//
+//  Fuentes:
+//  ✅ BTC/USD     → CoinGecko       (público, sin registro)
+//  ✅ USDJPY      → ExchangeRate API (público, sin registro)
+//  ✅ USD/CLP     → ExchangeRate API (público, sin registro)
+//  ✅ EUR/USD     → ExchangeRate API (público, sin registro)
+//  ✅ S&P 500     → Yahoo Finance    (público, sin registro)
+//  ✅ NASDAQ      → Yahoo Finance    (público, sin registro)
+//  ✅ ORO XAU     → Yahoo Finance    (público, sin registro)
+//  ✅ BRENT       → Yahoo Finance    (público, sin registro)
+//  ✅ IPSA        → Yahoo Finance    (público, sin registro)
+// ═══════════════════════════════════════════════════════════════
+(function(){
+
+  const REFRESH_MS = 60000; // actualiza cada 60 segundos
+  const PROXY      = 'https://corsproxy.io/?url='; // proxy CORS gratuito, sin registro
+
+  // ── Actualiza ticker (×2) y market tile ─────────────────────
+  function updateSym(sym, priceStr, chgPct) {
+    var pos    = chgPct >= 0;
+    var chgStr = (pos ? '▲ +' : '▼ ') + Math.abs(chgPct).toFixed(2) + '%';
+    document.querySelectorAll('.ticker-item[data-sym="' + sym + '"]').forEach(function(el) {
+      var b = el.querySelector('b');
+      var s = el.querySelector('span');
+      if (b) b.textContent = priceStr;
+      if (s) { s.textContent = chgStr; s.className = pos ? 'up' : 'dn'; }
+    });
+    var tile = document.querySelector('.mkt-tile[data-sym="' + sym + '"]');
+    if (tile) {
+      var v = tile.querySelector('.mkt-val');
+      var c = tile.querySelector('.mkt-chg');
+      if (v) v.textContent = priceStr;
+      if (c) { c.textContent = chgStr; c.className = 'mkt-chg ' + (pos ? 'pos' : 'neg'); }
+    }
+  }
+
+  // ── % cambio forex (compara vs fetch anterior en localStorage) ─
+  function forexChg(key, current) {
+    var stored = JSON.parse(localStorage.getItem('dw_' + key) || 'null');
+    localStorage.setItem('dw_' + key, JSON.stringify({ r: current, t: Date.now() }));
+    if (stored && stored.r) return (current - stored.r) / stored.r * 100;
+    return 0;
+  }
+
+  // ── BTC via CoinGecko (sin clave, sin registro) ──────────────
+  async function fetchBTC() {
+    try {
+      var r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
+      var d = await r.json();
+      updateSym('BTC', '$' + Math.round(d.bitcoin.usd).toLocaleString('en-US'), d.bitcoin.usd_24h_change || 0);
+    } catch(e) {}
+  }
+
+  // ── Forex via ExchangeRate API (sin clave, sin registro) ─────
+  async function fetchForex() {
+    try {
+      var r = await fetch('https://open.er-api.com/v6/latest/USD');
+      var d = await r.json();
+      if (d.result !== 'success') return;
+      var clp = d.rates.CLP;
+      var jpy = d.rates.JPY;
+      var eur = 1 / d.rates.EUR;
+      updateSym('USDCLP', '$' + Math.round(clp).toLocaleString('en-US'), forexChg('clp', clp));
+      updateSym('USDJPY', jpy.toFixed(2),  forexChg('jpy', jpy));
+      updateSym('EURUSD', eur.toFixed(4),  forexChg('eur', eur));
+    } catch(e) {}
+  }
+
+  // ── Yahoo Finance via proxy CORS (sin clave, sin registro) ───
+  // Cubre S&P500, NASDAQ, IPSA, Oro, Brent — todos con precio y % cambio real
+  async function fetchYahoo(ySymbol, dwSym, fmt) {
+    try {
+      var url = 'https://query2.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(ySymbol) + '?interval=1d&range=1d';
+      var r   = await fetch(PROXY + encodeURIComponent(url));
+      var d   = await r.json();
+      var meta = d.chart.result[0].meta;
+      var price = meta.regularMarketPrice;
+      var chg   = meta.regularMarketChangePercent || 0;
+      if (!price || price === 0) return;
+      updateSym(dwSym, fmt(price), chg);
+    } catch(e) {}
+  }
+
+  // ── Ciclo de actualización ───────────────────────────────────
+  async function refresh() {
+    // Sin cuenta, sin clave — todo automático
+    await fetchBTC();
+    await fetchForex();
+    await fetchYahoo('^GSPC', 'SP500',  function(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); });
+    await fetchYahoo('^IXIC', 'NASDAQ', function(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); });
+    await fetchYahoo('^IPSA', 'IPSA',   function(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); });
+    await fetchYahoo('GC=F',  'GOLD',   function(n){ return '$' + Math.round(n).toLocaleString('en-US'); });
+    await fetchYahoo('BZ=F',  'BRENT',  function(n){ return '$' + n.toFixed(2); });
+  }
+
+  refresh();
+  setInterval(refresh, REFRESH_MS);
+
 })();
 </script>
 </body>
