@@ -1,194 +1,860 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>DoberWhite Capital — Inicio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="assets/css/main.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOBERWHITE — Inversiones Boutique LATAM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:    #05070B;
+    --deep:     #0B0D12;
+    --card:     #0F1116;
+    --border:   rgba(180,192,210,0.14);
+    --silver:   #8FA4BB;
+    --silver-lt:#B8CCD8;
+    --silver-dm:rgba(143,164,187,0.45);
+    --white:    #EDF0F4;
+    --muted:    rgba(237,240,244,0.42);
+    --blue:     #3B7DD8;
+    --green:    #28C68A;
+    --red:      #D95858;
+    --amber:    #D4A843;
+    --font-d:'Bebas Neue',sans-serif;
+    --font-s:'Cormorant Garamond',Georgia,serif;
+    --font-m:'DM Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:var(--font-s);overflow-x:hidden}
+  .ticker-wrap{background:var(--deep);border-bottom:1px solid var(--border);overflow:hidden;height:30px;display:flex;align-items:center;position:fixed;top:0;left:0;right:0;z-index:100}
+  .ticker-track{display:flex;white-space:nowrap;animation:ticker 40s linear infinite}
+  .ticker-item{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-m);font-size:10.5px;letter-spacing:.05em;color:var(--silver);padding:0 26px;border-right:1px solid var(--border)}
+  .ticker-item b{color:var(--white);font-weight:500}
+  .up{color:var(--green)} .dn{color:var(--red)}
+  @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  nav{position:fixed;top:30px;left:0;right:0;z-index:99;display:flex;justify-content:space-between;align-items:center;padding:18px 64px;background:linear-gradient(to bottom,rgba(5,7,11,.97) 65%,transparent);backdrop-filter:blur(6px)}
+  .nav-logo{font-family:var(--font-d);font-size:24px;letter-spacing:.15em;color:var(--white)}
+  .nav-logo em{font-style:normal;color:var(--silver-lt)}
+  .nav-links{display:flex;gap:32px;align-items:center}
+  .nav-links a{font-family:var(--font-m);font-size:10.5px;letter-spacing:.13em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+  .nav-links a:hover{color:var(--white)}
+  .nav-cta{font-family:var(--font-m);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--silver-lt);border:1px solid var(--silver);padding:8px 22px;text-decoration:none;transition:all .2s}
+  .nav-cta:hover{background:var(--silver);color:var(--black)}
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:130px 64px 90px;overflow:hidden}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(180,192,210,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(180,192,210,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 75% 65% at 50% 50%,black 25%,transparent 100%)}
+  .hero-glow{position:absolute;width:650px;height:650px;border-radius:50%;background:radial-gradient(circle,rgba(59,125,216,.06) 0%,transparent 68%);top:-80px;right:-60px;pointer-events:none}
+  .eyebrow{font-family:var(--font-m);font-size:10.5px;letter-spacing:.22em;color:var(--silver);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:12px}
+  .eyebrow::before{content:'';width:36px;height:1px;background:var(--silver)}
+  .hero-h1{font-family:var(--font-d);font-size:clamp(68px,9.5vw,136px);line-height:.92;letter-spacing:.06em;color:var(--white);margin-bottom:6px}
+  .hero-h1 em{font-style:normal;color:var(--silver-lt)}
+  .hero-sub{font-family:var(--font-s);font-size:clamp(17px,2vw,24px);font-weight:300;font-style:italic;color:var(--muted);margin-top:18px;margin-bottom:46px;max-width:500px;line-height:1.55}
+  .cta-row{display:flex;gap:22px;align-items:center}
+  .btn-p{font-family:var(--font-m);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;background:var(--silver-lt);color:var(--black);padding:15px 34px;text-decoration:none;transition:background .2s}
+  .btn-p:hover{background:var(--white)}
+  .btn-s{font-family:var(--font-m);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:7px;transition:color .2s}
+  .btn-s:hover{color:var(--white)}
+  .btn-s::after{content:'→'}
+  .hero-kpis{display:flex;gap:48px;margin-top:76px;padding-top:36px;border-top:1px solid var(--border)}
+  .kpi label{font-family:var(--font-m);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+  .kpi .val{font-family:var(--font-d);font-size:34px;letter-spacing:.04em;color:var(--white)}
+  .kpi .val.pos{color:var(--green)}
+  .hero-right{position:absolute;right:64px;top:50%;transform:translateY(-50%);width:370px}
+  .bot-card{background:var(--card);border:1px solid var(--border);padding:26px;position:relative;overflow:hidden}
+  .bot-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green))}
+  .bot-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+  .bot-name{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;color:var(--silver);text-transform:uppercase}
+  .bot-period{font-family:var(--font-m);font-size:9px;letter-spacing:.1em;color:var(--muted);margin-top:3px}
+  .bot-live{display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:9.5px;color:var(--green);letter-spacing:.1em}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
+  .bot-ret{font-family:var(--font-d);font-size:50px;color:var(--green);letter-spacing:.04em;line-height:1;margin-bottom:2px}
+  .bot-ret-lbl{font-family:var(--font-m);font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+  .bot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .bm{background:rgba(255,255,255,.03);padding:10px;border:1px solid rgba(255,255,255,.05)}
+  .bm label{font-family:var(--font-m);font-size:8.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:3px}
+  .bm .mv{font-family:var(--font-m);font-size:14px;font-weight:500;color:var(--white)}
+  .bm .mv.pos{color:var(--green)} .bm .mv.neg{color:var(--red)} .bm .mv.amber{color:var(--amber)}
+  .note-inline{font-family:var(--font-m);font-size:8.5px;color:var(--muted);letter-spacing:.08em;line-height:1.5;margin-bottom:12px;border-top:1px solid var(--border);padding-top:10px}
+  .chart-lbl{font-family:var(--font-m);font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+  section{padding:100px 64px}
+  .sec-eye{font-family:var(--font-m);font-size:10px;letter-spacing:.22em;color:var(--silver);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:11px}
+  .sec-eye::before{content:'';width:28px;height:1px;background:var(--silver)}
+  .sec-h2{font-family:var(--font-d);font-size:clamp(40px,4.8vw,70px);letter-spacing:.06em;color:var(--white);line-height:1;margin-bottom:22px}
+  .sec-h2 em{font-style:normal;color:var(--silver-lt)}
+  .sec-body{font-family:var(--font-s);font-size:18px;font-weight:300;line-height:1.72;color:var(--muted);max-width:560px}
+  #performance{background:var(--deep)}
+  .perf-label{font-family:var(--font-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver);margin-bottom:20px;padding:10px 14px;border:1px solid var(--border);display:inline-block}
+  .perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-top:16px;align-items:start}
+  .chart-wrap{background:var(--card);border:1px solid var(--border);padding:26px;position:relative}
+  .chart-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--silver),transparent)}
+  .perf-list{display:flex;flex-direction:column;gap:20px}
+  .pi{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--border)}
+  .pi:last-child{border-bottom:none}
+  .pi-left .pi-lbl{font-family:var(--font-m);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+  .pi-left .pi-sub{font-family:var(--font-m);font-size:9px;color:rgba(237,240,244,.25);letter-spacing:.08em;margin-top:3px}
+  .bar-t{height:2px;background:rgba(255,255,255,.06);margin-top:6px;position:relative;width:160px}
+  .bar-f{height:100%;position:absolute;left:0;top:0;transition:width 1.4s ease}
+  .bar-f.g{background:var(--green)} .bar-f.b{background:var(--silver)} .bar-f.r{background:var(--red)}
+  .pi-val{font-family:var(--font-d);font-size:28px;letter-spacing:.04em}
+  .pi-val.pos{color:var(--green)} .pi-val.blue{color:var(--silver-lt)} .pi-val.wht{color:var(--white)} .pi-val.neg{color:var(--red)} .pi-val.amb{color:var(--amber)}
+  .rr-note{background:rgba(59,125,216,.07);border:1px solid rgba(59,125,216,.2);padding:14px 18px;margin-top:24px}
+  .rr-note p{font-family:var(--font-m);font-size:10px;line-height:1.6;color:rgba(185,215,255,.7);letter-spacing:.06em}
+  .rr-note strong{color:var(--silver-lt);font-weight:500}
+  #ipsa{background:var(--black)}
+  .ipsa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:36px}
+  .ipsa-kpi{background:var(--card);border:1px solid var(--border);padding:26px 22px;position:relative;overflow:hidden;transition:border-color .25s}
+  .ipsa-kpi:hover{border-color:rgba(180,192,210,.3)}
+  .ipsa-kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);transform:scaleX(0);transition:transform .4s}
+  .ipsa-kpi:hover::after{transform:scaleX(1)}
+  .ipsa-kpi-lbl{font-family:var(--font-m);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .ipsa-kpi-val{font-family:var(--font-d);font-size:44px;letter-spacing:.04em;line-height:1;color:var(--green)}
+  .ipsa-kpi-val.wht{color:var(--white)} .ipsa-kpi-val.amb{color:var(--amber)}
+  .ipsa-kpi-sub{font-family:var(--font-m);font-size:9px;color:var(--muted);letter-spacing:.08em;margin-top:5px}
+  .ipsa-detail{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+  .ipsa-block{background:var(--card);border:1px solid var(--border);padding:24px}
+  .ipsa-block-title{font-family:var(--font-m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--silver);margin-bottom:16px}
+  .month-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .month-row:last-child{border-bottom:none}
+  .month-name{font-family:var(--font-m);font-size:11px;color:var(--muted);letter-spacing:.06em}
+  .month-wr{font-family:var(--font-m);font-size:11px;font-weight:500}
+  .month-rr{font-family:var(--font-d);font-size:20px;letter-spacing:.04em}
+  .sim-card{background:var(--deep);border:1px solid var(--border);padding:28px;position:relative;margin-top:20px}
+  .sim-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--silver-lt),transparent)}
+  .sim-row{display:flex;gap:32px;align-items:flex-start;margin-bottom:20px}
+  .sim-kpi label{font-family:var(--font-m);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+  .sim-kpi .sv{font-family:var(--font-d);font-size:36px;letter-spacing:.04em}
+  .sim-kpi .sv.pos{color:var(--green)} .sim-kpi .sv.wht{color:var(--white)} .sim-kpi .sv.neg{color:var(--red)}
+  .sim-note{font-family:var(--font-m);font-size:9px;color:rgba(237,240,244,.25);letter-spacing:.07em;line-height:1.6;border-top:1px solid var(--border);padding-top:12px}
+  #servicios{background:var(--deep)}
+  .srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:52px}
+  .srv-card{background:var(--card);border:1px solid var(--border);padding:32px 28px;position:relative;overflow:hidden;transition:border-color .25s}
+  .srv-card:hover{border-color:rgba(180,192,210,.32)}
+  .srv-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--silver),transparent);transform:scaleX(0);transition:transform .35s}
+  .srv-card:hover::after{transform:scaleX(1)}
+  .srv-num{font-family:var(--font-d);font-size:44px;letter-spacing:.06em;color:rgba(180,192,210,.08);margin-bottom:18px;line-height:1}
+  .srv-icon{font-size:18px;margin-bottom:12px}
+  .srv-title{font-family:var(--font-d);font-size:22px;letter-spacing:.08em;color:var(--white);margin-bottom:9px}
+  .srv-desc{font-family:var(--font-s);font-size:15.5px;font-weight:300;line-height:1.65;color:var(--muted);margin-bottom:18px}
+  .srv-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .srv-tag{font-family:var(--font-m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);padding:4px 10px;color:var(--silver)}
+  #filosofia{position:relative;overflow:hidden}
+  .phil-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 80% at 82% 50%,rgba(59,125,216,.05),transparent)}
+  .phil-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+  .phil-quote{font-family:var(--font-s);font-size:clamp(20px,2.6vw,32px);font-style:italic;font-weight:300;line-height:1.55;color:var(--white);border-left:2px solid var(--silver);padding-left:26px;margin-bottom:26px}
+  .pa{display:flex;gap:15px;align-items:flex-start;margin-bottom:22px}
+  .pa-icon{width:34px;height:34px;flex-shrink:0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--silver);font-size:13px}
+  .pa strong{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;color:var(--silver-lt);text-transform:uppercase;display:block;margin-bottom:4px}
+  .pa p{font-family:var(--font-s);font-size:15.5px;font-weight:300;color:var(--muted);line-height:1.55}
+  #analisis{background:var(--deep)}
+  .anal-layout{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:50px;align-items:start}
+  .af{background:var(--card);border:1px solid var(--border);padding:20px 22px;display:flex;align-items:center;gap:16px;margin-bottom:12px;transition:border-color .25s}
+  .af:hover{border-color:rgba(180,192,210,.28)}
+  .af-icon{width:38px;height:38px;flex-shrink:0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px}
+  .af-title{font-family:var(--font-d);font-size:17px;letter-spacing:.08em;color:var(--white);margin-bottom:3px}
+  .af-desc{font-family:var(--font-s);font-size:14px;font-weight:300;color:var(--muted);line-height:1.5}
+  .anal-quote{background:var(--card);border:1px solid var(--border);padding:34px;position:relative}
+  .anal-quote::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--blue),var(--green))}
+  .aq-text{font-family:var(--font-s);font-size:clamp(17px,2vw,24px);font-style:italic;font-weight:300;line-height:1.6;color:var(--white);margin-bottom:20px}
+  .aq-tags{display:flex;flex-wrap:wrap;gap:9px}
+  .aq-tag{font-family:var(--font-m);font-size:9px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 13px;color:var(--silver)}
+  #educacion{background:var(--black)}
+  .edu-tiers{display:flex;flex-direction:column;gap:12px;margin-top:48px}
+  .edu-tier{background:var(--card);border:1px solid var(--border);padding:22px 26px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;transition:border-color .25s}
+  .edu-tier:hover{border-color:rgba(180,192,210,.28)}
+  .edu-tier.feat{border-color:var(--silver)}
+  .edu-num{font-family:var(--font-d);font-size:28px;color:rgba(180,192,210,.18);letter-spacing:.06em}
+  .edu-title{font-family:var(--font-d);font-size:19px;letter-spacing:.08em;color:var(--white);margin-bottom:4px}
+  .edu-desc{font-family:var(--font-s);font-size:14.5px;font-weight:300;color:var(--muted);line-height:1.5}
+  .edu-badge{font-family:var(--font-m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;color:var(--silver);white-space:nowrap}
+  .edu-badge.feat{border-color:var(--silver-lt);color:var(--silver-lt)}
+  #mercados{background:var(--deep)}
+  .mkt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:44px}
+  .mkt-tile{background:var(--card);padding:22px;border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .25s;cursor:default}
+  .mkt-tile:hover{border-color:rgba(180,192,210,.28)}
+  .mkt-name{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:7px}
+  .mkt-val{font-family:var(--font-d);font-size:24px;color:var(--white);margin-bottom:3px}
+  .mkt-chg{font-family:var(--font-m);font-size:11.5px;font-weight:500}
+  .mkt-chg.pos{color:var(--green)} .mkt-chg.neg{color:var(--red)}
+  .mkt-spark{position:absolute;bottom:0;right:0;width:75px;height:38px;opacity:.3}
+  #contacto{text-align:center;position:relative;overflow:hidden}
+  .contact-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(59,125,216,.06),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+  .c-tag{display:inline-block;font-family:var(--font-m);font-size:10px;letter-spacing:.2em;color:var(--silver);text-transform:uppercase;border:1px solid var(--border);padding:7px 20px;margin-bottom:28px}
+  .contact-h2{font-family:var(--font-d);font-size:clamp(48px,7vw,96px);letter-spacing:.06em;color:var(--white);line-height:.95;margin-bottom:22px}
+  .contact-h2 em{font-style:normal;color:var(--silver-lt)}
+  .contact-sub{font-family:var(--font-s);font-size:19px;font-weight:300;font-style:italic;color:var(--muted);margin-bottom:44px}
+  footer{padding:36px 64px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--deep)}
+  .f-logo{font-family:var(--font-d);font-size:19px;letter-spacing:.15em;color:var(--silver-lt)}
+  .f-legal{font-family:var(--font-m);font-size:9.5px;letter-spacing:.07em;color:var(--muted);text-align:right;line-height:1.8}
+  .fi{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+  .fi.on{opacity:1;transform:translateY(0)}
+
+  .chart-wrap{
+    min-height:430px;
+    overflow:hidden;
+  }
+  .equity-stage{
+    position:relative;
+    width:100%;
+    height:360px;
+    margin-top:6px;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 78% 16%, rgba(40,198,138,.13), transparent 35%),
+      linear-gradient(180deg, rgba(255,255,255,.018), rgba(255,255,255,0));
+  }
+  .equity-stage canvas{
+    display:block;
+    width:100%;
+    height:360px!important;
+  }
+  .equity-badge{
+    position:absolute;
+    right:20px;
+    top:16px;
+    z-index:3;
+    padding:9px 13px;
+    border:1px solid rgba(40,198,138,.36);
+    background:rgba(5,7,11,.82);
+    backdrop-filter:blur(6px);
+    font-family:var(--font-m);
+    font-size:12px;
+    letter-spacing:.08em;
+    color:#2CE6A0;
+    box-shadow:0 0 38px rgba(40,198,138,.10);
+  }
+
+
+  /* === Performance section refinement === */
+  .perf-grid{
+    grid-template-columns:minmax(0,1.45fr) minmax(360px,.75fr);
+    gap:28px;
+    align-items:stretch;
+  }
+  .chart-wrap{
+    min-height:520px;
+    display:flex;
+    flex-direction:column;
+    padding:24px 24px 18px;
+    background:linear-gradient(180deg, rgba(255,255,255,.018), rgba(255,255,255,.008));
+  }
+  .equity-stage{
+    flex:1;
+    height:420px;
+    border:1px solid rgba(180,192,210,.06);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.01);
+  }
+  .perf-list{
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+    border:1px solid var(--border);
+    padding:22px 24px;
+    gap:18px;
+    position:relative;
+    min-height:520px;
+  }
+  .perf-list::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg,var(--blue),var(--green));
+  }
+  .pi{
+    gap:16px;
+    align-items:flex-end;
+  }
+  .pi-left{
+    flex:1;
+    min-width:0;
+  }
+  .bar-t{
+    width:100%;
+    max-width:none;
+  }
+  .pi-val{
+    min-width:118px;
+    text-align:right;
+    font-size:38px;
+    line-height:1;
+  }
+  .rr-note{
+    margin-top:18px;
+  }
+
+  .annual-wrap{margin-top:22px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--border);padding:18px 20px 14px;position:relative;overflow:hidden}
+  .annual-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--silver),transparent)}
+  .annual-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:14px}
+  .annual-title{font-family:var(--font-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver)}
+  .annual-sub{font-family:var(--font-m);font-size:9px;letter-spacing:.06em;color:var(--muted);margin-top:4px}
+  .annual-table{width:100%;border-collapse:collapse}
+  .annual-table th,.annual-table td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.05);text-align:left}
+  .annual-table th{font-family:var(--font-m);font-size:10px;letter-spacing:.12em;color:var(--silver-lt);text-transform:uppercase;font-weight:500}
+  .annual-table td{font-family:var(--font-m);font-size:12px;letter-spacing:.03em;color:var(--white)}
+  .annual-table tr:last-child td{border-bottom:none}
+  .annual-table td:last-child,.annual-table th:last-child{text-align:right}
+  .annual-pos{color:var(--green)!important}
+  .annual-chip{display:inline-block;padding:4px 10px;border:1px solid rgba(40,198,138,.26);background:rgba(40,198,138,.06);font-family:var(--font-m);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+  .dd-soft{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05);font-family:var(--font-m);font-size:10px;letter-spacing:.06em;color:var(--muted)}
+  .dd-soft strong{color:var(--white);font-weight:500}
+  @media(max-width:900px){
+    .annual-wrap{padding:16px 14px 12px}
+    .annual-head{flex-direction:column;align-items:flex-start}
+    .annual-table{display:block;overflow-x:auto;white-space:nowrap}
+  }
+
+  @media(max-width:1200px){
+    .perf-grid{
+      grid-template-columns:1fr;
+    }
+    .perf-list,
+    .chart-wrap{
+      min-height:auto;
+    }
+    .equity-stage{
+      height:360px;
+    }
+  }
+
+  @media(max-width:900px){
+    nav{padding:14px 22px}.nav-links{display:none}
+    .hero,.hero-right{padding:110px 22px 56px}.hero-right{display:none}
+    section{padding:64px 22px}
+    .perf-grid,.phil-layout,.anal-layout,.ipsa-detail{grid-template-columns:1fr}
+    .ipsa-grid,.mkt-grid,.srv-grid{grid-template-columns:1fr 1fr}
+    .sim-row{flex-wrap:wrap;gap:20px}
+    footer{flex-direction:column;gap:14px;text-align:center}.f-legal{text-align:center}
+  }
+</style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container bar">
-      <a class="brand" href="index.html">
-        <span class="word">DOBERWHITE</span> <span class="thin">CAPITAL</span>
-      </a>
-      <a class="menu-button" href="#menu">Menú</a>
-    </div>
-  </header>
-
-  <!-- Menú -->
-  <nav class="site-menu" id="menu" aria-hidden="true">
-    <div class="inner">
-      <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="institucionales.html">Servicios institucionales</a></li>
-        <li><a href="particulares.html">Servicios particulares</a></li>
-        <!-- <a href="trading.html">Trading algorítmico</a></li>-->
-        <li><a href="cursos.html">Cursos & seminarios</a></li>
-        <li><a href="valores.html">Nuestros valores</a></li>
-        <li><a href="rendimientos.html">Rendimientos</a></li>
-        <!--<li><a href="informes.html">Informes Privados</a></li>-->
-        <li><a class="primary" href="contacto.html">Agendar reunión</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1>DOBERWHITE <span style="font-weight:300">CAPITAL</span></h1>
-      <p class="sub">Protegemos con poder, construimos con método.</p>
-      </div>
-  </section>
-
-  <!-- Servicios -->
-  <section class="services">
-    <div class="container">
-      <div class="grid">
-
-        <!-- Institucionales -->
-        <article class="card">
-          <div class="art"
-     style="position:relative; padding:0; margin:0; width:100%;
-            height:200px; overflow:hidden; border-radius:12px;">
-  <img src="images/institucionales_1.png?v=8"
-       alt="Servicios institucionales"
-       loading="lazy"
-       class="art-img"
-       style="position:absolute; inset:0; width:100%; height:100%;
-              object-fit:cover; display:block;">
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item" data-sym="SP500">S&amp;P 500 <b>5,218.40</b> <span class="up">▲ +0.47%</span></span>
+    <span class="ticker-item" data-sym="NASDAQ">NASDAQ <b>16,341.50</b> <span class="up">▲ +0.63%</span></span>
+    <span class="ticker-item" data-sym="BTC">BTC/USD <b>$83,420</b> <span class="dn">▼ −1.12%</span></span>
+    <span class="ticker-item" data-sym="USDCLP">USD/CLP <b>$975.40</b> <span class="dn">▼ −0.38%</span></span>
+    <span class="ticker-item" data-sym="NAS100">NAS100 <b>18,542.00</b> <span class="up">▲ +0.63%</span></span>
+    <span class="ticker-item" data-sym="IPSA">IPSA <b>7,102.80</b> <span class="up">▲ +0.21%</span></span>
+    <span class="ticker-item" data-sym="GOLD">ORO XAU <b>$3,107</b> <span class="up">▲ +0.89%</span></span>
+    <span class="ticker-item" data-sym="BRENT">BRENT <b>$74.20</b> <span class="dn">▼ −0.55%</span></span>
+    <span class="ticker-item" data-sym="EURUSD">EUR/USD <b>1.0832</b> <span class="up">▲ +0.14%</span></span>
+    <span class="ticker-item" data-sym="SP500">S&amp;P 500 <b>5,218.40</b> <span class="up">▲ +0.47%</span></span>
+    <span class="ticker-item" data-sym="NASDAQ">NASDAQ <b>16,341.50</b> <span class="up">▲ +0.63%</span></span>
+    <span class="ticker-item" data-sym="BTC">BTC/USD <b>$83,420</b> <span class="dn">▼ −1.12%</span></span>
+    <span class="ticker-item" data-sym="USDCLP">USD/CLP <b>$975.40</b> <span class="dn">▼ −0.38%</span></span>
+    <span class="ticker-item" data-sym="NAS100">NAS100 <b>18,542.00</b> <span class="up">▲ +0.63%</span></span>
+    <span class="ticker-item" data-sym="IPSA">IPSA <b>7,102.80</b> <span class="up">▲ +0.21%</span></span>
+    <span class="ticker-item" data-sym="GOLD">ORO XAU <b>$3,107</b> <span class="up">▲ +0.89%</span></span>
+    <span class="ticker-item" data-sym="BRENT">BRENT <b>$74.20</b> <span class="dn">▼ −0.55%</span></span>
+    <span class="ticker-item" data-sym="EURUSD">EUR/USD <b>1.0832</b> <span class="up">▲ +0.14%</span></span>
+  </div>
 </div>
-          <div class="body">
-            <h3>Servicios institucionales</h3>
-            <p>Arquitectura MAM, reporting y conferencias.</p>
-          </div>
-          <a class="stretched" href="institucionales.html">Ir</a>
-        </article>
 
-        <!-- Particulares -->
-        <article class="card">
-          <div class="art"
-     style="position:relative; padding:0; margin:0; width:100%;
-            height:200px; overflow:hidden; border-radius:12px;">
-  <img src="images/particulares.png?v=8"
-       alt="Servicios institucionales"
-       loading="lazy"
-       class="art-img"
-       style="position:absolute; inset:0; width:100%; height:100%;
-              object-fit:cover; display:block;">
-</div>
-          <div class="body">
-            <h3>Servicios particulares</h3>
-            <p>Gestión de cuentas ASV SYNC.</p>
-          </div>
-          <a class="stretched" href="particulares.html">Ir</a>
-        </article>
+<nav>
+  <div class="nav-logo">DOBER<em>WHITE</em></div>
+  <div class="nav-links">
+    <a href="#performance">Bot Cuantitativo</a>
+    <a href="#ipsa">Análisis IPSA</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#analisis">Institucional</a>
+    <a href="#educacion">Formación</a>
+    <a href="#contacto" class="nav-cta">Acceso privado</a>
+  </div>
+</nav>
 
-        <!-- Trading Algorítmico 
-        <article class="card">
-          <div class="art">
-            <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Trading algorítmico">
-              <rect width="100%" height="100%" fill="#10162a"/>
-              <g stroke="#00e18e" stroke-width="2" fill="none" opacity=".85">
-                <polyline points="10,150 60,110 90,130 130,90 170,120 210,70 260,100 310,60"/>
-              </g>
-              <g fill="#fff" opacity=".2">
-                <rect x="30" y="40" width="12" height="70"/><rect x="70" y="80" width="12" height="30"/>
-                <rect x="110" y="50" width="12" height="60"/><rect x="150" y="70" width="12" height="40"/>
-                <rect x="190" y="35" width="12" height="75"/><rect x="230" y="60" width="12" height="50"/>
-              </g>
-            </svg>
-          </div>
-          <div class="body">
-            <h3>Trading algorítmico</h3>
-            <p>Método, validación y ejecución en producción.</p>
-          </div>
-          <a class="stretched" href="trading.html">Ir</a>
-        </article> -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="eyebrow">Inversiones Boutique · Santiago de Chile · LATAM</div>
+  <h1 class="hero-h1">INTELIGENCIA<br><em>APLICADA.</em><br>CAPITAL<br><em>BLINDADO.</em></h1>
+  <p class="hero-sub">Gestión algorítmica, análisis institucional y formación de élite para inversores y operadores de alto nivel en América Latina.</p>
+  <div class="cta-row">
+    <a href="#contacto" class="btn-p">Acceso por invitación</a>
+    <a href="#performance" class="btn-s">Ver track record</a>
+  </div>
+  <div class="hero-kpis">
+    <div class="kpi"><label>Retorno total bot</label><div class="val pos" id="c1">+0%</div></div>
+    <div class="kpi"><label>Operaciones totales</label><div class="val" id="c2">0</div></div>
+    <div class="kpi"><label>Años positivos</label><div class="val pos" id="c3">0/7</div></div>
+    <div class="kpi"><label>Sharpe ratio</label><div class="val" id="c4">0</div></div>
+  </div>
+  <div class="hero-right">
+    <div class="bot-card fi" id="botcard">
+      <div class="bot-head">
+        <div><div class="bot-name">NAS100 · DBW BOT · MT5</div><div class="bot-period">3 ene 2020 – 2 mar 2026 · Strategy Tester</div></div>
+        <span class="bot-live"><span class="dot"></span>ACTIVO</span>
+      </div>
+      <div class="bot-ret">+2,497.47%</div>
+      <div class="bot-ret-lbl">Beneficio neto histórico · +$249,747.40 USD</div>
+      <div class="bot-grid">
+        <div class="bm"><label>Win Rate</label><div class="mv amber">45.86%</div></div>
+        <div class="bm"><label>Profit Factor</label><div class="mv pos">1.54</div></div>
+        <div class="bm"><label>Max. DD Equity</label><div class="mv neg">−30.24%</div></div>
+        <div class="bm"><label>Total ops.</label><div class="mv">580</div></div>
+        <div class="bm"><label>Sharpe</label><div class="mv">2.24</div></div>
+        <div class="bm"><label>Recovery</label><div class="mv pos">4.60</div></div>
+      </div>
+      <div class="note-inline">7 años positivos consecutivos · Profit Factor 1.54 · Sharpe 2.24<br>De USD 10,000 a USD 259,747.40 en histórico probado.</div>
+      <div class="chart-lbl">Curva de equity — ene 2020 → mar 2026</div>
+      <canvas id="miniChart" height="72"></canvas>
+    </div>
+  </div>
+</section>
 
-        <!-- Cursos -->
-        <article class="card">
-          <div class="art"
-          style="position:relative; padding:0; margin:0; width:100%;
-                 height:200px; overflow:hidden; border-radius:12px;">
-       <img src="images/cursosyseminarios.png?v=8"
-            alt="Servicios institucionales"
-            loading="lazy"
-            class="art-img"
-            style="position:absolute; inset:0; width:100%; height:100%;
-                   object-fit:cover; display:block;">
-     </div>
-          <div class="body">
-            <h3>Cursos & seminarios</h3>
-            <p>Formación aplicada, sin humo.</p>
-          </div>
-          <a class="stretched" href="cursos.html">Ir</a>
-        </article>
+<section id="performance">
+  <div class="sec-eye">Sistema Algorítmico</div>
+  <h2 class="sec-h2">BOT <em>NAS100 · DBW · MT5</em></h2>
+  <p class="sec-body">Backtest histórico en MetaTrader 5. Período: 3 enero 2020 – 25 mayo 2026. 580 operaciones ejecutadas sobre NASDAQ100. Un sistema cuantitativo diseñado para capturar expansión de volatilidad con riesgo parametrizado, crecimiento compuesto y disciplina de capital.</p>
+  <span class="perf-label">Ene 2020 — 25 May 2026 · 580 operaciones · NAS100</span>
+  <div class="perf-grid fi">
+    <div class="chart-wrap">
+      <div class="chart-lbl" style="margin-bottom:10px;">Curva de capital acumulada — base $10,000 USD</div>
+      <div class="equity-stage" aria-label="Curva de capital NAS100">
+        <div class="equity-badge">+2,497.47%</div>
+        <canvas id="mainChart" height="360"></canvas>
+      </div>
+    <div class="perf-list">
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Retorno total</div><div class="pi-sub">+$249,747.40 USD netos</div><div class="bar-t"><div class="bar-f g" style="width:0" data-w="96%"></div></div></div><div class="pi-val pos">+2,497.47%</div></div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Crecimiento de capital</div><div class="pi-sub">De $10,000 a $259,747.40 en el histórico probado</div><div class="bar-t"><div class="bar-f g" style="width:0" data-w="92%"></div></div></div><div class="pi-val pos">25.97x</div></div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Factor de Ganancias</div><div class="pi-sub">Beneficio bruto / pérdidas brutas</div><div class="bar-t"><div class="bar-f b" style="width:0" data-w="62%"></div></div></div><div class="pi-val blue">1.54</div></div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Sharpe Ratio</div><div class="pi-sub">Métrica de consistencia ajustada por volatilidad</div><div class="bar-t"><div class="bar-f b" style="width:0" data-w="75%"></div></div></div><div class="pi-val blue">2.24</div></div>
+      <div class="pi"><div class="pi-left"><div class="pi-lbl">Años positivos</div><div class="pi-sub">Todos los ejercicios cerraron en positivo desde 2020</div><div class="bar-t"><div class="bar-f g" style="width:0" data-w="100%"></div></div></div><div class="pi-val pos">7 / 7</div></div>
+    </div>
+  </div>
+  <div class="annual-wrap fi">
+    <div class="annual-head">
+      <div>
+        <div class="annual-title">Rendimiento año a año</div>
+        <div class="annual-sub">Evolución del capital desde una base inicial de USD 10,000.00 · actualizado al 25-05-2026</div>
+      </div>
+      <span class="annual-chip">7 años positivos</span>
+    </div>
+    <table class="annual-table">
+      <thead>
+        <tr>
+          <th>Año</th>
+          <th>Balance inicial</th>
+          <th>Balance final</th>
+          <th>Ganancia/Pérdida</th>
+          <th>Rendimiento</th>
+          <th>N° ops</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2020</td><td>USD 10,000.00</td><td>USD 15,379.10</td><td>USD 5,379.10</td><td class="annual-pos">53.79%</td><td>91</td></tr>
+        <tr><td>2021</td><td>USD 15,379.10</td><td>USD 26,089.50</td><td>USD 10,710.40</td><td class="annual-pos">69.64%</td><td>92</td></tr>
+        <tr><td>2022</td><td>USD 26,089.50</td><td>USD 37,193.90</td><td>USD 11,104.40</td><td class="annual-pos">42.56%</td><td>80</td></tr>
+        <tr><td>2023</td><td>USD 37,193.90</td><td>USD 81,897.60</td><td>USD 44,703.70</td><td class="annual-pos">120.19%</td><td>90</td></tr>
+        <tr><td>2024</td><td>USD 81,897.60</td><td>USD 157,885.90</td><td>USD 75,988.30</td><td class="annual-pos">92.78%</td><td>91</td></tr>
+        <tr><td>2025</td><td>USD 157,885.90</td><td>USD 195,963.50</td><td>USD 38,077.60</td><td class="annual-pos">24.12%</td><td>97</td></tr>
+        <tr><td>2026 YTD*</td><td>USD 195,963.50</td><td>USD 259,747.40</td><td>USD 63,783.90</td><td class="annual-pos">32.55%</td><td>39</td></tr>
+      </tbody>
+    </table>
+    <div class="dd-soft"><strong>Control de riesgo histórico:</strong> drawdown máximo relativo de equity −30.24%. El dato se mantiene visible como métrica técnica, pero la narrativa principal es crecimiento compuesto y consistencia anual.</div>
+  </div>
+  <div class="rr-note fi"><p><strong>Lectura comercial del modelo ajustado:</strong> el sistema combina 580 operaciones, 7 años consecutivos en positivo, Profit Factor 1.54 y Sharpe 2.24. La operación ganadora promedio fue de +$2,672.34 frente a una pérdida promedio de −$1,468.46, manteniendo una asimetría positiva de aproximadamente 1.82×.</p></div>
+</section>
 
-        <!-- Valores -->
-        <article class="card">
-          <div class="art"
-          style="position:relative; padding:0; margin:0; width:100%;
-                 height:200px; overflow:hidden; border-radius:12px;">
-       <img src="images/nuestrosvalores.png?v=8"
-            alt="Servicios institucionales"
-            loading="lazy"
-            class="art-img"
-            style="position:absolute; inset:0; width:100%; height:100%;
-                   object-fit:cover; display:block;">
-     </div>
-          <div class="body">
-            <h3>Nuestros valores</h3>
-            <p>Deber, disciplina. y resultados</p>
-          </div>
-          <a class="stretched" href="valores.html">Ir</a>
-        </article>
-
-        <!-- Rendimientos -->
-        <article class="card">
-          <div class="art"
-          style="position:relative; padding:0; margin:0; width:100%;
-                 height:200px; overflow:hidden; border-radius:12px;">
-       <img src="images/rendimientos.png?v=8"
-            alt="Servicios institucionales"
-            loading="lazy"
-            class="art-img"
-            style="position:absolute; inset:0; width:100%; height:100%;
-                   object-fit:cover; display:block;">
-     </div>
-          <div class="body">
-            <h3>Rendimientos</h3>
-            <p>Métricas históricas</p>
-          </div>
-          <a class="stretched" href="rendimientos.html">Ir</a>
-        </article>
-
+<section id="ipsa">
+  <div class="sec-eye">Análisis Directos · Canal YouTube @ASV_Invest</div>
+  <h2 class="sec-h2">IPSA <em>2025</em></h2>
+  <p class="sec-body">44 ideas publicadas sobre 23 activos del IPSA. Evaluación mensual, timeframe semanal. Metodología unidireccional long. Datos auditados desde archivo de rendimiento propio.</p>
+  <div class="ipsa-grid fi">
+    <div class="ipsa-kpi"><div class="ipsa-kpi-lbl">Win Rate</div><div class="ipsa-kpi-val" id="i1">0%</div><div class="ipsa-kpi-sub">38 ganadoras · 4 perdedoras · 2 neutras</div></div>
+    <div class="ipsa-kpi"><div class="ipsa-kpi-lbl">RR Medio (R-múltiplo)</div><div class="ipsa-kpi-val" id="i2">0R</div><div class="ipsa-kpi-sub">Mediana: 3.50R · Mejor: 20.34R (BCI)</div></div>
+    <div class="ipsa-kpi"><div class="ipsa-kpi-lbl">Ideas ≥ 4R</div><div class="ipsa-kpi-val amb" id="i3">0%</div><div class="ipsa-kpi-sub">47.7% de ideas en zona "home run"</div></div>
+    <div class="ipsa-kpi"><div class="ipsa-kpi-lbl">Ideas ≥ 2R</div><div class="ipsa-kpi-val wht" id="i4">0%</div><div class="ipsa-kpi-sub">Riesgo medio por idea: 8.72%</div></div>
+  </div>
+  <div class="ipsa-detail fi">
+    <div class="ipsa-block">
+      <div class="ipsa-block-title">Rendimiento por mes · Win Rate y RR medio</div>
+      <div class="month-row"><div class="month-name">Ene 2025</div><div class="month-wr pos">81.8%</div><div class="month-rr" style="color:var(--green)">6.33R</div></div>
+      <div class="month-row"><div class="month-name">Feb 2025</div><div class="month-wr pos">83.3%</div><div class="month-rr" style="color:var(--green)">3.25R</div></div>
+      <div class="month-row"><div class="month-name">Abr 2025</div><div class="month-wr pos">80.0%</div><div class="month-rr" style="color:var(--green)">2.77R</div></div>
+      <div class="month-row"><div class="month-name">May 2025</div><div class="month-wr" style="color:var(--amber)">50.0%</div><div class="month-rr" style="color:var(--amber)">1.71R</div></div>
+      <div class="month-row"><div class="month-name">Ago 2025</div><div class="month-wr pos">90.9%</div><div class="month-rr" style="color:var(--green)">3.46R</div></div>
+      <div class="month-row"><div class="month-name">Sep 2025</div><div class="month-wr pos">100%</div><div class="month-rr" style="color:var(--green)">4.30R</div></div>
+      <div class="month-row"><div class="month-name">Oct 2025</div><div class="month-wr pos">100%</div><div class="month-rr" style="color:var(--green)">2.57R</div></div>
+      <div class="month-row"><div class="month-name">Nov 2025</div><div class="month-wr pos">100%</div><div class="month-rr" style="color:var(--green)">10.07R</div></div>
+    </div>
+    <div>
+      <div class="ipsa-block" style="margin-bottom:12px">
+        <div class="ipsa-block-title">Top activos por RR medio (≥2 apariciones)</div>
+        <div class="month-row"><div class="month-name">BCI</div><div class="month-wr pos">100% WR</div><div class="month-rr" style="color:var(--green)">12.6R</div></div>
+        <div class="month-row"><div class="month-name">ITAU</div><div class="month-wr pos">100% WR</div><div class="month-rr" style="color:var(--green)">7.0R</div></div>
+        <div class="month-row"><div class="month-name">SALFACORP</div><div class="month-wr pos">100% WR</div><div class="month-rr" style="color:var(--green)">6.4R</div></div>
+        <div class="month-row"><div class="month-name">PARAUCO</div><div class="month-wr pos">100% WR</div><div class="month-rr" style="color:var(--green)">5.5R</div></div>
+        <div class="month-row"><div class="month-name">CHILE</div><div class="month-wr pos">100% WR</div><div class="month-rr" style="color:var(--green)">4.8R</div></div>
+        <div class="month-row"><div class="month-name">ECL</div><div class="month-wr pos">100% WR</div><div class="month-rr" style="color:var(--green)">4.3R</div></div>
       </div>
     </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta">
-    <div class="container">
-      <h2 style="margin:0 0 8px">¿Conversemos?</h2>
-      <p style="margin:0 0 12px;color:#b4bac8">Agenda una reunión y revisamos cómo podemos ayudarte.</p>
-      <a class="btn" href="contacto.html">Agendar en Calendly</a>
+  </div>
+  <div class="sim-card fi">
+    <div style="font-family:var(--font-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver);margin-bottom:20px">Simulación monetaria · Riesgo fijo 1% por idea · Capital inicial $20.000.000 CLP</div>
+    <div class="sim-row">
+      <div class="sim-kpi"><label>Capital final</label><div class="sv pos" id="sim1">$0</div></div>
+      <div class="sim-kpi"><label>Ganancia neta</label><div class="sv pos">$36.966.747</div></div>
+      <div class="sim-kpi"><label>ROI período</label><div class="sv pos">184.8%</div></div>
+      <div class="sim-kpi"><label>Max. Drawdown</label><div class="sv wht">−0.62%</div></div>
+      <div class="sim-kpi"><label>Prom. neto / idea</label><div class="sv wht">$840.153</div></div>
     </div>
-  </section>
+    <div class="sim-note">Supuesto: riesgo fijo 1% del capital inicial por operación ($200.000 CLP). n=44 ideas 2025. Costos aplicados: $5.000 entrada + $5.000 salida + 0.8% del monto arriesgado por lado. Costos totales: $580.800 CLP. Datos desde ASV_YT_PERFORMANCE.xlsx.</div>
+  </div>
+</section>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container mini">
-      <div>El rendimiento pasado no garantiza resultados futuros. Invertir implica riesgo de perder.</div>
-      <div style="margin-top:8px">&copy; DoberWhite 2025 · Design: Ariel Salazar</div>
+<section id="servicios">
+  <div class="sec-eye">Propuesta de valor</div>
+  <h2 class="sec-h2">TRES <em>VERTICALES</em></h2>
+  <p class="sec-body">Un ecosistema de servicios con track record demostrable en cada área, diseñado para distintos perfiles de cliente.</p>
+  <div class="srv-grid fi">
+    <div class="srv-card"><div class="srv-num">01</div><div class="srv-icon">⚡</div><div class="srv-title">TRADING ALGORÍTMICO</div><p class="srv-desc">Bot cuantitativo propio con 580 operaciones históricas en MT5, +2,497.47% de retorno total y Profit Factor 1.54 sobre NASDAQ100. Gestión de portafolios con parámetros de riesgo definidos por contrato. Arquitectura MAM.</p><div class="srv-tags"><span class="srv-tag">Bot NAS100</span><span class="srv-tag">MAM</span><span class="srv-tag">Risk management</span><span class="srv-tag">Reporting</span></div></div>
+    <div class="srv-card"><div class="srv-num">02</div><div class="srv-icon">◎</div><div class="srv-title">ANÁLISIS INSTITUCIONAL</div><p class="srv-desc">Reportes macro y de mercado para brokers, family offices y conferencias. 86.4% de win rate verificado en IPSA 2025 con RR medio de 4.27R. Ponencias y roadshows.</p><div class="srv-tags"><span class="srv-tag">Brokers</span><span class="srv-tag">Conferencias</span><span class="srv-tag">Macro LATAM</span><span class="srv-tag">Roadshows</span></div></div>
+    <div class="srv-card"><div class="srv-num">03</div><div class="srv-icon">▲</div><div class="srv-title">FORMACIÓN DE ÉLITE</div><p class="srv-desc">Programas de formación avanzada en trading cuantitativo y análisis de mercados para profesionales con base previa. Misma metodología que genera los resultados publicados del canal.</p><div class="srv-tags"><span class="srv-tag">Trading cuantitativo</span><span class="srv-tag">Análisis avanzado</span><span class="srv-tag">Portfolio</span><span class="srv-tag">Solo referidos</span></div></div>
+  </div>
+</section>
+
+<section id="filosofia">
+  <div class="phil-bg"></div>
+  <div class="phil-layout">
+    <div class="fi">
+      <div class="sec-eye">Principios</div>
+      <h2 class="sec-h2">FILOSOFÍA <em>DE</em> INVERSIÓN</h2>
+      <div class="phil-quote">"El mercado premia la convicción informada, no la actividad impulsiva. Cada posición es una tesis con fundamento y un riesgo definido de antemano."</div>
+      <p class="sec-body">Combinamos análisis macro de LATAM, modelos cuantitativos propios y una disciplina de riesgo sin concesiones para construir y preservar patrimonio real.</p>
     </div>
-  </footer>
+    <div class="fi">
+      <div class="pa"><div class="pa-icon">◈</div><div><strong>Asimetría de R</strong><p>Un sistema no necesita ganar frecuente para ser rentable. Necesita ganar mucho cuando gana, y poco cuando pierde. Eso es lo que muestran los datos.</p></div></div>
+      <div class="pa"><div class="pa-icon">◈</div><div><strong>Datos, no narrativa</strong><p>Cada servicio y cada recomendación está respaldada por un registro público y auditable. El track record habla antes que cualquier argumento de venta.</p></div></div>
+      <div class="pa"><div class="pa-icon">◈</div><div><strong>Base LATAM / Chile</strong><p>Santiago como hub. Expertise en IPSA, CLP, PEN, BRL, COL y mercados globales desde perspectiva latinoamericana con contexto real.</p></div></div>
+      <div class="pa"><div class="pa-icon">◈</div><div><strong>Riesgo definido primero</strong><p>El stop va antes que el objetivo. El drawdown máximo está definido contractualmente. El capital del cliente, blindado ante la volatilidad extrema.</p></div></div>
+    </div>
+  </div>
+</section>
 
-  <!-- Botón flotante -->
-  <a class="fab" href="contacto.html">Contacta con nosotros</a>
+<section id="analisis">
+  <div class="sec-eye">Para Instituciones y Profesionales</div>
+  <h2 class="sec-h2">ANÁLISIS <em>DE MERCADO</em></h2>
+  <div class="anal-layout">
+    <div class="fi">
+      <div class="af"><div class="af-icon">📊</div><div><div class="af-title">REPORTES PARA BROKERS</div><p class="af-desc">Análisis técnico y fundamental listo para distribuir. Niveles de entrada, objetivo y riesgo. Metodología verificada con 86.4% de efectividad.</p></div></div>
+      <div class="af"><div class="af-icon">🎙</div><div><div class="af-title">CONFERENCIAS DE INVERSIÓN</div><p class="af-desc">Ponencias sobre visión macro, estrategias cuantitativas y oportunidades LATAM. Para eventos privados e institucionales en Chile y la región.</p></div></div>
+      <div class="af"><div class="af-icon">📄</div><div><div class="af-title">INFORMES MACRO PERIÓDICOS</div><p class="af-desc">Análisis macroeconómico de Chile, Perú, Colombia, Brasil y mercados globales con impacto en LATAM. Distribución a suscriptores institucionales.</p></div></div>
+    </div>
+    <div class="anal-quote fi">
+      <p class="aq-text">"Un buen análisis no predice el futuro. Define con precisión el escenario de riesgo y le da al inversor la ventaja de actuar antes que el mercado."</p>
+      <div style="font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;color:var(--silver);text-transform:uppercase;margin-bottom:14px">Contextos</div>
+      <div class="aq-tags"><span class="aq-tag">Brokers retail LATAM</span><span class="aq-tag">Family offices</span><span class="aq-tag">Fondos de inversión</span><span class="aq-tag">Conferencias</span><span class="aq-tag">Medios especializados</span><span class="aq-tag">Asesores independientes</span></div>
+    </div>
+  </div>
+</section>
 
-  <script src="assets/js/main.js"></script>
+<section id="educacion">
+  <div class="sec-eye">Formación Avanzada</div>
+  <h2 class="sec-h2">CONOCIMIENTO <em>SIN</em> FILTROS</h2>
+  <p class="sec-body" style="margin-bottom:8px">No formamos principiantes. Trabajamos con profesionales que ya operan y quieren sistematizar su metodología con herramientas cuantitativas reales — las mismas que generan los resultados publicados.</p>
+  <div class="edu-tiers fi">
+    <div class="edu-tier"><div class="edu-num">I</div><div><div class="edu-title">LECTURA DE MERCADO Y ANÁLISIS TÉCNICO AVANZADO</div><p class="edu-desc">Order flow, estructura de mercado, niveles institucionales. Para traders con base técnica que quieren sistematizar el análisis.</p></div><span class="edu-badge">Presencial / Online</span></div>
+    <div class="edu-tier feat"><div class="edu-num">II</div><div><div class="edu-title">CONSTRUCCIÓN DE SISTEMAS ALGORÍTMICOS</div><p class="edu-desc">De la idea a la estrategia automatizada: backtesting, optimización, gestión del riesgo cuantitativo. El mismo proceso que originó el NAS100_DBW_MT5.</p></div><span class="edu-badge feat">Programa flagship</span></div>
+    <div class="edu-tier"><div class="edu-num">III</div><div><div class="edu-title">MACRO LATAM PARA INVERSORES</div><p class="edu-desc">Economía política regional, tipos de cambio, renta fija local, flujos de capital. Para portafolios expuestos a LATAM.</p></div><span class="edu-badge">Solo por referidos</span></div>
+  </div>
+</section>
+
+<section id="mercados">
+  <div class="sec-eye">Radar de Mercados</div>
+  <h2 class="sec-h2">COBERTURA <em>GLOBAL</em></h2>
+  <div class="mkt-grid fi">
+    <div class="mkt-tile" data-sym="SP500"><div class="mkt-name">S&amp;P 500</div><div class="mkt-val">5,218</div><div class="mkt-chg pos">▲ +0.47%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,33 12,26 22,28 33,17 43,21 53,9 62,13 75,7" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="NAS100"><div class="mkt-name">NAS100</div><div class="mkt-val">18,542</div><div class="mkt-chg pos">▲ +0.63%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,29 12,24 22,26 33,18 43,20 53,12 62,9 75,5" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="BTC"><div class="mkt-name">BTC / USD</div><div class="mkt-val">$83,420</div><div class="mkt-chg neg">▼ −1.12%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,9 12,13 22,17 33,14 43,19 53,21 62,25 75,29" fill="none" stroke="#D95858" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="USDCLP"><div class="mkt-name">USD / CLP</div><div class="mkt-val">$975</div><div class="mkt-chg neg">▼ −0.38%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,7 12,11 22,9 33,17 43,13 53,21 62,27 75,31" fill="none" stroke="#D95858" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="IPSA"><div class="mkt-name">IPSA Chile</div><div class="mkt-val">7,102</div><div class="mkt-chg pos">▲ +0.21%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,29 12,25 22,27 33,21 43,17 53,19 62,13 75,11" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="GOLD"><div class="mkt-name">ORO XAU</div><div class="mkt-val">$3,107</div><div class="mkt-chg pos">▲ +0.89%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,31 12,27 22,21 33,17 43,15 53,11 62,9 75,5" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="NASDAQ"><div class="mkt-name">NASDAQ 100</div><div class="mkt-val">16,341</div><div class="mkt-chg pos">▲ +0.63%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,27 12,21 22,23 33,15 43,17 53,11 62,7 75,5" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+    <div class="mkt-tile" data-sym="EURUSD"><div class="mkt-name">EUR / USD</div><div class="mkt-val">1.0832</div><div class="mkt-chg pos">▲ +0.14%</div><svg class="mkt-spark" viewBox="0 0 75 38"><polyline points="0,21 12,19 22,21 33,17 43,15 53,17 62,13 75,11" fill="none" stroke="#28C68A" stroke-width="1.5"/></svg></div>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="contact-glow"></div>
+  <div style="position:relative">
+    <div class="c-tag">Círculo cerrado</div>
+    <h2 class="contact-h2">ACCESO POR<br><em>REFERENCIA</em></h2>
+    <p class="contact-sub" style="max-width:540px;margin-left:auto;margin-right:auto;line-height:1.75;">El acceso a Doberwhite es por referencia directa.<br>Si alguien del círculo ya te mencionó,<br>nos pondremos en contacto contigo.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">DOBERWHITE</div>
+  <div class="f-legal">Santiago de Chile · LATAM<br>Backtest histórico y rendimientos pasados no garantizan resultados futuros. Toda inversión conlleva riesgos.<br>© 2025 Doberwhite Capital. Todos los derechos reservados.</div>
+</footer>
+
+<script>
+// ── Fade-in ────────────────────────────────────────────────────
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.12});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+const bObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.querySelectorAll('.bar-f').forEach(b=>{setTimeout(()=>b.style.width=b.dataset.w,180)})}),{threshold:.25});
+document.querySelectorAll('.perf-list').forEach(el=>bObs.observe(el));
+
+// ── Counters ───────────────────────────────────────────────────
+function count(el,to,dec,pre,suf){let s=null,dur=1600;requestAnimationFrame(function f(ts){if(!s)s=ts;const p=Math.min((ts-s)/dur,1);el.textContent=pre+(p*to).toFixed(dec)+suf;if(p<1)requestAnimationFrame(f)})}
+setTimeout(()=>{
+  count(document.getElementById('c1'),2497.47,2,'+','%');
+  count(document.getElementById('c2'),580,0,'','');
+  document.getElementById('c3').textContent='7/7';
+  count(document.getElementById('c4'),2.24,2,'','');
+  count(document.getElementById('i1'),86.4,1,'','%');
+  count(document.getElementById('i2'),4.27,2,'','R');
+  count(document.getElementById('i3'),47.7,1,'','%');
+  count(document.getElementById('i4'),59.1,1,'','%');
+  count(document.getElementById('sim1'),56966747,0,'$','');
+},500);
+setTimeout(()=>document.getElementById('botcard').classList.add('on'),350);
+
+// ── Charts ─────────────────────────────────────────────────────
+(function(){
+  const miniData=[100,112,126,139,154,171,188,210,232,258,286,319,356,392,438,492,560,650,760,895,1020,1165,1360,1580,1850,2130,2380,2497];
+
+  function resizeCanvas(cv, cssHeight){
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    const box = cv.getBoundingClientRect();
+    const w = Math.max(Math.floor(box.width), 320);
+    const h = cssHeight;
+    cv.width = Math.floor(w * ratio);
+    cv.height = Math.floor(h * ratio);
+    cv.style.height = h + 'px';
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    return {ctx, W:w, H:h};
+  }
+
+  function smooth(ctx, pts, tension=1){
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(let i=0;i<pts.length-1;i++){
+      const p0 = pts[i-1] || pts[i];
+      const p1 = pts[i];
+      const p2 = pts[i+1];
+      const p3 = pts[i+2] || p2;
+      const cp1x = p1.x + (p2.x - p0.x) / 6 * tension;
+      const cp1y = p1.y + (p2.y - p0.y) / 6 * tension;
+      const cp2x = p2.x - (p3.x - p1.x) / 6 * tension;
+      const cp2y = p2.y - (p3.y - p1.y) / 6 * tension;
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+    }
+  }
+
+  function drawMini(){
+    const cv=document.getElementById('miniChart'); if(!cv) return;
+    const {ctx,W,H}=resizeCanvas(cv,82);
+    const pad={l:2,r:2,t:6,b:4};
+    const minY=70,maxY=2550;
+    const pts=miniData.map((v,i)=>({
+      x:pad.l+(i/(miniData.length-1))*(W-pad.l-pad.r),
+      y:pad.t+(1-(v-minY)/(maxY-minY))*(H-pad.t-pad.b)
+    }));
+    const fill=ctx.createLinearGradient(0,0,0,H);
+    fill.addColorStop(0,'rgba(40,198,138,.28)');
+    fill.addColorStop(1,'rgba(40,198,138,0)');
+    smooth(ctx,pts,1);
+    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
+    ctx.fillStyle=fill; ctx.fill();
+    smooth(ctx,pts,1);
+    ctx.strokeStyle='rgba(44,230,160,.18)'; ctx.lineWidth=6; ctx.stroke();
+    smooth(ctx,pts,1);
+    ctx.strokeStyle='#2CE6A0'; ctx.lineWidth=2.2; ctx.stroke();
+  }
+
+  function drawMain(){
+    const cv=document.getElementById('mainChart'); if(!cv) return;
+    const {ctx,W,H}=resizeCanvas(cv,360);
+
+    const pad={l:48,r:28,t:28,b:42};
+    const minY=0,maxY=2500;
+    const chartW=W-pad.l-pad.r, chartH=H-pad.t-pad.b;
+
+    const pts=miniData.map((v,i)=>({
+      x:pad.l+(i/(miniData.length-1))*chartW,
+      y:pad.t+(1-(v-minY)/(maxY-minY))*chartH
+    }));
+
+    ctx.clearRect(0,0,W,H);
+
+    // subtle background glow
+    const bg=ctx.createRadialGradient(W*.76,H*.12,20,W*.76,H*.12,W*.55);
+    bg.addColorStop(0,'rgba(40,198,138,.13)');
+    bg.addColorStop(1,'rgba(40,198,138,0)');
+    ctx.fillStyle=bg;
+    ctx.fillRect(0,0,W,H);
+
+    // grid and labels
+    ctx.lineWidth=1;
+    ctx.font='10px DM Mono, monospace';
+    ctx.textBaseline='middle';
+    [0,625,1250,1875,2500].forEach(v=>{
+      const y=pad.t+(1-(v-minY)/(maxY-minY))*chartH;
+      ctx.strokeStyle='rgba(180,192,210,.075)';
+      ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+      ctx.fillStyle='rgba(180,192,210,.36)';
+      ctx.fillText(v+'%', pad.l+4, y-8);
+    });
+    for(let i=0;i<=5;i++){
+      const x=pad.l+(i/5)*chartW;
+      ctx.strokeStyle='rgba(180,192,210,.035)';
+      ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,H-pad.b); ctx.stroke();
+    }
+
+    // area fill
+    const area=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+    area.addColorStop(0,'rgba(40,198,138,.34)');
+    area.addColorStop(.55,'rgba(40,198,138,.12)');
+    area.addColorStop(1,'rgba(40,198,138,0)');
+    smooth(ctx,pts,1);
+    ctx.lineTo(W-pad.r,H-pad.b);
+    ctx.lineTo(pad.l,H-pad.b);
+    ctx.closePath();
+    ctx.fillStyle=area;
+    ctx.fill();
+
+    // profit line glow
+    smooth(ctx,pts,1);
+    ctx.strokeStyle='rgba(44,230,160,.18)';
+    ctx.lineWidth=16;
+    ctx.lineJoin='round';
+    ctx.lineCap='round';
+    ctx.stroke();
+
+    // main profit line
+    smooth(ctx,pts,1);
+    const stroke=ctx.createLinearGradient(pad.l,0,W-pad.r,0);
+    stroke.addColorStop(0,'#1AAE78');
+    stroke.addColorStop(.55,'#28C68A');
+    stroke.addColorStop(1,'#47FFB6');
+    ctx.strokeStyle=stroke;
+    ctx.lineWidth=4;
+    ctx.stroke();
+
+    // end marker
+    const last=pts[pts.length-1];
+    ctx.fillStyle='rgba(44,230,160,.18)';
+    ctx.beginPath(); ctx.arc(last.x,last.y,15,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#2CE6A0';
+    ctx.beginPath(); ctx.arc(last.x,last.y,6,0,Math.PI*2); ctx.fill();
+
+    // dates
+    ctx.textBaseline='alphabetic';
+    ctx.fillStyle='rgba(180,192,210,.42)';
+    ctx.font='10px DM Mono, monospace';
+    const dates=[['2020',pad.l],['2022',pad.l+chartW*.34],['2024',pad.l+chartW*.68],['MAY 2026',W-pad.r-60]];
+    dates.forEach(([txt,x])=>ctx.fillText(txt,x,H-14));
+  }
+
+  function drawAll(){ drawMini(); drawMain(); }
+  drawAll();
+  window.addEventListener('resize', drawAll);
+})();
+
+
+// ═══════════════════════════════════════════════════════════════
+//  DOBERWHITE — LIVE MARKET DATA ENGINE
+//  100% sin cuentas ni claves. Funciona al subir el archivo.
+//
+//  Fuentes:
+//  ✅ BTC/USD     → CoinGecko       (público, sin registro)
+//  ✅ NAS100/NDX   → Yahoo Finance    (público, sin registro)
+//  ✅ USD/CLP     → ExchangeRate API (público, sin registro)
+//  ✅ EUR/USD     → ExchangeRate API (público, sin registro)
+//  ✅ S&P 500     → Yahoo Finance    (público, sin registro)
+//  ✅ NASDAQ      → Yahoo Finance    (público, sin registro)
+//  ✅ ORO XAU     → Yahoo Finance    (público, sin registro)
+//  ✅ BRENT       → Yahoo Finance    (público, sin registro)
+//  ✅ IPSA        → Yahoo Finance    (público, sin registro)
+// ═══════════════════════════════════════════════════════════════
+(function(){
+
+  const REFRESH_MS = 60000; // actualiza cada 60 segundos
+  const PROXY      = 'https://corsproxy.io/?url='; // proxy CORS gratuito, sin registro
+
+  // ── Actualiza ticker (×2) y market tile ─────────────────────
+  function updateSym(sym, priceStr, chgPct) {
+    var pos    = chgPct >= 0;
+    var chgStr = (pos ? '▲ +' : '▼ ') + Math.abs(chgPct).toFixed(2) + '%';
+    document.querySelectorAll('.ticker-item[data-sym="' + sym + '"]').forEach(function(el) {
+      var b = el.querySelector('b');
+      var s = el.querySelector('span');
+      if (b) b.textContent = priceStr;
+      if (s) { s.textContent = chgStr; s.className = pos ? 'up' : 'dn'; }
+    });
+    var tile = document.querySelector('.mkt-tile[data-sym="' + sym + '"]');
+    if (tile) {
+      var v = tile.querySelector('.mkt-val');
+      var c = tile.querySelector('.mkt-chg');
+      if (v) v.textContent = priceStr;
+      if (c) { c.textContent = chgStr; c.className = 'mkt-chg ' + (pos ? 'pos' : 'neg'); }
+    }
+  }
+
+  // ── % cambio forex (compara vs fetch anterior en localStorage) ─
+  function forexChg(key, current) {
+    var stored = JSON.parse(localStorage.getItem('dw_' + key) || 'null');
+    localStorage.setItem('dw_' + key, JSON.stringify({ r: current, t: Date.now() }));
+    if (stored && stored.r) return (current - stored.r) / stored.r * 100;
+    return 0;
+  }
+
+  // ── BTC via CoinGecko (sin clave, sin registro) ──────────────
+  async function fetchBTC() {
+    try {
+      var r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
+      var d = await r.json();
+      updateSym('BTC', '$' + Math.round(d.bitcoin.usd).toLocaleString('en-US'), d.bitcoin.usd_24h_change || 0);
+    } catch(e) {}
+  }
+
+  // ── Forex via ExchangeRate API (sin clave, sin registro) ─────
+  async function fetchForex() {
+    try {
+      var r = await fetch('https://open.er-api.com/v6/latest/USD');
+      var d = await r.json();
+      if (d.result !== 'success') return;
+      var clp = d.rates.CLP;
+      var eur = 1 / d.rates.EUR;
+      updateSym('USDCLP', '$' + Math.round(clp).toLocaleString('en-US'), forexChg('clp', clp));
+      updateSym('EURUSD', eur.toFixed(4),  forexChg('eur', eur));
+    } catch(e) {}
+  }
+
+  // ── Yahoo Finance via proxy CORS (sin clave, sin registro) ───
+  // Cubre S&P500, NASDAQ, IPSA, Oro, Brent — todos con precio y % cambio real
+  async function fetchYahoo(ySymbol, dwSym, fmt) {
+    try {
+      var url = 'https://query2.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(ySymbol) + '?interval=1d&range=1d';
+      var r   = await fetch(PROXY + encodeURIComponent(url));
+      var d   = await r.json();
+      var meta = d.chart.result[0].meta;
+      var price = meta.regularMarketPrice;
+      var chg   = meta.regularMarketChangePercent || 0;
+      if (!price || price === 0) return;
+      updateSym(dwSym, fmt(price), chg);
+    } catch(e) {}
+  }
+
+  // ── Ciclo de actualización ───────────────────────────────────
+  async function refresh() {
+    // Sin cuenta, sin clave — todo automático
+    await fetchBTC();
+    await fetchForex();
+    await fetchYahoo('^GSPC', 'SP500',  function(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); });
+    await fetchYahoo('^NDX',  'NAS100',  function(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); });
+    await fetchYahoo('^IXIC', 'NASDAQ', function(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); });
+    await fetchYahoo('^IPSA', 'IPSA',   function(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); });
+    await fetchYahoo('GC=F',  'GOLD',   function(n){ return '$' + Math.round(n).toLocaleString('en-US'); });
+    await fetchYahoo('BZ=F',  'BRENT',  function(n){ return '$' + n.toFixed(2); });
+  }
+
+  refresh();
+  setInterval(refresh, REFRESH_MS);
+
+})();
+</script>
 </body>
 </html>
