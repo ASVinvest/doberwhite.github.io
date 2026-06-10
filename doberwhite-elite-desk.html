@@ -206,15 +206,35 @@
 
 <script>
   // REEMPLAZAR: número de WhatsApp que recibe las aplicaciones (formato internacional, solo dígitos)
-  const WHATSAPP = "56900000000";
-  function enviarAplicacion(){
-    const nombre=document.getElementById('nombre').value.trim(), email=document.getElementById('email').value.trim(),
-          wapp=document.getElementById('wapp').value.trim(), exp=document.getElementById('exp').value, busca=document.getElementById('busca').value.trim();
-    if(!nombre||!email||!wapp||!exp){ alert('Completa nombre, email, WhatsApp y tu experiencia para enviar la solicitud.'); return; }
-    const msg="Solicitud Elite Desk — Doberwhite Trading%0A%0A"+"Nombre: "+encodeURIComponent(nombre)+"%0A"+"Email: "+encodeURIComponent(email)+"%0A"+"WhatsApp: "+encodeURIComponent(wapp)+"%0A"+"Experiencia: "+encodeURIComponent(exp)+"%0A"+"Qué busca: "+encodeURIComponent(busca||"—");
-    document.getElementById('okmsg').classList.add('show');
-    window.open("https://wa.me/"+WHATSAPP+"?text="+msg,"_blank");
-  }
+  const WHATSAPP = "56988536769";
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbwCsDtR3Wg14VbN1bz1gOKEu6d_5R43KTFT182wzXv8Y5oFlIL3AikKbrhq2WKU5Xd-/exec";
+
+function enviarAplicacion(){
+  const nombre=document.getElementById('nombre').value.trim(),
+        email=document.getElementById('email').value.trim(),
+        wapp=document.getElementById('wapp').value.trim(),
+        exp=document.getElementById('exp').value,
+        busca=document.getElementById('busca').value.trim();
+  if(!nombre||!email||!wapp||!exp){ alert('Completa nombre, email, WhatsApp y tu experiencia para enviar la solicitud.'); return; }
+
+  // 1) Guarda el lead en tu Google Sheet (en silencio, no se pierde aunque no termine en WhatsApp)
+  fetch(SHEET_URL, {
+    method:"POST",
+    mode:"no-cors",
+    headers:{ "Content-Type":"text/plain;charset=utf-8" },
+    body: JSON.stringify({ nombre:nombre, email:email, whatsapp:wapp, experiencia:exp, busca:busca })
+  }).catch(function(){ /* si falla la red, igual seguimos a WhatsApp */ });
+
+  // 2) Abre WhatsApp con el mensaje listo para contacto en caliente
+  const msg="Solicitud Elite Desk — Doberwhite Trading%0A%0A"+
+    "Nombre: "+encodeURIComponent(nombre)+"%0A"+
+    "Email: "+encodeURIComponent(email)+"%0A"+
+    "WhatsApp: "+encodeURIComponent(wapp)+"%0A"+
+    "Experiencia: "+encodeURIComponent(exp)+"%0A"+
+    "Qué busca: "+encodeURIComponent(busca||"—");
+  document.getElementById('okmsg').classList.add('show');
+  window.open("https://wa.me/"+WHATSAPP+"?text="+msg,"_blank");
+}
   const io=new IntersectionObserver((es)=>{ es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'),i*55); io.unobserve(e.target);} }); },{threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
