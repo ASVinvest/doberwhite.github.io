@@ -205,9 +205,10 @@
 </div></footer>
 
 <script>
-  // REEMPLAZAR: número de WhatsApp que recibe las aplicaciones (formato internacional, solo dígitos)
+  // Número de WhatsApp que recibe las solicitudes (formato internacional, solo dígitos)
   const WHATSAPP = "56988536769";
-  const SHEET_URL = "https://script.google.com/macros/library/d/1h1Y5IIzttqINx7AgWE3rNVRIo-ctHyIe_BEDHirsz6PuJ6jalzA1TFxn/2";
+  // URL de la app web del Apps Script (la que termina en /exec)
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbzrLTRkfZHtRC_-O_V540AY6Cl4nGlZukJWfRaYuHEYBKHn50uJUZdEAu9AK8baVVBK/exec";
 
 function enviarAplicacion(){
   const nombre=document.getElementById('nombre').value.trim(),
