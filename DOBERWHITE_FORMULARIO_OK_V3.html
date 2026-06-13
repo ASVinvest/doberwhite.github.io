@@ -292,7 +292,7 @@
 
       <p>Completa tus datos y te contactaremos para ingresar a la ruta Doberwhite Trading.</p>
 
-      <form id="leadForm" method="GET" action="https://script.google.com/macros/s/AKfycbxjoUgRypOQloOHZpMrhAbxNQwjGd_aOmNIrWWTbbMcMf24T4WF3heHygtPssYrKn080g/exec" target="hidden_iframe" accept-charset="UTF-8">
+      <form id="leadForm" method="GET" action="https://script.google.com/macros/s/AKfycbxjoUgRypOQloOHZpMrhAbxNQwjGd_aOmNIrWWTbbMcMf24T4WF3heHygtPssYrKn080g/exec" accept-charset="UTF-8">
         <input type="hidden" name="landing" value="doberwhite_instagram_gold_replica">
         <input type="hidden" name="source" value="instagram">
         <input type="hidden" name="page_url" id="pageUrl">
@@ -303,6 +303,7 @@
         <input type="hidden" name="created_at" id="createdAt">
         <input type="hidden" name="telefono" id="fullPhone">
         <input type="hidden" name="telefono_completo" id="fullPhoneCopy">
+        <input type="hidden" name="return_url" id="returnUrl">
 
         <label>
           Nombre y apellido
@@ -349,8 +350,6 @@
         <div class="message" id="formMessage"></div>
       </form>
 
-      <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-
       <p class="mini-note">Los datos se envían al Google Sheet conectado mediante Apps Script.</p>
     </div>
   </section>
@@ -362,10 +361,8 @@
     const leadForm = document.getElementById("leadForm");
     const submitBtn = document.getElementById("submitBtn");
     const message = document.getElementById("formMessage");
-    const hiddenIframe = document.getElementById("hidden_iframe");
 
     const params = new URLSearchParams(window.location.search);
-    let submitted = false;
 
     function fillTrackingFields() {
       document.getElementById("pageUrl").value = window.location.href;
@@ -374,6 +371,9 @@
       document.getElementById("utmCampaign").value = params.get("utm_campaign") || "";
       document.getElementById("utmContent").value = params.get("utm_content") || "";
       document.getElementById("createdAt").value = new Date().toISOString();
+
+      const cleanUrl = window.location.href.split("?")[0].split("#")[0];
+      document.getElementById("returnUrl").value = cleanUrl;
     }
 
     function showModal() {
@@ -381,6 +381,7 @@
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+
       setTimeout(() => {
         const first = modal.querySelector("input[name='nombre']");
         if (first) first.focus();
@@ -408,6 +409,19 @@
       if (event.key === "Escape" && modal.classList.contains("open")) hideModal();
     });
 
+    // Si vuelve desde Apps Script con lead=ok, mostramos confirmación.
+    window.addEventListener("DOMContentLoaded", () => {
+      fillTrackingFields();
+      if (params.get("lead") === "ok") {
+        showModal();
+        message.className = "message ok";
+        message.textContent = "Solicitud enviada. Te contactaremos para continuar con la ruta de acceso.";
+        if (history.replaceState) {
+          history.replaceState(null, "", window.location.href.split("?")[0]);
+        }
+      }
+    });
+
     leadForm.addEventListener("submit", (event) => {
       message.className = "message";
       message.textContent = "";
@@ -427,23 +441,9 @@
       document.getElementById("fullPhoneCopy").value = fullPhone;
       fillTrackingFields();
 
-      submitted = true;
       submitBtn.disabled = true;
       submitBtn.textContent = "Enviando...";
-    });
-
-    hiddenIframe.addEventListener("load", () => {
-      if (!submitted) return;
-
-      message.className = "message ok";
-      message.textContent = "Solicitud enviada. Te contactaremos para continuar con la ruta de acceso.";
-
-      leadForm.reset();
-      fillTrackingFields();
-
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Enviar solicitud";
-      submitted = false;
+      // No hacemos preventDefault: el navegador enviará GET directo al Apps Script.
     });
   </script>
 </body>
