@@ -224,12 +224,14 @@
     const btn=document.getElementById('btnEnviar'); const orig=btn.textContent;
     btn.disabled=true; btn.textContent="Enviando…";
 
-    // Guarda el lead en tu Google Sheet (formato formulario -> Apps Script lo lee con e.parameter)
-    fetch(SHEET_URL, {
+    // Guarda el lead en tu Google Sheet.
+    // Los datos van en la URL (query string): Apps Script SIEMPRE los lee en e.parameter,
+    // sin depender de cómo se interprete el cuerpo de la petición (que era lo que fallaba).
+    var qs = new URLSearchParams({ nombre:nombre, email:email, whatsapp:wapp, experiencia:exp, busca:busca }).toString();
+    fetch(SHEET_URL + "?" + qs, {
       method:"POST",
       mode:"no-cors",
-      keepalive:true,
-      body: new URLSearchParams({ nombre:nombre, email:email, whatsapp:wapp, experiencia:exp, busca:busca })
+      keepalive:true
     })
     .then(function(){
       document.getElementById('okmsg').classList.add('show');
