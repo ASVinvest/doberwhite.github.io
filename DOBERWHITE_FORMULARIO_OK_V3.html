@@ -422,7 +422,28 @@
       }
     });
 
-    leadForm.addEventListener("submit", (event) => {
+    function showSuccess() {
+      const sheet = modal.querySelector(".sheet");
+      const intro = sheet.querySelector("p");
+      const note = sheet.querySelector(".mini-note");
+      const title = document.getElementById("formTitle");
+
+      leadForm.style.display = "none";
+      if (intro) intro.style.display = "none";
+      if (note) note.style.display = "none";
+      title.textContent = "¡Estás dentro!";
+
+      const ok = document.createElement("div");
+      ok.className = "message ok";
+      ok.style.display = "block";
+      ok.style.fontSize = "15px";
+      ok.style.lineHeight = "1.55";
+      ok.innerHTML = "Recibimos tu solicitud. Un asesor de Doberwhite Trading se pondrá en contacto contigo a la brevedad por WhatsApp para activar tu acceso a la ruta.";
+      sheet.appendChild(ok);
+    }
+
+    leadForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
       message.className = "message";
       message.textContent = "";
 
@@ -430,7 +451,6 @@
       const localPhone = cleanPhone(document.getElementById("phone").value);
 
       if (localPhone.length < 6) {
-        event.preventDefault();
         message.className = "message error";
         message.textContent = "Revisa el número de WhatsApp antes de enviar.";
         return;
@@ -443,7 +463,22 @@
 
       submitBtn.disabled = true;
       submitBtn.textContent = "Enviando...";
-      // No hacemos preventDefault: el navegador enviará GET directo al Apps Script.
+
+      try {
+        const payload = new URLSearchParams(new FormData(leadForm));
+        await fetch(leadForm.action, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body: payload.toString()
+        });
+        showSuccess();
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Enviar solicitud";
+        message.className = "message error";
+        message.textContent = "No pudimos enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo.";
+      }
     });
   </script>
 </body>
