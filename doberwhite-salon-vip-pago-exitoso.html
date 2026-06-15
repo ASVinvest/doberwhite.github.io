@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Pago exitoso · Salón VIP Doberwhite</title>
+  <meta name="description" content="Confirmación de pago exitoso para la membresía mensual del Salón VIP Doberwhite Trading." />
+  <style>
+    :root{
+      --bg:#070707;
+      --bg-soft:#101010;
+      --panel:#15130f;
+      --panel-2:#1d1a13;
+      --gold:#d9b45f;
+      --gold-2:#f1d99a;
+      --text:#f7f1e7;
+      --muted:#a9a094;
+      --muted-2:#7f786f;
+      --line:rgba(217,180,95,.22);
+      --ok:#58d68d;
+      --ok-soft:rgba(88,214,141,.12);
+      --shadow:0 26px 90px rgba(0,0,0,.52);
+      --radius:30px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 16% 0%, rgba(217,180,95,.18), transparent 34%),
+        radial-gradient(circle at 82% 16%, rgba(255,255,255,.08), transparent 26%),
+        linear-gradient(135deg, #050505 0%, #0a0a0a 48%, #15120b 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.14;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size:54px 54px;
+      mask-image:linear-gradient(to bottom, black, transparent 84%);
+    }
+    .ticker{
+      width:100%;
+      border-bottom:1px solid rgba(217,180,95,.16);
+      background:rgba(0,0,0,.38);
+      color:#cabf9d;
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      overflow:hidden;
+      white-space:nowrap;
+    }
+    .ticker span{display:inline-block;padding:10px 0;animation:move 34s linear infinite}
+    @keyframes move{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .wrap{width:min(1120px, calc(100% - 34px));margin:0 auto;position:relative;z-index:1}
+    header{display:flex;justify-content:space-between;align-items:center;padding:28px 0 18px;gap:18px}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--text)}
+    .mark{width:42px;height:42px;border:1px solid var(--line);border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg, rgba(217,180,95,.18), rgba(255,255,255,.04));box-shadow:inset 0 0 24px rgba(217,180,95,.08)}
+    .mark::before{content:"DW";font-weight:800;letter-spacing:-.06em;color:var(--gold-2);font-size:14px}
+    .brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-top:2px}
+    .brand strong{font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+    .pill{border:1px solid var(--line);color:var(--gold-2);background:rgba(217,180,95,.07);padding:10px 14px;border-radius:999px;text-decoration:none;font-size:13px}
+    main{padding:34px 0 44px}
+    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:28px;align-items:stretch}
+    .panel{border:1px solid var(--line);background:linear-gradient(155deg, rgba(21,19,15,.96), rgba(12,12,12,.9));border-radius:var(--radius);box-shadow:var(--shadow);padding:44px;position:relative;overflow:hidden}
+    .panel::after{content:"";position:absolute;right:-90px;top:-90px;width:230px;height:230px;border-radius:999px;background:rgba(217,180,95,.12);filter:blur(10px)}
+    .status{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;color:var(--ok);background:var(--ok-soft);border:1px solid rgba(88,214,141,.28);padding:9px 13px;border-radius:999px;font-size:13px;font-weight:700;margin-bottom:18px}
+    .dot{width:9px;height:9px;border-radius:999px;background:var(--ok);box-shadow:0 0 18px var(--ok)}
+    h1{position:relative;z-index:1;margin:0;font-size:clamp(42px, 7vw, 76px);line-height:.92;letter-spacing:-.07em;max-width:780px}
+    h1 em{font-style:normal;color:var(--gold-2)}
+    .lead{position:relative;z-index:1;margin:24px 0 0;color:#d8d0c1;font-size:18px;line-height:1.65;max-width:720px}
+    .actions{position:relative;z-index:1;display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:0 20px;border-radius:999px;text-decoration:none;font-weight:800;font-size:14px;transition:.18s ease;white-space:nowrap}
+    .btn.primary{background:linear-gradient(135deg, var(--gold), var(--gold-2));color:#12100a;box-shadow:0 16px 38px rgba(217,180,95,.22)}
+    .btn.secondary{border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.04)}
+    .btn:hover{transform:translateY(-2px)}
+    .receipt{background:linear-gradient(155deg, rgba(29,26,19,.92), rgba(10,10,10,.92));border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow)}
+    .receipt h2,.section h2{margin:0 0 16px;font-size:22px;letter-spacing:-.03em}
+    .row{display:flex;justify-content:space-between;gap:18px;padding:15px 0;border-bottom:1px solid rgba(217,180,95,.13);color:var(--muted);font-size:14px}
+    .row:last-child{border-bottom:0}.row strong{text-align:right;color:var(--text);font-size:14px}.tag{color:var(--gold-2)}
+    .section{margin-top:28px;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:var(--radius);padding:30px}
+    .step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+    .step{border:1px solid rgba(217,180,95,.15);background:rgba(0,0,0,.22);border-radius:22px;padding:20px;min-height:178px}
+    .step b{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:12px;background:rgba(217,180,95,.14);color:var(--gold-2);margin-bottom:14px}
+    .step h3{margin:0 0 8px;font-size:16px}.step p{margin:0;color:var(--muted);line-height:1.55;font-size:14px}
+    .note{margin-top:20px;color:var(--muted);font-size:13px;line-height:1.6;border-left:2px solid var(--gold);padding-left:14px}
+    .mini{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+    .mini-card{border:1px solid rgba(217,180,95,.15);border-radius:20px;background:rgba(0,0,0,.2);padding:18px}.mini-card span{display:block;color:var(--muted-2);font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}.mini-card strong{font-size:15px;color:var(--text)}
+    footer{padding:28px 0 42px;color:#938b80;font-size:12px;line-height:1.6;border-top:1px solid rgba(217,180,95,.14)}
+    footer a{color:var(--gold-2);text-decoration:none}
+    @media(max-width:900px){.hero{grid-template-columns:1fr}.panel{padding:32px}.step-grid,.mini{grid-template-columns:1fr}.pill{display:none}header{align-items:flex-start}.btn{width:100%}.actions{gap:10px}}
+  </style>
+</head>
+<body>
+  <div class="ticker"><span>Salón VIP · Pre-market interactivo · Comunidad Doberwhite · Gestión de riesgo primero · Salón VIP · Pre-market interactivo · Comunidad Doberwhite · Gestión de riesgo primero · </span></div>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="https://www.doberwhite.com/" aria-label="Ir a Doberwhite Trading">
+        <span class="mark" aria-hidden="true"></span>
+        <span><strong>Doberwhite Trading</strong><small>Inversiones Boutique LATAM</small></span>
+      </a>
+      <a class="pill" href="https://www.doberwhite.com/doberwhite-salon-vip.html">Salón VIP · Membresía mensual</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="panel">
+          <div class="status"><span class="dot"></span> Pago confirmado</div>
+          <h1>Bienvenido al <em>Salón VIP.</em></h1>
+          <p class="lead">Tu pago fue recibido correctamente. Desde ahora quedas en proceso de activación para la comunidad recurrente de Doberwhite Trading: pre-market interactivo, Telegram de comunidad y disciplina operativa cada mañana.</p>
+          <div class="actions">
+            <a class="btn primary" href="https://www.doberwhite.com/doberwhite-salon-vip.html">Ver detalles del Salón VIP</a>
+            <a class="btn secondary" href="mailto:contacto@doberwhite.com?subject=Pago%20confirmado%20Salon%20VIP%20Doberwhite">Contactar soporte</a>
+          </div>
+          <p class="note">Si el acceso a Telegram o el enlace de la sesión no llega automáticamente, escribe a soporte con el comprobante de pago y el correo utilizado en la compra.</p>
+        </div>
+
+        <aside class="receipt" aria-label="Resumen de membresía">
+          <h2>Resumen de acceso</h2>
+          <div class="row"><span>Producto</span><strong>Salón VIP Doberwhite</strong></div>
+          <div class="row"><span>Tipo</span><strong>Membresía mensual</strong></div>
+          <div class="row"><span>Formato</span><strong>Online + comunidad Telegram</strong></div>
+          <div class="row"><span>Sesión diaria</span><strong>Lun a Vie · 9:00–9:30 AM NY</strong></div>
+          <div class="row"><span>Estado</span><strong class="tag">Confirmado</strong></div>
+          <div class="mini">
+            <div class="mini-card"><span>Ritual</span><strong>Pre-market interactivo</strong></div>
+            <div class="mini-card"><span>Foco</span><strong>Lectura y riesgo</strong></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section" aria-label="Próximos pasos">
+        <h2>Próximos pasos</h2>
+        <div class="step-grid">
+          <article class="step">
+            <b>1</b>
+            <h3>Revisa tu correo</h3>
+            <p>Ahí recibirás la información de acceso, instrucciones operativas y cualquier enlace necesario para la comunidad.</p>
+          </article>
+          <article class="step">
+            <b>2</b>
+            <h3>Ingresa al Telegram</h3>
+            <p>La comunidad mantiene el contexto de mercado, dudas generales y conversación durante la jornada.</p>
+          </article>
+          <article class="step">
+            <b>3</b>
+            <h3>Bloquea tu ritual</h3>
+            <p>Conéctate de lunes a viernes, 9:00–9:30 AM hora de Nueva York, para preparar la apertura con criterio.</p>
+          </article>
+        </div>
+        <p class="note">Contenido educativo y de análisis de mercado. No constituye recomendación personalizada ni garantía de resultado. Cada operador decide y gestiona su propio riesgo.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="wrap">© <span id="year"></span> Doberwhite Trading. Todos los derechos reservados. · <a href="https://www.doberwhite.com/doberwhite-salon-vip.html">Salón VIP</a> · <a href="https://www.doberwhite.com/">Inicio</a></div>
+  </footer>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
