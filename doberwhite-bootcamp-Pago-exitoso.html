@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Pago exitoso · Bootcamp Doberwhite</title>
+  <meta name="description" content="Confirmación de pago exitoso para el Bootcamp Doberwhite Trading." />
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#101010;
+      --card:#15130f;
+      --card2:#1d1a13;
+      --gold:#d9b45f;
+      --gold2:#f1d99a;
+      --text:#f6f1e7;
+      --muted:#a9a094;
+      --line:rgba(217,180,95,.24);
+      --ok:#58d68d;
+      --shadow:0 24px 70px rgba(0,0,0,.45);
+      --radius:28px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(217,180,95,.18), transparent 32%),
+        radial-gradient(circle at 80% 18%, rgba(255,255,255,.07), transparent 28%),
+        linear-gradient(135deg, #050505 0%, #0b0b0b 48%, #15120b 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.16;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size:54px 54px;
+      mask-image:linear-gradient(to bottom, black, transparent 85%);
+    }
+    .ticker{
+      width:100%;
+      border-bottom:1px solid rgba(217,180,95,.16);
+      background:rgba(0,0,0,.38);
+      color:#cabf9d;
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      overflow:hidden;
+      white-space:nowrap;
+    }
+    .ticker span{
+      display:inline-block;
+      padding:10px 0;
+      animation:move 32s linear infinite;
+    }
+    @keyframes move{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .wrap{width:min(1120px, calc(100% - 34px)); margin:0 auto; position:relative; z-index:1}
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:28px 0 18px;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      text-decoration:none;
+      color:var(--text);
+    }
+    .mark{
+      width:42px;height:42px;border:1px solid var(--line);border-radius:14px;
+      display:grid;place-items:center;color:var(--gold2);font-weight:800;
+      background:linear-gradient(145deg, rgba(217,180,95,.15), rgba(255,255,255,.04));
+      box-shadow:0 12px 30px rgba(0,0,0,.35);
+    }
+    .brand strong{display:block; font-size:14px; letter-spacing:.13em}
+    .brand small{display:block; color:var(--muted); font-size:12px; margin-top:2px}
+    .pill{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:10px 14px;
+      color:var(--gold2);
+      background:rgba(217,180,95,.08);
+      font-size:13px;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    main{padding:40px 0 64px}
+    .hero{
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:28px;
+      align-items:stretch;
+    }
+    .panel{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(21,19,15,.94), rgba(8,8,8,.92));
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      padding:42px;
+      position:relative;
+      overflow:hidden;
+    }
+    .panel::after{
+      content:"";
+      position:absolute;
+      width:260px;height:260px;border-radius:999px;
+      background:radial-gradient(circle, rgba(217,180,95,.18), transparent 64%);
+      right:-80px;top:-80px;
+    }
+    .status{
+      display:inline-flex;align-items:center;gap:10px;
+      border:1px solid rgba(88,214,141,.35);
+      background:rgba(88,214,141,.09);
+      color:#b8ffd6;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      margin-bottom:26px;
+    }
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 20px var(--ok)}
+    h1{
+      margin:0;
+      font-size:clamp(38px, 6vw, 74px);
+      line-height:.92;
+      letter-spacing:-.06em;
+      max-width:820px;
+    }
+    h1 em{font-style:normal;color:var(--gold2)}
+    .lead{
+      color:#d7d0c4;
+      font-size:clamp(17px, 2.2vw, 21px);
+      line-height:1.55;
+      margin:26px 0 0;
+      max-width:760px;
+    }
+    .actions{display:flex; flex-wrap:wrap; gap:14px; margin-top:32px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      min-height:54px;
+      padding:0 22px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:750;
+      transition:.2s ease;
+    }
+    .btn.primary{background:linear-gradient(135deg, var(--gold2), var(--gold)); color:#12100b; box-shadow:0 14px 34px rgba(217,180,95,.22)}
+    .btn.secondary{border:1px solid var(--line); color:var(--text); background:rgba(255,255,255,.04)}
+    .btn:hover{transform:translateY(-2px)}
+    .receipt{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+      border-radius:var(--radius);
+      padding:30px;
+      min-height:100%;
+      box-shadow:var(--shadow);
+    }
+    .receipt h2,.steps h2{margin:0 0 18px;font-size:25px;letter-spacing:-.03em}
+    .row{display:flex;justify-content:space-between;gap:18px;padding:17px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+    .row:last-child{border-bottom:none}
+    .row span{color:var(--muted);font-size:14px}
+    .row strong{text-align:right;color:var(--text)}
+    .code{
+      color:var(--gold2);
+      font-variant-numeric:tabular-nums;
+      overflow-wrap:anywhere;
+    }
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+    .mini{
+      border:1px solid rgba(217,180,95,.18);
+      background:rgba(255,255,255,.035);
+      border-radius:22px;
+      padding:18px;
+    }
+    .mini b{display:block;color:var(--gold2);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .mini p{margin:0;color:#d4ccbf;line-height:1.45;font-size:14px}
+    .steps{margin-top:24px;border:1px solid var(--line);background:rgba(0,0,0,.34);border-radius:var(--radius);padding:34px;box-shadow:var(--shadow)}
+    .step-list{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+    .step{position:relative;padding:22px;border-radius:24px;background:linear-gradient(180deg, rgba(217,180,95,.08), rgba(255,255,255,.025));border:1px solid rgba(217,180,95,.15)}
+    .num{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;background:rgba(217,180,95,.14);color:var(--gold2);font-weight:800;margin-bottom:16px}
+    .step h3{margin:0 0 8px;font-size:18px}.step p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}
+    .note{margin-top:22px;color:var(--muted);font-size:13px;line-height:1.6;border-top:1px solid rgba(255,255,255,.08);padding-top:18px}
+    footer{padding:28px 0 42px;color:#938b80;font-size:12px;line-height:1.6;border-top:1px solid rgba(217,180,95,.14)}
+    footer a{color:var(--gold2);text-decoration:none}
+    @media(max-width:900px){.hero{grid-template-columns:1fr}.panel{padding:32px}.grid,.step-list{grid-template-columns:1fr}header{align-items:flex-start}.pill{display:none}}
+    @media(max-width:520px){.wrap{width:min(100% - 24px, 1120px)}.panel,.receipt,.steps{border-radius:22px;padding:24px}.actions{display:grid}.btn{width:100%}h1{font-size:43px}.brand small{display:none}}
+  </style>
+</head>
+<body>
+  <div class="ticker" aria-hidden="true"><span>BOOTCAMP DOBERWHITE · FORMACIÓN EDUCATIVA · GESTIÓN DE RIESGO · MÉTODO REPETIBLE · DISCIPLINA OPERATIVA · BOOTCAMP DOBERWHITE · FORMACIÓN EDUCATIVA · GESTIÓN DE RIESGO · MÉTODO REPETIBLE · DISCIPLINA OPERATIVA ·&nbsp;</span></div>
+
+  <div class="wrap">
+    <header>
+      <a class="brand" href="https://www.doberwhite.com/" aria-label="Ir a Doberwhite Trading">
+        <div class="mark">DW</div>
+        <div>
+          <strong>DOBERWHITE TRADING</strong>
+          <small>Inversiones Boutique · LATAM</small>
+        </div>
+      </a>
+      <a class="pill" href="https://www.doberwhite.com/doberwhite-bootcamp.html">Bootcamp · 3 días</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="panel">
+          <div class="status"><span class="dot"></span> Pago confirmado</div>
+          <h1>Tu cupo está <em>reservado.</em></h1>
+          <p class="lead">Bienvenido al Bootcamp Doberwhite. Tu pago fue recibido correctamente y quedas registrado para la formación intensiva de trading con foco en lectura de mercado, gestión de riesgo y proceso operativo.</p>
+          <div class="actions">
+            <!-- REEMPLAZAR este enlace por el grupo real de WhatsApp, Telegram o comunidad privada -->
+            <a class="btn primary" href="https://www.doberwhite.com/doberwhite-bootcamp.html">Ver detalles del Bootcamp</a>
+            <!-- REEMPLAZAR por link de soporte real -->
+            <a class="btn secondary" href="mailto:contacto@doberwhite.com?subject=Pago%20confirmado%20Bootcamp%20Doberwhite">Contactar soporte</a>
+          </div>
+          <div class="grid" aria-label="Resumen del bootcamp">
+            <div class="mini"><b>Duración</b><p>3 días de formación intensiva.</p></div>
+            <div class="mini"><b>Modalidad</b><p>Online, con dinámica práctica.</p></div>
+            <div class="mini"><b>Enfoque</b><p>Método, riesgo y disciplina operativa.</p></div>
+          </div>
+        </div>
+
+        <aside class="receipt" aria-label="Resumen de la inscripción">
+          <h2>Resumen de inscripción</h2>
+          <div class="row"><span>Producto</span><strong>Bootcamp Doberwhite</strong></div>
+          <div class="row"><span>Estado</span><strong style="color:#b8ffd6">Confirmado</strong></div>
+          <div class="row"><span>Modalidad</span><strong>Online</strong></div>
+          <div class="row"><span>Horario</span><strong>19:00 – 21:30 Hora Chile</strong></div>
+          <div class="row"><span>Orden</span><strong class="code" id="orderCode">Confirmación recibida</strong></div>
+          <div class="row"><span>Email</span><strong class="code" id="clientEmail">Registrado en el pago</strong></div>
+        </aside>
+      </section>
+
+      <section class="steps">
+        <h2>Qué ocurre ahora</h2>
+        <div class="step-list">
+          <article class="step"><span class="num">01</span><h3>Revisa tu correo</h3><p>La información de acceso y próximos pasos se enviará al email usado en el pago.</p></article>
+          <article class="step"><span class="num">02</span><h3>Prepara tu plataforma</h3><p>Llega con tu plataforma y cuenta listas para aprovechar los ejercicios prácticos.</p></article>
+          <article class="step"><span class="num">03</span><h3>Opera con criterio</h3><p>El objetivo es construir estructura, no copiar señales ni perseguir resultados rápidos.</p></article>
+        </div>
+        <p class="note">Contenido educativo y de análisis de mercado. No constituye recomendación de inversión personalizada, asesoría financiera ni garantía de resultado. El trading con productos apalancados implica alto riesgo y puede ocasionar la pérdida total del capital.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="wrap">© <span id="year"></span> Doberwhite Trading. Todos los derechos reservados. · <a href="https://www.doberwhite.com/doberwhite-bootcamp.html">Bootcamp</a> · <a href="https://www.doberwhite.com/">Inicio</a></div>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const order = params.get('order') || params.get('order_id') || params.get('transaction_id');
+    const email = params.get('email');
+    if(order) document.getElementById('orderCode').textContent = order;
+    if(email) document.getElementById('clientEmail').textContent = email;
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Pago no confirmado · Bootcamp Doberwhite</title>
+  <meta name="description" content="Página de pago no confirmado para el Bootcamp Doberwhite Trading." />
+  <style>
+    :root{
+      --bg:#070707;
+      --card:#15130f;
+      --gold:#d9b45f;
+      --gold2:#f1d99a;
+      --text:#f6f1e7;
+      --muted:#a9a094;
+      --line:rgba(217,180,95,.24);
+      --warn:#ffb15f;
+      --danger:#ff6961;
+      --shadow:0 24px 70px rgba(0,0,0,.45);
+      --radius:28px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 16% 4%, rgba(255,105,97,.12), transparent 30%),
+        radial-gradient(circle at 78% 18%, rgba(217,180,95,.16), transparent 34%),
+        linear-gradient(135deg, #050505 0%, #0a0a0a 50%, #16100b 100%);
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;
+      background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size:54px 54px;
+      mask-image:linear-gradient(to bottom, black, transparent 85%);
+    }
+    .wrap{width:min(1120px, calc(100% - 34px)); margin:0 auto; position:relative; z-index:1}
+    header{display:flex;justify-content:space-between;align-items:center;padding:28px 0 18px}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--text)}
+    .mark{width:42px;height:42px;border:1px solid var(--line);border-radius:14px;display:grid;place-items:center;color:var(--gold2);font-weight:800;background:linear-gradient(145deg, rgba(217,180,95,.15), rgba(255,255,255,.04));box-shadow:0 12px 30px rgba(0,0,0,.35)}
+    .brand strong{display:block;font-size:14px;letter-spacing:.13em}.brand small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+    .pill{border:1px solid var(--line);border-radius:999px;padding:10px 14px;color:var(--gold2);background:rgba(217,180,95,.08);font-size:13px;text-decoration:none;white-space:nowrap}
+    main{padding:40px 0 64px}
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:stretch}
+    .panel{border:1px solid var(--line);background:linear-gradient(180deg, rgba(21,19,15,.94), rgba(8,8,8,.92));box-shadow:var(--shadow);border-radius:var(--radius);padding:42px;position:relative;overflow:hidden}
+    .panel::after{content:"";position:absolute;width:270px;height:270px;border-radius:999px;background:radial-gradient(circle, rgba(255,177,95,.14), transparent 64%);right:-90px;top:-90px}
+    .status{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,177,95,.38);background:rgba(255,177,95,.09);color:#ffe3c1;padding:10px 14px;border-radius:999px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:26px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--warn);box-shadow:0 0 20px var(--warn)}
+    h1{margin:0;font-size:clamp(38px, 6vw, 72px);line-height:.92;letter-spacing:-.06em;max-width:820px}
+    h1 em{font-style:normal;color:var(--gold2)}
+    .lead{color:#d7d0c4;font-size:clamp(17px, 2.2vw, 21px);line-height:1.55;margin:26px 0 0;max-width:760px}
+    .actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 22px;border-radius:999px;text-decoration:none;font-weight:750;transition:.2s ease}.btn.primary{background:linear-gradient(135deg, var(--gold2), var(--gold));color:#12100b;box-shadow:0 14px 34px rgba(217,180,95,.22)}.btn.secondary{border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.04)}.btn:hover{transform:translateY(-2px)}
+    .checklist{border:1px solid var(--line);background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));border-radius:var(--radius);padding:30px;min-height:100%;box-shadow:var(--shadow)}
+    .checklist h2,.support h2{margin:0 0 18px;font-size:25px;letter-spacing:-.03em}.item{display:flex;gap:14px;padding:17px 0;border-bottom:1px solid rgba(255,255,255,.08)}.item:last-child{border-bottom:none}.icon{width:31px;height:31px;min-width:31px;border-radius:50%;display:grid;place-items:center;background:rgba(217,180,95,.12);color:var(--gold2);font-weight:850}.item h3{margin:2px 0 5px;font-size:16px}.item p{margin:0;color:var(--muted);line-height:1.45;font-size:14px}
+    .alert{margin-top:24px;border:1px solid rgba(255,177,95,.28);background:rgba(255,177,95,.075);border-radius:22px;padding:18px;color:#ead1ac;line-height:1.5;font-size:14px}.alert strong{color:var(--gold2)}
+    .support{margin-top:24px;border:1px solid var(--line);background:rgba(0,0,0,.34);border-radius:var(--radius);padding:34px;box-shadow:var(--shadow)}
+    .support-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}.box{padding:22px;border-radius:24px;background:linear-gradient(180deg, rgba(217,180,95,.08), rgba(255,255,255,.025));border:1px solid rgba(217,180,95,.15)}.box b{display:block;color:var(--gold2);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}.box p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}
+    .note{margin-top:22px;color:var(--muted);font-size:13px;line-height:1.6;border-top:1px solid rgba(255,255,255,.08);padding-top:18px}
+    footer{padding:28px 0 42px;color:#938b80;font-size:12px;line-height:1.6;border-top:1px solid rgba(217,180,95,.14)}footer a{color:var(--gold2);text-decoration:none}
+    @media(max-width:900px){.hero{grid-template-columns:1fr}.panel{padding:32px}.support-grid{grid-template-columns:1fr}.pill{display:none}}
+    @media(max-width:520px){.wrap{width:min(100% - 24px, 1120px)}.panel,.checklist,.support{border-radius:22px;padding:24px}.actions{display:grid}.btn{width:100%}h1{font-size:43px}.brand small{display:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="https://www.doberwhite.com/" aria-label="Ir a Doberwhite Trading">
+        <div class="mark">DW</div>
+        <div><strong>DOBERWHITE TRADING</strong><small>Inversiones Boutique · LATAM</small></div>
+      </a>
+      <a class="pill" href="https://www.doberwhite.com/doberwhite-bootcamp.html">Bootcamp · 3 días</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="panel">
+          <div class="status"><span class="dot"></span> Pago no confirmado</div>
+          <h1>No pudimos confirmar <em>tu pago.</em></h1>
+          <p class="lead">Tu cupo para el Bootcamp Doberwhite todavía no quedó reservado. Puede ser un rechazo del banco, una validación pendiente, un error de conexión o una sesión expirada.</p>
+          <div class="actions">
+            <!-- REEMPLAZAR por el link real de pago del procesador -->
+            <a class="btn primary" href="https://www.doberwhite.com/doberwhite-bootcamp.html#reservar">Reintentar pago</a>
+            <!-- REEMPLAZAR por WhatsApp o soporte real -->
+            <a class="btn secondary" href="mailto:contacto@doberwhite.com?subject=Problema%20con%20pago%20Bootcamp%20Doberwhite">Necesito ayuda</a>
+          </div>
+          <div class="alert"><strong>Importante:</strong> si tu banco muestra un cargo pendiente, espera la confirmación del proveedor de pago antes de intentar pagar nuevamente o contáctanos para revisar tu caso.</div>
+        </div>
+
+        <aside class="checklist" aria-label="Qué revisar si el pago falla">
+          <h2>Qué revisar</h2>
+          <div class="item"><span class="icon">1</span><div><h3>Datos de la tarjeta</h3><p>Confirma número, fecha, CVV y nombre del titular tal como aparecen en el medio de pago.</p></div></div>
+          <div class="item"><span class="icon">2</span><div><h3>Autorización bancaria</h3><p>Algunos bancos solicitan aprobación desde la app, clave dinámica o validación 3D Secure.</p></div></div>
+          <div class="item"><span class="icon">3</span><div><h3>Límite o saldo disponible</h3><p>Verifica saldo, cupo internacional y restricciones para compras online.</p></div></div>
+          <div class="item"><span class="icon">4</span><div><h3>Conexión estable</h3><p>Evita actualizar la página durante el pago. Reintenta desde una red segura.</p></div></div>
+        </aside>
+      </section>
+
+      <section class="support">
+        <h2>Tu cupo aún puede reservarse</h2>
+        <div class="support-grid">
+          <div class="box"><b>Paso 01</b><p>Vuelve a la página del Bootcamp y presiona nuevamente reservar cupo.</p></div>
+          <div class="box"><b>Paso 02</b><p>Usa el mismo correo para que podamos identificar tu inscripción.</p></div>
+          <div class="box"><b>Paso 03</b><p>Si el error se repite, escribe a soporte con el email usado y una captura del mensaje.</p></div>
+        </div>
+        <p class="note">Contenido educativo y de análisis de mercado. No constituye recomendación de inversión personalizada, asesoría financiera ni garantía de resultado. El trading con productos apalancados implica alto riesgo y puede ocasionar la pérdida total del capital.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="wrap">© <span id="year"></span> Doberwhite Trading. Todos los derechos reservados. · <a href="https://www.doberwhite.com/doberwhite-bootcamp.html">Bootcamp</a> · <a href="https://www.doberwhite.com/">Inicio</a></div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
