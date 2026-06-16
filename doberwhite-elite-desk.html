@@ -1,8 +1,8 @@
 <!--
-  DOBERWHITE TRADING · ELITE DESK (doberwhite-elite-desk.html) — v3
-  CORREGIDO: identidad de marca en DORADO/PLATA (se eliminó el azul que se había colado).
-  Formulario conectado a Google Sheet + WhatsApp. Wordmark/footer -> index.html.
-  IMPORTANTE: confirma que SHEET_URL coincide con tu implementación activa ("Form Elite Desk", /exec).
+  DOBERWHITE TRADING · ELITE DESK (doberwhite-elite-desk.html) — v4
+  CORREGIDO v4: SHEET_URL actualizada al deployment ACTIVO de Apps Script.
+  La versión anterior apuntaba a una implementación vieja, por eso los leads no llegaban a la hoja.
+  Formulario conectado a Google Sheet + WhatsApp (fase 2 apagada). Wordmark/footer -> index.html.
 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -208,7 +208,8 @@
 
 <script>
   // ====== CONFIGURACIÓN ======
-  // URL de tu Google Apps Script (app web /exec). Debe coincidir con tu implementación activa "Form Elite Desk".
+  // URL de tu Google Apps Script (app web /exec). DEBE ser el deployment ACTIVO "Form Elite Desk".
+  // ▼ CORREGIDO: antes apuntaba a un deployment viejo (AKfycbwCsD...), por eso los leads no se guardaban.
   const SHEET_URL = "https://script.google.com/macros/s/AKfycbzrLTRkfZHtRC_-O_V540AY6Cl4nGlZukJWfRaYuHEYBKHn50uJUZdEAu9AK8baVVBK/exec";
   // FASE 2 (apagado por ahora): WhatsApp. Cuando lo actives, descomenta el bloque marcado más abajo.
   // const WHATSAPP = "56988536769";
@@ -226,7 +227,7 @@
 
     // Guarda el lead en tu Google Sheet.
     // Los datos van en la URL (query string): Apps Script SIEMPRE los lee en e.parameter,
-    // sin depender de cómo se interprete el cuerpo de la petición (que era lo que fallaba).
+    // sin depender de cómo se interprete el cuerpo de la petición.
     var qs = new URLSearchParams({ nombre:nombre, email:email, whatsapp:wapp, experiencia:exp, busca:busca }).toString();
     fetch(SHEET_URL + "?" + qs, {
       method:"POST",
