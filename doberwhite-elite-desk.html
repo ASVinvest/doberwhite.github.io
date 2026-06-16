@@ -225,44 +225,21 @@
     const btn=document.getElementById('btnEnviar'); const orig=btn.textContent;
     btn.disabled=true; btn.textContent="Enviando…";
 
-    // Guarda el lead en tu Google Sheet mediante ENVÍO DE FORMULARIO a un IFRAME OCULTO.
-    // ▼ Por qué así: fetch() choca con el redirect 302 de Apps Script y las reglas de CORS,
-    //   y los parámetros se perdían (solo se guardaba la FECHA). Un <form> normal hacia un
-    //   iframe oculto envía los datos como application/x-www-form-urlencoded, el navegador
-    //   sigue el redirect dentro del iframe sin restricciones de CORS, y Apps Script recibe
-    //   TODOS los campos en e.parameter. Es el método más confiable para esto.
-    var datos = { nombre:nombre, email:email, whatsapp:wapp, experiencia:exp, busca:busca };
+    // Enviamos por GET con los datos en la URL.
+    // ▼ Por qué GET: en Apps Script, los parámetros de un GET SIEMPRE llegan a e.parameter,
+    //   sin perderse por el redirect 302 ni chocar con CORS. El nuevo Code.gs (doGet) escribe
+    //   la fila igual que doPost. Limitamos "busca" para no exceder el largo de la URL.
+    var datos = {
+      nombre:nombre, email:email, whatsapp:wapp, experiencia:exp,
+      busca:(busca||"").slice(0,1500)
+    };
+    var qs = new URLSearchParams(datos).toString();
 
-    // iframe oculto (se crea una sola vez)
-    var iframe = document.getElementById('dbw_sink');
-    if(!iframe){
-      iframe = document.createElement('iframe');
-      iframe.name = 'dbw_sink'; iframe.id = 'dbw_sink';
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-    }
-
-    // form temporal apuntando al iframe
-    var form = document.createElement('form');
-    form.method = 'POST';
-    form.action = SHEET_URL;
-    form.target = 'dbw_sink';
-    form.style.display = 'none';
-    Object.keys(datos).forEach(function(k){
-      var input = document.createElement('input');
-      input.type = 'hidden'; input.name = k; input.value = datos[k];
-      form.appendChild(input);
-    });
-    document.body.appendChild(form);
-
-    var done = false;
     function exito(){
-      if(done) return; done = true;
       document.getElementById('okmsg').classList.add('show');
       ['nombre','email','wapp','busca'].forEach(function(id){ document.getElementById(id).value=''; });
       document.getElementById('exp').selectedIndex=0;
       btn.textContent="Solicitud enviada ✓";
-      if(form && form.parentNode){ form.parentNode.removeChild(form); }
 
       // ===== FASE 2 · WhatsApp (apagado). Para activarlo, descomenta y define WHATSAPP arriba: =====
       // const msg="Solicitud Elite Desk — Doberwhite Trading%0A%0A"+
@@ -272,12 +249,12 @@
       // window.open("https://wa.me/"+WHATSAPP+"?text="+msg,"_blank");
     }
 
-    // Cuando el iframe termina de cargar la respuesta de Apps Script, confirmamos.
-    iframe.onload = exito;
-    // Respaldo por si onload no dispara (la respuesta es cross-origin): confirmamos igual.
-    setTimeout(exito, 2500);
-
-    form.submit();
+    fetch(SHEET_URL + "?" + qs, { method:"GET", mode:"no-cors" })
+      .then(exito)
+      .catch(function(){
+        btn.disabled=false; btn.textContent=orig;
+        alert("No pudimos enviar la solicitud. Revisa tu conexión e inténtalo nuevamente.");
+      });
   }
 
   const io=new IntersectionObserver((es)=>{ es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'),i*55); io.unobserve(e.target);} }); },{threshold:0.12});
