@@ -112,8 +112,8 @@ input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--li
 </style>
 </head>
 <body>
-<div class="tape"><span><b>DOBERWHITE</b> PERFORMANCE LAB</span><span>NET P&L <b id="tapePnl">—</b></span><span>WIN RATE <b id="tapeWr">—</b></span><span>OPS <b id="tapeOps">—</b></span><span>ACTIVOS <b id="tapeAssets">—</b></span></div>
-<header class="nav"><div class="brand">DOBER<em>WHITE</em></div><div class="navlinks"><span>Resumen</span><span>Meses</span><span>Activos</span><span>Operaciones</span></div></header>
+<div class="tape"><span><b>DOBERWHITE</b> PERFORMANCE LAB</span><span>P&L SIMULADO <b id="tapePnl">—</b></span><span>ANÁLISIS POSITIVOS <b id="tapeWr">—</b></span><span>ANÁLISIS <b id="tapeOps">—</b></span><span>ACTIVOS <b id="tapeAssets">—</b></span></div>
+<header class="nav"><div class="brand">DOBER<em>WHITE</em></div><div class="navlinks"><span>Resumen</span><span>Meses</span><span>Activos</span><span>Análisis</span></div></header>
 <main class="wrap">
   <section class="hero hero-clean">
     <aside class="hero-card">
@@ -123,8 +123,8 @@ input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--li
         <div><div class="meta-label">Broker/Servidor</div><div class="meta-value" id="metaBroker">—</div></div>
         <div><div class="meta-label">Rango histórico</div><div class="meta-value" id="metaRange">—</div></div>
         <div><div class="meta-label">Balance / Equity</div><div class="meta-value" id="metaBalance">—</div></div>
-        <div><div class="meta-label">Operaciones cerradas</div><div class="meta-value" id="metaClosed">—</div></div>
-        <div><div class="meta-label">Posiciones abiertas</div><div class="meta-value" id="metaOpen">—</div></div>
+        <div><div class="meta-label">Análisis cerrados</div><div class="meta-value" id="metaClosed">—</div></div>
+        <div><div class="meta-label">Análisis activos</div><div class="meta-value" id="metaOpen">—</div></div>
       </div>
       <div class="notice" id="netNotice">—</div>
     </aside>
@@ -160,9 +160,8 @@ input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--li
     <div class="field"><label>Desde</label><input id="startDate" type="date"></div>
     <div class="field"><label>Hasta</label><input id="endDate" type="date"></div>
     <div class="field"><label>Mes</label><select id="monthSelect"><option value="all">Todos</option></select></div>
-    <div class="field"><label>Dirección</label><select id="sideSelect"><option value="all">Buy + Sell</option><option value="buy">Buy</option><option value="sell">Sell</option></select></div>
-    <div class="field"><label>Resultado</label><select id="resultSelect"><option value="all">Todos</option><option value="win">Ganadoras</option><option value="loss">Perdedoras</option><option value="flat">Break even</option></select></div>
-    <div class="field"><label>Bloque horario cierre</label><select id="sessionSelect"><option value="all">Todos</option><option value="0-7">00:00–06:59</option><option value="7-13">07:00–12:59</option><option value="13-20">13:00–19:59</option><option value="20-24">20:00–23:59</option></select></div>
+    <div class="field"><label>Dirección análisis</label><select id="sideSelect"><option value="all">Buy + Sell</option><option value="buy">Buy</option><option value="sell">Sell</option></select></div>
+    <div class="field"><label>Resultado</label><select id="resultSelect"><option value="all">Todos</option><option value="win">Positivos</option><option value="loss">Negativos</option><option value="flat">Break even</option></select></div>
     <div class="field wide"><label>Activo</label><div id="symbolChips" class="chips"></div></div>
     <div class="field actions"><button class="btn ghost" onclick="resetFilters()">Reset</button><button class="btn" onclick="renderAll()">Aplicar</button></div>
   </section>
@@ -171,22 +170,22 @@ input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--li
 
   <section class="grid">
     <div class="card">
-      <h2>Curva acumulada neta</h2><p>Secuencia cronológica de operaciones cerradas filtradas.</p>
+      <h2>Curva acumulada neta</h2><p>Secuencia cronológica de análisis cerrados filtrados.</p>
       <div id="equityChart" class="chart"></div>
     </div>
     <div class="card">
-      <h2>Ranking por activo</h2><p>Contribución neta USD y calidad del resultado por símbolo.</p>
+      <h2>Ranking por activo</h2><p>Contribución simulada USD y calidad del resultado por símbolo.</p>
       <div id="assetBars" class="chart small"></div>
     </div>
   </section>
 
   <section class="grid" style="margin-top:16px;">
     <div class="card">
-      <h2>Ganancia mensual + Win Rate</h2><p>Barras: P&L neto USD. Línea: win rate mensual.</p>
+      <h2>Simulación de análisis en montos</h2><p>Barras: P&L simulado. Línea: análisis positivos.</p>
       <div id="monthlyChart" class="chart"></div>
     </div>
     <div class="card">
-      <h2>Mapa mes × activo</h2><p>Identifica concentración de rentabilidad o pérdida.</p>
+      <h2>Mapa resultados simulados</h2><p>Identifica concentración de resultados simulados por activo.</p>
       <div id="heatmap" class="heatmap"></div>
     </div>
   </section>
@@ -196,8 +195,8 @@ input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--li
   <section class="card table-card active-performance-card">
     <div class="active-head">
       <div>
-        <h2>Performance trades activos</h2>
-        <p>Operaciones activas del modelo. No afectan los KPIs de operaciones cerradas.</p>
+        <h2>Performance análisis activos</h2>
+        <p>Análisis activos del modelo. No afectan los KPIs de análisis cerrados.</p>
       </div>
       <div id="activeBadge" class="active-badge">—</div>
     </div>
@@ -206,22 +205,22 @@ input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--li
   </section>
 
   <section class="card table-card">
-    <h2>Resumen mensual</h2><p>Operaciones, win rate y ganancia/pérdida neta por mes.</p>
+    <h2>Resumen mensual</h2><p>Análisis, análisis positivos y P&L simulado por mes.</p>
     <div class="table-wrap"><table id="monthlyTable"></table></div>
   </section>
 
   <section class="card table-card">
-    <h2>Resumen por activo</h2><p>Performance comparada para evaluar concentración, edge y activos a priorizar.</p>
+    <h2>Resumen por activo</h2><p>Performance simulada para evaluar concentración, edge y activos a priorizar.</p>
     <div class="table-wrap"><table id="assetTable"></table></div>
   </section>
 
   <section class="card table-card">
-    <h2>Operaciones filtradas</h2><p>Detalle transaccional. Usa la búsqueda para encontrar símbolo, fecha o ticket.</p>
-    <div style="display:flex; gap:10px; align-items:center; margin-bottom:12px;"><input id="tradeSearch" type="search" placeholder="Buscar en operaciones..." oninput="renderTradesTable(currentFiltered)"><span id="tradeCount" style="color:var(--muted); font-size:12px;"></span></div>
+    <h2>Análisis filtrados</h2><p>Detalle de análisis. Usa la búsqueda para encontrar símbolo, fecha o ticket.</p>
+    <div style="display:flex; gap:10px; align-items:center; margin-bottom:12px;"><input id="tradeSearch" type="search" placeholder="Buscar en análisis..." oninput="renderTradesTable(currentFiltered)"><span id="tradeCount" style="color:var(--muted); font-size:12px;"></span></div>
     <div class="table-wrap"><table id="tradesTable"></table></div>
   </section>
 
-  <div class="footer">Fuente: TRACK_RECORD_ANALISIS_2026.xlsx. El dashboard usa las operaciones trackeadas del archivo adjunto. Modelo configurable desde el simulador superior: capital inicial, riesgo por entrada y base del riesgo usando RISK_REWARD para recalcular el resultado por trade. Las fechas del Excel no incluyen hora intradía, por eso los filtros horarios solo aplican si la operación trae hora.</div>
+  <div class="footer">Fuente: TRACK_RECORD_ANALISIS_2026.xlsx. El dashboard simula los análisis trackeados del archivo adjunto. Modelo configurable desde el simulador superior: capital inicial, riesgo por entrada y base del riesgo usando RISK_REWARD para recalcular el resultado por trade. Las fechas del Excel no incluyen hora intradía.</div>
 </main>
 <script>
 const DATA_URL = './assets/data/dashboard/data_doberwhite.json';
@@ -317,9 +316,9 @@ function renderMetaSummary(arr, a) {
   const finalBalance = Number(SIM_STATE.initialBalance || 0) + Number(a.net || 0);
   document.getElementById('metaRange').textContent = range;
   document.getElementById('metaBalance').textContent = fmtUSD(finalBalance) + ' / ' + fmtUSD(finalBalance);
-  document.getElementById('metaClosed').textContent = fmtNum(a.n,0) + ' ops';
-  document.getElementById('metaOpen').textContent = META.openPositions.length + ' abiertas · flotante ' + fmtUSD(META.floatingPnl);
-  document.getElementById('netNotice').innerHTML = `Cálculo actual: capital inicial <b>${fmtUSD(SIM_STATE.initialBalance)}</b>; riesgo <b>${(SIM_STATE.riskPct*100).toFixed(2)}%</b> por operación; base <b>${riskModeLabel(SIM_STATE.riskMode)}</b>. Resultado filtrado: <b>${fmtUSD(a.net)}</b> · Balance final: <b>${fmtUSD(finalBalance)}</b>.`;
+  document.getElementById('metaClosed').textContent = fmtNum(a.n,0) + ' análisis';
+  document.getElementById('metaOpen').textContent = META.openPositions.length + ' activos · flotante ' + fmtUSD(META.floatingPnl);
+  document.getElementById('netNotice').innerHTML = `Cálculo actual: capital inicial <b>${fmtUSD(SIM_STATE.initialBalance)}</b>; riesgo <b>${(SIM_STATE.riskPct*100).toFixed(2)}%</b> por análisis; base <b>${riskModeLabel(SIM_STATE.riskMode)}</b>. Resultado filtrado: <b>${fmtUSD(a.net)}</b> · Balance final: <b>${fmtUSD(finalBalance)}</b>.`;
   document.getElementById('simNotice').innerHTML = `Simulación activa: <b>${fmtUSD(SIM_STATE.initialBalance)}</b> de capital inicial, <b>${(SIM_STATE.riskPct*100).toFixed(2)}%</b> de riesgo por entrada y cálculo sobre <b>${riskModeLabel(SIM_STATE.riskMode)}</b>.`;
 }
 
@@ -367,7 +366,7 @@ function setup() {
   chips.innerHTML = '';
   selectedSymbols = new Set(META.symbols);
   META.symbols.forEach(s => { const span = document.createElement('span'); span.className='chip active'; span.textContent=s; span.onclick=()=>{ if(selectedSymbols.has(s)) selectedSymbols.delete(s); else selectedSymbols.add(s); span.classList.toggle('active'); renderAll(); }; chips.appendChild(span); });
-  ['startDate','endDate','monthSelect','sideSelect','resultSelect','sessionSelect'].forEach(id=>document.getElementById(id).addEventListener('change', renderAll));
+  ['startDate','endDate','monthSelect','sideSelect','resultSelect'].forEach(id=>document.getElementById(id).addEventListener('change', renderAll));
   document.getElementById('metaAccount').textContent = META.account['Cuenta de trading'] || META.account.Nombre || '—';
   document.getElementById('metaBroker').textContent = META.account.Empresa || META.account['Broker/Servidor'] || '—';
   const tapeAssets = document.getElementById('tapeAssets');
@@ -376,25 +375,18 @@ function setup() {
   document.getElementById('tradeSearch').addEventListener('input', () => renderTradesTable(currentFiltered));
   renderAll();
 }
-function sessionMatch(hour, session) {
-  if (session === 'all') return true;
-  const [a,b] = session.split('-').map(Number);
-  return hour !== null && hour >= a && hour < b;
-}
 function filterTrades() {
   const start = document.getElementById('startDate').value;
   const end = document.getElementById('endDate').value;
   const month = document.getElementById('monthSelect').value;
   const side = document.getElementById('sideSelect').value;
   const result = document.getElementById('resultSelect').value;
-  const session = document.getElementById('sessionSelect').value;
   if (selectedSymbols.size === 0) return [];
   return TRADES.filter(closedStatus).filter(t =>
     (!start || t.date >= start) && (!end || t.date <= end) &&
     (month === 'all' || t.month === month) &&
     (side === 'all' || t.side === side) &&
     selectedSymbols.has(t.symbol) &&
-    sessionMatch(t.hour, session) &&
     (result === 'all' || (result === 'win' && t.net > 0) || (result === 'loss' && t.net < 0) || (result === 'flat' && t.net === 0))
   );
 }
@@ -406,7 +398,6 @@ function resetFilters() {
   document.getElementById('monthSelect').value = 'all';
   document.getElementById('sideSelect').value = 'all';
   document.getElementById('resultSelect').value = 'all';
-  document.getElementById('sessionSelect').value = 'all';
   document.getElementById('tradeSearch').value = '';
   renderAll();
 }
@@ -430,11 +421,11 @@ function renderAll() {
 }
 function renderKPIs(a) {
   const kpis = [
-    ['Operaciones', fmtNum(a.n,0), 'cerradas filtradas', ''],
-    ['P&L neto', fmtUSD(a.net), `modelo ${fmtUSD(SIM_STATE.initialBalance)} · riesgo ${(SIM_STATE.riskPct*100).toFixed(2)}%`, cls(a.net)],
-    ['Win rate', fmtPct(a.winRate), `${a.wins} ganadas / ${a.losses} perdidas`, 'gold'],
-    ['Profit factor', a.pf ? a.pf.toFixed(2) : '—', `Gross win ${fmtUSD(a.grossWin)}`, a.pf && a.pf>=1 ? 'positive' : 'negative'],
-    ['Avg / trade', fmtUSD(a.avg), `Base ${riskModeLabel(SIM_STATE.riskMode)}`, cls(a.avg)],
+    ['Análisis', fmtNum(a.n,0), 'análisis cerrados filtrados', ''],
+    ['P&L simulado', fmtUSD(a.net), `modelo ${fmtUSD(SIM_STATE.initialBalance)} · riesgo ${(SIM_STATE.riskPct*100).toFixed(2)}%`, cls(a.net)],
+    ['Análisis positivos', fmtPct(a.winRate), `${a.wins} positivos / ${a.losses} negativos`, 'gold'],
+    ['Factor', a.pf ? a.pf.toFixed(2) : '—', `P simulado ${fmtUSD(a.grossWin)}`, a.pf && a.pf>=1 ? 'positive' : 'negative'],
+    ['Promedio sim', fmtUSD(a.avg), `Base ${riskModeLabel(SIM_STATE.riskMode)}`, cls(a.avg)],
     ['Max DD secuencial', fmtUSD(-a.maxDD), `Mejor ${a.best?fmtUSD(a.best.net):'—'} · Peor ${a.worst?fmtUSD(a.worst.net):'—'}`, 'negative']
   ];
   document.getElementById('kpis').innerHTML = kpis.map(k => `<div class="kpi"><div class="label">${k[0]}</div><div class="value ${k[3]}">${k[1]}</div><div class="sub">${k[2]}</div></div>`).join('');
@@ -473,12 +464,12 @@ function renderMonthly(arr) {
   const linePts = rows.map((r,i)=>[ml+i*step+step/2, mt + (1-r.winRate)*(h-mt-mb)]);
   svg.innerHTML += `<path d="${linePath(linePts)}" fill="none" stroke="${COLORS.gold2}" stroke-width="2.5" vector-effect="non-scaling-stroke"/>`;
   linePts.forEach((p,i)=>{ svg.innerHTML += `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${COLORS.gold2}"/><text x="${p[0]}" y="${p[1]-9}" text-anchor="middle" class="axis-text">${fmtPct(rows[i].winRate)}</text>`; });
-  svg.innerHTML += `<text x="${w-mr}" y="${mt+12}" text-anchor="end" class="axis-text">Línea: win rate</text>`;
+  svg.innerHTML += `<text x="${w-mr}" y="${mt+12}" text-anchor="end" class="axis-text">Línea: análisis positivos</text>`;
 }
 function renderAssets(arr) {
   const rows = aggRows(arr, t=>t.symbol).sort((a,b)=>b.net-a.net);
   const maxAbs = Math.max(1, ...rows.map(r=>Math.abs(r.net)));
-  const html = rows.map(r => `<div class="asset-row"><div><b>${r.key}</b><br><span style="color:var(--muted);font-size:11px">${r.n} ops · ${fmtPct(r.winRate)}</span></div><div class="track"><div class="bar ${r.net>=0?'pos':'neg'}" style="width:${Math.max(2,Math.abs(r.net)/maxAbs*100)}%"></div></div><div class="${cls(r.net)}" style="text-align:right;font-weight:800">${fmtUSD(r.net)}</div></div>`).join('');
+  const html = rows.map(r => `<div class="asset-row"><div><b>${r.key}</b><br><span style="color:var(--muted);font-size:11px">${r.n} análisis · ${fmtPct(r.winRate)}</span></div><div class="track"><div class="bar ${r.net>=0?'pos':'neg'}" style="width:${Math.max(2,Math.abs(r.net)/maxAbs*100)}%"></div></div><div class="${cls(r.net)}" style="text-align:right;font-weight:800">${fmtUSD(r.net)}</div></div>`).join('');
   document.getElementById('assetBars').innerHTML = html || '<p>Sin datos.</p>';
 }
 function renderHeatmap(arr) {
@@ -489,18 +480,18 @@ function renderHeatmap(arr) {
   for (const m of months) for (const s of symbols) { const list=arr.filter(t=>t.month===m && t.symbol===s); const net=sum(list,t=>t.net); matrix.set(m+'|'+s, {net, n:list.length}); maxAbs=Math.max(maxAbs, Math.abs(net)); }
   grid.style.setProperty('--cols', months.length);
   let out = `<div class="heat-row"><div></div>${months.map(m=>`<div class="heat-cell heat-head">${monthLabel(m)}</div>`).join('')}</div>`;
-  for (const s of symbols) { out += `<div class="heat-row"><div class="heat-cell heat-head">${s}</div>`; for (const m of months) { const c=matrix.get(m+'|'+s); const alpha = Math.min(.68, .08 + Math.abs(c.net)/maxAbs*.60); const bg = c.net>=0 ? `rgba(69,196,134,${alpha})` : `rgba(224,90,87,${alpha})`; out += `<div class="heat-cell" style="background:${bg}"><b>${fmtUSD(c.net)}</b><span style="color:#c8cfdf;font-size:10px">${c.n} ops</span></div>`; } out += `</div>`; }
+  for (const s of symbols) { out += `<div class="heat-row"><div class="heat-cell heat-head">${s}</div>`; for (const m of months) { const c=matrix.get(m+'|'+s); const alpha = Math.min(.68, .08 + Math.abs(c.net)/maxAbs*.60); const bg = c.net>=0 ? `rgba(69,196,134,${alpha})` : `rgba(224,90,87,${alpha})`; out += `<div class="heat-cell" style="background:${bg}"><b>${fmtUSD(c.net)}</b><span style="color:#c8cfdf;font-size:10px">${c.n} análisis</span></div>`; } out += `</div>`; }
   grid.innerHTML = out;
 }
 function renderMonthlyTable(arr) {
   const rows = aggRows(arr, t=>t.month).filter(r=>r.key).sort((a,b)=>a.key.localeCompare(b.key));
-  let html = '<thead><tr><th>Mes</th><th>Ops</th><th>Win rate</th><th>P&L Neto</th><th>Gross Win</th><th>Gross Loss</th><th>Avg/Trade</th><th>PF</th><th>Mejor activo</th></tr></thead><tbody>';
+  let html = '<thead><tr><th>Mes</th><th>Cantidad de análisis</th><th>Análisis positivos</th><th>P&L simulado</th><th>P simulado</th><th>L simulado</th><th>Promedios por ops sim</th><th>Factor</th><th>Mejor activo</th></tr></thead><tbody>';
   for (const r of rows) { const assets = aggRows(r.list, t=>t.symbol).sort((a,b)=>b.net-a.net); html += `<tr><td>${monthLabel(r.key)}</td><td>${r.n}</td><td>${fmtPct(r.winRate)}</td><td class="${cls(r.net)}">${fmtUSD(r.net)}</td><td class="positive">${fmtUSD(r.grossWin)}</td><td class="negative">${fmtUSD(-r.grossLoss)}</td><td class="${cls(r.avg)}">${fmtUSD(r.avg)}</td><td>${r.pf?r.pf.toFixed(2):'—'}</td><td>${assets[0]?assets[0].key+' '+fmtUSD(assets[0].net):'—'}</td></tr>`; }
   document.getElementById('monthlyTable').innerHTML = html + '</tbody>';
 }
 function renderAssetTable(arr) {
   const rows = aggRows(arr, t=>t.symbol).sort((a,b)=>b.net-a.net);
-  let html = '<thead><tr><th>Activo</th><th>Ops</th><th>Win rate</th><th>P&L Neto</th><th>Avg/Trade</th><th>PF</th><th>Avg Win</th><th>Avg Loss</th><th>Volumen</th><th>Mejor</th><th>Peor</th></tr></thead><tbody>';
+  let html = '<thead><tr><th>Activo</th><th>Cantidad de análisis</th><th>Análisis positivos</th><th>P&L simulado</th><th>Promedio sim</th><th>Factor</th><th>P simulado prom</th><th>L simulado prom</th><th>Volumen</th><th>Mejor</th><th>Peor</th></tr></thead><tbody>';
   for (const r of rows) { html += `<tr><td><b>${r.key}</b></td><td>${r.n}</td><td>${fmtPct(r.winRate)}</td><td class="${cls(r.net)}">${fmtUSD(r.net)}</td><td class="${cls(r.avg)}">${fmtUSD(r.avg)}</td><td>${r.pf?r.pf.toFixed(2):'—'}</td><td class="positive">${fmtUSD(r.avgWin)}</td><td class="negative">${fmtUSD(-r.avgLoss)}</td><td>${fmtNum(r.volume,2)}</td><td class="positive">${r.best?fmtUSD(r.best.net):'—'}</td><td class="negative">${r.worst?fmtUSD(r.worst.net):'—'}</td></tr>`; }
   document.getElementById('assetTable').innerHTML = html + '</tbody>';
 }
@@ -583,17 +574,17 @@ function renderActiveTrades(closedArr, closedAgg) {
   const stats = document.getElementById('activeStats');
   const table = document.getElementById('activeTable');
   if (!badge || !stats || !table) return;
-  badge.textContent = rows.length ? `${rows.length} activas` : 'Sin activas';
+  badge.textContent = rows.length ? `${rows.length} activos` : 'Sin activos';
   const cards = [
-    ['Activas', fmtNum(rows.length,0), 'operaciones abiertas', ''],
+    ['Activos', fmtNum(rows.length,0), 'análisis activos', ''],
     ['Flotante modelo', fmtUSD(floating), 'según simulador', cls(floating)],
-    ['Riesgo abierto', fmtUSD(exposure), 'capital expuesto', 'gold'],
+    ['Riesgo simulado', fmtUSD(exposure), 'capital simulado', 'gold'],
     ['R/R promedio', rows.length ? avgRR.toFixed(2) : '—', 'promedio activo', avgRR >= 0 ? 'positive' : 'negative']
   ];
   stats.innerHTML = cards.map(k => `<div class="active-stat"><div class="label">${k[0]}</div><div class="value ${k[3]}">${k[1]}</div><div class="sub">${k[2]}</div></div>`).join('');
-  let html = '<thead><tr><th>Apertura</th><th>Ticket</th><th>Activo</th><th>Side</th><th>Entrada</th><th>SL</th><th>Precio actual</th><th>R/R</th><th>Riesgo</th><th>Flotante</th></tr></thead><tbody>';
+  let html = '<thead><tr><th>Activación de análisis</th><th>Ticket</th><th>Activo</th><th>Dirección de análisis</th><th>Nivel de hipótesis</th><th>Zona de invalidación</th><th>Precio actual</th><th>R/R</th><th>Riesgo simulado</th><th>Flotante</th></tr></thead><tbody>';
   if (!rows.length) {
-    html += '<tr><td colspan="10" style="text-align:left;color:var(--muted);">No hay trades activos visibles con los filtros actuales.</td></tr>';
+    html += '<tr><td colspan="10" style="text-align:left;color:var(--muted);">No hay análisis activos visibles con los filtros actuales.</td></tr>';
   } else {
     for (const t of rows) {
       html += `<tr><td>${t.openTime || '—'}</td><td>${t.position || '—'}</td><td><b>${t.symbol || '—'}</b></td><td>${t.side || '—'}</td><td>${t.openPrice ? fmtNum(t.openPrice,2) : '—'}</td><td>${t.sl || '—'}</td><td>${t.closePrice ? fmtNum(t.closePrice,2) : '—'}</td><td class="${cls(t.riskReward)}">${Number(t.riskReward || 0).toFixed(2)}</td><td>${fmtUSD(t.riskAmount)}</td><td class="${cls(t.floatingPnl)}"><b>${fmtUSD(t.floatingPnl)}</b></td></tr>`;
@@ -606,8 +597,8 @@ function renderTradesTable(arr) {
   const q = (document.getElementById('tradeSearch')?.value || '').toLowerCase().trim();
   let rows = [...arr].sort((a,b)=>parseTime(b.closeTime)-parseTime(a.closeTime));
   if (q) rows = rows.filter(t => Object.values(t).join(' ').toLowerCase().includes(q));
-  document.getElementById('tradeCount').textContent = `${rows.length} operaciones visibles`;
-  let html = '<thead><tr><th>Cierre</th><th>Ticket</th><th>Activo</th><th>Side</th><th>Vol</th><th>Duración</th><th>Resultado modelo</th><th>Comisión</th><th>Swap</th><th>Neto</th></tr></thead><tbody>';
+  document.getElementById('tradeCount').textContent = `${rows.length} análisis visibles`;
+  let html = '<thead><tr><th>Cierre</th><th>Ticket</th><th>Activo</th><th>Dirección de análisis</th><th>Vol</th><th>Duración</th><th>P&L simulado</th><th>Comisión</th><th>Swap</th><th>Neto</th></tr></thead><tbody>';
   for (const t of rows.slice(0, 1000)) { html += `<tr><td>${t.closeTime}</td><td>${t.position}</td><td><b>${t.symbol}</b></td><td>${t.side}</td><td>${fmtNum(t.volume,2)}</td><td>${t.durationMin ?? '—'} min</td><td class="${cls(t.profit)}">${fmtUSD(t.profit)}</td><td class="${cls(t.commission)}">${fmtUSD(t.commission)}</td><td class="${cls(t.swap)}">${fmtUSD(t.swap)}</td><td class="${cls(t.net)}"><b>${fmtUSD(t.net)}</b></td></tr>`; }
   document.getElementById('tradesTable').innerHTML = html + '</tbody>';
 }
