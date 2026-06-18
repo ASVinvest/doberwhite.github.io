@@ -109,6 +109,26 @@ input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--li
 @media(max-width:1100px) { .active-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
 @media(max-width:720px) { .active-head { flex-direction:column; } .active-stats { grid-template-columns:1fr; } }
 
+
+/* Ranking por activo: mantiene todos los activos contenidos dentro del recuadro */
+#assetBars.chart.small {
+  height:300px;
+  max-height:300px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-right:8px;
+}
+#assetBars .asset-row {
+  grid-template-columns:92px minmax(90px,1fr) 96px;
+  gap:10px;
+  margin:7px 0;
+  align-items:center;
+}
+#assetBars .asset-row b { font-size:15px; line-height:1.1; }
+#assetBars .asset-row span { display:block; line-height:1.2; }
+#assetBars .track { height:10px; }
+@media(max-width:1100px) { #assetBars.chart.small { height:auto; max-height:none; overflow:visible; } }
+
 </style>
 </head>
 <body>
@@ -480,7 +500,7 @@ function renderHeatmap(arr) {
   for (const m of months) for (const s of symbols) { const list=arr.filter(t=>t.month===m && t.symbol===s); const net=sum(list,t=>t.net); matrix.set(m+'|'+s, {net, n:list.length}); maxAbs=Math.max(maxAbs, Math.abs(net)); }
   grid.style.setProperty('--cols', months.length);
   let out = `<div class="heat-row"><div></div>${months.map(m=>`<div class="heat-cell heat-head">${monthLabel(m)}</div>`).join('')}</div>`;
-  for (const s of symbols) { out += `<div class="heat-row"><div class="heat-cell heat-head">${s}</div>`; for (const m of months) { const c=matrix.get(m+'|'+s); const alpha = Math.min(.68, .08 + Math.abs(c.net)/maxAbs*.60); const bg = c.net>=0 ? `rgba(69,196,134,${alpha})` : `rgba(224,90,87,${alpha})`; out += `<div class="heat-cell" style="background:${bg}"><b>${fmtUSD(c.net)}</b><span style="color:#c8cfdf;font-size:10px">${c.n} análisis</span></div>`; } out += `</div>`; }
+  for (const s of symbols) { out += `<div class="heat-row"><div class="heat-cell heat-head">${s}</div>`; for (const m of months) { const c=matrix.get(m+'|'+s); const alpha = Math.min(.68, .08 + Math.abs(c.net)/maxAbs*.60); const bg = c.net>=0 ? `rgba(69,196,134,${alpha})` : `rgba(224,90,87,${alpha})`; out += `<div class="heat-cell" style="background:${bg}"><b>${fmtUSD(c.net)}</b><span style="color:#c8cfdf;font-size:10px">${c.n} ops</span></div>`; } out += `</div>`; }
   grid.innerHTML = out;
 }
 function renderMonthlyTable(arr) {
