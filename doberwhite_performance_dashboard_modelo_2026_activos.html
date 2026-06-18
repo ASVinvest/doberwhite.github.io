@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Doberwhite Performance Dashboard</title>
+<style>
+:root {
+  --bg: #07090b;
+  --bg2: #0c0e11;
+  --panel: rgba(17, 19, 24, .92);
+  --panel2: rgba(255,255,255,.035);
+  --line: rgba(255,255,255,.10);
+  --line2: rgba(210, 175, 98, .24);
+  --text: #f4f0e8;
+  --muted: #98a0ae;
+  --soft: #c6d0e4;
+  --gold: #d2af62;
+  --gold2: #f1d38a;
+  --green: #45c486;
+  --red: #e05a57;
+  --blue: #8da2d7;
+  --shadow: 0 20px 60px rgba(0,0,0,.38);
+}
+* { box-sizing: border-box; }
+body {
+  margin:0; background: radial-gradient(1200px 700px at 70% 15%, rgba(210,175,98,.08), transparent 55%), var(--bg);
+  color:var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.32; background-image:linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px); background-size: 52px 52px; mask-image: linear-gradient(to bottom, #000, transparent 88%); }
+.tape {height:34px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:34px; padding:0 18px; color:#8c929d; font-size:12px; background:#08090b; white-space:nowrap; overflow:hidden;}
+.tape b { color:#ddd; font-weight:700; } .up { color:var(--green); } .down { color:var(--red); }
+.nav {height:78px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:0 56px; background:rgba(7,9,11,.86); backdrop-filter: blur(12px); position:sticky; top:0; z-index:20;}
+.brand { letter-spacing:9px; font-weight:800; font-size:21px; } .brand em { font-family: Georgia, serif; font-style:italic; letter-spacing:6px; font-weight:500; }
+.navlinks { display:flex; gap:34px; font-size:12px; letter-spacing:2.5px; color:#8f949c; text-transform:uppercase; }
+.btn { border:1px solid var(--line2); background: linear-gradient(135deg, var(--gold), #b99245); color:#08090b; text-transform:uppercase; letter-spacing:2.2px; font-weight:800; font-size:12px; padding:13px 18px; cursor:pointer; border-radius:0; }
+.btn.ghost { background:transparent; color:var(--text); border-color: var(--line); }
+.wrap { max-width:1480px; margin:0 auto; padding:52px 34px 72px; }
+.hero { display:grid; grid-template-columns: 1.1fr .9fr; gap:36px; align-items:end; padding:36px 0 26px; }
+.eyebrow { color:var(--gold2); text-transform:uppercase; letter-spacing:4px; font-size:11px; font-weight:800; margin-bottom:18px; }
+h1 { font-family: Georgia, 'Times New Roman', serif; line-height:.94; font-size:clamp(48px, 6vw, 96px); font-weight:400; margin:0 0 24px; letter-spacing:-1px; }
+h1 em { display:block; font-style:italic; font-size:.62em; color:#fff; }
+.lead { max-width:780px; color:#b8c3da; font-size:18px; line-height:1.55; }
+.hero-card { border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02)); padding:24px; box-shadow:var(--shadow); }
+.meta-grid {display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:14px; }
+.meta-label {font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.8px; }
+.meta-value {font-size:15px; color:#fff; margin-top:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.notice { margin-top:16px; padding:12px 14px; border-left:2px solid var(--gold); background:rgba(210,175,98,.08); color:#d8dce8; font-size:13px; line-height:1.45; }
+.filters { display:grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap:12px; align-items:end; border:1px solid var(--line); background:rgba(10,12,15,.78); padding:16px; margin:26px 0 22px; position:sticky; top:79px; z-index:18; backdrop-filter: blur(12px); }
+.field { grid-column: span 2; } .field.wide { grid-column: span 4; } .field.actions { grid-column: span 2; display:flex; gap:10px; }
+label { display:block; color:var(--muted); font-size:10px; letter-spacing:1.8px; text-transform:uppercase; margin:0 0 7px; }
+select, input[type="date"], input[type="search"] { width:100%; background:#080a0d; border:1px solid var(--line); color:#fff; height:42px; padding:0 12px; outline:none; }
+.chips { display:flex; flex-wrap:wrap; gap:7px; }
+.chip { border:1px solid var(--line); color:#c8cfdf; background:#080a0d; padding:10px 11px; font-size:12px; cursor:pointer; user-select:none; }
+.chip.active { border-color:var(--gold); background:rgba(210,175,98,.16); color:#fff; }
+.kpis { display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:14px; margin:18px 0 22px; }
+.kpi { border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); padding:18px; min-height:118px; position:relative; overflow:hidden; }
+.kpi::after { content:""; position:absolute; right:-40px; top:-40px; width:110px; height:110px; border:1px solid rgba(210,175,98,.16); border-radius:50%; }
+.kpi .label { color:#8d96a8; font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+.kpi .value { margin-top:10px; font-family: Georgia, serif; font-size:34px; line-height:1; }
+.kpi .sub { margin-top:10px; color:#929bad; font-size:12px; }
+.positive { color:var(--green)!important; } .negative { color:var(--red)!important; } .gold { color:var(--gold2)!important; }
+.grid { display:grid; grid-template-columns: 1.3fr .7fr; gap:16px; }
+.card { border:1px solid var(--line); background:var(--panel); padding:18px; box-shadow:var(--shadow); min-width:0; }
+.card h2 { margin:0 0 4px; font-size:14px; letter-spacing:2px; text-transform:uppercase; }
+.card p { margin:0 0 14px; color:var(--muted); font-size:13px; line-height:1.4; }
+.chart { width:100%; height:320px; }
+.chart.small { height:270px; }
+svg { width:100%; height:100%; overflow:visible; }
+.axis { stroke:rgba(255,255,255,.12); stroke-width:1; } .gridline { stroke:rgba(255,255,255,.06); stroke-width:1; }
+.axis-text { fill:#87909f; font-size:11px; } .chart-label { fill:#cfd5e2; font-size:11px; }
+.table-card { margin-top:16px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th, td { border-bottom:1px solid rgba(255,255,255,.08); padding:12px 10px; text-align:right; white-space:nowrap; }
+th { color:#aeb7c8; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; background:rgba(255,255,255,.035); position:sticky; top:0; z-index:1; }
+td:first-child, th:first-child { text-align:left; }
+.table-wrap { max-height:520px; overflow:auto; border:1px solid rgba(255,255,255,.06); }
+.asset-row { display:grid; grid-template-columns:90px 1fr 90px; gap:10px; align-items:center; margin:12px 0; }
+.track { height:10px; background:rgba(255,255,255,.08); position:relative; overflow:hidden; }
+.bar { height:100%; background:var(--gold); min-width:2px; }
+.bar.neg { background:var(--red); } .bar.pos { background:var(--green); }
+.heatmap { display:grid; gap:6px; overflow:auto; padding-bottom:4px; }
+.heat-row { display:grid; grid-template-columns:82px repeat(var(--cols), minmax(74px,1fr)); gap:6px; }
+.heat-cell { min-height:42px; border:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:12px; background:rgba(255,255,255,.035); }
+.heat-head { color:#9ca5b7; font-size:10px; text-transform:uppercase; letter-spacing:1px; }
+.footer { color:#7f8794; font-size:12px; line-height:1.55; margin-top:24px; border-top:1px solid var(--line); padding-top:18px; }
+@media(max-width:1100px) { .hero, .grid { grid-template-columns:1fr; } .kpis {grid-template-columns: repeat(3,1fr)} .filters {position:static} .field,.field.wide,.field.actions {grid-column:span 6} .navlinks {display:none} }
+@media(max-width:720px) { .nav {padding:0 20px} .wrap {padding:28px 16px 50px} .kpis {grid-template-columns:1fr 1fr} .filters {grid-template-columns:1fr} .field,.field.wide,.field.actions {grid-column:span 1} .hero-card {padding:16px} h1 {font-size:48px} }
+
+.hero.hero-clean { grid-template-columns: repeat(2, minmax(0,1fr)); align-items:start; gap:24px; padding:14px 0 12px; }
+.hero.hero-clean .hero-card { height:100%; }
+.sim-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; }
+.sim-field.full { grid-column:1 / -1; }
+input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--line); color:#fff; height:42px; padding:0 12px; outline:none; }
+.sim-actions { display:flex; gap:10px; margin-top:16px; }
+.sim-note { margin-top:14px; padding:12px 14px; border-left:2px solid var(--gold); background:rgba(210,175,98,.08); color:#d8dce8; font-size:13px; line-height:1.45; }
+.hero-title { margin:0 0 12px; font-size:14px; letter-spacing:2px; text-transform:uppercase; color:var(--gold2); }
+@media(max-width:1100px) { .hero.hero-clean { grid-template-columns:1fr; } }
+@media(max-width:720px) { .sim-grid { grid-template-columns:1fr; } }
+
+
+.active-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; }
+.active-badge { border:1px solid var(--line2); color:var(--gold2); padding:10px 12px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; white-space:nowrap; background:rgba(210,175,98,.08); }
+.active-stats { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:12px; margin:14px 0; }
+.active-stat { border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.035); padding:14px; min-height:74px; }
+.active-stat .label { color:#8d96a8; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; }
+.active-stat .value { margin-top:8px; font-family:Georgia, serif; font-size:24px; line-height:1; }
+.active-table-wrap { max-height:260px; }
+@media(max-width:1100px) { .active-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media(max-width:720px) { .active-head { flex-direction:column; } .active-stats { grid-template-columns:1fr; } }
+
+</style>
+</head>
+<body>
+<div class="tape"><span><b>DOBERWHITE</b> PERFORMANCE LAB</span><span>NET P&L <b id="tapePnl">—</b></span><span>WIN RATE <b id="tapeWr">—</b></span><span>OPS <b id="tapeOps">—</b></span><span>ACTIVOS <b>NAS100, USDCAD, USDJPY, XAUUSD</b></span></div>
+<header class="nav"><div class="brand">DOBER<em>WHITE</em></div><div class="navlinks"><span>Resumen</span><span>Meses</span><span>Activos</span><span>Operaciones</span></div></header>
+<main class="wrap">
+  <section class="hero hero-clean">
+    <aside class="hero-card">
+      <div class="hero-title">Resumen del modelo</div>
+      <div class="meta-grid">
+        <div><div class="meta-label">Cuenta</div><div class="meta-value" id="metaAccount">—</div></div>
+        <div><div class="meta-label">Broker/Servidor</div><div class="meta-value" id="metaBroker">—</div></div>
+        <div><div class="meta-label">Rango histórico</div><div class="meta-value" id="metaRange">—</div></div>
+        <div><div class="meta-label">Balance / Equity</div><div class="meta-value" id="metaBalance">—</div></div>
+        <div><div class="meta-label">Operaciones cerradas</div><div class="meta-value" id="metaClosed">—</div></div>
+        <div><div class="meta-label">Posiciones abiertas</div><div class="meta-value" id="metaOpen">—</div></div>
+      </div>
+      <div class="notice" id="netNotice">—</div>
+    </aside>
+
+    <aside class="hero-card">
+      <div class="hero-title">Simulador del modelo</div>
+      <div class="sim-grid">
+        <div class="sim-field">
+          <label>Monto inicial</label>
+          <input id="simInitialBalance" type="number" min="0" step="0.01" />
+        </div>
+        <div class="sim-field">
+          <label>Riesgo por entrada (%)</label>
+          <input id="simRiskPct" type="number" min="0" step="0.01" />
+        </div>
+        <div class="sim-field full">
+          <label>Base del riesgo</label>
+          <select id="simRiskMode">
+            <option value="equity">Sobre equity dinámica</option>
+            <option value="fixed">Sobre capital inicial fijo</option>
+          </select>
+        </div>
+      </div>
+      <div class="sim-actions">
+        <button class="btn ghost" onclick="resetSimulation()">Reset modelo</button>
+        <button class="btn" onclick="applySimulation()">Aplicar simulación</button>
+      </div>
+      <div class="sim-note" id="simNotice">Ajusta el capital inicial, el riesgo por entrada y la base del riesgo para recalcular todos los valores del dashboard filtrado.</div>
+    </aside>
+  </section>
+
+  <section class="filters">
+    <div class="field"><label>Desde</label><input id="startDate" type="date"></div>
+    <div class="field"><label>Hasta</label><input id="endDate" type="date"></div>
+    <div class="field"><label>Mes</label><select id="monthSelect"><option value="all">Todos</option></select></div>
+    <div class="field"><label>Dirección</label><select id="sideSelect"><option value="all">Buy + Sell</option><option value="buy">Buy</option><option value="sell">Sell</option></select></div>
+    <div class="field"><label>Resultado</label><select id="resultSelect"><option value="all">Todos</option><option value="win">Ganadoras</option><option value="loss">Perdedoras</option><option value="flat">Break even</option></select></div>
+    <div class="field"><label>Bloque horario cierre</label><select id="sessionSelect"><option value="all">Todos</option><option value="0-7">00:00–06:59</option><option value="7-13">07:00–12:59</option><option value="13-20">13:00–19:59</option><option value="20-24">20:00–23:59</option></select></div>
+    <div class="field wide"><label>Activo</label><div id="symbolChips" class="chips"></div></div>
+    <div class="field actions"><button class="btn ghost" onclick="resetFilters()">Reset</button><button class="btn" onclick="renderAll()">Aplicar</button></div>
+  </section>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Curva acumulada neta</h2><p>Secuencia cronológica de operaciones cerradas filtradas.</p>
+      <div id="equityChart" class="chart"></div>
+    </div>
+    <div class="card">
+      <h2>Ranking por activo</h2><p>Contribución neta USD y calidad del resultado por símbolo.</p>
+      <div id="assetBars" class="chart small"></div>
+    </div>
+  </section>
+
+  <section class="grid" style="margin-top:16px;">
+    <div class="card">
+      <h2>Ganancia mensual + Win Rate</h2><p>Barras: P&L neto USD. Línea: win rate mensual.</p>
+      <div id="monthlyChart" class="chart"></div>
+    </div>
+    <div class="card">
+      <h2>Mapa mes × activo</h2><p>Identifica concentración de rentabilidad o pérdida.</p>
+      <div id="heatmap" class="heatmap"></div>
+    </div>
+  </section>
+
+
+
+  <section class="card table-card active-performance-card">
+    <div class="active-head">
+      <div>
+        <h2>Performance trades activos</h2>
+        <p>Operaciones activas del modelo. No afectan los KPIs de operaciones cerradas.</p>
+      </div>
+      <div id="activeBadge" class="active-badge">—</div>
+    </div>
+    <div id="activeStats" class="active-stats"></div>
+    <div class="table-wrap active-table-wrap"><table id="activeTable"></table></div>
+  </section>
+
+  <section class="card table-card">
+    <h2>Resumen mensual</h2><p>Operaciones, win rate y ganancia/pérdida neta por mes.</p>
+    <div class="table-wrap"><table id="monthlyTable"></table></div>
+  </section>
+
+  <section class="card table-card">
+    <h2>Resumen por activo</h2><p>Performance comparada para evaluar concentración, edge y activos a priorizar.</p>
+    <div class="table-wrap"><table id="assetTable"></table></div>
+  </section>
+
+  <section class="card table-card">
+    <h2>Operaciones filtradas</h2><p>Detalle transaccional. Usa la búsqueda para encontrar símbolo, fecha o ticket.</p>
+    <div style="display:flex; gap:10px; align-items:center; margin-bottom:12px;"><input id="tradeSearch" type="search" placeholder="Buscar en operaciones..." oninput="renderTradesTable(currentFiltered)"><span id="tradeCount" style="color:var(--muted); font-size:12px;"></span></div>
+    <div class="table-wrap"><table id="tradesTable"></table></div>
+  </section>
+
+  <div class="footer">Fuente: TRACK_RECORD_ANALISIS_2026.xlsx. El dashboard usa las operaciones trackeadas del archivo adjunto. Modelo configurable desde el simulador superior: capital inicial, riesgo por entrada y base del riesgo usando RISK_REWARD para recalcular el resultado por trade. Las fechas del Excel no incluyen hora intradía, por eso los filtros horarios solo aplican si la operación trae hora.</div>
+</main>
+<script>
+const TRADES = [{"openTime":"2026.01.06 00:00:00","position":"NAS100-6.1.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":25611.9,"sl":"25413.9","tp":"","closeTime":"2026.01.07 00:00:00","closePrice":25542.4,"commission":0.0,"swap":0.0,"profit":-35.1,"net":-35.1,"date":"2026-01-07","month":"2026-01","weekday":"Wed","hour":null,"durationMin":null,"riskReward":-0.351010101010101,"riskAmount":100.0,"equityBefore":10000.0,"equityAfter":9964.9,"returnPct":-0.002713582358200628,"pips":-69.5,"sourceOrder":25},{"openTime":"2026.01.09 00:00:00","position":"NAS100-9.1.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":25791.0,"sl":"25517.6","tp":"","closeTime":"2026.01.09 00:00:00","closePrice":25517.6,"commission":0.0,"swap":0.0,"profit":-99.65,"net":-99.65,"date":"2026-01-09","month":"2026-01","weekday":"Fri","hour":null,"durationMin":null,"riskReward":-1.0,"riskAmount":99.65,"equityBefore":9964.9,"equityAfter":9865.25,"returnPct":-0.01060059710751815,"pips":-273.4,"sourceOrder":26},{"openTime":"2026.01.02 00:00:00","position":"USDCAD-2.1.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.37412,"sl":"1.37077","tp":"","closeTime":"2026.01.12 00:00:00","closePrice":1.38681,"commission":0.0,"swap":0.0,"profit":373.7,"net":373.7,"date":"2026-01-12","month":"2026-01","weekday":"Mon","hour":null,"durationMin":null,"riskReward":3.788059701492605,"riskAmount":98.65,"equityBefore":9865.25,"equityAfter":10238.95,"returnPct":0.00923500130992938,"pips":0.01269,"sourceOrder":68},{"openTime":"2026.01.14 00:00:00","position":"NAS100-14.1.26","symbol":"NAS100","side":"sell","volume":1.0,"openPrice":25413.9,"sl":"25660.1","tp":"","closeTime":"2026.01.14 00:00:00","closePrice":25660.1,"commission":0.0,"swap":0.0,"profit":-102.39,"net":-102.39,"date":"2026-01-14","month":"2026-01","weekday":"Wed","hour":null,"durationMin":null,"riskReward":-1.0,"riskAmount":102.39,"equityBefore":10238.95,"equityAfter":10136.56,"returnPct":0.009687611897426063,"pips":246.2,"sourceOrder":27},{"openTime":"2026.01.08 00:00:00","position":"USDJPY-8.1.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":156.998,"sl":"156.59","tp":"","closeTime":"2026.01.14 00:00:00","closePrice":158.631,"commission":0.0,"swap":0.0,"profit":405.71,"net":405.71,"date":"2026-01-14","month":"2026-01","weekday":"Wed","hour":null,"durationMin":null,"riskReward":4.002450980392308,"riskAmount":101.37,"equityBefore":10136.56,"equityAfter":10542.27,"returnPct":0.010401406387342549,"pips":1.633,"sourceOrder":47},{"openTime":"2026.01.08 00:00:00","position":"XAUUSD-8.1.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4478.18,"sl":"4429.61","tp":"","closeTime":"2026.01.16 00:00:00","closePrice":4583.2,"commission":0.0,"swap":0.0,"profit":227.95,"net":227.95,"date":"2026-01-16","month":"2026-01","weekday":"Fri","hour":null,"durationMin":null,"riskReward":2.1622400658842533,"riskAmount":105.42,"equityBefore":10542.27,"equityAfter":10770.22,"returnPct":0.023451491454117512,"pips":105.02,"sourceOrder":1},{"openTime":"2026.01.13 00:00:00","position":"USDCAD-13.1.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.38936,"sl":"1.38457","tp":"","closeTime":"2026.01.19 00:00:00","closePrice":1.38804,"commission":0.0,"swap":0.0,"profit":-29.68,"net":-29.68,"date":"2026-01-19","month":"2026-01","weekday":"Mon","hour":null,"durationMin":null,"riskReward":-0.2755741127348704,"riskAmount":107.7,"equityBefore":10770.22,"equityAfter":10740.54,"returnPct":-0.0009500777336327593,"pips":-0.00132,"sourceOrder":69},{"openTime":"2026.01.21 00:00:00","position":"USDJPY-21.1.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":158.74,"sl":"158.087","tp":"","closeTime":"2026.01.23 00:00:00","closePrice":158.087,"commission":0.0,"swap":0.0,"profit":-107.41,"net":-107.41,"date":"2026-01-23","month":"2026-01","weekday":"Fri","hour":null,"durationMin":null,"riskReward":-1.0,"riskAmount":107.41,"equityBefore":10740.54,"equityAfter":10633.14,"returnPct":-0.004113644954013007,"pips":-0.653,"sourceOrder":48},{"openTime":"2026.01.19 00:00:00","position":"USDCAD-19.1.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.38499,"sl":"1.38828","tp":"","closeTime":"2026.01.26 00:00:00","closePrice":1.37317,"commission":0.0,"swap":0.0,"profit":382.02,"net":382.02,"date":"2026-01-26","month":"2026-01","weekday":"Mon","hour":null,"durationMin":null,"riskReward":3.592705167173218,"riskAmount":106.33,"equityBefore":10633.14,"equityAfter":11015.15,"returnPct":-0.008534357648791624,"pips":-0.01182,"sourceOrder":70},{"openTime":"2026.01.26 00:00:00","position":"NAS100-26.1.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":25706.3,"sl":"25506.8","tp":"","closeTime":"2026.01.28 00:00:00","closePrice":25960.2,"commission":0.0,"swap":0.0,"profit":140.19,"net":140.19,"date":"2026-01-28","month":"2026-01","weekday":"Wed","hour":null,"durationMin":null,"riskReward":1.2726817042606589,"riskAmount":110.15,"equityBefore":11015.15,"equityAfter":11155.34,"returnPct":0.00987695623251894,"pips":253.9,"sourceOrder":28},{"openTime":"2026.01.18 00:00:00","position":"XAUUSD-18.1.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4658.99,"sl":"4584.45","tp":"","closeTime":"2026.01.29 00:00:00","closePrice":5422.22,"commission":0.0,"swap":0.0,"profit":1142.22,"net":1142.22,"date":"2026-01-29","month":"2026-01","weekday":"Thu","hour":null,"durationMin":null,"riskReward":10.239200429299716,"riskAmount":111.55,"equityBefore":11155.34,"equityAfter":12297.56,"returnPct":0.16381876758696645,"pips":763.23,"sourceOrder":2},{"openTime":"2026.01.22 00:00:00","position":"XAUUSD-22.1.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4926.15,"sl":"4818.47","tp":"","closeTime":"2026.01.29 00:00:00","closePrice":5479.82,"commission":0.0,"swap":0.0,"profit":632.32,"net":632.32,"date":"2026-01-29","month":"2026-01","weekday":"Thu","hour":null,"durationMin":null,"riskReward":5.141809063893047,"riskAmount":122.98,"equityBefore":12297.56,"equityAfter":12929.88,"returnPct":0.11239406027019072,"pips":553.67,"sourceOrder":3},{"openTime":"2026.01.23 00:00:00","position":"USDJPY-23.1.26","symbol":"USDJPY","side":"sell","volume":1.0,"openPrice":156.345,"sl":"158.114","tp":"","closeTime":"2026.01.29 00:00:00","closePrice":153.731,"commission":0.0,"swap":0.0,"profit":191.06,"net":191.06,"date":"2026-01-29","month":"2026-01","weekday":"Thu","hour":null,"durationMin":null,"riskReward":1.477671000565289,"riskAmount":129.3,"equityBefore":12929.88,"equityAfter":13120.94,"returnPct":-0.01671943458377312,"pips":-2.614,"sourceOrder":49},{"openTime":"2026.01.27 00:00:00","position":"USDCAD-27.1.126","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.37069,"sl":"1.37746","tp":"","closeTime":"2026.01.30 00:00:00","closePrice":1.35764,"commission":0.0,"swap":0.0,"profit":252.92,"net":252.92,"date":"2026-01-30","month":"2026-01","weekday":"Fri","hour":null,"durationMin":null,"riskReward":1.927621861152159,"riskAmount":131.21,"equityBefore":13120.94,"equityAfter":13373.86,"returnPct":-0.009520752321823367,"pips":-0.01305,"sourceOrder":71},{"openTime":"2026.01.30 00:00:00","position":"XAUUSD-30.1.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4872.89,"sl":"5148.37","tp":"","closeTime":"2026.02.02 00:00:00","closePrice":4872.89,"commission":0.0,"swap":0.0,"profit":0.0,"net":0.0,"date":"2026-02-02","month":"2026-02","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.0,"riskAmount":133.74,"equityBefore":13373.86,"equityAfter":13373.86,"returnPct":0.0,"pips":0.0,"sourceOrder":4},{"openTime":"2026.02.03 00:00:00","position":"NAS100-3.2.26","symbol":"NAS100","side":"sell","volume":1.0,"openPrice":25138.7,"sl":"25670.2","tp":"","closeTime":"2026.02.06 00:00:00","closePrice":24967.6,"commission":0.0,"swap":0.0,"profit":43.05,"net":43.05,"date":"2026-02-06","month":"2026-02","weekday":"Fri","hour":null,"durationMin":null,"riskReward":0.3219190968955827,"riskAmount":133.74,"equityBefore":13373.86,"equityAfter":13416.91,"returnPct":-0.0068062389861052175,"pips":-171.1,"sourceOrder":29},{"openTime":"2026.02.02 00:00:00","position":"USDJPY-2.2.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":155.525,"sl":"154.602","tp":"","closeTime":"2026.02.08 00:00:00","closePrice":156.561,"commission":0.0,"swap":0.0,"profit":150.6,"net":150.6,"date":"2026-02-08","month":"2026-02","weekday":"Sun","hour":null,"durationMin":null,"riskReward":1.1224268689057415,"riskAmount":134.17,"equityBefore":13416.91,"equityAfter":13567.51,"returnPct":0.00666130847130697,"pips":1.036,"sourceOrder":50},{"openTime":"2026.02.09 00:00:00","position":"USDCAD-9.2.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.36039,"sl":"1.36559","tp":"","closeTime":"2026.02.11 00:00:00","closePrice":1.35752,"commission":0.0,"swap":0.0,"profit":74.88,"net":74.88,"date":"2026-02-11","month":"2026-02","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.5519230769230532,"riskAmount":135.68,"equityBefore":13567.51,"equityAfter":13642.39,"returnPct":-0.0021096891332631484,"pips":-0.00287,"sourceOrder":72},{"openTime":"2026.02.09 00:00:00","position":"USDJPY-9.2.26","symbol":"USDJPY","side":"sell","volume":1.0,"openPrice":155.288,"sl":"156.132","tp":"","closeTime":"2026.02.13 00:00:00","closePrice":153.502,"commission":0.0,"swap":0.0,"profit":288.69,"net":288.69,"date":"2026-02-13","month":"2026-02","weekday":"Fri","hour":null,"durationMin":null,"riskReward":2.1161137440758457,"riskAmount":136.42,"equityBefore":13642.39,"equityAfter":13931.08,"returnPct":-0.01150121065375298,"pips":-1.786,"sourceOrder":51},{"openTime":"2026.02.12 00:00:00","position":"NAS100-12.2.26","symbol":"NAS100","side":"sell","volume":1.0,"openPrice":24823.8,"sl":"25178.1","tp":"","closeTime":"2026.02.17 00:00:00","closePrice":24736.2,"commission":0.0,"swap":0.0,"profit":34.44,"net":34.44,"date":"2026-02-17","month":"2026-02","weekday":"Tue","hour":null,"durationMin":null,"riskReward":0.24724809483488208,"riskAmount":139.31,"equityBefore":13931.08,"equityAfter":13965.52,"returnPct":-0.00352887148623493,"pips":-87.6,"sourceOrder":30},{"openTime":"2026.02.16 00:00:00","position":"XAUUSD-16.2.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4916.36,"sl":"5000.32","tp":"","closeTime":"2026.02.18 00:00:00","closePrice":4966.7,"commission":0.0,"swap":0.0,"profit":-83.73,"net":-83.73,"date":"2026-02-18","month":"2026-02","weekday":"Wed","hour":null,"durationMin":null,"riskReward":-0.5995712243925694,"riskAmount":139.66,"equityBefore":13965.52,"equityAfter":13881.79,"returnPct":0.010239282721363097,"pips":50.34,"sourceOrder":5},{"openTime":"2026.02.16 00:00:00","position":"USDCAD-16.2.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.36434,"sl":"1.36083","tp":"","closeTime":"2026.02.20 00:00:00","closePrice":1.36753,"commission":0.0,"swap":0.0,"profit":126.16,"net":126.16,"date":"2026-02-20","month":"2026-02","weekday":"Fri","hour":null,"durationMin":null,"riskReward":0.9088319088318209,"riskAmount":138.82,"equityBefore":13881.79,"equityAfter":14007.95,"returnPct":0.002338126859873446,"pips":0.00319,"sourceOrder":73},{"openTime":"2026.02.18 00:00:00","position":"USDJPY-18.2.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":154.531,"sl":"153.685","tp":"","closeTime":"2026.02.22 00:00:00","closePrice":154.76,"commission":0.0,"swap":0.0,"profit":37.92,"net":37.92,"date":"2026-02-22","month":"2026-02","weekday":"Sun","hour":null,"durationMin":null,"riskReward":0.27068557919619857,"riskAmount":140.08,"equityBefore":14007.95,"equityAfter":14045.87,"returnPct":0.0014819033074269239,"pips":0.229,"sourceOrder":52},{"openTime":"2026.02.23 00:00:00","position":"USDCAD-23.2.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.36892,"sl":"1.36616","tp":"","closeTime":"2026.02.24 00:00:00","closePrice":1.36773,"commission":0.0,"swap":0.0,"profit":-60.56,"net":-60.56,"date":"2026-02-24","month":"2026-02","weekday":"Tue","hour":null,"durationMin":null,"riskReward":-0.43115942028988363,"riskAmount":140.46,"equityBefore":14045.87,"equityAfter":13985.31,"returnPct":-0.0008692984250358027,"pips":-0.00119,"sourceOrder":74},{"openTime":"2026.02.23 00:00:00","position":"USDJPY-23.2.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":155.18,"sl":"154.503","tp":"","closeTime":"2026.02.25 00:00:00","closePrice":155.799,"commission":0.0,"swap":0.0,"profit":127.87,"net":127.87,"date":"2026-02-25","month":"2026-02","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.9143279172820984,"riskAmount":139.85,"equityBefore":13985.31,"equityAfter":14113.18,"returnPct":0.0039889160974351245,"pips":0.619,"sourceOrder":53},{"openTime":"2026.02.24 00:00:00","position":"NAS100-24.2.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":25055.4,"sl":"24881.9","tp":"","closeTime":"2026.02.26 00:00:00","closePrice":25120.4,"commission":0.0,"swap":0.0,"profit":52.87,"net":52.87,"date":"2026-02-26","month":"2026-02","weekday":"Thu","hour":null,"durationMin":null,"riskReward":0.3746397694524496,"riskAmount":141.13,"equityBefore":14113.18,"equityAfter":14166.05,"returnPct":0.002594251139474979,"pips":65.0,"sourceOrder":31},{"openTime":"2026.02.25 00:00:00","position":"XAUUSD-25.2.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4437.89,"sl":"4592.98","tp":"","closeTime":"2026.02.27 00:00:00","closePrice":4540.33,"commission":0.0,"swap":0.0,"profit":-93.57,"net":-93.57,"date":"2026-02-27","month":"2026-02","weekday":"Fri","hour":null,"durationMin":null,"riskReward":-0.6605196982397324,"riskAmount":141.66,"equityBefore":14166.05,"equityAfter":14072.48,"returnPct":0.023083041715770136,"pips":102.44,"sourceOrder":11},{"openTime":"2026.02.20 00:00:00","position":"XAUUSD-20.2.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":5055.85,"sl":"4983.56","tp":"","closeTime":"2026.03.02 00:00:00","closePrice":5309.78,"commission":0.0,"swap":0.0,"profit":494.32,"net":494.32,"date":"2026-03-02","month":"2026-03","weekday":"Mon","hour":null,"durationMin":null,"riskReward":3.5126573523308826,"riskAmount":140.72,"equityBefore":14072.48,"equityAfter":14566.8,"returnPct":0.05022498689636734,"pips":253.93,"sourceOrder":6},{"openTime":"2026.02.27 00:00:00","position":"XAUUSD-27.2.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":5217.84,"sl":"5147.69","tp":"","closeTime":"2026.03.02 00:00:00","closePrice":5309.78,"commission":0.0,"swap":0.0,"profit":190.92,"net":190.92,"date":"2026-03-02","month":"2026-03","weekday":"Mon","hour":null,"durationMin":null,"riskReward":1.3106200997861566,"riskAmount":145.67,"equityBefore":14566.8,"equityAfter":14757.72,"returnPct":0.0176203179859864,"pips":91.94,"sourceOrder":7},{"openTime":"2026.02.27 00:00:00","position":"USDCAD-27.2.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.36297,"sl":"1.36784","tp":"","closeTime":"2026.03.02 00:00:00","closePrice":1.36784,"commission":0.0,"swap":0.0,"profit":-147.58,"net":-147.58,"date":"2026-03-02","month":"2026-03","weekday":"Mon","hour":null,"durationMin":null,"riskReward":-1.0,"riskAmount":147.58,"equityBefore":14757.72,"equityAfter":14610.14,"returnPct":0.00357307937812279,"pips":0.00487,"sourceOrder":75},{"openTime":"2026.03.03 00:00:00","position":"XAUUSD-3.3.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":5031.32,"sl":"5270.82","tp":"","closeTime":"2026.03.04 00:00:00","closePrice":5202.63,"commission":0.0,"swap":0.0,"profit":-104.5,"net":-104.5,"date":"2026-03-04","month":"2026-03","weekday":"Wed","hour":null,"durationMin":null,"riskReward":-0.7152818371607532,"riskAmount":146.1,"equityBefore":14610.14,"equityAfter":14505.64,"returnPct":0.03404871882527849,"pips":171.31,"sourceOrder":8},{"openTime":"2026.03.03 00:00:00","position":"NAS100-3.3.26","symbol":"NAS100","side":"sell","volume":1.0,"openPrice":24416.3,"sl":"24916.2","tp":"","closeTime":"2026.03.04 00:00:00","closePrice":24916.2,"commission":0.0,"swap":0.0,"profit":-145.06,"net":-145.06,"date":"2026-03-04","month":"2026-03","weekday":"Wed","hour":null,"durationMin":null,"riskReward":-1.0,"riskAmount":145.06,"equityBefore":14505.64,"equityAfter":14360.58,"returnPct":0.02047402759631889,"pips":499.9,"sourceOrder":32},{"openTime":"2026.03.01 00:00:00","position":"USDJPY-1.3.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":156.873,"sl":"155.688","tp":"","closeTime":"2026.03.04 00:00:00","closePrice":157.219,"commission":0.0,"swap":0.0,"profit":41.93,"net":41.93,"date":"2026-03-04","month":"2026-03","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.2919831223628717,"riskAmount":143.61,"equityBefore":14360.58,"equityAfter":14402.51,"returnPct":0.00220560580852025,"pips":0.346,"sourceOrder":54},{"openTime":"2026.03.05 00:00:00","position":"USDJPY-5.3.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":157.788,"sl":"156.778","tp":"","closeTime":"2026.03.09 00:00:00","closePrice":157.956,"commission":0.0,"swap":0.0,"profit":23.96,"net":23.96,"date":"2026-03-09","month":"2026-03","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.1663366336633413,"riskAmount":144.03,"equityBefore":14402.51,"equityAfter":14426.47,"returnPct":0.001064719750551335,"pips":0.168,"sourceOrder":55},{"openTime":"2026.03.06 00:00:00","position":"USDCAD-6.3.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.35987,"sl":"1.36662","tp":"","closeTime":"2026.03.11 00:00:00","closePrice":1.35944,"commission":0.0,"swap":0.0,"profit":9.19,"net":9.19,"date":"2026-03-11","month":"2026-03","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.06370370370369308,"riskAmount":144.26,"equityBefore":14426.47,"equityAfter":14435.66,"returnPct":-0.0003162066962282273,"pips":-0.00043,"sourceOrder":76},{"openTime":"2026.03.10 00:00:00","position":"USDJPY-10.3.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":158.225,"sl":"157.652","tp":"","closeTime":"2026.03.16 00:00:00","closePrice":159.127,"commission":0.0,"swap":0.0,"profit":227.24,"net":227.24,"date":"2026-03-16","month":"2026-03","weekday":"Mon","hour":null,"durationMin":null,"riskReward":1.574171029668418,"riskAmount":144.36,"equityBefore":14435.66,"equityAfter":14662.9,"returnPct":0.00570074261336706,"pips":0.902,"sourceOrder":56},{"openTime":"2026.03.18 00:00:00","position":"USDJPY-18.3.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":159.455,"sl":"158.854","tp":"","closeTime":"2026.03.19 00:00:00","closePrice":159.051,"commission":0.0,"swap":0.0,"profit":-98.57,"net":-98.57,"date":"2026-03-19","month":"2026-03","weekday":"Thu","hour":null,"durationMin":null,"riskReward":-0.6722129783694266,"riskAmount":146.63,"equityBefore":14662.9,"equityAfter":14564.33,"returnPct":-0.002533630177793289,"pips":-0.404,"sourceOrder":57},{"openTime":"2026.03.19 00:00:00","position":"USDJPY-19.3.26","symbol":"USDJPY","side":"sell","volume":1.0,"openPrice":158.042,"sl":"159.029","tp":"","closeTime":"2026.03.20 00:00:00","closePrice":158.832,"commission":0.0,"swap":0.0,"profit":-116.57,"net":-116.57,"date":"2026-03-20","month":"2026-03","weekday":"Fri","hour":null,"durationMin":null,"riskReward":-0.8004052684903711,"riskAmount":145.64,"equityBefore":14564.33,"equityAfter":14447.76,"returnPct":0.004998671239290875,"pips":0.79,"sourceOrder":58},{"openTime":"2026.03.12 00:00:00","position":"USDCAD-12.3.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.36468,"sl":"1.36108","tp":"","closeTime":"2026.03.20 00:00:00","closePrice":1.37087,"commission":0.0,"swap":0.0,"profit":248.42,"net":248.42,"date":"2026-03-20","month":"2026-03","weekday":"Fri","hour":null,"durationMin":null,"riskReward":1.7194444444445667,"riskAmount":144.48,"equityBefore":14447.76,"equityAfter":14696.18,"returnPct":0.004535861887035919,"pips":0.00619,"sourceOrder":77},{"openTime":"2026.03.12 00:00:00","position":"XAUUSD-12.3.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":5075.03,"sl":"5163.32","tp":"","closeTime":"2026.03.23 00:00:00","closePrice":4305.21,"commission":0.0,"swap":0.0,"profit":1281.39,"net":1281.39,"date":"2026-03-23","month":"2026-03","weekday":"Mon","hour":null,"durationMin":null,"riskReward":8.71922074980179,"riskAmount":146.96,"equityBefore":14696.18,"equityAfter":15977.57,"returnPct":-0.15168777327424665,"pips":-769.82,"sourceOrder":9},{"openTime":"2026.03.18 00:00:00","position":"NAS100-18.3.26","symbol":"NAS100","side":"sell","volume":1.0,"openPrice":24388.1,"sl":"24715.5","tp":"","closeTime":"2026.03.23 00:00:00","closePrice":24145.6,"commission":0.0,"swap":0.0,"profit":118.34,"net":118.34,"date":"2026-03-23","month":"2026-03","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.740684178375073,"riskAmount":159.78,"equityBefore":15977.57,"equityAfter":16095.92,"returnPct":-0.009943374022576612,"pips":-242.5,"sourceOrder":33},{"openTime":"2026.03.18 00:00:00","position":"XAUUSD-18.3.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4878.0,"sl":"5051.57","tp":"","closeTime":"2026.03.24 00:00:00","closePrice":4479.23,"commission":0.0,"swap":0.0,"profit":369.8,"net":369.8,"date":"2026-03-24","month":"2026-03","weekday":"Tue","hour":null,"durationMin":null,"riskReward":2.297459238347647,"riskAmount":160.96,"equityBefore":16095.92,"equityAfter":16465.72,"returnPct":-0.08174866748667498,"pips":-398.77,"sourceOrder":10},{"openTime":"2026.03.25 00:00:00","position":"USDJPY-25.3.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":159.461,"sl":"158.865","tp":"","closeTime":"2026.03.30 00:00:00","closePrice":159.662,"commission":0.0,"swap":0.0,"profit":55.53,"net":55.53,"date":"2026-03-30","month":"2026-03","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.3372483221476379,"riskAmount":164.66,"equityBefore":16465.72,"equityAfter":16521.25,"returnPct":0.00126049629690006,"pips":0.201,"sourceOrder":59},{"openTime":"2026.03.26 00:00:00","position":"NAS100-26.3.26","symbol":"NAS100","side":"sell","volume":1.0,"openPrice":23641.8,"sl":"24100.1","tp":"","closeTime":"2026.03.31 00:00:00","closePrice":23393.1,"commission":0.0,"swap":0.0,"profit":89.65,"net":89.65,"date":"2026-03-31","month":"2026-03","weekday":"Tue","hour":null,"durationMin":null,"riskReward":0.5426576478289354,"riskAmount":165.21,"equityBefore":16521.25,"equityAfter":16610.9,"returnPct":-0.010519503591097101,"pips":-248.7,"sourceOrder":34},{"openTime":"2026.03.23 00:00:00","position":"USDCAD-23.3.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.37427,"sl":"1.37135","tp":"","closeTime":"2026.03.31 00:00:00","closePrice":1.39106,"commission":0.0,"swap":0.0,"profit":955.13,"net":955.13,"date":"2026-03-31","month":"2026-03","weekday":"Tue","hour":null,"durationMin":null,"riskReward":5.749999999999886,"riskAmount":166.11,"equityBefore":16610.9,"equityAfter":17566.03,"returnPct":0.012217395417203125,"pips":0.01679,"sourceOrder":78},{"openTime":"2026.03.31 00:00:00","position":"XAUUSD-31.3.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4651.91,"sl":"4539.2","tp":"","closeTime":"2026.04.01 00:00:00","closePrice":4601.38,"commission":0.0,"swap":0.0,"profit":-78.75,"net":-78.75,"date":"2026-04-01","month":"2026-04","weekday":"Wed","hour":null,"durationMin":null,"riskReward":-0.44831869399343205,"riskAmount":175.66,"equityBefore":17566.03,"equityAfter":17487.27,"returnPct":-0.01086220498676882,"pips":-50.53,"sourceOrder":12},{"openTime":"2026.04.02 00:00:00","position":"NAS100-2.4.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":23923.2,"sl":"23720.2","tp":"","closeTime":"2026.04.06 00:00:00","closePrice":24036.0,"commission":0.0,"swap":0.0,"profit":97.17,"net":97.17,"date":"2026-04-06","month":"2026-04","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.5556650246305382,"riskAmount":174.87,"equityBefore":17487.27,"equityAfter":17584.44,"returnPct":0.004715088282503999,"pips":112.8,"sourceOrder":35},{"openTime":"2026.04.01 00:00:00","position":"USDCAD-1.4.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.39094,"sl":"1.3867","tp":"","closeTime":"2026.04.06 00:00:00","closePrice":1.39234,"commission":0.0,"swap":0.0,"profit":58.06,"net":58.06,"date":"2026-04-06","month":"2026-04","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.330188679245245,"riskAmount":175.84,"equityBefore":17584.44,"equityAfter":17642.51,"returnPct":0.001006513580743773,"pips":0.0014,"sourceOrder":79},{"openTime":"2026.04.07 00:00:00","position":"XAUUSD-7.4.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4748.45,"sl":"4649.1","tp":"","closeTime":"2026.04.08 00:00:00","closePrice":4718.49,"commission":0.0,"swap":0.0,"profit":-53.2,"net":-53.2,"date":"2026-04-08","month":"2026-04","weekday":"Wed","hour":null,"durationMin":null,"riskReward":-0.30156014091595573,"riskAmount":176.43,"equityBefore":17642.51,"equityAfter":17589.3,"returnPct":-0.006309427286798841,"pips":-29.96,"sourceOrder":13},{"openTime":"2026.04.07 00:00:00","position":"USDJPY-7.4.26","symbol":"USDJPY","side":"sell","volume":1.0,"openPrice":158.732,"sl":"159.433","tp":"","closeTime":"2026.04.09 00:00:00","closePrice":158.965,"commission":0.0,"swap":0.0,"profit":-58.46,"net":-58.46,"date":"2026-04-09","month":"2026-04","weekday":"Thu","hour":null,"durationMin":null,"riskReward":-0.3323823109843171,"riskAmount":175.89,"equityBefore":17589.3,"equityAfter":17530.84,"returnPct":0.0014678829725576215,"pips":0.233,"sourceOrder":60},{"openTime":"2026.04.07 00:00:00","position":"NAS100-7.4.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":24215.7,"sl":"23857.0","tp":"","closeTime":"2026.04.10 00:00:00","closePrice":25168.0,"commission":0.0,"swap":0.0,"profit":465.42,"net":465.42,"date":"2026-04-10","month":"2026-04","weekday":"Fri","hour":null,"durationMin":null,"riskReward":2.6548647895176956,"riskAmount":175.31,"equityBefore":17530.84,"equityAfter":17996.26,"returnPct":0.039325726697968744,"pips":952.3,"sourceOrder":36},{"openTime":"2026.04.07 00:00:00","position":"USDCAD-7.4.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.38479,"sl":"1.39036","tp":"","closeTime":"2026.04.10 00:00:00","closePrice":1.38448,"commission":0.0,"swap":0.0,"profit":10.02,"net":10.02,"date":"2026-04-10","month":"2026-04","weekday":"Fri","hour":null,"durationMin":null,"riskReward":0.055655296229807596,"riskAmount":179.96,"equityBefore":17996.26,"equityAfter":18006.28,"returnPct":-0.00022386065757262763,"pips":-0.00031,"sourceOrder":80},{"openTime":"2026.04.14 00:00:00","position":"XAUUSD-14.4.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4796.14,"sl":"4729.27","tp":"","closeTime":"2026.04.16 00:00:00","closePrice":4796.14,"commission":0.0,"swap":0.0,"profit":0.0,"net":0.0,"date":"2026-04-16","month":"2026-04","weekday":"Thu","hour":null,"durationMin":null,"riskReward":0.0,"riskAmount":180.06,"equityBefore":18006.28,"equityAfter":18006.28,"returnPct":0.0,"pips":0.0,"sourceOrder":14},{"openTime":"2026.04.17 00:00:00","position":"XAUUSD-17.4.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4882.87,"sl":"4776.95","tp":"","closeTime":"2026.04.17 00:00:00","closePrice":4776.95,"commission":0.0,"swap":0.0,"profit":-180.06,"net":-180.06,"date":"2026-04-17","month":"2026-04","weekday":"Fri","hour":null,"durationMin":null,"riskReward":-1.0,"riskAmount":180.06,"equityBefore":18006.28,"equityAfter":17826.21,"returnPct":-0.02169216055311729,"pips":-105.92,"sourceOrder":15},{"openTime":"2026.04.13 00:00:00","position":"NAS100-13.4.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":25163.7,"sl":"24728.1","tp":"","closeTime":"2026.04.17 00:00:00","closePrice":26701.1,"commission":0.0,"swap":0.0,"profit":629.16,"net":629.16,"date":"2026-04-17","month":"2026-04","weekday":"Fri","hour":null,"durationMin":null,"riskReward":3.5293847566574614,"riskAmount":178.26,"equityBefore":17826.21,"equityAfter":18455.37,"returnPct":0.06109594376025784,"pips":1537.4,"sourceOrder":37},{"openTime":"2026.04.17 00:00:00","position":"USDJPY-17.4.26","symbol":"USDJPY","side":"sell","volume":1.0,"openPrice":158.429,"sl":"159.231","tp":"","closeTime":"2026.04.19 00:00:00","closePrice":158.762,"commission":0.0,"swap":0.0,"profit":-76.63,"net":-76.63,"date":"2026-04-19","month":"2026-04","weekday":"Sun","hour":null,"durationMin":null,"riskReward":-0.41521197007481486,"riskAmount":184.55,"equityBefore":18455.37,"equityAfter":18378.74,"returnPct":0.0021018879119352185,"pips":0.333,"sourceOrder":61},{"openTime":"2026.04.13 00:00:00","position":"USDCAD-13.4.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.37968,"sl":"1.38456","tp":"","closeTime":"2026.04.22 00:00:00","closePrice":1.36657,"commission":0.0,"swap":0.0,"profit":493.74,"net":493.74,"date":"2026-04-22","month":"2026-04","weekday":"Wed","hour":null,"durationMin":null,"riskReward":2.686475409836059,"riskAmount":183.79,"equityBefore":18378.74,"equityAfter":18872.48,"returnPct":-0.009502203409486265,"pips":-0.01311,"sourceOrder":81},{"openTime":"2026.04.21 00:00:00","position":"XAUUSD-21.4.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4707.54,"sl":"4786.44","tp":"","closeTime":"2026.04.24 00:00:00","closePrice":4742.45,"commission":0.0,"swap":0.0,"profit":-83.5,"net":-83.5,"date":"2026-04-24","month":"2026-04","weekday":"Fri","hour":null,"durationMin":null,"riskReward":-0.4424588086185046,"riskAmount":188.72,"equityBefore":18872.48,"equityAfter":18788.98,"returnPct":0.007415762797554626,"pips":34.91,"sourceOrder":16},{"openTime":"2026.04.22 00:00:00","position":"NAS100-22.4.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":26913.3,"sl":"26408.6","tp":"","closeTime":"2026.04.28 00:00:00","closePrice":27202.5,"commission":0.0,"swap":0.0,"profit":107.66,"net":107.66,"date":"2026-04-28","month":"2026-04","weekday":"Tue","hour":null,"durationMin":null,"riskReward":0.5730136714880133,"riskAmount":187.89,"equityBefore":18788.98,"equityAfter":18896.64,"returnPct":0.010745616479584497,"pips":289.2,"sourceOrder":38},{"openTime":"2026.04.27 00:00:00","position":"USDCAD-27.4.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.36173,"sl":"1.36748","tp":"","closeTime":"2026.04.28 00:00:00","closePrice":1.36498,"commission":0.0,"swap":0.0,"profit":-106.81,"net":-106.81,"date":"2026-04-28","month":"2026-04","weekday":"Tue","hour":null,"durationMin":null,"riskReward":-0.5652173913043512,"riskAmount":188.97,"equityBefore":18896.64,"equityAfter":18789.83,"returnPct":0.002386669897850524,"pips":0.00325,"sourceOrder":82},{"openTime":"2026.04.27 00:00:00","position":"XAUUSD-27.4.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4683.5,"sl":"4733.82","tp":"","closeTime":"2026.04.30 00:00:00","closePrice":4611.62,"commission":0.0,"swap":0.0,"profit":268.4,"net":268.4,"date":"2026-04-30","month":"2026-04","weekday":"Thu","hour":null,"durationMin":null,"riskReward":1.4284578696343506,"riskAmount":187.9,"equityBefore":18789.83,"equityAfter":19058.24,"returnPct":-0.015347496530372595,"pips":-71.88,"sourceOrder":17},{"openTime":"2026.04.29 00:00:00","position":"USDJPY-29.4.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":159.842,"sl":"159.403","tp":"","closeTime":"2026.04.30 00:00:00","closePrice":159.842,"commission":0.0,"swap":0.0,"profit":0.0,"net":0.0,"date":"2026-04-30","month":"2026-04","weekday":"Thu","hour":null,"durationMin":null,"riskReward":0.0,"riskAmount":190.58,"equityBefore":19058.24,"equityAfter":19058.24,"returnPct":0.0,"pips":0.0,"sourceOrder":62},{"openTime":"2026.05.01 00:00:00","position":"XAUUSD-1.5.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4564.52,"sl":"4635.67","tp":"","closeTime":"2026.05.01 00:00:00","closePrice":4635.67,"commission":0.0,"swap":0.0,"profit":-190.58,"net":-190.58,"date":"2026-05-01","month":"2026-05","weekday":"Fri","hour":null,"durationMin":null,"riskReward":-1.0,"riskAmount":190.58,"equityBefore":19058.24,"equityAfter":18867.66,"returnPct":0.015587619289651355,"pips":71.15,"sourceOrder":18},{"openTime":"2026.04.30 00:00:00","position":"USDCAD-30.4.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.36118,"sl":"1.36716","tp":"","closeTime":"2026.05.04 00:00:00","closePrice":1.36179,"commission":0.0,"swap":0.0,"profit":-19.25,"net":-19.25,"date":"2026-05-04","month":"2026-05","weekday":"Mon","hour":null,"durationMin":null,"riskReward":-0.10200668896321276,"riskAmount":188.68,"equityBefore":18867.66,"equityAfter":18848.41,"returnPct":0.00044814058390518774,"pips":0.00061,"sourceOrder":83},{"openTime":"2026.05.05 00:00:00","position":"USDCAD-5.5.26","symbol":"USDCAD","side":"sell","volume":1.0,"openPrice":1.35967,"sl":"1.36272","tp":"","closeTime":"2026.05.06 00:00:00","closePrice":1.36132,"commission":0.0,"swap":0.0,"profit":-101.97,"net":-101.97,"date":"2026-05-06","month":"2026-05","weekday":"Wed","hour":null,"durationMin":null,"riskReward":-0.5409836065574272,"riskAmount":188.48,"equityBefore":18848.41,"equityAfter":18746.44,"returnPct":0.0012135297535431633,"pips":0.00165,"sourceOrder":84},{"openTime":"2026.05.05 00:00:00","position":"XAUUSD-5.5.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4662.68,"sl":"4600.79","tp":"","closeTime":"2026.05.10 00:00:00","closePrice":4697.11,"commission":0.0,"swap":0.0,"profit":104.29,"net":104.29,"date":"2026-05-10","month":"2026-05","weekday":"Sun","hour":null,"durationMin":null,"riskReward":0.5563095815155793,"riskAmount":187.46,"equityBefore":18746.44,"equityAfter":18850.73,"returnPct":0.007384165329810122,"pips":34.43,"sourceOrder":19},{"openTime":"2026.05.07 00:00:00","position":"USDCAD-7.5.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.36667,"sl":"1.36219","tp":"","closeTime":"2026.05.11 00:00:00","closePrice":1.36667,"commission":0.0,"swap":0.0,"profit":0.0,"net":0.0,"date":"2026-05-11","month":"2026-05","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.0,"riskAmount":188.51,"equityBefore":18850.73,"equityAfter":18850.73,"returnPct":0.0,"pips":0.0,"sourceOrder":85},{"openTime":"2026.05.11 00:00:00","position":"XAUUSD-11.5.26","symbol":"XAUUSD","side":"buy","volume":1.0,"openPrice":4737.56,"sl":"4648.92","tp":"","closeTime":"2026.05.12 00:00:00","closePrice":4703.9,"commission":0.0,"swap":0.0,"profit":-71.58,"net":-71.58,"date":"2026-05-12","month":"2026-05","weekday":"Tue","hour":null,"durationMin":null,"riskReward":-0.37973826714802167,"riskAmount":188.51,"equityBefore":18850.73,"equityAfter":18779.15,"returnPct":-0.007104923209416025,"pips":-33.66,"sourceOrder":20},{"openTime":"2026.04.29 00:00:00","position":"NAS100-29.4.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":27489.9,"sl":"27028.6","tp":"","closeTime":"2026.05.12 00:00:00","closePrice":29061.7,"commission":0.0,"swap":0.0,"profit":639.87,"net":639.87,"date":"2026-05-12","month":"2026-05","weekday":"Tue","hour":null,"durationMin":null,"riskReward":3.407327119011466,"riskAmount":187.79,"equityBefore":18779.15,"equityAfter":19419.02,"returnPct":0.05717736332252943,"pips":1571.8,"sourceOrder":39},{"openTime":"2026.05.05 00:00:00","position":"NAS100-5.5.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":27992.2,"sl":"27506.0","tp":"","closeTime":"2026.05.12 00:00:00","closePrice":29061.7,"commission":0.0,"swap":0.0,"profit":427.16,"net":427.16,"date":"2026-05-12","month":"2026-05","weekday":"Tue","hour":null,"durationMin":null,"riskReward":2.1997120526532257,"riskAmount":194.19,"equityBefore":19419.02,"equityAfter":19846.18,"returnPct":0.03820707197004869,"pips":1069.5,"sourceOrder":40},{"openTime":"2026.05.11 00:00:00","position":"USDJPY-11.5.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":157.435,"sl":"157.013","tp":"","closeTime":"2026.05.12 00:00:00","closePrice":157.013,"commission":0.0,"swap":0.0,"profit":-198.46,"net":-198.46,"date":"2026-05-12","month":"2026-05","weekday":"Tue","hour":null,"durationMin":null,"riskReward":-1.0,"riskAmount":198.46,"equityBefore":19846.18,"equityAfter":19647.72,"returnPct":-0.002680471305618215,"pips":-0.422,"sourceOrder":63},{"openTime":"2026.05.12 00:00:00","position":"NAS100-12.5.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":29027.8,"sl":"28758.7","tp":"","closeTime":"2026.05.14 00:00:00","closePrice":29339.5,"commission":0.0,"swap":0.0,"profit":227.58,"net":227.58,"date":"2026-05-14","month":"2026-05","weekday":"Thu","hour":null,"durationMin":null,"riskReward":1.1583054626532978,"riskAmount":196.48,"equityBefore":19647.72,"equityAfter":19875.3,"returnPct":0.010737982210157204,"pips":311.7,"sourceOrder":41},{"openTime":"2026.05.12 00:00:00","position":"USDJPY-12.5.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":157.603,"sl":"157.182","tp":"","closeTime":"2026.05.19 00:00:00","closePrice":158.769,"commission":0.0,"swap":0.0,"profit":550.47,"net":550.47,"date":"2026-05-19","month":"2026-05","weekday":"Tue","hour":null,"durationMin":null,"riskReward":2.769596199524797,"riskAmount":198.75,"equityBefore":19875.3,"equityAfter":20425.76,"returnPct":0.00739833632608522,"pips":1.166,"sourceOrder":64},{"openTime":"2026.05.11 00:00:00","position":"USDCAD-11.5.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.36792,"sl":"1.36478","tp":"","closeTime":"2026.05.19 00:00:00","closePrice":1.37327,"commission":0.0,"swap":0.0,"profit":348.02,"net":348.02,"date":"2026-05-19","month":"2026-05","weekday":"Tue","hour":null,"durationMin":null,"riskReward":1.7038216560509876,"riskAmount":204.26,"equityBefore":20425.76,"equityAfter":20773.78,"returnPct":0.003911047429674186,"pips":0.00535,"sourceOrder":86},{"openTime":"2026.05.14 00:00:00","position":"XAUUSD-14.5.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4613.94,"sl":"4677.43","tp":"","closeTime":"2026.05.20 00:00:00","closePrice":4548.47,"commission":0.0,"swap":0.0,"profit":214.22,"net":214.22,"date":"2026-05-20","month":"2026-05","weekday":"Wed","hour":null,"durationMin":null,"riskReward":1.0311860135454187,"riskAmount":207.74,"equityBefore":20773.78,"equityAfter":20988.0,"returnPct":-0.014189608013974953,"pips":-65.47,"sourceOrder":21},{"openTime":"2026.05.21 00:00:00","position":"NAS100-21.5.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":29448.9,"sl":"29043.4","tp":"","closeTime":"2026.05.27 00:00:00","closePrice":29842.6,"commission":0.0,"swap":0.0,"profit":203.77,"net":203.77,"date":"2026-05-27","month":"2026-05","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.9709001233045551,"riskAmount":209.88,"equityBefore":20988.0,"equityAfter":21191.77,"returnPct":0.01336892040110138,"pips":393.7,"sourceOrder":42},{"openTime":"2026.05.26 00:00:00","position":"XAUUSD-26.5.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4489.38,"sl":"4548.47","tp":"","closeTime":"2026.05.28 00:00:00","closePrice":4477.17,"commission":0.0,"swap":0.0,"profit":43.79,"net":43.79,"date":"2026-05-28","month":"2026-05","weekday":"Thu","hour":null,"durationMin":null,"riskReward":0.20663394821458803,"riskAmount":211.92,"equityBefore":21191.77,"equityAfter":21235.56,"returnPct":-0.0027197519479305043,"pips":-12.21,"sourceOrder":22},{"openTime":"2026.05.26 00:00:00","position":"USDJPY-26.5.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":159.228,"sl":"158.856","tp":"","closeTime":"2026.05.28 00:00:00","closePrice":159.386,"commission":0.0,"swap":0.0,"profit":90.19,"net":90.19,"date":"2026-05-28","month":"2026-05","weekday":"Thu","hour":null,"durationMin":null,"riskReward":0.424731182795648,"riskAmount":212.36,"equityBefore":21235.56,"equityAfter":21325.75,"returnPct":0.0009922877885797377,"pips":0.158,"sourceOrder":65},{"openTime":"2026.05.20 00:00:00","position":"USDCAD-20.5.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.37648,"sl":"1.37377","tp":"","closeTime":"2026.05.28 00:00:00","closePrice":1.38213,"commission":0.0,"swap":0.0,"profit":444.61,"net":444.61,"date":"2026-05-28","month":"2026-05","weekday":"Thu","hour":null,"durationMin":null,"riskReward":2.084870848708552,"riskAmount":213.26,"equityBefore":21325.75,"equityAfter":21770.37,"returnPct":0.0041046727885623024,"pips":0.00565,"sourceOrder":87},{"openTime":"2026.05.28 00:00:00","position":"NAS100-28.5.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":30270.1,"sl":"29814.1","tp":"","closeTime":"2026.06.01 00:00:00","closePrice":30270.1,"commission":0.0,"swap":0.0,"profit":0.0,"net":0.0,"date":"2026-06-01","month":"2026-06","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.0,"riskAmount":217.7,"equityBefore":21770.37,"equityAfter":21770.37,"returnPct":0.0,"pips":0.0,"sourceOrder":43},{"openTime":"2026.04.01 00:00:00","position":"NAS100-1.4.26","symbol":"NAS100","side":"buy","volume":1.0,"openPrice":30431.6,"sl":"30251.1","tp":"","closeTime":"2026.06.03 00:00:00","closePrice":30517.1,"commission":0.0,"swap":0.0,"profit":103.12,"net":103.12,"date":"2026-06-03","month":"2026-06","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.47368421052631576,"riskAmount":217.7,"equityBefore":21770.37,"equityAfter":21873.49,"returnPct":0.002809579516029448,"pips":85.5,"sourceOrder":44},{"openTime":"2026.05.31 00:00:00","position":"USDJPY-31.6.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":159.48,"sl":"159.183","tp":"","closeTime":"2026.06.03 00:00:00","closePrice":159.48,"commission":0.0,"swap":0.0,"profit":0.0,"net":0.0,"date":"2026-06-03","month":"2026-06","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.0,"riskAmount":218.73,"equityBefore":21873.49,"equityAfter":21873.49,"returnPct":0.0,"pips":0.0,"sourceOrder":66},{"openTime":"2026.06.05 00:00:00","position":"NAS100-5.6.26","symbol":"NAS100","side":"sell","volume":1.0,"openPrice":29745.5,"sl":"30383.8","tp":"","closeTime":"2026.06.05 00:00:00","closePrice":28782.7,"commission":0.0,"swap":0.0,"profit":329.94,"net":329.94,"date":"2026-06-05","month":"2026-06","weekday":"Fri","hour":null,"durationMin":null,"riskReward":1.5083816387278715,"riskAmount":218.73,"equityBefore":21873.49,"equityAfter":22203.43,"returnPct":-0.03236792119816445,"pips":-962.8,"sourceOrder":45},{"openTime":"2026.06.01 00:00:00","position":"USDCAD-1.6.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.38407,"sl":"1.38082","tp":"","closeTime":"2026.06.05 00:00:00","closePrice":1.38821,"commission":0.0,"swap":0.0,"profit":282.84,"net":282.84,"date":"2026-06-05","month":"2026-06","weekday":"Fri","hour":null,"durationMin":null,"riskReward":1.2738461538461736,"riskAmount":222.03,"equityBefore":22203.43,"equityAfter":22486.26,"returnPct":0.002991178191854571,"pips":0.00414,"sourceOrder":88},{"openTime":"2026.06.03 00:00:00","position":"USDJPY-3.6.26","symbol":"USDJPY","side":"buy","volume":1.0,"openPrice":159.906,"sl":"159.495","tp":"","closeTime":"2026.06.08 00:00:00","closePrice":160.043,"commission":0.0,"swap":0.0,"profit":74.95,"net":74.95,"date":"2026-06-08","month":"2026-06","weekday":"Mon","hour":null,"durationMin":null,"riskReward":0.3333333333333333,"riskAmount":224.86,"equityBefore":22486.26,"equityAfter":22561.22,"returnPct":0.000856753342588723,"pips":0.137,"sourceOrder":67},{"openTime":"2026.05.05 00:00:00","position":"XAUUSD-5.5.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4366.4,"sl":"4478.32","tp":"","closeTime":"2026.06.09 00:00:00","closePrice":4026.0,"commission":0.0,"swap":0.0,"profit":686.19,"net":686.19,"date":"2026-06-09","month":"2026-06","weekday":"Tue","hour":null,"durationMin":null,"riskReward":3.041458184417436,"riskAmount":225.61,"equityBefore":22561.22,"equityAfter":23247.41,"returnPct":-0.07795895932576025,"pips":-340.4,"sourceOrder":23},{"openTime":"2026.06.09 00:00:00","position":"XAUUSD-9.6.26","symbol":"XAUUSD","side":"sell","volume":1.0,"openPrice":4259.71,"sl":"4368.51","tp":"","closeTime":"2026.06.09 00:00:00","closePrice":4026.0,"commission":0.0,"swap":0.0,"profit":499.37,"net":499.37,"date":"2026-06-09","month":"2026-06","weekday":"Tue","hour":null,"durationMin":null,"riskReward":2.1480698529411733,"riskAmount":232.47,"equityBefore":23247.41,"equityAfter":23746.78,"returnPct":-0.054865237304887016,"pips":-233.71,"sourceOrder":24},{"openTime":"2026.06.09 00:00:00","position":"NAS100-9.6.26","symbol":"NAS100","side":"sell","volume":1.0,"openPrice":29217.6,"sl":"29823.4","tp":"","closeTime":"2026.06.10 00:00:00","closePrice":28626.5,"commission":0.0,"swap":0.0,"profit":231.71,"net":231.71,"date":"2026-06-10","month":"2026-06","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.9757345658633141,"riskAmount":237.47,"equityBefore":23746.78,"equityAfter":23978.48,"returnPct":-0.02023095668364272,"pips":-591.1,"sourceOrder":46},{"openTime":"2026.06.05 00:00:00","position":"USDCAD-5.6.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.38962,"sl":"1.38564","tp":"","closeTime":"2026.06.10 00:00:00","closePrice":1.39191,"commission":0.0,"swap":0.0,"profit":137.97,"net":137.97,"date":"2026-06-10","month":"2026-06","weekday":"Wed","hour":null,"durationMin":null,"riskReward":0.5753768844220726,"riskAmount":239.78,"equityBefore":23978.48,"equityAfter":24116.45,"returnPct":0.0016479325283169644,"pips":0.00229,"sourceOrder":89},{"openTime":"2026.06.11 00:00:00","position":"USDCAD-11.6.26","symbol":"USDCAD","side":"buy","volume":1.0,"openPrice":1.3977,"sl":"1.39228","tp":"","closeTime":"2026.06.11 00:00:00","closePrice":1.3977,"commission":0.0,"swap":0.0,"profit":0.0,"net":0.0,"date":"2026-06-11","month":"2026-06","weekday":"Thu","hour":null,"durationMin":null,"riskReward":0.0,"riskAmount":241.16,"equityBefore":24116.45,"equityAfter":24116.45,"returnPct":0.0,"pips":0.0,"sourceOrder":90}];
+const META = {"sourceFile":"TRACK_RECORD_ANALISIS_2026.xlsx","account":{"Nombre":"MODELO DOBERWHITE TRADING","Cuenta de trading":"MODELO DOBERWHITE TRADING","Empresa":"PEPPERSTONE","Fecha":"2026"},"reportStats":{"Modelo":"Capital inicial 10.000 USD; riesgo 1% por operación; P&L = Equity previa × 1% × RISK_REWARD","Balance inicial":"10000.00","Balance final":"24116.45","Beneficio Neto Modelo":"14116.45","Riesgo por operación":"1.00%"},"closedTradesCount":90,"closedTradesNet":14116.45,"reportNet":14116.45,"balance":24116.45,"initialBalance":10000.0,"equity":24116.45,"floatingPnl":0.0,"openPositions":[],"symbols":["NAS100","USDCAD","USDJPY","XAUUSD"],"months":["2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"],"minDate":"2026-01-07","maxDate":"2026-06-11","riskPct":0.01};
+const SIM_DEFAULTS = { initialBalance: META.initialBalance, riskPct: META.riskPct, riskMode: 'equity' };
+let SIM_STATE = { ...SIM_DEFAULTS };
+
+function riskModeLabel(mode) { return mode === 'fixed' ? 'capital inicial fijo' : 'equity dinámica'; }
+function setSimulationInputs() {
+  document.getElementById('simInitialBalance').value = Number(SIM_STATE.initialBalance || 0).toFixed(2);
+  document.getElementById('simRiskPct').value = (Number(SIM_STATE.riskPct || 0) * 100).toFixed(2);
+  document.getElementById('simRiskMode').value = SIM_STATE.riskMode;
+}
+function applySimulation() {
+  const initialBalance = Math.max(0, Number(document.getElementById('simInitialBalance').value || 0));
+  const riskPct = Math.max(0, Number(document.getElementById('simRiskPct').value || 0)) / 100;
+  const riskMode = document.getElementById('simRiskMode').value === 'fixed' ? 'fixed' : 'equity';
+  SIM_STATE = { initialBalance, riskPct, riskMode };
+  setSimulationInputs();
+  renderAll();
+}
+function resetSimulation() {
+  SIM_STATE = { ...SIM_DEFAULTS };
+  setSimulationInputs();
+  renderAll();
+}
+function simulateTrades(arr) {
+  const sorted = [...arr].sort((a,b)=>parseTime(a.closeTime)-parseTime(b.closeTime) || ((a.sourceOrder||0) - (b.sourceOrder||0)));
+  let equity = Number(SIM_STATE.initialBalance || 0);
+  return sorted.map(t => {
+    const rr = Number(t.riskReward || 0);
+    const riskBase = SIM_STATE.riskMode === 'fixed' ? Number(SIM_STATE.initialBalance || 0) : equity;
+    const riskAmount = riskBase * Number(SIM_STATE.riskPct || 0);
+    const modelPnl = riskAmount * rr;
+    const commission = Number(t.commission || 0);
+    const swap = Number(t.swap || 0);
+    const net = modelPnl + commission + swap;
+    const equityBefore = equity;
+    const equityAfter = equityBefore + net;
+    equity = equityAfter;
+    return { ...t, profit: modelPnl, net, riskAmount, equityBefore, equityAfter, returnPct: equityBefore ? net / equityBefore : 0 };
+  });
+}
+function renderMetaSummary(arr, a) {
+  const sorted = [...arr].sort((x,y)=>parseTime(x.closeTime)-parseTime(y.closeTime) || ((x.sourceOrder||0)-(y.sourceOrder||0)));
+  const range = sorted.length ? `${sorted[0].date} → ${sorted[sorted.length-1].date}` : '—';
+  const finalBalance = Number(SIM_STATE.initialBalance || 0) + Number(a.net || 0);
+  document.getElementById('metaRange').textContent = range;
+  document.getElementById('metaBalance').textContent = fmtUSD(finalBalance) + ' / ' + fmtUSD(finalBalance);
+  document.getElementById('metaClosed').textContent = fmtNum(a.n,0) + ' ops';
+  document.getElementById('metaOpen').textContent = META.openPositions.length + ' abiertas · flotante ' + fmtUSD(META.floatingPnl);
+  document.getElementById('netNotice').innerHTML = `Cálculo actual: capital inicial <b>${fmtUSD(SIM_STATE.initialBalance)}</b>; riesgo <b>${(SIM_STATE.riskPct*100).toFixed(2)}%</b> por operación; base <b>${riskModeLabel(SIM_STATE.riskMode)}</b>. Resultado filtrado: <b>${fmtUSD(a.net)}</b> · Balance final: <b>${fmtUSD(finalBalance)}</b>.`;
+  document.getElementById('simNotice').innerHTML = `Simulación activa: <b>${fmtUSD(SIM_STATE.initialBalance)}</b> de capital inicial, <b>${(SIM_STATE.riskPct*100).toFixed(2)}%</b> de riesgo por entrada y cálculo sobre <b>${riskModeLabel(SIM_STATE.riskMode)}</b>.`;
+}
+
+let selectedSymbols = new Set(META.symbols);
+let currentFiltered = [...TRADES];
+const COLORS = { gold:'#d2af62', gold2:'#f1d38a', green:'#45c486', red:'#e05a57', blue:'#8da2d7', text:'#f4f0e8', muted:'#87909f', grid:'rgba(255,255,255,.09)' };
+
+function fmtUSD(n) { n = Number(n || 0); const sign = n < 0 ? '-' : ''; return sign + '$' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmtNum(n, d=0) { return Number(n || 0).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+function fmtPct(n) { return isFinite(n) ? (n*100).toFixed(1) + '%' : '—'; }
+function cls(n) { return Number(n) >= 0 ? 'positive' : 'negative'; }
+function monthLabel(m) { const [y,mo] = m.split('-'); return mo + '/' + y.slice(2); }
+function parseTime(s) { return new Date(s.replaceAll('.', '-').replace(' ', 'T')); }
+function sum(arr, fn) { return arr.reduce((a,x)=>a+fn(x),0); }
+
+function aggregate(arr) {
+  const n = arr.length;
+  const wins = arr.filter(t=>t.net>0);
+  const losses = arr.filter(t=>t.net<0);
+  const grossWin = sum(wins, t=>t.net);
+  const grossLoss = Math.abs(sum(losses, t=>t.net));
+  const net = sum(arr, t=>t.net);
+  const avgWin = wins.length ? grossWin / wins.length : 0;
+  const avgLoss = losses.length ? grossLoss / losses.length : 0;
+  const sorted = [...arr].sort((a,b)=>parseTime(a.closeTime)-parseTime(b.closeTime));
+  let cum = 0, peak = 0, maxDD = 0, best = null, worst = null, streak = 0, bestStreak = 0, lossStreak = 0, worstLossStreak = 0;
+  for (const t of sorted) {
+    cum += t.net; if (cum > peak) peak = cum; const dd = peak - cum; if (dd > maxDD) maxDD = dd;
+    if (!best || t.net > best.net) best = t; if (!worst || t.net < worst.net) worst = t;
+    if (t.net > 0) { streak++; bestStreak=Math.max(bestStreak,streak); lossStreak=0; }
+    else if (t.net < 0) { lossStreak++; worstLossStreak=Math.max(worstLossStreak,lossStreak); streak=0; }
+  }
+  return {n, wins:wins.length, losses:losses.length, net, grossWin, grossLoss, winRate:n?wins.length/n:0, pf:grossLoss?grossWin/grossLoss:null, avg:n?net/n:0, avgWin, avgLoss, payoff:avgLoss?avgWin/avgLoss:null, maxDD, best, worst, volume:sum(arr,t=>t.volume), bestStreak, worstLossStreak};
+}
+function groupBy(arr, keyFn) { const m = new Map(); for (const x of arr) { const k = keyFn(x); if (!m.has(k)) m.set(k, []); m.get(k).push(x); } return m; }
+function aggRows(arr, keyFn) { return [...groupBy(arr, keyFn).entries()].map(([key, list]) => ({key, list, ...aggregate(list)})); }
+
+function setup() {
+  document.getElementById('startDate').value = META.minDate;
+  document.getElementById('endDate').value = META.maxDate;
+  const monthSelect = document.getElementById('monthSelect');
+  META.months.forEach(m => { const opt = document.createElement('option'); opt.value=m; opt.textContent=monthLabel(m); monthSelect.appendChild(opt); });
+  const chips = document.getElementById('symbolChips');
+  META.symbols.forEach(s => { const span = document.createElement('span'); span.className='chip active'; span.textContent=s; span.onclick=()=>{ if(selectedSymbols.has(s)) selectedSymbols.delete(s); else selectedSymbols.add(s); span.classList.toggle('active'); renderAll(); }; chips.appendChild(span); });
+  ['startDate','endDate','monthSelect','sideSelect','resultSelect','sessionSelect'].forEach(id=>document.getElementById(id).addEventListener('change', renderAll));
+  document.getElementById('metaAccount').textContent = META.account['Cuenta de trading'] || '—';
+  document.getElementById('metaBroker').textContent = META.account['Empresa'] || '—';
+  setSimulationInputs();
+  document.getElementById('tradeSearch').addEventListener('input', () => renderTradesTable(currentFiltered));
+  renderAll();
+}
+function sessionMatch(hour, session) {
+  if (session === 'all') return true;
+  const [a,b] = session.split('-').map(Number);
+  return hour !== null && hour >= a && hour < b;
+}
+function filterTrades() {
+  const start = document.getElementById('startDate').value;
+  const end = document.getElementById('endDate').value;
+  const month = document.getElementById('monthSelect').value;
+  const side = document.getElementById('sideSelect').value;
+  const result = document.getElementById('resultSelect').value;
+  const session = document.getElementById('sessionSelect').value;
+  if (selectedSymbols.size === 0) return [];
+  return TRADES.filter(t =>
+    (!start || t.date >= start) && (!end || t.date <= end) &&
+    (month === 'all' || t.month === month) &&
+    (side === 'all' || t.side === side) &&
+    selectedSymbols.has(t.symbol) &&
+    sessionMatch(t.hour, session) &&
+    (result === 'all' || (result === 'win' && t.net > 0) || (result === 'loss' && t.net < 0) || (result === 'flat' && t.net === 0))
+  );
+}
+function resetFilters() {
+  selectedSymbols = new Set(META.symbols);
+  document.querySelectorAll('.chip').forEach(c => c.classList.add('active'));
+  document.getElementById('startDate').value = META.minDate;
+  document.getElementById('endDate').value = META.maxDate;
+  document.getElementById('monthSelect').value = 'all';
+  document.getElementById('sideSelect').value = 'all';
+  document.getElementById('resultSelect').value = 'all';
+  document.getElementById('sessionSelect').value = 'all';
+  document.getElementById('tradeSearch').value = '';
+  renderAll();
+}
+function renderAll() {
+  currentFiltered = simulateTrades(filterTrades());
+  const a = aggregate(currentFiltered);
+  renderMetaSummary(currentFiltered, a);
+  renderKPIs(a);
+  renderEquity(currentFiltered);
+  renderMonthly(currentFiltered);
+  renderAssets(currentFiltered);
+  renderHeatmap(currentFiltered);
+  renderActiveTrades(currentFiltered, a);
+  renderMonthlyTable(currentFiltered);
+  renderAssetTable(currentFiltered);
+  renderTradesTable(currentFiltered);
+  document.getElementById('tapePnl').textContent = fmtUSD(a.net);
+  document.getElementById('tapePnl').className = cls(a.net);
+  document.getElementById('tapeWr').textContent = fmtPct(a.winRate);
+  document.getElementById('tapeOps').textContent = fmtNum(a.n,0);
+}
+function renderKPIs(a) {
+  const kpis = [
+    ['Operaciones', fmtNum(a.n,0), 'cerradas filtradas', ''],
+    ['P&L neto', fmtUSD(a.net), `modelo ${fmtUSD(SIM_STATE.initialBalance)} · riesgo ${(SIM_STATE.riskPct*100).toFixed(2)}%`, cls(a.net)],
+    ['Win rate', fmtPct(a.winRate), `${a.wins} ganadas / ${a.losses} perdidas`, 'gold'],
+    ['Profit factor', a.pf ? a.pf.toFixed(2) : '—', `Gross win ${fmtUSD(a.grossWin)}`, a.pf && a.pf>=1 ? 'positive' : 'negative'],
+    ['Avg / trade', fmtUSD(a.avg), `Base ${riskModeLabel(SIM_STATE.riskMode)}`, cls(a.avg)],
+    ['Max DD secuencial', fmtUSD(-a.maxDD), `Mejor ${a.best?fmtUSD(a.best.net):'—'} · Peor ${a.worst?fmtUSD(a.worst.net):'—'}`, 'negative']
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(k => `<div class="kpi"><div class="label">${k[0]}</div><div class="value ${k[3]}">${k[1]}</div><div class="sub">${k[2]}</div></div>`).join('');
+}
+function svgRoot(id, w=900, h=320) { const el = document.getElementById(id); el.innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"></svg>`; return el.querySelector('svg'); }
+function linePath(points) { return points.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' '); }
+function renderEquity(arr) {
+  const svg = svgRoot('equityChart'); const w=900,h=320, ml=65,mr=18,mt=22,mb=38;
+  const sorted = [...arr].sort((a,b)=>parseTime(a.closeTime)-parseTime(b.closeTime) || (a.sourceOrder||0)-(b.sourceOrder||0));
+  if (!sorted.length) { svg.innerHTML = `<text x="450" y="160" text-anchor="middle" class="axis-text">Sin datos para el filtro.</text>`; return; }
+  let equity = META.initialBalance || 10000;
+  const pts = [{i:0, v:equity, t:null}];
+  sorted.forEach((t,i)=>{ equity += t.net; pts.push({i:i+1, v:equity, t}); });
+  const min = Math.min(...pts.map(p=>p.v)), max = Math.max(...pts.map(p=>p.v));
+  const pad = Math.max(1, (max-min)*0.08); const ymin = min-pad, ymax = max+pad; const span = ymax-ymin || 1;
+  const x = i => ml + (pts.length===1?0:(i/(pts.length-1)))*(w-ml-mr);
+  const y = v => mt + (ymax-v)/span*(h-mt-mb);
+  for(let g=0; g<=4; g++) { const yy=mt+g*(h-mt-mb)/4; svg.innerHTML += `<line x1="${ml}" y1="${yy}" x2="${w-mr}" y2="${yy}" class="gridline"/><text x="${ml-8}" y="${yy+4}" text-anchor="end" class="axis-text">${fmtUSD(ymax - g*span/4)}</text>`; }
+  svg.innerHTML += `<line x1="${ml}" y1="${y(META.initialBalance || 10000)}" x2="${w-mr}" y2="${y(META.initialBalance || 10000)}" class="axis"/>`;
+  const p = pts.map(d=>[x(d.i), y(d.v)]);
+  svg.innerHTML += `<path d="${linePath(p)}" fill="none" stroke="${COLORS.gold2}" stroke-width="3" vector-effect="non-scaling-stroke"/>`;
+  const first = pts[0], last = pts[pts.length-1];
+  svg.innerHTML += `<circle cx="${x(first.i)}" cy="${y(first.v)}" r="4" fill="${COLORS.blue}"/><text x="${x(first.i)+6}" y="${y(first.v)-8}" class="chart-label">${fmtUSD(first.v)}</text>`;
+  svg.innerHTML += `<circle cx="${x(last.i)}" cy="${y(last.v)}" r="5" fill="${last.v>=first.v?COLORS.green:COLORS.red}"/><text x="${w-mr}" y="${y(last.v)-10}" text-anchor="end" class="chart-label">${fmtUSD(last.v)}</text>`;
+  svg.innerHTML += `<text x="${ml}" y="${h-10}" class="axis-text">${sorted[0].date}</text><text x="${w-mr}" y="${h-10}" text-anchor="end" class="axis-text">${sorted[sorted.length-1].date}</text>`;
+}
+function renderMonthly(arr) {
+  const svg = svgRoot('monthlyChart'); const w=900,h=320, ml=52,mr=52,mt=25,mb=50;
+  let rows = aggRows(arr, t=>t.month).filter(r=>r.key).sort((a,b)=>a.key.localeCompare(b.key));
+  if (!rows.length) { svg.innerHTML = `<text x="450" y="160" text-anchor="middle" class="axis-text">Sin datos para el filtro.</text>`; return; }
+  const min = Math.min(0, ...rows.map(r=>r.net)), max = Math.max(0, ...rows.map(r=>r.net)); const span=max-min || 1;
+  const barW = (w-ml-mr)/rows.length * .62; const step=(w-ml-mr)/rows.length; const y=v=>mt+(max-v)/span*(h-mt-mb); const zero=y(0);
+  for(let g=0;g<=4;g++){ const yy=mt+g*(h-mt-mb)/4; svg.innerHTML += `<line x1="${ml}" y1="${yy}" x2="${w-mr}" y2="${yy}" class="gridline"/><text x="${ml-8}" y="${yy+4}" text-anchor="end" class="axis-text">${fmtUSD(max-g*span/4)}</text>`; }
+  svg.innerHTML += `<line x1="${ml}" y1="${zero}" x2="${w-mr}" y2="${zero}" class="axis"/>`;
+  rows.forEach((r,i)=>{ const x=ml+i*step+step/2-barW/2; const yy=y(Math.max(r.net,0)); const hh=Math.abs(y(r.net)-zero); svg.innerHTML += `<rect x="${x}" y="${r.net>=0?yy:zero}" width="${barW}" height="${Math.max(2,hh)}" fill="${r.net>=0?COLORS.green:COLORS.red}" opacity=".88"/><text x="${x+barW/2}" y="${h-24}" text-anchor="middle" class="axis-text">${monthLabel(r.key)}</text><text x="${x+barW/2}" y="${r.net>=0?yy-7:zero+hh+14}" text-anchor="middle" class="chart-label">${fmtUSD(r.net)}</text>`; });
+  const linePts = rows.map((r,i)=>[ml+i*step+step/2, mt + (1-r.winRate)*(h-mt-mb)]);
+  svg.innerHTML += `<path d="${linePath(linePts)}" fill="none" stroke="${COLORS.gold2}" stroke-width="2.5" vector-effect="non-scaling-stroke"/>`;
+  linePts.forEach((p,i)=>{ svg.innerHTML += `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${COLORS.gold2}"/><text x="${p[0]}" y="${p[1]-9}" text-anchor="middle" class="axis-text">${fmtPct(rows[i].winRate)}</text>`; });
+  svg.innerHTML += `<text x="${w-mr}" y="${mt+12}" text-anchor="end" class="axis-text">Línea: win rate</text>`;
+}
+function renderAssets(arr) {
+  const rows = aggRows(arr, t=>t.symbol).sort((a,b)=>b.net-a.net);
+  const maxAbs = Math.max(1, ...rows.map(r=>Math.abs(r.net)));
+  const html = rows.map(r => `<div class="asset-row"><div><b>${r.key}</b><br><span style="color:var(--muted);font-size:11px">${r.n} ops · ${fmtPct(r.winRate)}</span></div><div class="track"><div class="bar ${r.net>=0?'pos':'neg'}" style="width:${Math.max(2,Math.abs(r.net)/maxAbs*100)}%"></div></div><div class="${cls(r.net)}" style="text-align:right;font-weight:800">${fmtUSD(r.net)}</div></div>`).join('');
+  document.getElementById('assetBars').innerHTML = html || '<p>Sin datos.</p>';
+}
+function renderHeatmap(arr) {
+  const months = [...new Set(arr.map(t=>t.month).filter(Boolean))].sort(); const symbols = [...new Set(arr.map(t=>t.symbol))].sort();
+  const grid = document.getElementById('heatmap');
+  if (!months.length || !symbols.length) { grid.innerHTML = '<p>Sin datos.</p>'; return; }
+  const matrix = new Map(); let maxAbs=1;
+  for (const m of months) for (const s of symbols) { const list=arr.filter(t=>t.month===m && t.symbol===s); const net=sum(list,t=>t.net); matrix.set(m+'|'+s, {net, n:list.length}); maxAbs=Math.max(maxAbs, Math.abs(net)); }
+  grid.style.setProperty('--cols', months.length);
+  let out = `<div class="heat-row"><div></div>${months.map(m=>`<div class="heat-cell heat-head">${monthLabel(m)}</div>`).join('')}</div>`;
+  for (const s of symbols) { out += `<div class="heat-row"><div class="heat-cell heat-head">${s}</div>`; for (const m of months) { const c=matrix.get(m+'|'+s); const alpha = Math.min(.68, .08 + Math.abs(c.net)/maxAbs*.60); const bg = c.net>=0 ? `rgba(69,196,134,${alpha})` : `rgba(224,90,87,${alpha})`; out += `<div class="heat-cell" style="background:${bg}"><b>${fmtUSD(c.net)}</b><span style="color:#c8cfdf;font-size:10px">${c.n} ops</span></div>`; } out += `</div>`; }
+  grid.innerHTML = out;
+}
+function renderMonthlyTable(arr) {
+  const rows = aggRows(arr, t=>t.month).filter(r=>r.key).sort((a,b)=>a.key.localeCompare(b.key));
+  let html = '<thead><tr><th>Mes</th><th>Ops</th><th>Win rate</th><th>P&L Neto</th><th>Gross Win</th><th>Gross Loss</th><th>Avg/Trade</th><th>PF</th><th>Mejor activo</th></tr></thead><tbody>';
+  for (const r of rows) { const assets = aggRows(r.list, t=>t.symbol).sort((a,b)=>b.net-a.net); html += `<tr><td>${monthLabel(r.key)}</td><td>${r.n}</td><td>${fmtPct(r.winRate)}</td><td class="${cls(r.net)}">${fmtUSD(r.net)}</td><td class="positive">${fmtUSD(r.grossWin)}</td><td class="negative">${fmtUSD(-r.grossLoss)}</td><td class="${cls(r.avg)}">${fmtUSD(r.avg)}</td><td>${r.pf?r.pf.toFixed(2):'—'}</td><td>${assets[0]?assets[0].key+' '+fmtUSD(assets[0].net):'—'}</td></tr>`; }
+  document.getElementById('monthlyTable').innerHTML = html + '</tbody>';
+}
+function renderAssetTable(arr) {
+  const rows = aggRows(arr, t=>t.symbol).sort((a,b)=>b.net-a.net);
+  let html = '<thead><tr><th>Activo</th><th>Ops</th><th>Win rate</th><th>P&L Neto</th><th>Avg/Trade</th><th>PF</th><th>Avg Win</th><th>Avg Loss</th><th>Volumen</th><th>Mejor</th><th>Peor</th></tr></thead><tbody>';
+  for (const r of rows) { html += `<tr><td><b>${r.key}</b></td><td>${r.n}</td><td>${fmtPct(r.winRate)}</td><td class="${cls(r.net)}">${fmtUSD(r.net)}</td><td class="${cls(r.avg)}">${fmtUSD(r.avg)}</td><td>${r.pf?r.pf.toFixed(2):'—'}</td><td class="positive">${fmtUSD(r.avgWin)}</td><td class="negative">${fmtUSD(-r.avgLoss)}</td><td>${fmtNum(r.volume,2)}</td><td class="positive">${r.best?fmtUSD(r.best.net):'—'}</td><td class="negative">${r.worst?fmtUSD(r.worst.net):'—'}</td></tr>`; }
+  document.getElementById('assetTable').innerHTML = html + '</tbody>';
+}
+
+function activeStatus(t) {
+  const raw = t.status ?? t.estado ?? t.ESTADO ?? t.state ?? t.estadoWeb ?? t.ESTADO_WEB ?? t.estado_web ?? '';
+  const v = String(raw).toLowerCase().trim();
+  return raw === 1 || v === '1' || v === 'activa' || v === 'activo' || v === 'active' || v === 'open' || v === 'abierta' || v === 'abierto';
+}
+function normalDateFromTrade(t) {
+  const raw = t.date || t.openDate || t.fecha || t.FECHA_APERTURA_TRADE || t.openTime || t.time || '';
+  const s = String(raw || '').slice(0, 10).replaceAll('.', '-').replaceAll('/', '-');
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  return '';
+}
+function normalSymbol(t) { return String(t.symbol ?? t.ACTIVO ?? t.activo ?? t.Symbol ?? '').trim(); }
+function normalSide(t) { return String(t.side ?? t.type ?? t.direccion ?? t.DIRECCION ?? '').toLowerCase().trim(); }
+function normalizeActiveTrade(t, idx=0) {
+  const symbol = normalSymbol(t) || '—';
+  const side = normalSide(t) || '—';
+  const openTime = t.openTime ?? t.FECHA_APERTURA_TRADE ?? t.openDate ?? t.time ?? '—';
+  return {
+    ...t,
+    position: t.position ?? t.ticket ?? t.id ?? t.CORRELATIVO_UNICO ?? `ACTIVA-${idx+1}`,
+    symbol,
+    side,
+    openTime,
+    date: normalDateFromTrade(t),
+    openPrice: Number(t.openPrice ?? t.PRECIO_ENTRADA_TRADE ?? t.entryPrice ?? t.price ?? 0),
+    sl: t.sl ?? t.STOP_LOSS ?? t.stopLoss ?? '',
+    closePrice: Number(t.closePrice ?? t.currentPrice ?? t.PRECIO_CIERRE_DE_TRADE ?? t.priceCurrent ?? 0),
+    riskReward: Number(t.riskReward ?? t.RISK_REWARD ?? t.rr ?? 0),
+    floatingPnl: Number(t.floatingPnl ?? t.net ?? t.profit ?? t.pnl ?? 0)
+  };
+}
+function getActiveTrades() {
+  const fromTrades = TRADES.filter(activeStatus).map(normalizeActiveTrade);
+  const fromMeta = Array.isArray(META.openPositions) ? META.openPositions.map(normalizeActiveTrade) : [];
+  const seen = new Set();
+  return [...fromTrades, ...fromMeta].filter(t => {
+    const key = `${t.position}|${t.symbol}|${t.openTime}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+function activeMatchesFilters(t) {
+  if (selectedSymbols.size === 0) return false;
+  if (t.symbol && t.symbol !== '—' && !selectedSymbols.has(t.symbol)) return false;
+  const side = document.getElementById('sideSelect').value;
+  if (side !== 'all' && t.side && t.side !== '—' && t.side !== side) return false;
+  const start = document.getElementById('startDate').value;
+  const end = document.getElementById('endDate').value;
+  const month = document.getElementById('monthSelect').value;
+  const d = t.date;
+  if (d) {
+    if (start && d < start) return false;
+    if (end && d > end) return false;
+    if (month !== 'all' && !d.startsWith(month)) return false;
+  }
+  return true;
+}
+function simulateActiveTrades(closedArr, closedAgg) {
+  const active = getActiveTrades().filter(activeMatchesFilters);
+  const baseEquity = Number(SIM_STATE.initialBalance || 0) + Number((closedAgg && closedAgg.net) || 0);
+  return active.map((t, idx) => {
+    const riskBase = SIM_STATE.riskMode === 'fixed' ? Number(SIM_STATE.initialBalance || 0) : baseEquity;
+    const riskAmount = riskBase * Number(SIM_STATE.riskPct || 0);
+    const rr = Number(t.riskReward || 0);
+    const floating = Number.isFinite(rr) && rr !== 0 ? riskAmount * rr : Number(t.floatingPnl || 0);
+    return { ...t, riskAmount, floatingPnl: floating, net: floating, sourceOrder: idx };
+  });
+}
+function renderActiveTrades(closedArr, closedAgg) {
+  const rows = simulateActiveTrades(closedArr, closedAgg);
+  const floating = sum(rows, t=>Number(t.floatingPnl || 0));
+  const exposure = sum(rows, t=>Number(t.riskAmount || 0));
+  const avgRR = rows.length ? sum(rows, t=>Number(t.riskReward || 0)) / rows.length : 0;
+  const badge = document.getElementById('activeBadge');
+  const stats = document.getElementById('activeStats');
+  const table = document.getElementById('activeTable');
+  if (!badge || !stats || !table) return;
+  badge.textContent = rows.length ? `${rows.length} activas` : 'Sin activas';
+  const cards = [
+    ['Activas', fmtNum(rows.length,0), 'operaciones abiertas', ''],
+    ['Flotante modelo', fmtUSD(floating), 'según simulador', cls(floating)],
+    ['Riesgo abierto', fmtUSD(exposure), 'capital expuesto', 'gold'],
+    ['R/R promedio', rows.length ? avgRR.toFixed(2) : '—', 'promedio activo', avgRR >= 0 ? 'positive' : 'negative']
+  ];
+  stats.innerHTML = cards.map(k => `<div class="active-stat"><div class="label">${k[0]}</div><div class="value ${k[3]}">${k[1]}</div><div class="sub">${k[2]}</div></div>`).join('');
+  let html = '<thead><tr><th>Apertura</th><th>Ticket</th><th>Activo</th><th>Side</th><th>Entrada</th><th>SL</th><th>Precio actual</th><th>R/R</th><th>Riesgo</th><th>Flotante</th></tr></thead><tbody>';
+  if (!rows.length) {
+    html += '<tr><td colspan="10" style="text-align:left;color:var(--muted);">No hay trades activos visibles con los filtros actuales.</td></tr>';
+  } else {
+    for (const t of rows) {
+      html += `<tr><td>${t.openTime || '—'}</td><td>${t.position || '—'}</td><td><b>${t.symbol || '—'}</b></td><td>${t.side || '—'}</td><td>${t.openPrice ? fmtNum(t.openPrice,2) : '—'}</td><td>${t.sl || '—'}</td><td>${t.closePrice ? fmtNum(t.closePrice,2) : '—'}</td><td class="${cls(t.riskReward)}">${Number(t.riskReward || 0).toFixed(2)}</td><td>${fmtUSD(t.riskAmount)}</td><td class="${cls(t.floatingPnl)}"><b>${fmtUSD(t.floatingPnl)}</b></td></tr>`;
+    }
+  }
+  table.innerHTML = html + '</tbody>';
+}
+
+function renderTradesTable(arr) {
+  const q = (document.getElementById('tradeSearch')?.value || '').toLowerCase().trim();
+  let rows = [...arr].sort((a,b)=>parseTime(b.closeTime)-parseTime(a.closeTime));
+  if (q) rows = rows.filter(t => Object.values(t).join(' ').toLowerCase().includes(q));
+  document.getElementById('tradeCount').textContent = `${rows.length} operaciones visibles`;
+  let html = '<thead><tr><th>Cierre</th><th>Ticket</th><th>Activo</th><th>Side</th><th>Vol</th><th>Duración</th><th>Resultado modelo</th><th>Comisión</th><th>Swap</th><th>Neto</th></tr></thead><tbody>';
+  for (const t of rows.slice(0, 1000)) { html += `<tr><td>${t.closeTime}</td><td>${t.position}</td><td><b>${t.symbol}</b></td><td>${t.side}</td><td>${fmtNum(t.volume,2)}</td><td>${t.durationMin ?? '—'} min</td><td class="${cls(t.profit)}">${fmtUSD(t.profit)}</td><td class="${cls(t.commission)}">${fmtUSD(t.commission)}</td><td class="${cls(t.swap)}">${fmtUSD(t.swap)}</td><td class="${cls(t.net)}"><b>${fmtUSD(t.net)}</b></td></tr>`; }
+  document.getElementById('tradesTable').innerHTML = html + '</tbody>';
+}
+
+setup();
+</script>
+</body>
+</html>
