@@ -40,18 +40,72 @@
   .nav-in{ display:flex; align-items:center; justify-content:space-between; padding-block:16px; }
   .brand{ font-family:var(--font-brand); font-size:18px; letter-spacing:.30em; font-weight:500; text-transform:uppercase; }
   nav.links{ display:flex; gap:26px; font-size:12.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dbw-muted); } nav.links a:hover{ color:var(--dbw-text); }
+  .brand-short,.cta-short{ display:none; }
+  .nav-actions{ display:flex; align-items:center; gap:12px; position:relative; }
+  .mobile-menu{ display:none; position:relative; }
+  .mobile-menu summary{ list-style:none; width:42px; height:42px; display:grid; place-items:center; border:1px solid var(--dbw-line); color:var(--dbw-text); background:rgba(15,17,22,.72); cursor:pointer; font-size:18px; line-height:1; transition:.25s ease; }
+  .mobile-menu summary::-webkit-details-marker{ display:none; }
+  .mobile-menu summary:hover{ border-color:var(--dbw-act); color:var(--dbw-act); }
+  .mobile-menu[open] summary{ border-color:var(--dbw-act); color:var(--dbw-act); background:rgba(198,166,100,.08); }
+  .mobile-menu-panel{ position:absolute; right:0; top:calc(100% + 10px); min-width:250px; background:rgba(5,7,11,.97); border:1px solid var(--dbw-line); box-shadow:0 22px 70px rgba(0,0,0,.52); backdrop-filter:blur(14px); padding:8px; z-index:70; }
+  .mobile-menu-panel a{ display:block; padding:13px 14px; border-bottom:1px solid var(--dbw-line-soft); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dbw-muted); }
+  .mobile-menu-panel a:last-child{ border-bottom:none; }
+  .mobile-menu-panel a:hover{ color:var(--dbw-text); background:rgba(255,255,255,.035); }
   .btn{ display:inline-block; font-size:12px; letter-spacing:.16em; text-transform:uppercase; padding:11px 22px; border:1px solid var(--dbw-act); color:var(--dbw-act); transition:.25s ease; font-weight:500; cursor:pointer; background:none; font-family:var(--font-body); }
   .btn:hover{ background:var(--dbw-act); color:var(--dbw-bg); }
   .btn-solid{ background:var(--dbw-act); border-color:var(--dbw-act); color:#1A1408; } .btn-solid:hover{ background:var(--dbw-act-d); border-color:var(--dbw-act-d); color:#0E0B05; }
   .btn-ghost{ border-color:var(--dbw-line); color:var(--dbw-text); } .btn-ghost:hover{ border-color:var(--dbw-text); }
-  .hero{ position:relative; padding-block:clamp(68px,11vw,140px); overflow:hidden; }
-  .hero svg.curve{ position:absolute; inset:auto 0 0 0; width:100%; height:46%; opacity:.12; pointer-events:none; }
+  .hero{ position:relative; padding-block:clamp(56px,9vw,112px); overflow:hidden; isolation:isolate;
+    background:
+      radial-gradient(circle at 76% 34%, rgba(198,166,100,.10), transparent 24%),
+      radial-gradient(circle at 82% 78%, rgba(184,204,216,.06), transparent 28%),
+      linear-gradient(135deg, rgba(5,7,11,1) 0%, rgba(8,11,16,1) 56%, rgba(5,7,11,1) 100%);
+  }
+  .hero::before{ content:""; position:absolute; inset:0; z-index:-2; opacity:.18;
+    background-image:linear-gradient(rgba(184,204,216,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(184,204,216,.08) 1px, transparent 1px);
+    background-size:76px 76px; mask-image:linear-gradient(90deg, transparent 0%, #000 26%, #000 100%); }
+  .hero::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg, rgba(5,7,11,.96) 0%, rgba(5,7,11,.90) 46%, rgba(5,7,11,.34) 100%); }
+  .hero-in{ display:grid; grid-template-columns:minmax(0,.98fr) minmax(360px,.9fr); gap:clamp(28px,4vw,64px); align-items:center; }
+  .hero-copy{ position:relative; z-index:2; }
   .scarcity{ display:inline-flex; align-items:center; gap:10px; font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--dbw-act); border:1px solid var(--dbw-act); padding:7px 14px; margin-bottom:24px; }
   .scarcity .dot{ width:6px; height:6px; border-radius:50%; background:var(--dbw-act); animation:pulse 2.4s infinite; }
   @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(198,166,100,.5);} 70%{box-shadow:0 0 0 8px rgba(198,166,100,0);} 100%{box-shadow:0 0 0 0 rgba(198,166,100,0);} }
-  .hero h1{ font-family:var(--font-display); font-weight:500; text-transform:uppercase; font-size:clamp(44px,8.4vw,108px); line-height:.94; margin:0 0 22px; } .hero h1 .em{ text-transform:none; }
-  .hero p.sub{ color:var(--dbw-muted); font-size:clamp(16px,1.9vw,21px); max-width:56ch; margin:0 0 34px; }
-  .cta-row{ display:flex; gap:16px; flex-wrap:wrap; } .hero .micro{ margin-top:28px; font-size:12px; color:var(--dbw-faint); letter-spacing:.04em; max-width:56ch; }
+  .hero h1{ font-family:var(--font-display); font-weight:500; text-transform:uppercase; font-size:clamp(44px,7.8vw,104px); line-height:.94; margin:0 0 20px; } .hero h1 .em{ text-transform:none; }
+  .hero p.sub{ color:var(--dbw-muted); font-size:clamp(16px,1.75vw,20px); max-width:54ch; margin:0 0 20px; }
+  .hero-meta{ display:flex; flex-wrap:wrap; gap:10px 18px; margin:0 0 28px; color:var(--dbw-accent); font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+  .hero-meta span{ position:relative; padding-left:14px; }
+  .hero-meta span::before{ content:""; position:absolute; left:0; top:50%; width:5px; height:5px; margin-top:-2px; border-radius:50%; background:var(--dbw-act); }
+  .cta-row{ display:flex; gap:16px; flex-wrap:wrap; } .hero .micro{ margin-top:22px; font-size:12px; color:var(--dbw-faint); letter-spacing:.04em; max-width:56ch; }
+
+  .hero-visual{ position:relative; z-index:1; min-height:500px; display:flex; align-items:center; justify-content:center; }
+  .elite-visual{ position:relative; width:min(540px,100%); min-height:460px; }
+  .elite-visual .ring{ position:absolute; border-radius:50%; border:1px solid rgba(198,166,100,.12); }
+  .elite-visual .ring.r1{ inset:22px; }
+  .elite-visual .ring.r2{ inset:84px; border-color:rgba(184,204,216,.10); }
+  .elite-visual .ring.r3{ inset:146px; }
+  .private-note{ position:absolute; left:50%; top:24px; transform:translateX(-50%); padding:9px 14px; border:1px solid rgba(180,192,210,.16); background:rgba(5,7,11,.78); backdrop-filter:blur(10px); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--dbw-accent); }
+  .service-card{ position:relative; margin:88px auto 0; width:min(470px,100%); border:1px solid rgba(198,166,100,.26); background:linear-gradient(180deg, rgba(15,17,22,.9), rgba(7,9,13,.8)); box-shadow:0 28px 90px rgba(0,0,0,.46); backdrop-filter:blur(14px); overflow:hidden; }
+  .service-card::before{ content:""; position:absolute; inset:0; background:linear-gradient(115deg, transparent 0%, rgba(255,255,255,.045) 34%, transparent 46%); transform:translateX(-94%); animation:scanner 6.8s ease-in-out infinite; pointer-events:none; }
+  .service-head{ padding:20px 22px 16px; border-bottom:1px solid var(--dbw-line-soft); }
+  .service-kicker{ font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--dbw-accent); }
+  .service-head h3{ margin:10px 0 8px; font-family:var(--font-display); font-weight:500; font-size:clamp(28px,3.5vw,38px); line-height:1.02; }
+  .service-head p{ margin:0; color:var(--dbw-muted); font-size:14px; max-width:32ch; }
+  .service-list{ padding:8px 22px 22px; }
+  .service-row{ display:grid; grid-template-columns:54px 1fr; gap:14px; padding:16px 0; border-top:1px solid var(--dbw-line-soft); }
+  .service-row:first-child{ border-top:none; }
+  .service-row .num{ font-family:var(--font-display); font-style:italic; font-size:28px; line-height:1; color:var(--dbw-accent); }
+  .service-row b{ display:block; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--dbw-text); }
+  .service-row span{ display:block; margin-top:5px; color:var(--dbw-muted); font-size:13.5px; line-height:1.45; }
+  .service-tags{ display:flex; flex-wrap:wrap; gap:8px; padding:0 22px 22px; }
+  .service-tags span{ border:1px solid rgba(198,166,100,.24); padding:7px 10px; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dbw-accent); }
+  .float-chip{ position:absolute; border:1px solid rgba(180,192,210,.16); background:rgba(5,7,11,.8); backdrop-filter:blur(12px); box-shadow:0 16px 48px rgba(0,0,0,.28); padding:12px 14px; width:170px; }
+  .float-chip b{ display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dbw-text); }
+  .float-chip span{ display:block; margin-top:5px; color:var(--dbw-muted); font-size:12.5px; line-height:1.4; }
+  .chip-a{ left:0; top:120px; }
+  .chip-b{ right:0; top:160px; }
+  .chip-c{ right:14px; bottom:36px; }
+  .chip-c b{ color:var(--dbw-act); }
+  @keyframes scanner{ 0%,58%{ transform:translateX(-96%); opacity:0; } 70%{ opacity:1; } 100%{ transform:translateX(96%); opacity:0; } }
   .concept{ display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center; }
   .concept .big{ font-family:var(--font-display); font-style:italic; font-size:clamp(24px,3.4vw,34px); line-height:1.35; } .concept .big b{ color:var(--dbw-accent); font-weight:500; font-style:normal; } .concept p{ color:var(--dbw-muted); font-size:15px; }
   .delta{ display:grid; grid-template-columns:1fr 1.4fr; gap:1px; background:var(--dbw-line-soft); border:1px solid var(--dbw-line-soft); margin-top:46px; }
@@ -88,8 +142,9 @@
   .disclaimer{ margin-top:34px; padding-top:26px; border-top:1px solid var(--dbw-line-soft); color:var(--dbw-faint); font-size:11.5px; line-height:1.7; max-width:95ch; } .disclaimer b{ color:var(--dbw-muted); font-weight:500; }
   .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; } .reveal.in{ opacity:1; transform:none; }
   a:focus-visible, .btn:focus-visible{ outline:2px solid var(--dbw-act); outline-offset:3px; }
-  @media (max-width:900px){ .concept{ grid-template-columns:1fr; gap:26px; } .delta{ grid-template-columns:1fr; } .process{ grid-template-columns:1fr; } .cols2{ grid-template-columns:1fr; } .principles{ grid-template-columns:1fr; gap:26px; } .grid2{ grid-template-columns:1fr; } nav.links{ display:none; } }
-  @media (max-width:520px){ .foot-top{ flex-direction:column; } }
+  @media (max-width:1100px){ .hero-in{ grid-template-columns:1fr; } .hero-visual{ min-height:460px; } .elite-visual{ max-width:560px; margin:0 auto; } }
+  @media (max-width:900px){ .hero-visual{ min-height:430px; } .hero-meta{ gap:8px 14px; } .chip-a{ left:6px; top:126px; } .chip-b{ right:6px; top:168px; } .chip-c{ right:12px; bottom:28px; } .concept{ grid-template-columns:1fr; gap:26px; } .delta{ grid-template-columns:1fr; } .process{ grid-template-columns:1fr; } .cols2{ grid-template-columns:1fr; } .principles{ grid-template-columns:1fr; gap:26px; } .grid2{ grid-template-columns:1fr; } header.nav nav.links{ display:none; } .mobile-menu{ display:block; } }
+  @media (max-width:520px){ .nav-in{ gap:8px; } .brand{ font-size:14px; letter-spacing:.20em; } .brand-full,.cta-full{ display:none; } .brand-short,.cta-short{ display:inline; } .nav-actions{ gap:7px; } .nav-actions > .btn{ padding:10px 12px; font-size:10.5px; letter-spacing:.12em; } .mobile-menu summary{ width:38px; height:38px; font-size:17px; } .mobile-menu-panel{ min-width:min(78vw,250px); } .hero{ padding-block:42px 54px; } .hero h1{ font-size:clamp(42px,15vw,70px); } .hero p.sub{ margin-bottom:18px; } .hero-meta{ margin-bottom:22px; } .hero-visual{ min-height:auto; margin-top:4px; } .elite-visual{ min-height:auto; display:grid; gap:12px; } .elite-visual .ring, .private-note{ display:none; } .service-card{ margin:0; width:100%; } .float-chip{ position:relative; left:auto; right:auto; top:auto; bottom:auto; width:auto; } .chip-a,.chip-b,.chip-c{ position:relative; } .foot-top{ flex-direction:column; } }
   @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } .reveal{ opacity:1; transform:none; } html{ scroll-behavior:auto; } }
 </style>
 
@@ -99,19 +154,70 @@
 </div></div>
 
 <header class="nav"><div class="wrap nav-in">
-  <a class="brand" href="index.html">DOBERWHITE TRADING</a>
+  <a class="brand" href="index.html"><span class="brand-full">DOBERWHITE TRADING</span><span class="brand-short">DOBERWHITE</span></a>
   <nav class="links"><a href="#concepto">El concepto</a><a href="#incluye">Qué incluye</a><a href="#proceso">El acceso</a><a href="#paraquien">Para quién</a></nav>
-  <a class="btn btn-solid" href="#aplicar">Solicitar acceso</a>
+  <div class="nav-actions">
+    <a class="btn btn-solid" href="#aplicar"><span class="cta-full">Solicitar acceso</span><span class="cta-short">Acceso</span></a>
+    <details class="mobile-menu">
+      <summary aria-label="Abrir menú de navegación">☰</summary>
+      <div class="mobile-menu-panel">
+        <a href="index.html">Inicio</a>
+        <a href="#concepto">El concepto</a>
+        <a href="#incluye">Qué incluye</a>
+        <a href="#proceso">El acceso</a>
+        <a href="#paraquien">Para quién</a>
+        <a href="#aplicar">Solicitar acceso</a>
+      </div>
+    </details>
+  </div>
 </div></header>
 
 <section class="hero">
-  <svg class="curve" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0,250 C150,240 220,180 340,190 C470,200 520,120 660,130 C800,140 860,70 1000,60 C1100,52 1160,40 1200,30" fill="none" stroke="var(--dbw-accent)" stroke-width="1.5"/></svg>
-  <div class="wrap">
-    <div class="scarcity reveal"><span class="dot"></span> Círculo cerrado · Acceso por aplicación · Cupos limitados</div>
-    <h1 class="reveal">Elite <span class="em">Desk</span></h1>
-    <p class="sub reveal">El asiento en la mesa de análisis. El nivel de mayor compromiso del ecosistema Doberwhite Trading: todo el Salón VIP, más análisis educativo en 4H por canal privado y acompañamiento cercano y continuo.</p>
-    <div class="cta-row reveal"><a class="btn btn-solid" href="#aplicar">Solicitar acceso</a><a class="btn btn-ghost" href="#incluye">Qué incluye</a></div>
-    <p class="micro reveal">El acceso es selectivo y por aplicación. Contenido educativo y de análisis de mercado; no son recomendaciones personalizadas ni garantía de resultado. El trading apalancado implica riesgo de pérdida de capital.</p>
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <div class="scarcity reveal"><span class="dot"></span> Círculo cerrado · Acceso por aplicación · Cupos limitados</div>
+      <h1 class="reveal">Elite <span class="em">Desk</span></h1>
+      <p class="sub reveal">Deja de operar aislado. Accede a acompañamiento profesional, análisis 4H privado y respuesta a tus dudas para estructurar mejor cada decisión.</p>
+      <div class="hero-meta reveal"><span>Círculo privado</span><span>Acompañamiento continuo</span><span>Análisis 4H profesional</span></div>
+      <div class="cta-row reveal"><a class="btn btn-solid" href="#aplicar">Solicitar mi acceso</a><a class="btn btn-ghost" href="#concepto">Ver cómo funciona</a></div>
+      <p class="micro reveal">El acceso es selectivo y por aplicación. Contenido educativo y de análisis de mercado; no son recomendaciones personalizadas ni garantía de resultado. El trading apalancado implica riesgo de pérdida de capital.</p>
+    </div>
+
+    <div class="hero-visual reveal" aria-label="Visual del servicio Elite Desk">
+      <div class="elite-visual">
+        <div class="ring r1" aria-hidden="true"></div>
+        <div class="ring r2" aria-hidden="true"></div>
+        <div class="ring r3" aria-hidden="true"></div>
+        <div class="private-note">Elite Desk · private channel</div>
+
+        <div class="float-chip chip-a"><b>Acompañamiento</b><span>Seguimiento más cercano al proceso.</span></div>
+        <div class="float-chip chip-b"><b>Análisis profesional</b><span>Escenarios y niveles explicados con criterio.</span></div>
+        <div class="float-chip chip-c"><b>Dudas resueltas</b><span>Contexto, estructura y ejecución con acompañamiento.</span></div>
+
+        <div class="service-card">
+          <div class="service-head">
+            <div class="service-kicker">Elite Desk · círculo privado</div>
+            <h3>Opera acompañado. <span class="em">Decide con estructura.</span></h3>
+            <p>El servicio más cercano de Doberwhite Trading: acompañamiento, análisis profesional y respuesta a tus dudas en un círculo privado.</p>
+          </div>
+          <div class="service-list">
+            <div class="service-row">
+              <div class="num">01</div>
+              <div><b>Acompañamiento guiado</b><span>Seguimiento estructurado para operar con más criterio y menos improvisación.</span></div>
+            </div>
+            <div class="service-row">
+              <div class="num">02</div>
+              <div><b>Resolución de dudas</b><span>Preguntas sobre contexto, niveles y ejecución respondidas dentro del círculo.</span></div>
+            </div>
+            <div class="service-row">
+              <div class="num">03</div>
+              <div><b>Análisis de mercado profesional</b><span>Lectura 4H por canal privado para sostener el hilo del mercado.</span></div>
+            </div>
+          </div>
+          <div class="service-tags"><span>Canal privado</span><span>4H</span><span>Círculo reducido</span><span>Acceso por aplicación</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -259,4 +365,9 @@
 
   const io=new IntersectionObserver((es)=>{ es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'),i*55); io.unobserve(e.target);} }); },{threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>a.closest('details')?.removeAttribute('open')));
+  document.addEventListener('click',(e)=>{
+    const menu=document.querySelector('.mobile-menu');
+    if(menu?.hasAttribute('open') && !menu.contains(e.target)) menu.removeAttribute('open');
+  });
 </script>
