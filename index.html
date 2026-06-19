@@ -63,6 +63,17 @@
   .brand{ font-family:var(--font-brand); font-size:18px; letter-spacing:.30em; font-weight:500; text-transform:uppercase; }
   nav.links{ display:flex; gap:26px; font-size:12.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dbw-muted); }
   nav.links a:hover{ color:var(--dbw-text); }
+
+  .nav-actions{ display:flex; align-items:center; gap:12px; position:relative; }
+  .mobile-menu{ display:none; position:relative; }
+  .mobile-menu summary{ list-style:none; width:42px; height:42px; display:grid; place-items:center; border:1px solid var(--dbw-line); color:var(--dbw-text); background:rgba(15,17,22,.72); cursor:pointer; font-size:18px; line-height:1; transition:.25s ease; }
+  .mobile-menu summary::-webkit-details-marker{ display:none; }
+  .mobile-menu summary:hover{ border-color:var(--dbw-act); color:var(--dbw-act); }
+  .mobile-menu[open] summary{ border-color:var(--dbw-act); color:var(--dbw-act); background:rgba(198,166,100,.08); }
+  .mobile-menu-panel{ position:absolute; right:0; top:calc(100% + 10px); min-width:260px; background:rgba(5,7,11,.96); border:1px solid var(--dbw-line); box-shadow:0 22px 70px rgba(0,0,0,.52); backdrop-filter:blur(14px); padding:8px; z-index:70; }
+  .mobile-menu-panel a{ display:block; padding:13px 14px; border-bottom:1px solid var(--dbw-line-soft); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dbw-muted); }
+  .mobile-menu-panel a:last-child{ border-bottom:none; }
+  .mobile-menu-panel a:hover{ color:var(--dbw-text); background:rgba(255,255,255,.035); }
   .btn{ display:inline-flex; align-items:center; gap:7px; font-size:12px; letter-spacing:.16em; text-transform:uppercase; padding:11px 22px; border:1px solid var(--dbw-act); color:var(--dbw-act); transition:.25s ease; font-weight:500; cursor:pointer; background:none; font-family:var(--font-body); }
   .btn:hover{ background:var(--dbw-act); color:var(--dbw-bg); }
   .btn-solid{ background:var(--dbw-act); border-color:var(--dbw-act); color:#1A1408; }
@@ -70,13 +81,85 @@
   .btn-solid .pp-mark{ font-size:15px; letter-spacing:-.01em; }
   .btn-ghost{ border-color:var(--dbw-line); color:var(--dbw-text); } .btn-ghost:hover{ border-color:var(--dbw-text); }
 
-  .hero{ position:relative; padding-block:clamp(72px,12vw,150px); overflow:hidden; }
-  .hero svg.curve{ position:absolute; inset:auto 0 0 0; width:100%; height:46%; opacity:.12; pointer-events:none; }
-  .hero h1{ font-family:var(--font-display); font-weight:500; text-transform:uppercase; font-size:clamp(42px,9vw,104px); line-height:.96; margin:0 0 26px; max-width:18ch; }
-  .hero h1 .em{ text-transform:none; }
-  .hero p.sub{ color:var(--dbw-muted); font-size:clamp(17px,2.1vw,23px); max-width:54ch; margin:0 0 38px; }
+  .hero{
+    position:relative;
+    min-height:calc(88svh - 86px);
+    padding-block:clamp(42px,6vw,78px);
+    overflow:hidden;
+    isolation:isolate;
+    background:
+      radial-gradient(circle at 76% 38%, rgba(198,166,100,.14), transparent 27%),
+      radial-gradient(circle at 82% 78%, rgba(184,204,216,.08), transparent 28%),
+      linear-gradient(135deg, rgba(5,7,11,1) 0%, rgba(8,11,16,1) 54%, rgba(5,7,11,1) 100%);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-2;
+    opacity:.22;
+    background-image:
+      linear-gradient(rgba(184,204,216,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,204,216,.08) 1px, transparent 1px);
+    background-size:74px 74px;
+    mask-image:linear-gradient(90deg, transparent 0%, #000 28%, #000 100%);
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    background:linear-gradient(90deg, rgba(5,7,11,.96) 0%, rgba(5,7,11,.88) 41%, rgba(5,7,11,.24) 100%);
+    pointer-events:none;
+  }
+  .hero-in{ display:grid; grid-template-columns:minmax(0,.98fr) minmax(380px,.82fr); gap:clamp(26px,4vw,58px); align-items:start; }
+  .hero-copy{ position:relative; z-index:2; }
+  .hero h1{ font-family:var(--font-display); font-weight:500; text-transform:uppercase; font-size:clamp(40px,6vw,76px); line-height:.94; margin:0 0 18px; max-width:8.4ch; letter-spacing:-.035em; }
+  .hero h1 .em{ text-transform:none; display:block; font-size:.58em; line-height:1.04; margin-top:.10em; letter-spacing:-.02em; color:var(--dbw-accent); }
+  .hero p.sub{ color:var(--dbw-muted); font-size:clamp(15px,1.3vw,17px); max-width:48ch; margin:0 0 18px; }
+  .hero-proof{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; max-width:560px; margin:0 0 24px; }
+  .proof-card{ border:1px solid var(--dbw-line-soft); background:rgba(15,17,22,.62); backdrop-filter:blur(10px); padding:14px 15px; }
+  .proof-card b{ display:block; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dbw-text); font-weight:600; }
+  .proof-card span{ display:block; margin-top:4px; color:var(--dbw-muted); font-size:12.5px; line-height:1.45; }
   .hero .cta-row{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
-  .hero .micro{ margin-top:30px; font-size:12px; color:var(--dbw-faint); letter-spacing:.04em; max-width:52ch; }
+  .hero .micro{ margin-top:18px; font-size:12px; color:var(--dbw-faint); letter-spacing:.04em; max-width:62ch; }
+
+  .hero-visual{ position:relative; z-index:1; min-height:500px; display:flex; align-items:center; justify-content:center; padding-top:0; margin-top:0; }
+  .hero-orb{ position:absolute; width:min(52vw,640px); aspect-ratio:1; border-radius:50%; border:1px solid rgba(198,166,100,.16); opacity:.72; animation:orbPulse 7s ease-in-out infinite; }
+  .hero-orb::before,.hero-orb::after{ content:""; position:absolute; inset:11%; border-radius:50%; border:1px solid rgba(184,204,216,.11); }
+  .hero-orb::after{ inset:24%; border-color:rgba(198,166,100,.13); }
+  .desk-card{ position:relative; width:min(520px,100%); border:1px solid rgba(198,166,100,.28); background:linear-gradient(180deg, rgba(15,17,22,.88), rgba(7,9,13,.78)); box-shadow:0 32px 90px rgba(0,0,0,.52); backdrop-filter:blur(16px); overflow:hidden; }
+  .desk-card::before{ content:""; position:absolute; inset:0; background:linear-gradient(115deg, transparent 0%, rgba(255,255,255,.055) 36%, transparent 46%); transform:translateX(-90%); animation:scanner 6.5s ease-in-out infinite; pointer-events:none; }
+  .desk-top{ display:flex; justify-content:flex-start; align-items:center; gap:18px; padding:16px 18px; border-bottom:1px solid var(--dbw-line-soft); }
+  .desk-kicker{ font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--dbw-accent); }
+  .desk-status{ display:inline-flex; align-items:center; gap:7px; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dbw-muted); }
+  .desk-status i{ width:7px; height:7px; border-radius:50%; background:var(--dbw-up); box-shadow:0 0 16px var(--dbw-up); }
+  .chart-stage{ position:relative; height:312px; margin:18px; border:1px solid var(--dbw-line-soft); background:linear-gradient(180deg, rgba(5,7,11,.2), rgba(5,7,11,.62)); overflow:hidden; }
+  .chart-stage::before{ content:""; position:absolute; inset:0; background-image:linear-gradient(rgba(184,204,216,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(184,204,216,.06) 1px, transparent 1px); background-size:44px 44px; opacity:.72; }
+  .chart-stage svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .chart-line{ fill:none; stroke:var(--dbw-accent); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:720; stroke-dashoffset:720; animation:drawLine 4.7s ease-in-out infinite alternate; filter:drop-shadow(0 0 8px rgba(184,204,216,.22)); }
+  .chart-area{ fill:url(#goldFade); opacity:.58; }
+  .candle{ position:absolute; bottom:42px; width:8px; border-radius:3px; background:rgba(184,204,216,.66); box-shadow:0 0 12px rgba(184,204,216,.16); animation:candleLift 4.5s ease-in-out infinite; }
+  .candle::before{ content:""; position:absolute; left:3px; top:-15px; width:2px; height:calc(100% + 28px); background:rgba(184,204,216,.34); }
+  .candle.up{ background:rgba(40,198,138,.76); box-shadow:0 0 16px rgba(40,198,138,.22); }
+  .candle.gold{ background:rgba(198,166,100,.78); box-shadow:0 0 18px rgba(198,166,100,.26); }
+  .c1{ left:9%; height:52px; animation-delay:.1s; } .c2{ left:17%; height:86px; animation-delay:.5s; } .c3{ left:25%; height:64px; animation-delay:.9s; } .c4{ left:33%; height:112px; animation-delay:1.2s; } .c5{ left:41%; height:78px; animation-delay:1.6s; } .c6{ left:49%; height:134px; animation-delay:2s; } .c7{ left:57%; height:96px; animation-delay:2.4s; } .c8{ left:65%; height:154px; animation-delay:2.8s; } .c9{ left:73%; height:118px; animation-delay:3.2s; } .c10{ left:81%; height:176px; animation-delay:3.6s; }
+  .price-tag{ position:absolute; right:16px; top:76px; padding:8px 10px; background:rgba(198,166,100,.16); border:1px solid rgba(198,166,100,.36); color:var(--dbw-text); font-size:11px; letter-spacing:.11em; text-transform:uppercase; }
+  .risk-strip{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--dbw-line-soft); border-top:1px solid var(--dbw-line-soft); }
+  .risk-strip div{ background:rgba(5,7,11,.64); padding:14px 16px; }
+  .risk-strip b{ display:block; font-family:var(--font-display); font-style:italic; font-size:22px; line-height:1; color:var(--dbw-text); font-weight:500; }
+  .risk-strip span{ display:block; margin-top:6px; color:var(--dbw-faint); font-size:10px; letter-spacing:.13em; text-transform:uppercase; }
+  .floating-card{ position:absolute; border:1px solid rgba(180,192,210,.18); background:rgba(5,7,11,.76); backdrop-filter:blur(14px); box-shadow:0 18px 58px rgba(0,0,0,.36); padding:14px 16px; min-width:190px; }
+  .floating-card b{ display:block; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dbw-text); }
+  .floating-card span{ color:var(--dbw-muted); font-size:12px; }
+  .float-a{ left:-52px; top:104px; animation:floatDesk 5.8s ease-in-out infinite; }
+  .float-b{ right:-34px; bottom:78px; animation:floatDesk 6.4s ease-in-out infinite reverse; }
+  .float-b b{ color:var(--dbw-act); }
+  @keyframes drawLine{ to{ stroke-dashoffset:0; } }
+  @keyframes scanner{ 0%,58%{ transform:translateX(-92%); opacity:0; } 70%{ opacity:1; } 100%{ transform:translateX(92%); opacity:0; } }
+  @keyframes candleLift{ 0%,100%{ transform:scaleY(.88); opacity:.72; } 50%{ transform:scaleY(1.05); opacity:1; } }
+  @keyframes floatDesk{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+  @keyframes orbPulse{ 0%,100%{ transform:scale(.98); opacity:.55; } 50%{ transform:scale(1.03); opacity:.9; } }
 
   .trust{ border-top:1px solid var(--dbw-line-soft); background:var(--dbw-bg-2); }
   .trust-in{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:24px; padding-block:26px; }
@@ -159,6 +242,12 @@
   .reveal.in{ opacity:1; transform:none; }
   a:focus-visible, .btn:focus-visible{ outline:2px solid var(--dbw-act); outline-offset:3px; }
 
+  @media (max-width:1100px){
+    .hero-in{ grid-template-columns:1fr; }
+    .hero h1{ max-width:9ch; }
+    .hero-visual{ min-height:500px; margin-top:0; padding-top:0; }
+    .float-a{ left:0; } .float-b{ right:0; }
+  }
   @media (max-width:900px){
     .grid4{ grid-template-columns:repeat(2,1fr); }
     .pp-highlight{ grid-template-columns:1fr; }
@@ -167,8 +256,58 @@
     .principles{ grid-template-columns:1fr; gap:26px; }
     .trust-in{ flex-direction:column; align-items:flex-start; }
     nav.links{ display:none; }
+    .mobile-menu{ display:block; }
   }
   @media (max-width:520px){
+    .nav-in{ gap:10px; }
+    .brand{ font-size:14px; letter-spacing:.20em; }
+    .nav-actions{ gap:8px; }
+    .nav-actions > .btn{ padding:10px 12px; font-size:10.5px; letter-spacing:.12em; }
+    .mobile-menu summary{ width:38px; height:38px; font-size:17px; }
+    .mobile-menu-panel{ min-width:min(78vw,260px); }
+    .hero{ min-height:auto; padding-block:34px 44px; }
+    .hero h1{ font-size:clamp(42px,15vw,68px); }
+    .hero-proof{ grid-template-columns:1fr; }
+    .hero-visual{
+      min-height:auto;
+      margin-top:26px;
+      display:block;
+      padding:0;
+      overflow:visible;
+    }
+    .desk-card{
+      width:100%;
+      max-width:100%;
+      margin:0 auto;
+      transform:none;
+    }
+    .desk-top{
+      padding:14px 16px;
+    }
+    .desk-kicker{ font-size:9.5px; letter-spacing:.20em; }
+    .desk-status{ font-size:9.5px; letter-spacing:.12em; }
+    .chart-stage{
+      height:282px;
+      margin:12px;
+    }
+    .price-tag{
+      right:10px;
+      top:76px;
+      font-size:10px;
+      padding:7px 8px;
+    }
+    .risk-strip div{ padding:12px 14px; }
+    .risk-strip b{ font-size:20px; }
+    .floating-card{
+      display:none;
+    }
+    .hero-orb{
+      width:118vw;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      opacity:.38;
+    }
     .grid4{ grid-template-columns:1fr; } .adv{ grid-template-columns:1fr; }
     .step{ grid-template-columns:60px 1fr; gap:18px; } .step .num{ font-size:30px; }
     .trust-stats{ gap:18px; }
@@ -191,21 +330,67 @@
     <a href="doberwhite-salon-vip.html">Salón VIP</a>
     <a href="doberwhite-elite-desk.html">Elite Desk</a>
   </nav>
-  <a class="btn btn-solid" href="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141" target="_blank" rel="noopener">Abrir cuenta</a>
+  <div class="nav-actions">
+    <a class="btn btn-solid" href="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141" target="_blank" rel="noopener">Abrir cuenta</a>
+    <details class="mobile-menu">
+      <summary aria-label="Abrir menú de navegación">☰</summary>
+      <div class="mobile-menu-panel">
+        <a href="index.html">Inicio</a>
+        <a href="#porque">El ecosistema</a>
+        <a href="#pepperstone">Pepperstone</a>
+        <a href="doberwhite-bootcamp.html">Bootcamp</a>
+        <a href="doberwhite-salon-vip.html">Salón VIP</a>
+        <a href="doberwhite-elite-desk.html">Elite Desk</a>
+      </div>
+    </details>
+  </div>
 </div></header>
 
 <section class="hero">
-  <svg class="curve" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0,250 C150,240 220,180 340,190 C470,200 520,120 660,130 C800,140 860,70 1000,60 C1100,52 1160,40 1200,30" fill="none" stroke="var(--dbw-accent)" stroke-width="1.5"/></svg>
-  <div class="wrap">
-    <p class="eyebrow reveal">Partner oficial de Pepperstone · MASTER IB</p>
-    <h1 class="reveal">No te damos una cuenta. Te damos una <span class="em">estructura.</span></h1>
-    <p class="sub reveal">Abre tu cuenta en Pepperstone, un bróker ECN regulado de primer nivel, a través de la estructura Doberwhite Trading: onboarding profesional, ruta de aprendizaje, análisis institucional y una comunidad de operadores con disciplina de riesgo.</p>
-    <div class="cta-row reveal">
-      <!-- LOGO-PEPPERSTONE (versión oscura para botón dorado) -->
-      <a class="btn btn-solid" href="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141" target="_blank" rel="noopener">Abrir cuenta en <span class="pp-mark on-btn">pepperstone</span></a>
-      <a class="btn btn-ghost" href="#porque">Conocer el ecosistema</a>
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow reveal">Mesa de análisis · Pepperstone Partner · LATAM</p>
+      <h1 class="reveal">Mercados globales. <span class="em">Con estructura.</span></h1>
+      <p class="sub reveal">Análisis 4H, comunidad privada y ejecución profesional para operar con criterio real.</p>
+      <div class="hero-proof reveal" aria-label="Estructura operativa Doberwhite Trading">
+        <div class="proof-card"><b>Análisis 4H</b><span>Contexto técnico para operar con paciencia.</span></div>
+        <div class="proof-card"><b>Broker + plataforma</b><span>Pepperstone, TradingView, MT4/MT5 y cTrader.</span></div>
+      </div>
+      <div class="cta-row reveal">
+        <!-- LOGO-PEPPERSTONE (versión oscura para botón dorado) -->
+        <a class="btn btn-solid" href="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141" target="_blank" rel="noopener">Abrir cuenta en <span class="pp-mark on-btn">pepperstone</span></a>
+        <a class="btn btn-ghost" href="#porque">Conocer el ecosistema</a>
+      </div>
+      <p class="micro reveal">No prometemos resultados ni administramos fondos. Te damos proceso, criterio y acompañamiento para que aprendas a operar con disciplina de riesgo.</p>
     </div>
-    <p class="micro reveal">Para operadores con capital de trabajo real que buscan estructura, criterio y acompañamiento. El trading con productos apalancados implica riesgo de pérdida de capital.</p>
+
+    <div class="hero-visual reveal" aria-label="Visual dinámico de mesa profesional de trading">
+      <div class="hero-orb" aria-hidden="true"></div>
+      <div class="desk-card">
+        <div class="desk-top">
+          <div>
+            <div class="desk-kicker">DOBERWHITE LIVE DESK</div>
+            <div class="desk-status"><i></i> sesión de mercado</div>
+          </div>
+        </div>
+        <div class="chart-stage">
+          <svg viewBox="0 0 520 312" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="goldFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(198,166,100,.25)"/><stop offset="1" stop-color="rgba(198,166,100,0)"/></linearGradient></defs>
+            <path class="chart-area" d="M0,238 C48,214 72,226 110,186 C154,140 194,176 236,132 C282,84 322,128 365,86 C408,45 456,68 520,28 L520,312 L0,312 Z"/>
+            <path class="chart-line" d="M0,238 C48,214 72,226 110,186 C154,140 194,176 236,132 C282,84 322,128 365,86 C408,45 456,68 520,28"/>
+          </svg>
+          <div class="candle up c1"></div><div class="candle c2"></div><div class="candle gold c3"></div><div class="candle up c4"></div><div class="candle c5"></div><div class="candle gold c6"></div><div class="candle up c7"></div><div class="candle gold c8"></div><div class="candle c9"></div><div class="candle up c10"></div>
+          <div class="price-tag">NASDAQ · XAUUSD · FX</div>
+        </div>
+        <div class="risk-strip">
+          <div><b>01</b><span>plan</span></div>
+          <div><b>02</b><span>riesgo</span></div>
+          <div><b>03</b><span>ejecución</span></div>
+        </div>
+      </div>
+      <div class="floating-card float-a"><b>Comunidad privada</b><span>Operadores con proceso, no ruido.</span></div>
+      <div class="floating-card float-b"><b>Risk protocol</b><span>Entrada · stop · escenario · invalidación.</span></div>
+    </div>
   </div>
 </section>
 
@@ -270,19 +455,6 @@
     <a class="btn btn-ghost" href="#ecosistema">Ver el ecosistema</a>
   </div>
   <p class="pp-note reveal">Doberwhite Trading es un Introducing Broker (IB) de Pepperstone. La entidad, regulación, condiciones, instrumentos y apalancamiento disponibles dependen de la jurisdicción bajo la que se abra cada cuenta y de los términos del bróker. El trading con productos apalancados implica riesgo de pérdida de capital.</p>
-</div></section>
-
-<section class="section" id="ruta"><div class="wrap">
-  <p class="eyebrow reveal">El viaje del cliente</p>
-  <h2 class="title reveal">Tu <span class="em">ruta</span></h2>
-  <p class="lead reveal">Una secuencia ordenada, del primer paso a la comunidad. Cada etapa prepara la siguiente.</p>
-  <div class="steps">
-    <div class="step reveal"><div class="num">01</div><div><h4>Abrir cuenta</h4><p>Apertura en Pepperstone a través de la estructura Doberwhite Trading. Proceso claro y verificación guiada.</p></div></div>
-    <div class="step reveal"><div class="num">02</div><div><h4>Onboarding profesional</h4><p>Video de bienvenida y guía paso a paso: configuración, depósito, uso de plataforma y advertencias de riesgo.</p></div></div>
-    <div class="step reveal"><div class="num">03</div><div><h4>Primeros pasos con criterio</h4><p>Fundamentos de lectura de mercado y gestión de riesgo. Operar con estructura desde el inicio.</p></div></div>
-    <div class="step reveal"><div class="num">04</div><div><h4>Comunidad — Salón VIP</h4><p>Análisis interactivo de pre-market cada mañana y comunidad activa en Telegram. Disciplina operativa y acompañamiento recurrente.</p></div></div>
-    <div class="step reveal"><div class="num">05</div><div><h4>Profundidad — Elite Desk</h4><p>Para quienes buscan el círculo más cercano: análisis 4H y acompañamiento estructurado.</p></div></div>
-  </div>
 </div></section>
 
 <section class="section" id="ecosistema"><div class="wrap">
@@ -357,4 +529,5 @@
 <script>
   const io = new IntersectionObserver((es)=>{ es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'), i*55); io.unobserve(e.target);} }); }, { threshold:0.12 });
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>a.closest('details')?.removeAttribute('open')));
 </script>
