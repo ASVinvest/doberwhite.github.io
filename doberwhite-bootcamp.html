@@ -40,19 +40,102 @@
   .nav-in{ display:flex; align-items:center; justify-content:space-between; padding-block:16px; }
   .brand{ font-family:var(--font-brand); font-size:18px; letter-spacing:.30em; font-weight:500; text-transform:uppercase; }
   nav.links{ display:flex; gap:26px; font-size:12.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dbw-muted); } nav.links a:hover{ color:var(--dbw-text); }
+  .brand-short,.cta-short{ display:none; }
+  .nav-actions{ display:flex; align-items:center; gap:12px; position:relative; }
+  .mobile-menu{ display:none; position:relative; }
+  .mobile-menu summary{ list-style:none; width:42px; height:42px; display:grid; place-items:center; border:1px solid var(--dbw-line); color:var(--dbw-text); background:rgba(15,17,22,.72); cursor:pointer; font-size:18px; line-height:1; transition:.25s ease; }
+  .mobile-menu summary::-webkit-details-marker{ display:none; }
+  .mobile-menu summary:hover{ border-color:var(--dbw-act); color:var(--dbw-act); }
+  .mobile-menu[open] summary{ border-color:var(--dbw-act); color:var(--dbw-act); background:rgba(198,166,100,.08); }
+  .mobile-menu-panel{ position:absolute; right:0; top:calc(100% + 10px); min-width:250px; background:rgba(5,7,11,.97); border:1px solid var(--dbw-line); box-shadow:0 22px 70px rgba(0,0,0,.52); backdrop-filter:blur(14px); padding:8px; z-index:70; }
+  .mobile-menu-panel a{ display:block; padding:13px 14px; border-bottom:1px solid var(--dbw-line-soft); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dbw-muted); }
+  .mobile-menu-panel a:last-child{ border-bottom:none; }
+  .mobile-menu-panel a:hover{ color:var(--dbw-text); background:rgba(255,255,255,.035); }
   .btn{ display:inline-block; font-size:12px; letter-spacing:.16em; text-transform:uppercase; padding:11px 22px; border:1px solid var(--dbw-act); color:var(--dbw-act); transition:.25s ease; font-weight:500; cursor:pointer; background:none; font-family:var(--font-body); }
   .btn:hover{ background:var(--dbw-act); color:var(--dbw-bg); }
   .btn-solid{ background:var(--dbw-act); border-color:var(--dbw-act); color:#1A1408; } .btn-solid:hover{ background:var(--dbw-act-d); border-color:var(--dbw-act-d); color:#0E0B05; }
   .btn-ghost{ border-color:var(--dbw-line); color:var(--dbw-text); } .btn-ghost:hover{ border-color:var(--dbw-text); }
-  .hero{ position:relative; padding-block:clamp(64px,10vw,128px); overflow:hidden; }
-  .hero svg.curve{ position:absolute; inset:auto 0 0 0; width:100%; height:44%; opacity:.12; pointer-events:none; }
-  .hero h1{ font-family:var(--font-display); font-weight:500; text-transform:uppercase; font-size:clamp(44px,8.4vw,104px); line-height:.94; margin:0 0 22px; } .hero h1 .em{ text-transform:none; }
-  .hero p.sub{ color:var(--dbw-muted); font-size:clamp(16px,1.9vw,21px); max-width:58ch; margin:0 0 26px; } .hero .micro{ margin-top:26px; font-size:12px; color:var(--dbw-faint); letter-spacing:.04em; max-width:56ch; }
+  .hero{ position:relative; padding-block:clamp(54px,8vw,104px); overflow:hidden; isolation:isolate;
+    background:
+      radial-gradient(circle at 78% 32%, rgba(198,166,100,.11), transparent 24%),
+      radial-gradient(circle at 82% 78%, rgba(184,204,216,.06), transparent 28%),
+      linear-gradient(135deg, rgba(5,7,11,1) 0%, rgba(8,11,16,1) 58%, rgba(5,7,11,1) 100%);
+  }
+  .hero::before{ content:""; position:absolute; inset:0; z-index:-2; opacity:.16;
+    background-image:linear-gradient(rgba(184,204,216,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(184,204,216,.08) 1px, transparent 1px);
+    background-size:76px 76px; mask-image:linear-gradient(90deg, transparent 0%, #000 28%, #000 100%); }
+  .hero::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg, rgba(5,7,11,.97) 0%, rgba(5,7,11,.90) 46%, rgba(5,7,11,.34) 100%); }
+  .hero-in{ display:grid; grid-template-columns:minmax(0,.98fr) minmax(380px,.92fr); gap:clamp(30px,4.5vw,68px); align-items:center; }
+  .hero-copy{ position:relative; z-index:2; }
+  .hero h1{ font-family:var(--font-display); font-weight:500; text-transform:uppercase; font-size:clamp(44px,7.5vw,96px); line-height:.94; margin:0 0 20px; max-width:10ch; } .hero h1 .em{ text-transform:none; }
+  .hero p.sub{ color:var(--dbw-muted); font-size:clamp(16px,1.7vw,20px); max-width:55ch; margin:0 0 24px; }
+  .hero-meta{ display:flex; flex-wrap:wrap; gap:10px 18px; margin:0 0 26px; color:var(--dbw-accent); font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+  .hero-meta span{ position:relative; padding-left:14px; }
+  .hero-meta span::before{ content:""; position:absolute; left:0; top:50%; width:5px; height:5px; margin-top:-2px; border-radius:50%; background:var(--dbw-act); }
+  .hero .micro{ margin-top:22px; font-size:12px; color:var(--dbw-faint); letter-spacing:.04em; max-width:56ch; }
   .cta-row{ display:flex; gap:16px; flex-wrap:wrap; }
-  .count-wrap{ display:flex; flex-wrap:wrap; align-items:center; gap:22px; margin-bottom:32px; }
-  .count{ display:flex; gap:12px; } .count .u{ text-align:center; border:1px solid var(--dbw-line); padding:12px 14px; min-width:62px; }
-  .count .u b{ display:block; font-family:var(--font-display); font-size:30px; line-height:1; color:var(--dbw-text); } .count .u span{ font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dbw-faint); }
-  .count-meta{ font-size:13px; color:var(--dbw-muted); letter-spacing:.04em; } .count-meta b{ color:var(--dbw-accent); font-weight:500; }
+  .count-wrap{ display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin-bottom:28px; }
+  .count{ display:flex; gap:8px; }
+  .count .u{ text-align:center; border:1px solid var(--dbw-line); background:rgba(15,17,22,.44); padding:10px 12px; min-width:58px; }
+  .count .u b{ display:block; font-family:var(--font-display); font-size:27px; line-height:1; color:var(--dbw-text); }
+  .count .u span{ font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--dbw-faint); }
+  .count-meta{ font-size:12.5px; color:var(--dbw-muted); letter-spacing:.04em; }
+  .count-meta b{ color:var(--dbw-accent); font-weight:500; }
+
+  .hero-visual{ position:relative; z-index:1; min-height:500px; display:flex; align-items:center; justify-content:center; }
+  .training-terminal{ position:relative; width:min(570px,100%); min-height:470px; }
+  .terminal-glow{ position:absolute; inset:26px 18px 18px; border-radius:50%; background:radial-gradient(circle, rgba(198,166,100,.11), transparent 66%); filter:blur(8px); }
+  .terminal-frame{ position:relative; margin-top:34px; border:1px solid rgba(198,166,100,.26); background:linear-gradient(180deg, rgba(15,17,22,.96), rgba(6,8,12,.94)); box-shadow:0 34px 100px rgba(0,0,0,.54); overflow:hidden; }
+  .terminal-top{ height:54px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 18px; border-bottom:1px solid var(--dbw-line-soft); background:rgba(255,255,255,.015); }
+  .terminal-brand{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--dbw-up); box-shadow:0 0 0 0 rgba(40,198,138,.45); animation:livePulse 2.3s infinite; flex:0 0 auto; }
+  .terminal-brand b{ font-size:10px; letter-spacing:.19em; text-transform:uppercase; white-space:nowrap; }
+  .terminal-brand span{ font-size:10px; letter-spacing:.12em; color:var(--dbw-muted); text-transform:uppercase; white-space:nowrap; }
+  .terminal-status{ font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--dbw-act); white-space:nowrap; }
+  .chart-stage{ position:relative; height:304px; border-bottom:1px solid var(--dbw-line-soft); background:
+    linear-gradient(rgba(184,204,216,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184,204,216,.055) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(8,11,16,.88), rgba(5,7,11,.98));
+    background-size:100% 52px, 64px 100%, auto;
+  }
+  .chart-stage svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+  .price-line{ fill:none; stroke:var(--dbw-accent); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:680; stroke-dashoffset:680; animation:drawPrice 3.2s ease forwards .35s; }
+  .price-fill{ opacity:.12; }
+  .risk-zone{ position:absolute; left:14%; right:12%; top:38%; height:24%; border-top:1px solid rgba(198,166,100,.45); border-bottom:1px solid rgba(217,88,88,.42); background:linear-gradient(180deg, rgba(198,166,100,.07), rgba(217,88,88,.035)); }
+  .zone-label{ position:absolute; right:14px; top:10px; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--dbw-act); }
+  .stop-label{ position:absolute; right:14px; bottom:8px; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:rgba(217,88,88,.82); }
+  .lesson-marker{ position:absolute; left:56%; top:31%; width:14px; height:14px; border:1px solid var(--dbw-act); border-radius:50%; box-shadow:0 0 0 0 rgba(198,166,100,.35); animation:lessonPulse 2.6s infinite; }
+  .lesson-marker::before,.lesson-marker::after{ content:""; position:absolute; background:rgba(198,166,100,.42); }
+  .lesson-marker::before{ width:1px; height:34px; left:6px; top:-36px; }
+  .lesson-marker::after{ height:1px; width:42px; left:14px; top:6px; }
+  .lesson-note{ position:absolute; left:calc(56% + 54px); top:16%; width:174px; border:1px solid rgba(180,192,210,.16); background:rgba(5,7,11,.88); backdrop-filter:blur(10px); padding:12px 13px; }
+  .lesson-note b{ display:block; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dbw-text); }
+  .lesson-note span{ display:block; margin-top:5px; color:var(--dbw-muted); font-size:12px; line-height:1.42; }
+  .candle{ position:absolute; bottom:28px; width:8px; border-radius:1px; transform-origin:50% 100%; animation:candleIn .75s ease both; }
+  .candle::before{ content:""; position:absolute; left:50%; width:1px; transform:translateX(-50%); background:currentColor; opacity:.7; }
+  .candle.up{ background:rgba(40,198,138,.72); color:rgba(40,198,138,.72); }
+  .candle.down{ background:rgba(184,204,216,.5); color:rgba(184,204,216,.5); }
+  .c1{ left:12%; height:46px; animation-delay:.15s; } .c1::before{ top:-18px; height:78px; }
+  .c2{ left:20%; height:74px; animation-delay:.28s; } .c2::before{ top:-20px; height:108px; }
+  .c3{ left:28%; height:54px; animation-delay:.41s; } .c3::before{ top:-22px; height:92px; }
+  .c4{ left:37%; height:96px; animation-delay:.54s; } .c4::before{ top:-20px; height:126px; }
+  .c5{ left:46%; height:64px; animation-delay:.67s; } .c5::before{ top:-18px; height:98px; }
+  .c6{ left:56%; height:116px; animation-delay:.80s; } .c6::before{ top:-24px; height:148px; }
+  .c7{ left:66%; height:84px; animation-delay:.93s; } .c7::before{ top:-18px; height:116px; }
+  .c8{ left:76%; height:132px; animation-delay:1.06s; } .c8::before{ top:-26px; height:166px; }
+  .c9{ left:86%; height:104px; animation-delay:1.19s; } .c9::before{ top:-22px; height:142px; }
+  .terminal-bottom{ display:grid; grid-template-columns:repeat(3,1fr); }
+  .session-tab{ min-height:86px; padding:15px 16px 13px; border-right:1px solid var(--dbw-line-soft); }
+  .session-tab:last-child{ border-right:none; }
+  .session-tab small{ display:block; font-family:var(--font-display); font-style:italic; font-size:20px; color:var(--dbw-accent); line-height:1; }
+  .session-tab b{ display:block; margin-top:8px; font-size:10px; letter-spacing:.15em; text-transform:uppercase; }
+  .session-tab span{ display:block; margin-top:4px; color:var(--dbw-muted); font-size:11.5px; line-height:1.35; }
+  .terminal-caption{ margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:16px; color:var(--dbw-faint); font-size:10px; letter-spacing:.13em; text-transform:uppercase; }
+  .terminal-caption strong{ color:var(--dbw-act); font-weight:500; }
+  @keyframes livePulse{ 0%{box-shadow:0 0 0 0 rgba(40,198,138,.42);} 70%{box-shadow:0 0 0 8px rgba(40,198,138,0);} 100%{box-shadow:0 0 0 0 rgba(40,198,138,0);} }
+  @keyframes lessonPulse{ 0%{box-shadow:0 0 0 0 rgba(198,166,100,.34);} 70%{box-shadow:0 0 0 12px rgba(198,166,100,0);} 100%{box-shadow:0 0 0 0 rgba(198,166,100,0);} }
+  @keyframes drawPrice{ to{ stroke-dashoffset:0; } }
+  @keyframes candleIn{ from{ transform:scaleY(.05); opacity:0; } to{ transform:scaleY(1); opacity:1; } }
   .twocol{ display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:start; }
   .twocol .big{ font-family:var(--font-display); font-style:italic; font-size:clamp(22px,3.1vw,30px); line-height:1.4; } .twocol .big b{ color:var(--dbw-accent); font-weight:500; font-style:normal; } .twocol p{ color:var(--dbw-muted); font-size:15px; }
   .days{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:46px; }
@@ -87,8 +170,9 @@
   .disclaimer{ margin-top:34px; padding-top:26px; border-top:1px solid var(--dbw-line-soft); color:var(--dbw-faint); font-size:11.5px; line-height:1.7; max-width:95ch; } .disclaimer b{ color:var(--dbw-muted); font-weight:500; }
   .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; } .reveal.in{ opacity:1; transform:none; }
   a:focus-visible, .btn:focus-visible, summary:focus-visible{ outline:2px solid var(--dbw-act); outline-offset:3px; }
-  @media (max-width:900px){ .twocol{ grid-template-columns:1fr; gap:26px; } .days{ grid-template-columns:1fr; } .grid2{ grid-template-columns:1fr; } .cols2{ grid-template-columns:1fr; } .formatbar{ grid-template-columns:1fr 1fr; } .principles{ grid-template-columns:1fr; gap:26px; } nav.links{ display:none; } }
-  @media (max-width:520px){ .formatbar{ grid-template-columns:1fr; } .foot-top{ flex-direction:column; } }
+  @media (max-width:1100px){ .hero-in{ grid-template-columns:1fr; } .hero-visual{ min-height:500px; } .training-terminal{ max-width:610px; margin:0 auto; } }
+  @media (max-width:900px){ .hero-visual{ min-height:440px; } .twocol{ grid-template-columns:1fr; gap:26px; } .days{ grid-template-columns:1fr; } .grid2{ grid-template-columns:1fr; } .cols2{ grid-template-columns:1fr; } .formatbar{ grid-template-columns:1fr 1fr; } .principles{ grid-template-columns:1fr; gap:26px; } header.nav nav.links{ display:none; } .mobile-menu{ display:block; } }
+  @media (max-width:520px){ .nav-in{ gap:8px; } .brand{ font-size:14px; letter-spacing:.20em; } .brand-full,.cta-full{ display:none; } .brand-short,.cta-short{ display:inline; } .nav-actions{ gap:7px; } .nav-actions > .btn{ padding:10px 12px; font-size:10.5px; letter-spacing:.12em; } .mobile-menu summary{ width:38px; height:38px; font-size:17px; } .mobile-menu-panel{ min-width:min(78vw,250px); } .hero{ padding-block:42px 54px; } .hero h1{ font-size:clamp(42px,14vw,66px); max-width:9ch; } .hero p.sub{ margin-bottom:18px; } .hero-meta{ margin-bottom:20px; gap:8px 12px; } .count-wrap{ align-items:flex-start; margin-bottom:22px; } .count{ width:100%; } .count .u{ flex:1; min-width:0; padding:10px 8px; } .hero-visual{ min-height:auto; margin-top:10px; } .training-terminal{ min-height:auto; width:100%; } .terminal-frame{ margin-top:0; } .terminal-top{ height:auto; min-height:54px; flex-direction:column; align-items:flex-start; justify-content:center; padding:12px 14px; gap:5px; } .terminal-brand{ flex-wrap:wrap; } .chart-stage{ height:250px; } .lesson-note{ left:auto; right:10px; top:12px; width:150px; padding:10px; } .lesson-marker{ left:48%; top:38%; } .lesson-marker::after{ width:26px; } .risk-zone{ left:10%; right:8%; } .terminal-bottom{ grid-template-columns:1fr; } .session-tab{ min-height:auto; border-right:none; border-bottom:1px solid var(--dbw-line-soft); padding:13px 15px; } .session-tab:last-child{ border-bottom:none; } .terminal-caption{ flex-direction:column; align-items:flex-start; gap:4px; } .formatbar{ grid-template-columns:1fr; } .foot-top{ flex-direction:column; } }
   @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } .reveal{ opacity:1; transform:none; } html{ scroll-behavior:auto; } }
 </style>
 
@@ -98,25 +182,68 @@
 </div></div>
 
 <header class="nav"><div class="wrap nav-in">
-  <a class="brand" href="index.html">DOBERWHITE TRADING</a>
+  <a class="brand" href="index.html"><span class="brand-full">DOBERWHITE TRADING</span><span class="brand-short">DOBERWHITE</span></a>
   <nav class="links"><a href="#programa">El programa</a><a href="#llevas">Qué te llevas</a><a href="#paraquien">Para quién</a><a href="#reservar">Reservar</a></nav>
-  <a class="btn btn-solid" href="#reservar">Reservar cupo</a>
+  <div class="nav-actions">
+    <a class="btn btn-solid" href="#reservar"><span class="cta-full">Reservar cupo</span><span class="cta-short">Reservar</span></a>
+    <details class="mobile-menu">
+      <summary aria-label="Abrir menú de navegación">☰</summary>
+      <div class="mobile-menu-panel">
+        <a href="index.html">Inicio</a>
+        <a href="#programa">El programa</a>
+        <a href="#llevas">Qué te llevas</a>
+        <a href="#paraquien">Para quién</a>
+        <a href="#reservar">Reservar cupo</a>
+      </div>
+    </details>
+  </div>
 </div></header>
 
 <section class="hero">
-  <svg class="curve" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0,250 C150,240 220,180 340,190 C470,200 520,120 660,130 C800,140 860,70 1000,60 C1100,52 1160,40 1200,30" fill="none" stroke="var(--dbw-accent)" stroke-width="1.5"/></svg>
-  <div class="wrap">
-    <p class="eyebrow reveal">Formación intensiva · 3 días · Fin de mes</p>
-    <h1 class="reveal">Bootcamp <span class="em">Doberwhite</span></h1>
-    <p class="sub reveal">Tres días para salir ejecutando con más criterio: una gestión de riesgo profesional y una estrategia de scalping estructurada. La misma disciplina de la casa, llevada a un proceso que puedes repetir.</p>
-    <div class="count-wrap reveal">
-      <div class="count" id="count" aria-label="Cuenta regresiva a la próxima edición">
-        <div class="u"><b id="cd">--</b><span>Días</span></div><div class="u"><b id="ch">--</b><span>Horas</span></div><div class="u"><b id="cm">--</b><span>Min</span></div>
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow reveal">Bootcamp intensivo de trading · 3 días en vivo · Cupos limitados</p>
+      <h1 class="reveal">Bootcamp de <span class="em">Trading</span></h1>
+      <p class="sub reveal">Aprende a leer el mercado, proteger el capital y ejecutar una estrategia de scalping mediante sesiones prácticas, análisis guiado y casos reales.</p>
+      <div class="hero-meta reveal"><span>Formación en vivo</span><span>Práctica guiada</span><span>Estrategia de scalping</span></div>
+      <div class="count-wrap reveal">
+        <div class="count" id="count" aria-label="Cuenta regresiva a la próxima edición">
+          <div class="u"><b id="cd">--</b><span>Días</span></div><div class="u"><b id="ch">--</b><span>Horas</span></div><div class="u"><b id="cm">--</b><span>Min</span></div>
+        </div>
+        <div class="count-meta">Próxima edición: <b id="edate">15, 16 y 17 de julio</b> · grupo reducido</div>
       </div>
-      <div class="count-meta">Próxima edición: <b id="edate">7, 8 y 9 Julio</b> · cupos limitados</div>
+      <div class="cta-row reveal"><a class="btn btn-solid" href="#reservar">Reservar mi cupo</a><a class="btn btn-ghost" href="#programa">Ver el programa</a></div>
+      <p class="micro reveal">Formación educativa. No promete rentabilidad ni resultados. El trading con productos apalancados implica riesgo de pérdida de capital.</p>
     </div>
-    <div class="cta-row reveal"><a class="btn btn-solid" href="#reservar">Reservar mi cupo</a><a class="btn btn-ghost" href="#programa">Ver el programa</a></div>
-    <p class="micro reveal">Formación educativa. No promete rentabilidad ni resultados. El trading con productos apalancados implica riesgo de pérdida de capital.</p>
+
+    <div class="hero-visual reveal" aria-label="Terminal visual del Bootcamp de Trading Doberwhite">
+      <div class="training-terminal">
+        <div class="terminal-glow" aria-hidden="true"></div>
+        <div class="terminal-frame">
+          <div class="terminal-top">
+            <div class="terminal-brand"><span class="live-dot"></span><b>Bootcamp Live</b><span>NAS100 · práctica guiada</span></div>
+            <div class="terminal-status">Sesión 03 · Ejecución</div>
+          </div>
+          <div class="chart-stage">
+            <div class="risk-zone"><span class="zone-label">Zona de decisión</span><span class="stop-label">Invalidación</span></div>
+            <div class="lesson-marker" aria-hidden="true"></div>
+            <div class="lesson-note"><b>Explicación en vivo</b><span>Qué observamos, dónde invalida y cómo dimensionar el riesgo.</span></div>
+            <span class="candle up c1"></span><span class="candle down c2"></span><span class="candle up c3"></span><span class="candle up c4"></span><span class="candle down c5"></span><span class="candle up c6"></span><span class="candle down c7"></span><span class="candle up c8"></span><span class="candle up c9"></span>
+            <svg viewBox="0 0 560 304" preserveAspectRatio="none" aria-hidden="true">
+              <defs><linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B8CCD8" stop-opacity=".22"/><stop offset="1" stop-color="#B8CCD8" stop-opacity="0"/></linearGradient></defs>
+              <path class="price-fill" d="M0,252 C48,232 76,228 108,204 C145,177 164,198 202,169 C238,141 263,158 296,122 C326,90 352,115 384,86 C423,52 456,72 560,36 L560,304 L0,304 Z" fill="url(#priceGrad)"/>
+              <path class="price-line" d="M0,252 C48,232 76,228 108,204 C145,177 164,198 202,169 C238,141 263,158 296,122 C326,90 352,115 384,86 C423,52 456,72 560,36"/>
+            </svg>
+          </div>
+          <div class="terminal-bottom">
+            <div class="session-tab"><small>01</small><b>Leer el mercado</b><span>Contexto, estructura y niveles.</span></div>
+            <div class="session-tab"><small>02</small><b>Gestionar el riesgo</b><span>Stop, tamaño y reglas operativas.</span></div>
+            <div class="session-tab"><small>03</small><b>Ejecutar scalping</b><span>Práctica, disciplina y proceso.</span></div>
+          </div>
+        </div>
+        <div class="terminal-caption"><span>Análisis + práctica + feedback</span><strong>3 jornadas conectadas</strong></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -243,4 +370,9 @@
   })();
   const io=new IntersectionObserver((es)=>{ es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'),i*55); io.unobserve(e.target);} }); },{threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>a.closest('details')?.removeAttribute('open')));
+  document.addEventListener('click',(e)=>{
+    const menu=document.querySelector('.mobile-menu');
+    if(menu?.hasAttribute('open') && !menu.contains(e.target)) menu.removeAttribute('open');
+  });
 </script>
