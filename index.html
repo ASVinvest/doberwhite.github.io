@@ -319,17 +319,24 @@
   /* Captura previa a apertura de cuenta Pepperstone */
   body.lead-modal-open{ overflow:hidden; }
   .lead-modal{
-    position:fixed; inset:0; z-index:120; display:grid; place-items:center;
-    padding:20px; opacity:0; visibility:hidden; pointer-events:none;
+    --modal-vh:100svh;
+    position:fixed; inset:0; z-index:120;
+    display:flex; align-items:center; justify-content:center;
+    padding:max(16px,calc(env(safe-area-inset-top) + 16px)) max(16px,calc(env(safe-area-inset-right) + 16px)) max(16px,calc(env(safe-area-inset-bottom) + 16px)) max(16px,calc(env(safe-area-inset-left) + 16px));
+    overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+    opacity:0; visibility:hidden; pointer-events:none;
     transition:opacity .22s ease, visibility .22s ease;
   }
   .lead-modal.is-open{ opacity:1; visibility:visible; pointer-events:auto; }
-  .lead-modal-backdrop{ position:absolute; inset:0; z-index:0; background:rgba(2,4,8,.88); backdrop-filter:blur(10px); }
+  .lead-modal-backdrop{ position:fixed; inset:0; z-index:0; background:rgba(2,4,8,.88); backdrop-filter:blur(10px); }
   .lead-dialog{
-    position:relative; z-index:1; width:min(100%,470px); max-height:calc(100svh - 32px); overflow:auto;
+    position:relative; z-index:1; width:min(100%,470px); max-height:calc(var(--modal-vh) - 32px); overflow:auto;
+    margin:auto;
     background:linear-gradient(180deg,#0F1116,#05070B);
     border:1px solid rgba(198,166,100,.42); box-shadow:0 30px 100px rgba(0,0,0,.72);
     padding:clamp(24px,5vw,38px);
+    -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
+    transform:translate3d(0,0,0);
   }
   .lead-dialog::before{ content:""; position:absolute; inset:0 0 auto; height:2px; background:linear-gradient(90deg,transparent,var(--dbw-act),transparent); }
   .lead-close{
@@ -343,7 +350,7 @@
   .lead-dialog h3 .em{ text-transform:none; }
   .lead-intro{ margin:0 0 24px; color:var(--dbw-muted); font-size:14px; line-height:1.55; }
   .lead-fields{ display:grid; gap:12px; }
-  .lead-field{ display:grid; gap:7px; }
+  .lead-field{ display:grid; gap:7px; scroll-margin-block:84px 140px; }
   .lead-field label{ color:var(--dbw-accent); font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:500; }
   .lead-field input{
     width:100%; min-height:50px; border:1px solid var(--dbw-line); background:rgba(5,7,11,.76);
@@ -361,9 +368,16 @@
   .lead-status.error{ border-color:rgba(217,88,88,.42); color:#ffb5b5; background:rgba(217,88,88,.07); }
   .lead-modal iframe{ display:none; }
   @media (max-width:520px){
-    .lead-modal{ padding:12px; align-items:end; }
-    .lead-dialog{ width:100%; padding:26px 20px calc(22px + env(safe-area-inset-bottom)); }
-    .lead-dialog h3{ font-size:30px; }
+    .lead-modal{
+      justify-content:stretch; align-items:flex-start;
+      padding:max(8px,calc(env(safe-area-inset-top) + 8px)) max(8px,calc(env(safe-area-inset-right) + 8px)) max(8px,calc(env(safe-area-inset-bottom) + 8px)) max(8px,calc(env(safe-area-inset-left) + 8px));
+    }
+    .lead-dialog{
+      width:100%; max-width:none; max-height:calc(var(--modal-vh) - 16px);
+      margin:0;
+      padding:24px 18px calc(22px + env(safe-area-inset-bottom));
+    }
+    .lead-dialog h3{ font-size:clamp(27px,8vw,34px); }
   }
 
 </style>
@@ -634,13 +648,17 @@
   (() => {
     const PEPPERSTONE_URL = 'https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141';
     const modal = document.getElementById('pepperstoneLeadModal');
+    const dialog = modal.querySelector('.lead-dialog');
     const form = document.getElementById('pepperstoneLeadForm');
     const iframe = document.getElementById('pepperstoneLeadIframe');
     const submit = document.getElementById('pepperstoneSubmit');
     const status = document.getElementById('pepperstoneLeadStatus');
+    const nameInput = document.getElementById('pepperstoneNombre');
     const phoneInput = document.getElementById('pepperstoneTelefono');
     const emailInput = document.getElementById('pepperstoneEmail');
+    const inputs = [nameInput, phoneInput, emailInput];
     const params = new URLSearchParams(location.search);
+    const viewport = window.visualViewport;
     let submitted = false;
     let redirected = false;
     let fallbackTimer = null;
@@ -655,14 +673,35 @@
       document.getElementById('pepperstoneUtmContent').value = params.get('utm_content') || 'pepperstone_cta';
     };
 
+    const updateViewportMetrics = () => {
+      const vh = viewport?.height || window.innerHeight || document.documentElement.clientHeight;
+      modal.style.setProperty('--modal-vh', `${Math.max(220, vh)}px`);
+    };
+
+    const ensureFieldVisible = (el, behavior = 'smooth') => {
+      if (!el || !modal.classList.contains('is-open')) return;
+      requestAnimationFrame(() => {
+        updateViewportMetrics();
+        setTimeout(() => {
+          const field = el.closest('.lead-field') || el;
+          try { field.scrollIntoView({ block:'center', inline:'nearest', behavior }); } catch(_) {}
+        }, 180);
+      });
+    };
+
     const openModal = (event) => {
       event?.preventDefault();
       lastFocus = document.activeElement;
       setTracking();
+      updateViewportMetrics();
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden','false');
       document.body.classList.add('lead-modal-open');
-      setTimeout(()=>document.getElementById('pepperstoneNombre').focus(),80);
+      dialog.scrollTop = 0;
+      setTimeout(() => {
+        nameInput.focus({ preventScroll:true });
+        ensureFieldVisible(nameInput, 'auto');
+      }, 90);
     };
 
     const closeModal = () => {
@@ -670,6 +709,7 @@
       modal.classList.remove('is-open');
       modal.setAttribute('aria-hidden','true');
       document.body.classList.remove('lead-modal-open');
+      dialog.scrollTop = 0;
       lastFocus?.focus?.();
     };
 
@@ -691,6 +731,28 @@
     modal.querySelectorAll('[data-lead-close]').forEach(el=>el.addEventListener('click',closeModal));
     document.addEventListener('keydown',event=>{ if(event.key==='Escape' && modal.classList.contains('is-open')) closeModal(); });
 
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => ensureFieldVisible(input));
+      input.addEventListener('click', () => ensureFieldVisible(input));
+      input.addEventListener('input', () => ensureFieldVisible(input, 'auto'));
+    });
+
+    if (viewport) {
+      const handleViewportChange = () => {
+        if (!modal.classList.contains('is-open')) return;
+        updateViewportMetrics();
+        const active = document.activeElement;
+        if (active && inputs.includes(active)) ensureFieldVisible(active, 'auto');
+      };
+      viewport.addEventListener('resize', handleViewportChange);
+      viewport.addEventListener('scroll', handleViewportChange);
+    } else {
+      window.addEventListener('resize', () => {
+        if (!modal.classList.contains('is-open')) return;
+        updateViewportMetrics();
+      });
+    }
+
     form.addEventListener('submit', event => {
       status.className = 'lead-status';
       status.textContent = '';
@@ -698,6 +760,9 @@
         event.preventDefault();
         form.reportValidity();
         showStatus('Completa correctamente los tres datos.','error');
+        const invalid = form.querySelector(':invalid');
+        invalid?.focus?.({ preventScroll:true });
+        ensureFieldVisible(invalid || nameInput, 'auto');
         return;
       }
       const phone = phoneInput.value.trim();
@@ -705,7 +770,8 @@
       if (digits.length < 8) {
         event.preventDefault();
         showStatus('Revisa tu número de WhatsApp e incluye el código de país.','error');
-        phoneInput.focus();
+        phoneInput.focus({ preventScroll:true });
+        ensureFieldVisible(phoneInput, 'auto');
         return;
       }
       const email = emailInput.value.trim();
@@ -724,5 +790,6 @@
 
     iframe.addEventListener('load',goToPepperstone);
     setTracking();
+    updateViewportMetrics();
   })();
 </script>
