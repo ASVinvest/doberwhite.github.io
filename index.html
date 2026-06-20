@@ -314,6 +314,58 @@
     .foot-top{ flex-direction:column; }
   }
   @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } .reveal{ opacity:1; transform:none; } html{ scroll-behavior:auto; } }
+
+
+  /* Captura previa a apertura de cuenta Pepperstone */
+  body.lead-modal-open{ overflow:hidden; }
+  .lead-modal{
+    position:fixed; inset:0; z-index:120; display:grid; place-items:center;
+    padding:20px; opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .22s ease, visibility .22s ease;
+  }
+  .lead-modal.is-open{ opacity:1; visibility:visible; pointer-events:auto; }
+  .lead-modal-backdrop{ position:absolute; inset:0; z-index:0; background:rgba(2,4,8,.88); backdrop-filter:blur(10px); }
+  .lead-dialog{
+    position:relative; z-index:1; width:min(100%,470px); max-height:calc(100svh - 32px); overflow:auto;
+    background:linear-gradient(180deg,#0F1116,#05070B);
+    border:1px solid rgba(198,166,100,.42); box-shadow:0 30px 100px rgba(0,0,0,.72);
+    padding:clamp(24px,5vw,38px);
+  }
+  .lead-dialog::before{ content:""; position:absolute; inset:0 0 auto; height:2px; background:linear-gradient(90deg,transparent,var(--dbw-act),transparent); }
+  .lead-close{
+    position:absolute; top:12px; right:12px; width:38px; height:38px; display:grid; place-items:center;
+    border:1px solid var(--dbw-line); background:rgba(255,255,255,.025); color:var(--dbw-muted);
+    font:400 24px/1 var(--font-body); cursor:pointer;
+  }
+  .lead-close:hover{ color:var(--dbw-text); border-color:var(--dbw-act); }
+  .lead-dialog .eyebrow{ margin-bottom:12px; }
+  .lead-dialog h3{ margin:0 38px 10px 0; font-family:var(--font-display); font-size:clamp(28px,6.4vw,39px); line-height:.98; font-weight:500; text-transform:uppercase; }
+  .lead-dialog h3 .em{ text-transform:none; }
+  .lead-intro{ margin:0 0 24px; color:var(--dbw-muted); font-size:14px; line-height:1.55; }
+  .lead-fields{ display:grid; gap:12px; }
+  .lead-field{ display:grid; gap:7px; }
+  .lead-field label{ color:var(--dbw-accent); font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:500; }
+  .lead-field input{
+    width:100%; min-height:50px; border:1px solid var(--dbw-line); background:rgba(5,7,11,.76);
+    color:var(--dbw-text); padding:12px 14px; border-radius:0; outline:none;
+    font:400 15px/1.2 var(--font-body); transition:border-color .2s ease, background .2s ease;
+  }
+  .lead-field input::placeholder{ color:rgba(237,240,244,.42); }
+  .lead-field input:focus{ border-color:var(--dbw-act); background:rgba(198,166,100,.035); }
+  .lead-submit{ width:100%; justify-content:center; min-height:52px; margin-top:6px; }
+  .lead-submit[disabled]{ opacity:.65; cursor:wait; }
+  .lead-consent{ margin:12px 0 0; color:var(--dbw-faint); font-size:10.5px; line-height:1.5; }
+  .lead-status{ display:none; margin-top:12px; padding:10px 12px; border:1px solid var(--dbw-line); color:var(--dbw-muted); font-size:12px; line-height:1.4; }
+  .lead-status.show{ display:block; }
+  .lead-status.ok{ border-color:rgba(40,198,138,.38); color:#9ce4c7; background:rgba(40,198,138,.06); }
+  .lead-status.error{ border-color:rgba(217,88,88,.42); color:#ffb5b5; background:rgba(217,88,88,.07); }
+  .lead-modal iframe{ display:none; }
+  @media (max-width:520px){
+    .lead-modal{ padding:12px; align-items:end; }
+    .lead-dialog{ width:100%; padding:26px 20px calc(22px + env(safe-area-inset-bottom)); }
+    .lead-dialog h3{ font-size:30px; }
+  }
+
 </style>
 
 <div class="ticker" aria-hidden="true"><div class="ticker-track">
@@ -331,7 +383,7 @@
     <a href="doberwhite-elite-desk.html">Elite Desk</a>
   </nav>
   <div class="nav-actions">
-    <a class="btn btn-solid" href="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141" target="_blank" rel="noopener">Abrir cuenta</a>
+    <a class="btn btn-solid pepperstone-lead-open" href="#abrir-cuenta" data-pepperstone-url="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141">Abrir cuenta</a>
     <details class="mobile-menu">
       <summary aria-label="Abrir menú de navegación">☰</summary>
       <div class="mobile-menu-panel">
@@ -358,7 +410,7 @@
       </div>
       <div class="cta-row reveal">
         <!-- LOGO-PEPPERSTONE (versión oscura para botón dorado) -->
-        <a class="btn btn-solid" href="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141" target="_blank" rel="noopener">Abrir cuenta en <span class="pp-mark on-btn">pepperstone</span></a>
+        <a class="btn btn-solid pepperstone-lead-open" href="#abrir-cuenta" data-pepperstone-url="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141">Abrir cuenta en <span class="pp-mark on-btn">pepperstone</span></a>
         <a class="btn btn-ghost" href="#porque">Conocer el ecosistema</a>
       </div>
       <p class="micro reveal">No prometemos resultados ni administramos fondos. Te damos proceso, criterio y acompañamiento para que aprendas a operar con disciplina de riesgo.</p>
@@ -451,7 +503,7 @@
 
   <div class="pp-cta reveal">
     <!-- LOGO-PEPPERSTONE (versión oscura para botón dorado) -->
-    <a class="btn btn-solid" href="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141" target="_blank" rel="noopener">Abrir cuenta en <span class="pp-mark on-btn">pepperstone</span></a>
+    <a class="btn btn-solid pepperstone-lead-open" href="#abrir-cuenta" data-pepperstone-url="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141">Abrir cuenta en <span class="pp-mark on-btn">pepperstone</span></a>
     <a class="btn btn-ghost" href="#ecosistema">Ver el ecosistema</a>
   </div>
   <p class="pp-note reveal">Doberwhite Trading es un Introducing Broker (IB) de Pepperstone. La entidad, regulación, condiciones, instrumentos y apalancamiento disponibles dependen de la jurisdicción bajo la que se abra cada cuenta y de los términos del bróker. El trading con productos apalancados implica riesgo de pérdida de capital.</p>
@@ -505,7 +557,7 @@
   <p class="reveal">Abre tu cuenta en Pepperstone a través de la estructura Doberwhite Trading y entra al ecosistema. El acompañamiento empieza el primer día.</p>
   <div class="cta-row reveal">
     <!-- LOGO-PEPPERSTONE (versión oscura para botón dorado) -->
-    <a class="btn btn-solid" href="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141" target="_blank" rel="noopener">Abrir cuenta en <span class="pp-mark on-btn">pepperstone</span></a>
+    <a class="btn btn-solid pepperstone-lead-open" href="#abrir-cuenta" data-pepperstone-url="https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141">Abrir cuenta en <span class="pp-mark on-btn">pepperstone</span></a>
     <a class="btn btn-ghost" href="doberwhite-salon-vip.html">Conocer el Salón VIP</a>
   </div>
 </div></section>
@@ -526,8 +578,151 @@
   </p>
 </div></footer>
 
+
+
+<div class="lead-modal" id="pepperstoneLeadModal" aria-hidden="true">
+  <div class="lead-modal-backdrop" data-lead-close></div>
+  <section class="lead-dialog" role="dialog" aria-modal="true" aria-labelledby="pepperstoneLeadTitle">
+    <button class="lead-close" type="button" aria-label="Cerrar formulario" data-lead-close>×</button>
+    <p class="eyebrow">Apertura de cuenta</p>
+    <h3 id="pepperstoneLeadTitle">Antes de continuar a <span class="em">Pepperstone</span></h3>
+    <p class="lead-intro">Déjanos tus datos para acompañarte durante la apertura. Al continuar, serás dirigido al sitio de Pepperstone.</p>
+
+    <form id="pepperstoneLeadForm" method="GET" action="https://script.google.com/macros/s/AKfycbxXBPa60sMClk3zQuPs9WLHR_naVmx2h-VDSHCj4fabb-hzwfuLnGvyTOBeR-kpBmDEyg/exec" target="pepperstone_lead_iframe" accept-charset="UTF-8" novalidate>
+      <input type="hidden" name="landing" value="home_doberwhite">
+      <input type="hidden" name="source" value="web_home">
+      <input type="hidden" name="producto" value="Apertura de cuenta Pepperstone">
+      <input type="hidden" name="estado" value="Lead registrado - pendiente de apertura">
+      <input type="hidden" name="page_url" id="pepperstonePageUrl">
+      <input type="hidden" name="created_at" id="pepperstoneCreatedAt">
+      <input type="hidden" name="utm_source" id="pepperstoneUtmSource">
+      <input type="hidden" name="utm_medium" id="pepperstoneUtmMedium">
+      <input type="hidden" name="utm_campaign" id="pepperstoneUtmCampaign">
+      <input type="hidden" name="utm_content" id="pepperstoneUtmContent">
+      <input type="hidden" name="correo" id="pepperstoneCorreoCopy">
+      <input type="hidden" name="telefono" id="pepperstoneTelefonoCopy">
+      <input type="hidden" name="telefono_completo" id="pepperstoneTelefonoCompleto">
+      <input type="hidden" name="whatsapp" id="pepperstoneWhatsappCopy">
+
+      <div class="lead-fields">
+        <div class="lead-field">
+          <label for="pepperstoneNombre">Nombre completo</label>
+          <input id="pepperstoneNombre" name="nombre" type="text" autocomplete="name" placeholder="Tu nombre completo" required maxlength="100">
+        </div>
+        <div class="lead-field">
+          <label for="pepperstoneTelefono">WhatsApp</label>
+          <input id="pepperstoneTelefono" name="numero" type="tel" autocomplete="tel" inputmode="tel" placeholder="Ej.: +56 9 1234 5678" required minlength="8" maxlength="24">
+        </div>
+        <div class="lead-field">
+          <label for="pepperstoneEmail">Correo electrónico</label>
+          <input id="pepperstoneEmail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="nombre@correo.com" required maxlength="140">
+        </div>
+        <button class="btn btn-solid lead-submit" id="pepperstoneSubmit" type="submit">Continuar a <span class="pp-mark on-btn">pepperstone</span></button>
+      </div>
+      <p class="lead-consent">Al continuar, autorizas a Doberwhite Trading a contactarte para ayudarte con la apertura de tu cuenta.</p>
+      <div class="lead-status" id="pepperstoneLeadStatus" role="status" aria-live="polite"></div>
+    </form>
+    <iframe name="pepperstone_lead_iframe" id="pepperstoneLeadIframe" title="Registro de apertura de cuenta"></iframe>
+  </section>
+</div>
+
 <script>
   const io = new IntersectionObserver((es)=>{ es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'), i*55); io.unobserve(e.target);} }); }, { threshold:0.12 });
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>a.closest('details')?.removeAttribute('open')));
+
+  (() => {
+    const PEPPERSTONE_URL = 'https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141';
+    const modal = document.getElementById('pepperstoneLeadModal');
+    const form = document.getElementById('pepperstoneLeadForm');
+    const iframe = document.getElementById('pepperstoneLeadIframe');
+    const submit = document.getElementById('pepperstoneSubmit');
+    const status = document.getElementById('pepperstoneLeadStatus');
+    const phoneInput = document.getElementById('pepperstoneTelefono');
+    const emailInput = document.getElementById('pepperstoneEmail');
+    const params = new URLSearchParams(location.search);
+    let submitted = false;
+    let redirected = false;
+    let fallbackTimer = null;
+    let lastFocus = null;
+
+    const setTracking = () => {
+      document.getElementById('pepperstonePageUrl').value = location.href;
+      document.getElementById('pepperstoneCreatedAt').value = new Date().toISOString();
+      document.getElementById('pepperstoneUtmSource').value = params.get('utm_source') || 'direct';
+      document.getElementById('pepperstoneUtmMedium').value = params.get('utm_medium') || 'website';
+      document.getElementById('pepperstoneUtmCampaign').value = params.get('utm_campaign') || 'home_open_account';
+      document.getElementById('pepperstoneUtmContent').value = params.get('utm_content') || 'pepperstone_cta';
+    };
+
+    const openModal = (event) => {
+      event?.preventDefault();
+      lastFocus = document.activeElement;
+      setTracking();
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden','false');
+      document.body.classList.add('lead-modal-open');
+      setTimeout(()=>document.getElementById('pepperstoneNombre').focus(),80);
+    };
+
+    const closeModal = () => {
+      if (submitted && !redirected) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden','true');
+      document.body.classList.remove('lead-modal-open');
+      lastFocus?.focus?.();
+    };
+
+    const showStatus = (message,type='') => {
+      status.textContent = message;
+      status.className = `lead-status show ${type}`;
+    };
+
+    const goToPepperstone = () => {
+      if (!submitted || redirected) return;
+      redirected = true;
+      clearTimeout(fallbackTimer);
+      showStatus('Datos guardados. Abriendo Pepperstone…','ok');
+      submit.innerHTML = 'Abriendo <span class="pp-mark on-btn">pepperstone</span>…';
+      setTimeout(()=>window.location.assign(PEPPERSTONE_URL),420);
+    };
+
+    document.querySelectorAll('.pepperstone-lead-open').forEach(link => link.addEventListener('click',openModal));
+    modal.querySelectorAll('[data-lead-close]').forEach(el=>el.addEventListener('click',closeModal));
+    document.addEventListener('keydown',event=>{ if(event.key==='Escape' && modal.classList.contains('is-open')) closeModal(); });
+
+    form.addEventListener('submit', event => {
+      status.className = 'lead-status';
+      status.textContent = '';
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        form.reportValidity();
+        showStatus('Completa correctamente los tres datos.','error');
+        return;
+      }
+      const phone = phoneInput.value.trim();
+      const digits = phone.replace(/\D/g,'');
+      if (digits.length < 8) {
+        event.preventDefault();
+        showStatus('Revisa tu número de WhatsApp e incluye el código de país.','error');
+        phoneInput.focus();
+        return;
+      }
+      const email = emailInput.value.trim();
+      document.getElementById('pepperstoneCorreoCopy').value = email;
+      document.getElementById('pepperstoneTelefonoCopy').value = phone;
+      document.getElementById('pepperstoneTelefonoCompleto').value = phone;
+      document.getElementById('pepperstoneWhatsappCopy').value = phone;
+      setTracking();
+      submitted = true;
+      redirected = false;
+      submit.disabled = true;
+      submit.textContent = 'Guardando datos…';
+      showStatus('Registrando tus datos antes de continuar…','ok');
+      fallbackTimer = setTimeout(goToPepperstone,3500);
+    });
+
+    iframe.addEventListener('load',goToPepperstone);
+    setTracking();
+  })();
 </script>
