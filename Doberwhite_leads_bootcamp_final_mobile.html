@@ -11,7 +11,7 @@
       --gold:#d4a536;
       --gold-soft:#f2ca66;
       --ink:#070a09;
-      --line:rgba(216,170,69,.72); 
+      --line:rgba(216,170,69,.72);
       --ok:#c6f6d5;
       --error:#ffd3d3;
     }
@@ -126,6 +126,12 @@
         <input type="hidden" name="correo" id="emailCopy">
         <input type="hidden" name="nivel_actual" id="levelCopy">
         <input type="hidden" name="fechas" value="15, 16 y 17 de julio de 2026">
+        <input type="hidden" name="producto" value="Bootcamp Doberwhite Trading · Julio 2026">
+        <input type="hidden" name="estado" value="Lead registrado - pendiente de pago">
+        <input type="hidden" name="payment_status" value="pendiente">
+        <input type="hidden" name="proveedor_pago" value="Flow">
+        <input type="hidden" name="monto" value="199000">
+        <input type="hidden" name="moneda" value="CLP">
 
         <span class="icon i-name" aria-hidden="true">●</span>
         <label class="sr-only" for="name">Nombre completo</label>
@@ -162,7 +168,7 @@
           <option value="Quiero mejorar mi gestión de riesgo">Quiero mejorar mi gestión de riesgo</option>
         </select>
 
-        <button class="submit" id="submitBtn" type="submit">Inscríbete ahora&nbsp; ❯</button>
+        <button class="submit" id="submitBtn" type="submit">Reservar cupo&nbsp; ❯</button>
         <div class="status" id="status" role="status" aria-live="polite"></div>
       </form>
 
@@ -173,12 +179,14 @@
 
   <script>
     (() => {
+      const PAYMENT_URL = 'https://www.flow.cl/btn.php?token=xe2f90a9ad22d19fbd986c1dee7c15657ba2dcfa';
       const form = document.getElementById('leadForm');
       const submitBtn = document.getElementById('submitBtn');
       const iframe = document.getElementById('hidden_iframe');
       const status = document.getElementById('status');
       const params = new URLSearchParams(location.search);
       let submitted = false;
+      let redirected = false;
       let fallbackTimer = null;
 
       const cleanPhone = value => String(value || '').replace(/[^0-9]/g, '');
@@ -197,19 +205,17 @@
         status.className = `status show ${type}`;
       }
 
-      function resetButton() {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Inscríbete ahora&nbsp; ❯';
-      }
-
-      function completeSubmission() {
-        if (!submitted) return;
+      function goToPayment() {
+        if (!submitted || redirected) return;
+        redirected = true;
         clearTimeout(fallbackTimer);
-        showStatus('Inscripción enviada. Te contactaremos pronto.', 'ok');
-        form.reset();
-        tracking();
-        resetButton();
-        submitted = false;
+        showStatus('Datos guardados. Abriendo pago seguro…', 'ok');
+        submitBtn.textContent = 'Abriendo pago…';
+
+        /* Conserva la página en el historial por si el usuario vuelve desde Flow. */
+        setTimeout(() => {
+          window.location.assign(PAYMENT_URL);
+        }, 450);
       }
 
       form.addEventListener('submit', event => {
@@ -241,15 +247,18 @@
         tracking();
 
         submitted = true;
+        redirected = false;
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando…';
-        showStatus('Enviando inscripción…', 'ok');
+        submitBtn.textContent = 'Guardando datos…';
+        showStatus('Registrando tus datos antes del pago…', 'ok');
 
-        /* Respaldo visual si la respuesta del Apps Script no puede cargarse en iframe. */
-        fallbackTimer = setTimeout(completeSubmission, 2600);
+        /* Respaldo: si la respuesta del Apps Script no carga por restricciones del navegador,
+           igualmente se continúa a Flow después de dar tiempo al envío del formulario. */
+        fallbackTimer = setTimeout(goToPayment, 3500);
       });
 
-      iframe.addEventListener('load', completeSubmission);
+      /* El iframe se carga cuando Apps Script termina de recibir el lead. */
+      iframe.addEventListener('load', goToPayment);
       tracking();
     })();
   </script>
