@@ -243,7 +243,7 @@ input[type="number"] { width:100%; background:#080a0d; border:1px solid var(--li
   <div class="footer">Fuente: TRACK_RECORD_ANALISIS_2026.xlsx. El dashboard simula los análisis trackeados del archivo adjunto. Modelo configurable desde el simulador superior: capital inicial, riesgo por entrada y base del riesgo usando RISK_REWARD para recalcular el resultado por trade. Las fechas del Excel no incluyen hora intradía.</div>
 </main>
 <script>
-const DATA_URL = './assets/data/dashboard/data_doberwhite.json';
+const DATA_URL = new URL('/assets/data/dashboard/data_doberwhite.json', window.location.origin).href;
 let TRADES = [];
 let META = {};
 
@@ -275,11 +275,40 @@ function normalizeDashboardPayload(payload) {
 }
 async function loadDashboardData() {
   const url = DATA_URL + '?v=' + Date.now();
-  const res = await fetch(url, { cache: 'no-store' });
+  const res = await fetch(url, {
+    method: 'GET',
+    cache: 'no-store',
+    credentials: 'same-origin',
+    headers: {
+      'Accept': 'application/json',
+      'Cache-Control': 'no-cache'
+    }
+  });
   if (!res.ok) throw new Error(`No se pudo cargar ${DATA_URL} (${res.status})`);
   const payload = await res.json();
+
+  if (!payload || !Array.isArray(payload.trades)) {
+    throw new Error('El archivo JSON no contiene el arreglo obligatorio "trades".');
+  }
+
   normalizeDashboardPayload(payload);
-  SIM_DEFAULTS = { initialBalance: META.initialBalance || 10000, riskPct: META.riskPct || 0.01, riskMode: 'equity' };
+
+  console.info('[Doberwhite] JSON cargado', {
+    url: res.url,
+    updatedAt: payload.updatedAt || META.updatedAt || '—',
+    sourceFile: payload.sourceFile || META.sourceFile || '—',
+    trades: TRADES.length,
+    closedTrades: TRADES.filter(closedStatus).length,
+    activeTrades: TRADES.filter(activeStatus).length,
+    minDate: META.minDate,
+    maxDate: META.maxDate
+  });
+
+  SIM_DEFAULTS = {
+    initialBalance: META.initialBalance || 10000,
+    riskPct: META.riskPct || 0.01,
+    riskMode: META.riskMode === 'fixed' ? 'fixed' : 'equity'
+  };
   SIM_STATE = { ...SIM_DEFAULTS };
 }
 async function initDashboard() {
@@ -364,14 +393,21 @@ function aggregate(arr) {
   const avgWin = wins.length ? grossWin / wins.length : 0;
   const avgLoss = losses.length ? grossLoss / losses.length : 0;
   const sorted = [...arr].sort((a,b)=>parseTime(a.closeTime)-parseTime(b.closeTime));
-  let cum = 0, peak = 0, maxDD = 0, best = null, worst = null, streak = 0, bestStreak = 0, lossStreak = 0, worstLossStreak = 0;
+  const initialEquity = Number(SIM_STATE.initialBalance || 0);
+  let cum = 0, peakEquity = initialEquity, maxDD = 0, maxDDPct = 0, best = null, worst = null, streak = 0, bestStreak = 0, lossStreak = 0, worstLossStreak = 0;
   for (const t of sorted) {
-    cum += t.net; if (cum > peak) peak = cum; const dd = peak - cum; if (dd > maxDD) maxDD = dd;
+    cum += t.net;
+    const currentEquity = initialEquity + cum;
+    if (currentEquity > peakEquity) peakEquity = currentEquity;
+    const dd = peakEquity - currentEquity;
+    const ddPct = peakEquity > 0 ? dd / peakEquity : 0;
+    if (dd > maxDD) maxDD = dd;
+    if (ddPct > maxDDPct) maxDDPct = ddPct;
     if (!best || t.net > best.net) best = t; if (!worst || t.net < worst.net) worst = t;
     if (t.net > 0) { streak++; bestStreak=Math.max(bestStreak,streak); lossStreak=0; }
     else if (t.net < 0) { lossStreak++; worstLossStreak=Math.max(worstLossStreak,lossStreak); streak=0; }
   }
-  return {n, wins:wins.length, losses:losses.length, net, grossWin, grossLoss, winRate:n?wins.length/n:0, pf:grossLoss?grossWin/grossLoss:null, avg:n?net/n:0, avgWin, avgLoss, payoff:avgLoss?avgWin/avgLoss:null, maxDD, best, worst, volume:sum(arr,t=>t.volume), bestStreak, worstLossStreak};
+  return {n, wins:wins.length, losses:losses.length, net, grossWin, grossLoss, winRate:n?wins.length/n:0, pf:grossLoss?grossWin/grossLoss:null, avg:n?net/n:0, avgWin, avgLoss, payoff:avgLoss?avgWin/avgLoss:null, maxDD, maxDDPct, best, worst, volume:sum(arr,t=>t.volume), bestStreak, worstLossStreak};
 }
 function groupBy(arr, keyFn) { const m = new Map(); for (const x of arr) { const k = keyFn(x); if (!m.has(k)) m.set(k, []); m.get(k).push(x); } return m; }
 function aggRows(arr, keyFn) { return [...groupBy(arr, keyFn).entries()].map(([key, list]) => ({key, list, ...aggregate(list)})); }
@@ -446,7 +482,7 @@ function renderKPIs(a) {
     ['Análisis positivos', fmtPct(a.winRate), `${a.wins} positivos / ${a.losses} negativos`, 'gold'],
     ['Factor', a.pf ? a.pf.toFixed(2) : '—', `P simulado ${fmtUSD(a.grossWin)}`, a.pf && a.pf>=1 ? 'positive' : 'negative'],
     ['Promedio sim', fmtUSD(a.avg), `Base ${riskModeLabel(SIM_STATE.riskMode)}`, cls(a.avg)],
-    ['Max DD secuencial', fmtUSD(-a.maxDD), `Mejor ${a.best?fmtUSD(a.best.net):'—'} · Peor ${a.worst?fmtUSD(a.worst.net):'—'}`, 'negative']
+    ['Max DD secuencial', `${fmtUSD(-a.maxDD)} · ${fmtPct(-a.maxDDPct)}`, `Caída máxima desde el peak de capital · Mejor ${a.best?fmtUSD(a.best.net):'—'} · Peor ${a.worst?fmtUSD(a.worst.net):'—'}`, 'negative']
   ];
   document.getElementById('kpis').innerHTML = kpis.map(k => `<div class="kpi"><div class="label">${k[0]}</div><div class="value ${k[3]}">${k[1]}</div><div class="sub">${k[2]}</div></div>`).join('');
 }
