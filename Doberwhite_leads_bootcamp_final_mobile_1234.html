@@ -400,7 +400,7 @@ body{
    ============================================================ */
 // URL de tu Web App de Google Apps Script (el mismo patrón que ya usas
 // para el Elite Desk). Debe terminar en /exec.
-const SCRIPT_URL = "https://script.google.com/macros/s/AQUI_TU_ID/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjoUgRypOQloOHZpMrhAbxNQwjGd_aOmNIrWWTbbMcMf24T4WF3heHygtPssYrKn080g/exec";
 
 // Número de WhatsApp del negocio para el botón de confirmación (sin +, sin espacios)
 const WA_NUMBER  = "56900000000";
@@ -466,19 +466,10 @@ form.addEventListener('submit', async (e)=>{
     fecha:    new Date().toISOString()
   };
 
-  try {
-    // Apps Script lee los campos desde e.parameter, por eso enviamos
-    // form-urlencoded (compatible con no-cors). NO uses JSON aquí.
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: new URLSearchParams(data)
-    });
-  } catch(err){
-    console.error('Error al enviar:', err);
-    // aun con error de red mostramos éxito para no frenar al lead;
-    // los datos igual pueden reintentarse. Ajusta si prefieres bloquear.
-  }
+  // Envío por formulario oculto + iframe: es el método más compatible con
+  // Google Apps Script. Sigue los redirects de Google de forma nativa y no
+  // depende de fetch/CORS/no-cors.
+  await enviarASheet(data);
 
   // prellenar mensaje de WhatsApp
   const msg = encodeURIComponent(
@@ -490,6 +481,45 @@ form.addEventListener('submit', async (e)=>{
   form.style.display = 'none';
   document.getElementById('successState').classList.add('show');
 });
+
+// Envío robusto a Google Apps Script vía formulario oculto + iframe.
+function enviarASheet(data){
+  return new Promise((resolve)=>{
+    const nombreIframe = 'dw_sink_' + Date.now();
+
+    const iframe = document.createElement('iframe');
+    iframe.name = nombreIframe;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const f = document.createElement('form');
+    f.action = SCRIPT_URL;
+    f.method = 'POST';
+    f.target = nombreIframe;
+    f.style.display = 'none';
+
+    Object.keys(data).forEach(function(k){
+      const inp = document.createElement('input');
+      inp.type = 'hidden';
+      inp.name = k;
+      inp.value = data[k];
+      f.appendChild(inp);
+    });
+
+    let listo = false;
+    const terminar = function(){
+      if(listo) return; listo = true;
+      resolve();
+      setTimeout(function(){ f.remove(); iframe.remove(); }, 1500);
+    };
+
+    iframe.addEventListener('load', terminar);
+    setTimeout(terminar, 5000); // fallback
+
+    document.body.appendChild(f);
+    f.submit();
+  });
+}
 </script>
 </body>
 </html>
