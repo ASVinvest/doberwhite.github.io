@@ -467,13 +467,12 @@ form.addEventListener('submit', async (e)=>{
   };
 
   try {
-    // Apps Script no responde con cabeceras CORS: usamos no-cors (fire & forget).
-    // Si tu Web App está configurada para devolver JSON con CORS, puedes quitar el mode.
+    // Apps Script lee los campos desde e.parameter, por eso enviamos
+    // form-urlencoded (compatible con no-cors). NO uses JSON aquí.
     await fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: {'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify(data)
+      body: new URLSearchParams(data)
     });
   } catch(err){
     console.error('Error al enviar:', err);
