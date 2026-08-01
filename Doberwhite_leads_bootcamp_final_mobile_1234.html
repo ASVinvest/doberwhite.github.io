@@ -479,43 +479,15 @@ form.addEventListener('submit', async (e)=>{
   document.getElementById('successState').classList.add('show');
 });
 
-// Envío robusto a Google Apps Script vía formulario oculto + iframe.
+// Envío por GET con query string (así lo lee tu Apps Script en e.parameter).
+// Con POST, los parámetros se pierden en el redirect 302 de Apps Script.
 function enviarASheet(data){
-  return new Promise((resolve)=>{
-    const nombreIframe = 'dw_sink_' + Date.now();
-
-    const iframe = document.createElement('iframe');
-    iframe.name = nombreIframe;
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    const f = document.createElement('form');
-    f.action = SCRIPT_URL;
-    f.method = 'POST';
-    f.target = nombreIframe;
-    f.style.display = 'none';
-
-    Object.keys(data).forEach(function(k){
-      const inp = document.createElement('input');
-      inp.type = 'hidden';
-      inp.name = k;
-      inp.value = data[k];
-      f.appendChild(inp);
-    });
-
-    let listo = false;
-    const terminar = function(){
-      if(listo) return; listo = true;
-      resolve();
-      setTimeout(function(){ f.remove(); iframe.remove(); }, 1500);
-    };
-
-    iframe.addEventListener('load', terminar);
-    setTimeout(terminar, 5000); // fallback
-
-    document.body.appendChild(f);
-    f.submit();
-  });
+  const qs = new URLSearchParams(data).toString();
+  return fetch(SCRIPT_URL + '?' + qs, {
+    method: 'GET',
+    mode: 'no-cors',
+    keepalive: true
+  }).catch(function(){ /* no-cors no deja leer respuesta; el lead igual se guarda */ });
 }
 </script>
 </body>
