@@ -345,10 +345,10 @@ body{
         </span>
         <select id="nivel" name="nivel" required>
           <option value="" disabled selected hidden>¿Cuál es tu nivel actual?</option>
-          <option value="principiante">Principiante · empiezo desde cero</option>
-          <option value="basico">Básico · conozco lo esencial</option>
-          <option value="intermedio">Intermedio · ya opero</option>
-          <option value="avanzado">Avanzado · busco consistencia</option>
+          <option value="Estoy comenzando">Estoy comenzando desde cero</option>
+          <option value="Tengo conocimientos básicos">Tengo conocimientos básicos</option>
+          <option value="Ya opero en cuenta demo">Ya opero en cuenta demo</option>
+          <option value="Ya opero en cuenta real">Ya opero en cuenta real</option>
         </select>
         <span class="chev">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
@@ -459,11 +459,8 @@ form.addEventListener('submit', async (e)=>{
   const data = {
     nombre:   document.getElementById('nombre').value.trim(),
     email:    document.getElementById('email').value.trim(),
-    pais:     paisSel.value,
-    whatsapp: paisSel.value + ' ' + waInput.value.trim(),
-    nivel:    document.getElementById('nivel').value,
-    origen:   'Landing Bootcamp Agosto',
-    fecha:    new Date().toISOString()
+    telefono: paisSel.value.replace('+','') + waInput.value.trim(),
+    nivel:    document.getElementById('nivel').value
   };
 
   // Envío por formulario oculto + iframe: es el método más compatible con
