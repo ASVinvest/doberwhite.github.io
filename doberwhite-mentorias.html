@@ -1,15 +1,15 @@
 <!--
   ============================================================================
-  DOBERWHITE TRADING · BOOTCAMP DE TRADING (doberwhite-bootcamp.html)
-  Producto: Bootcamp online grabado · 5 h prácticas asíncronas · CLP 50.000 (−75%)
-  · YouTube privado 30 días. Contenido 100% educativo (compliance).
+  DOBERWHITE TRADING · MENTORÍAS (doberwhite-mentorias.html)
+  Producto: Mentoría individual · CLP 100.000 / mes · 1 hora semanal 1-a-1.
+  Revisamos operativa, activos y estrategias. Contenido educativo (compliance).
   ----------------------------------------------------------------------------
   CTA WhatsApp: define tu número en la constante WHATSAPP (más abajo en el script).
   ============================================================================
 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bootcamp de Trading — DOBERWHITE TRADING · Online grabado</title>
+<title>Mentoría Individual — DOBERWHITE TRADING · 1 a 1</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,7 +82,6 @@
   .btn-wetrade:hover{ background:var(--wt-orange-d); border-color:var(--wt-orange-d); color:#150C05; }
   .btn-wetrade .wt-mark{ font-size:15px; }
 
-  /* page hero */
   .page-hero{ position:relative; overflow:hidden; isolation:isolate; padding-block:clamp(52px,8vw,100px);
     background:radial-gradient(circle at 80% 26%, rgba(198,166,100,.13), transparent 30%), linear-gradient(135deg,#05070B,#080B10 60%,#05070B); }
   .page-hero::before{ content:""; position:absolute; inset:0; z-index:-1; opacity:.18;
@@ -101,8 +100,7 @@
   .spec-card::before{ content:""; position:absolute; inset:0 0 auto; height:2px; background:linear-gradient(90deg,transparent,var(--dbw-act),transparent); }
   .spec-card .k{ font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--dbw-accent); }
   .spec-price{ font-family:var(--font-display); font-style:italic; font-weight:500; font-size:clamp(36px,5vw,50px); color:var(--dbw-text); margin:8px 0 0; line-height:1; }
-  .spec-price s{ font-family:var(--font-body); font-style:normal; font-size:16px; color:var(--dbw-faint); margin-left:12px; }
-  .off-pill{ display:inline-block; margin-left:10px; font-family:var(--font-body); font-style:normal; font-size:11px; letter-spacing:.1em; color:var(--wt-orange); border:1px solid var(--wt-orange); padding:3px 9px; vertical-align:middle; }
+  .spec-price small{ font-family:var(--font-body); font-style:normal; font-size:15px; color:var(--dbw-muted); }
   .spec-sub{ color:var(--dbw-muted); font-size:13px; margin-top:10px; }
   .spec-list{ list-style:none; padding:0; margin:22px 0 24px; }
   .spec-list li{ position:relative; padding:11px 0 11px 24px; border-top:1px solid var(--dbw-line-soft); color:var(--dbw-text); font-size:13.5px; }
@@ -114,12 +112,6 @@
   .pillar .glyph{ font-size:22px; color:var(--dbw-accent); }
   .pillar h3{ font-family:var(--font-display); font-style:italic; font-weight:500; font-size:22px; margin:16px 0 10px; }
   .pillar p{ color:var(--dbw-muted); font-size:14px; margin:0; }
-
-  .modules{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--dbw-line-soft); border:1px solid var(--dbw-line-soft); margin-top:44px; }
-  .module{ background:var(--dbw-bg); padding:30px 28px; display:grid; grid-template-columns:52px 1fr; gap:20px; align-items:start; }
-  .module .mnum{ font-family:var(--font-display); font-size:34px; color:var(--dbw-accent); line-height:1; font-weight:500; }
-  .module h3{ font-size:15px; letter-spacing:.03em; text-transform:uppercase; margin:2px 0 8px; font-weight:500; }
-  .module p{ color:var(--dbw-muted); font-size:13.5px; margin:0; }
 
   .steps{ margin-top:38px; border-top:1px solid var(--dbw-line-soft); }
   .step{ display:grid; grid-template-columns:80px 1fr; gap:26px; padding:28px 0; border-bottom:1px solid var(--dbw-line-soft); align-items:start; }
@@ -168,7 +160,6 @@
 
   @media (max-width:960px){
     .page-hero-in{ grid-template-columns:1fr; }
-    .modules{ grid-template-columns:1fr; }
     .twocol{ grid-template-columns:1fr; }
     .grid4{ grid-template-columns:repeat(2,1fr); }
     .principles{ grid-template-columns:1fr; gap:24px; }
@@ -180,12 +171,11 @@
     .nav-actions > .btn{ padding:10px 12px; font-size:10.5px; }
     .grid4{ grid-template-columns:1fr; }
     .step{ grid-template-columns:56px 1fr; gap:18px; } .step .num{ font-size:30px; }
-    .module{ grid-template-columns:44px 1fr; gap:14px; } .module .mnum{ font-size:28px; }
     .foot-top{ flex-direction:column; }
   }
   @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } .reveal{ opacity:1; transform:none; } html{ scroll-behavior:auto; } }
 
-  /* Lead modal (Pepperstone) — botón "Abrir cuenta" del nav */
+  /* Lead modal (Pepperstone) */
   body.lead-modal-open{ overflow:hidden; }
   .lead-modal{ --modal-vh:100svh; position:fixed; inset:0; z-index:120; display:flex; align-items:center; justify-content:center; padding:max(16px,calc(env(safe-area-inset-top) + 16px)) max(16px,calc(env(safe-area-inset-right) + 16px)) max(16px,calc(env(safe-area-inset-bottom) + 16px)) max(16px,calc(env(safe-area-inset-left) + 16px)); overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; opacity:0; visibility:hidden; pointer-events:none; transition:opacity .22s ease, visibility .22s ease; }
   .lead-modal.is-open{ opacity:1; visibility:visible; pointer-events:auto; }
@@ -229,8 +219,8 @@
   <nav class="links">
     <a href="index.html#porque">El ecosistema</a>
     <a href="index.html#brokers">Brokers Top</a>
-    <a href="doberwhite-bootcamp.html" class="active">Bootcamp</a>
-    <a href="doberwhite-mentorias.html">Mentorias</a>
+    <a href="doberwhite-bootcamp.html">Bootcamp</a>
+    <a href="doberwhite-mentorias.html" class="active">Mentorias</a>
     <a href="doberwhite-copytrading.html">Copy trading</a>
   </nav>
   <div class="nav-actions">
@@ -241,8 +231,8 @@
         <a href="index.html">Inicio</a>
         <a href="index.html#porque">El ecosistema</a>
         <a href="index.html#brokers">Brokers Top</a>
-        <a href="doberwhite-bootcamp.html" class="active">Bootcamp</a>
-        <a href="doberwhite-mentorias.html">Mentorias</a>
+        <a href="doberwhite-bootcamp.html">Bootcamp</a>
+        <a href="doberwhite-mentorias.html" class="active">Mentorias</a>
         <a href="doberwhite-copytrading.html">Copy trading</a>
       </div>
     </details>
@@ -251,71 +241,57 @@
 
 <section class="page-hero"><div class="wrap page-hero-in">
   <div class="hero-copy reveal">
-    <p class="eyebrow">Bootcamp · Online grabado</p>
-    <h1>Bootcamp de Trading <span class="em">Estructura desde el día uno.</span></h1>
-    <p class="sub">Cinco horas de formación 100% práctica y asíncrona para ordenar tu operativa: lectura de mercado, gestión de riesgo y un método repetible. Sin promesas, con proceso.</p>
+    <p class="eyebrow">Mentoría · Uno a uno</p>
+    <h1>Mentoría Individual <span class="em">Tu operativa, revisada de cerca.</span></h1>
+    <p class="sub">Una hora a la semana, en vivo y uno a uno. Revisamos tu operativa, tus activos y tus estrategias para que operes con criterio y gestión de riesgo, a tu ritmo.</p>
     <div class="chips">
-      <span class="chip">5 horas prácticas</span>
-      <span class="chip">Formato asíncrono</span>
-      <span class="chip">YouTube privado · 30 días</span>
-      <span class="chip">Educativo</span>
+      <span class="chip">1 hora semanal</span>
+      <span class="chip">100% individual</span>
+      <span class="chip">Operativa · activos · estrategias</span>
+      <span class="chip">Mensual</span>
     </div>
     <div class="hero-ctas">
-      <a class="btn btn-solid wa-cta" data-msg="Hola, quiero inscribirme al Bootcamp de Trading (CLP 50.000)." href="#inscripcion">Inscribirme al Bootcamp</a>
-      <a class="btn btn-ghost" href="#temario">Ver el temario</a>
+      <a class="btn btn-solid wa-cta" data-msg="Hola, quiero reservar la Mentoría Individual (CLP 100.000 / mes)." href="#reservar">Reservar mi mentoría</a>
+      <a class="btn btn-ghost" href="#que-trabajamos">Qué trabajamos</a>
     </div>
-    <p class="hero-note">Contenido educativo y de análisis de mercado. No es asesoría de inversión ni garantiza resultados. El trading apalancado implica riesgo de pérdida de capital.</p>
+    <p class="hero-note">Acompañamiento educativo y de análisis. No es asesoría de inversión personalizada ni garantiza resultados.</p>
   </div>
 
-  <aside class="spec-card reveal" id="inscripcion">
-    <div class="k">Precio de lanzamiento</div>
-    <div class="spec-price">CLP 50.000 <s>CLP 200.000</s><span class="off-pill">−75%</span></div>
-    <p class="spec-sub">Pago único · acceso inmediato al canal privado.</p>
+  <aside class="spec-card reveal" id="reservar">
+    <div class="k">Mentoría individual</div>
+    <div class="spec-price">CLP 100.000 <small>/ mes</small></div>
+    <p class="spec-sub">4 sesiones al mes · una por semana · en vivo.</p>
     <ul class="spec-list">
-      <li>5 horas de clases 100% prácticas</li>
-      <li>Avanzas a tu ritmo (asíncrono)</li>
-      <li>Acceso a YouTube privado por 30 días</li>
-      <li>Enfoque en riesgo y método, no en señales</li>
-      <li>Plantilla de bitácora y plan de trading</li>
+      <li>1 hora semanal, uno a uno</li>
+      <li>Revisión de tu operativa real</li>
+      <li>Trabajo sobre tus activos y estrategias</li>
+      <li>Gestión de riesgo aplicada a tu perfil</li>
+      <li>Tareas y seguimiento entre sesiones</li>
     </ul>
-    <a class="btn btn-solid wa-cta" data-msg="Hola, quiero inscribirme al Bootcamp de Trading (CLP 50.000)." href="#">Quiero mi acceso</a>
+    <a class="btn btn-solid wa-cta" data-msg="Hola, quiero reservar la Mentoría Individual (CLP 100.000 / mes)." href="#">Reservar mi cupo</a>
   </aside>
 </div></section>
 
-<section class="section"><div class="wrap">
-  <p class="eyebrow reveal">Qué incluye</p>
-  <h2 class="title reveal">Todo lo necesario para <span class="em">empezar con orden</span></h2>
-  <p class="lead reveal">Un programa corto, denso y aplicable. Pensado para que salgas con un proceso claro, no con apuntes sueltos.</p>
+<section class="section" id="que-trabajamos"><div class="wrap">
+  <p class="eyebrow reveal">Qué trabajamos</p>
+  <h2 class="title reveal">Una hora enfocada en <span class="em">tu proceso</span></h2>
+  <p class="lead reveal">Cada sesión es sobre tu operativa concreta. Nada genérico: revisamos lo que estás haciendo y lo ajustamos.</p>
   <div class="grid4">
-    <div class="pillar reveal"><div class="glyph">◈</div><h3>5 horas prácticas</h3><p>Clases directas al grano, con ejemplos reales de lectura de mercado y ejecución.</p></div>
-    <div class="pillar reveal"><div class="glyph">▲</div><h3>Asíncrono</h3><p>Ves las clases cuando quieras y las repasas las veces que necesites durante tu acceso.</p></div>
-    <div class="pillar reveal"><div class="glyph">◎</div><h3>Canal privado</h3><p>Acceso a un canal de YouTube privado durante 30 días con todo el material del bootcamp.</p></div>
-    <div class="pillar reveal"><div class="glyph">⚡</div><h3>Método repetible</h3><p>Un marco de trabajo con bitácora y plan, para que puedas repetir el proceso por tu cuenta.</p></div>
-  </div>
-</div></section>
-
-<section class="section" id="temario"><div class="wrap">
-  <p class="eyebrow reveal">Temario</p>
-  <h2 class="title reveal">Qué vas a <span class="em">trabajar</span></h2>
-  <p class="lead reveal">Contenido 100% educativo, ordenado de lo fundamental a lo aplicable.</p>
-  <div class="modules">
-    <div class="module reveal"><div class="mnum">01</div><div><h3>Riesgo y capital primero</h3><p>Cómo definir el riesgo por operación, proteger el capital y por qué el stop va antes que el objetivo.</p></div></div>
-    <div class="module reveal"><div class="mnum">02</div><div><h3>Lectura de mercado y estructura</h3><p>Contexto, tendencia, zonas y estructura de precio para tomar decisiones con criterio, no por impulso.</p></div></div>
-    <div class="module reveal"><div class="mnum">03</div><div><h3>Plan de trading y bitácora</h3><p>Construcción de un plan escrito y registro de operaciones para evaluar y mejorar tu proceso.</p></div></div>
-    <div class="module reveal"><div class="mnum">04</div><div><h3>Tamaño de posición</h3><p>Cálculo de lotaje y valor del pip por activo para que el riesgo sea consistente en cada entrada.</p></div></div>
-    <div class="module reveal"><div class="mnum">05</div><div><h3>Psicología y disciplina</h3><p>Gestión de emociones, sesgos y errores frecuentes que sabotean la ejecución del plan.</p></div></div>
-    <div class="module reveal"><div class="mnum">06</div><div><h3>Ejecución y casos prácticos</h3><p>Aplicación del método sobre ejemplos reales: entrada, invalidación, escenario y gestión del trade.</p></div></div>
+    <div class="pillar reveal"><div class="glyph">◈</div><h3>Operativa</h3><p>Revisamos tus entradas, salidas y ejecución para detectar fugas y errores repetidos.</p></div>
+    <div class="pillar reveal"><div class="glyph">▲</div><h3>Activos</h3><p>Trabajamos los mercados que operas (índices, oro, forex) y su lógica de comportamiento.</p></div>
+    <div class="pillar reveal"><div class="glyph">◎</div><h3>Estrategias</h3><p>Ajustamos tu estrategia a tu perfil, tu tiempo y tu tolerancia al riesgo.</p></div>
+    <div class="pillar reveal"><div class="glyph">⚡</div><h3>Riesgo y bitácora</h3><p>Definimos riesgo por operación y ordenamos tu bitácora para que midas tu progreso.</p></div>
   </div>
 </div></section>
 
 <section class="section"><div class="wrap">
   <p class="eyebrow reveal">Cómo funciona</p>
-  <h2 class="title reveal">De la inscripción <span class="em">a la práctica</span></h2>
+  <h2 class="title reveal">De la reserva <span class="em">al seguimiento</span></h2>
   <div class="steps">
-    <div class="step reveal"><div class="num">01</div><div><h4>Te inscribes</h4><p>Escríbenos por WhatsApp, confirmas tu inscripción y coordinamos el acceso.</p></div></div>
-    <div class="step reveal"><div class="num">02</div><div><h4>Recibes el acceso</h4><p>Te damos entrada al canal de YouTube privado con las 5 horas de contenido y el material de apoyo.</p></div></div>
-    <div class="step reveal"><div class="num">03</div><div><h4>Avanzas a tu ritmo</h4><p>Durante 30 días ves y repasas las clases cuando quieras, en el orden que necesites.</p></div></div>
-    <div class="step reveal"><div class="num">04</div><div><h4>Aplicas el método</h4><p>Bajas lo aprendido a tu bitácora y tu plan, primero en demo, para operar con disciplina de riesgo.</p></div></div>
+    <div class="step reveal"><div class="num">01</div><div><h4>Reservas tu cupo</h4><p>Escríbenos por WhatsApp, confirmamos disponibilidad y coordinamos tu horario semanal.</p></div></div>
+    <div class="step reveal"><div class="num">02</div><div><h4>Sesión en vivo 1 a 1</h4><p>Una hora por videollamada enfocada en tu operativa, con pantalla compartida y ejemplos reales.</p></div></div>
+    <div class="step reveal"><div class="num">03</div><div><h4>Revisión y ajustes</h4><p>Detectamos qué corregir en tu ejecución, tu gestión de riesgo y tu plan, y lo dejamos por escrito.</p></div></div>
+    <div class="step reveal"><div class="num">04</div><div><h4>Tareas y seguimiento</h4><p>Sales con acciones concretas para la semana y retomamos el avance en la siguiente sesión.</p></div></div>
   </div>
 </div></section>
 
@@ -324,47 +300,47 @@
   <h2 class="title reveal">¿Es para <span class="em">ti</span>?</h2>
   <div class="twocol">
     <div class="panel reveal"><h3>Sí, si…</h3><ul>
-      <li>Estás empezando y quieres una base ordenada</li>
-      <li>Ya operas pero sin un proceso claro</li>
-      <li>Priorizas gestión de riesgo antes que "señales"</li>
-      <li>Prefieres avanzar a tu ritmo, sin horarios fijos</li>
+      <li>Ya operas y quieres corregir tu operativa con guía</li>
+      <li>Buscas acompañamiento personalizado, no un grupo masivo</li>
+      <li>Quieres orden en riesgo, activos y estrategia</li>
+      <li>Prefieres avanzar con seguimiento semanal</li>
     </ul></div>
     <div class="panel alt reveal"><h3>Quizá no, si…</h3><ul>
-      <li>Buscas ganancias garantizadas o "secretos"</li>
-      <li>Esperas que alguien opere por ti</li>
-      <li>No estás dispuesto a practicar en demo primero</li>
-      <li>No quieres asumir que el trading conlleva riesgo</li>
+      <li>Buscas señales o que operen por ti</li>
+      <li>Esperas rentabilidad garantizada</li>
+      <li>Recién partes de cero (mejor empieza por el Bootcamp)</li>
+      <li>No dispones de una hora semanal para trabajar tu proceso</li>
     </ul></div>
   </div>
 </div></section>
 
 <section class="section"><div class="wrap">
   <p class="eyebrow reveal">Preguntas frecuentes</p>
-  <h2 class="title reveal">Antes de <span class="em">inscribirte</span></h2>
+  <h2 class="title reveal">Antes de <span class="em">reservar</span></h2>
   <div class="faq reveal">
-    <details><summary>¿Las clases son en vivo?</summary><p>No. El Bootcamp es grabado y asíncrono: accedes a las 5 horas de contenido y las ves cuando quieras durante tu período de acceso.</p></details>
-    <details><summary>¿Cuánto dura el acceso?</summary><p>Tienes acceso al canal de YouTube privado durante 30 días desde que se te habilita.</p></details>
-    <details><summary>¿Necesito experiencia previa?</summary><p>No es obligatoria. El temario parte de lo fundamental (riesgo y capital) y avanza hacia la ejecución, así que sirve tanto si empiezas como si quieres ordenar tu operativa.</p></details>
-    <details><summary>¿Me garantiza que voy a ganar dinero?</summary><p>No. Es formación educativa. Ningún curso puede garantizar resultados y el trading apalancado implica riesgo de pérdida de capital. El objetivo es que operes con método y disciplina de riesgo.</p></details>
-    <details><summary>¿Qué necesito para hacerlo?</summary><p>Conexión a internet y, idealmente, una cuenta demo para practicar lo aprendido antes de operar con capital real.</p></details>
-    <details><summary>¿Cómo me inscribo y pago?</summary><p>Escríbenos por WhatsApp desde cualquier botón de esta página y te indicamos los medios de pago disponibles y el acceso.</p></details>
+    <details><summary>¿La mentoría es individual o grupal?</summary><p>Es 100% individual. Cada sesión es uno a uno, enfocada exclusivamente en tu operativa.</p></details>
+    <details><summary>¿Cuántas sesiones incluye al mes?</summary><p>Cuatro sesiones mensuales, una por semana, de una hora cada una.</p></details>
+    <details><summary>¿Qué activos y temporalidades trabajamos?</summary><p>Los que tú operas. Podemos revisar índices, oro y forex, y adaptar la estrategia a tu temporalidad y tu tiempo disponible.</p></details>
+    <details><summary>¿Necesito experiencia previa?</summary><p>Ayuda tener algo de recorrido. Si estás partiendo desde cero, lo ideal es empezar por el Bootcamp y luego pasar a mentoría.</p></details>
+    <details><summary>¿Me garantizan que voy a ser rentable?</summary><p>No. La mentoría es formación y acompañamiento; ningún servicio puede garantizar resultados y el trading apalancado implica riesgo de pérdida de capital.</p></details>
+    <details><summary>¿Cómo reservo y pago?</summary><p>Escríbenos por WhatsApp desde cualquier botón de esta página y coordinamos horario y medios de pago.</p></details>
   </div>
 </div></section>
 
 <section class="section cta-band"><div class="wrap">
-  <p class="eyebrow reveal" style="color:var(--dbw-accent)">Cupos por edición</p>
-  <h2 class="reveal">Empieza con <span class="em">orden</span>, no con impulso</h2>
-  <p class="reveal">Precio de lanzamiento con 75% de descuento. Acceso inmediato al canal privado por 30 días.</p>
+  <p class="eyebrow reveal" style="color:var(--dbw-accent)">Cupos limitados</p>
+  <h2 class="reveal">Tu operativa merece <span class="em">una hora enfocada</span></h2>
+  <p class="reveal">Reserva tu mentoría individual y empieza a corregir tu proceso esta semana.</p>
   <div class="hero-ctas reveal">
-    <a class="btn btn-solid wa-cta" data-msg="Hola, quiero inscribirme al Bootcamp de Trading (CLP 50.000)." href="#">Inscribirme al Bootcamp</a>
-    <a class="btn btn-ghost" href="doberwhite-mentorias.html">Ver Mentorías</a>
+    <a class="btn btn-solid wa-cta" data-msg="Hola, quiero reservar la Mentoría Individual (CLP 100.000 / mes)." href="#">Reservar mi mentoría</a>
+    <a class="btn btn-ghost" href="doberwhite-bootcamp.html">Ver el Bootcamp</a>
   </div>
 </div></section>
 
 <section class="section"><div class="wrap">
   <p class="eyebrow reveal">Cómo operamos</p>
   <div class="principles">
-    <div class="principle reveal"><h4><span class="g">◈</span>Educación, no señales</h4><p>El Bootcamp es contenido educativo y de lectura de mercado. No son recomendaciones personalizadas ni garantía de resultado.</p></div>
+    <div class="principle reveal"><h4><span class="g">◈</span>Educación, no señales</h4><p>La mentoría es acompañamiento educativo y de lectura de mercado. No son recomendaciones personalizadas ni garantía de resultado.</p></div>
     <div class="principle reveal"><h4><span class="g">◈</span>Tú decides</h4><p>No gestionamos fondos de clientes. Cada operador toma sus propias decisiones y gestiona su propio riesgo.</p></div>
     <div class="principle reveal"><h4><span class="g">◈</span>Riesgo definido primero</h4><p>El trading con productos apalancados puede ocasionar la pérdida total del capital. Lo decimos claro, siempre.</p></div>
   </div>
@@ -381,7 +357,7 @@
     </nav>
   </div>
   <p class="disclaimer" id="legal">
-    <b>Contenido educativo y de análisis de mercado.</b> El Bootcamp y los servicios de Doberwhite Trading no constituyen recomendación de inversión personalizada ni invitación a operar. No gestionamos fondos de clientes. El trading con CFD, forex, índices y commodities apalancados implica un alto riesgo y puede ocasionar la pérdida total del capital invertido. Ninguna formación garantiza resultados; los rendimientos pasados no garantizan resultados futuros. Cada persona es responsable de sus propias decisiones y de su gestión de riesgo.
+    <b>Contenido educativo y de análisis de mercado.</b> La mentoría y los servicios de Doberwhite Trading no constituyen recomendación de inversión personalizada ni invitación a operar. No gestionamos fondos de clientes. El trading con CFD, forex, índices y commodities apalancados implica un alto riesgo y puede ocasionar la pérdida total del capital invertido. Ningún servicio garantiza resultados; los rendimientos pasados no garantizan resultados futuros. Cada persona es responsable de sus propias decisiones y de su gestión de riesgo.
     <br><br>© 2025 Doberwhite Trading. Todos los derechos reservados.
   </p>
 </div></footer>
@@ -394,8 +370,8 @@
     <h3 id="pepperstoneLeadTitle">Antes de continuar a <span class="em">Pepperstone</span></h3>
     <p class="lead-intro">Déjanos tus datos para acompañarte durante la apertura. Al continuar, serás dirigido al sitio de Pepperstone.</p>
     <form id="pepperstoneLeadForm" method="GET" action="https://script.google.com/macros/s/AKfycbxXBPa60sMClk3zQuPs9WLHR_naVmx2h-VDSHCj4fabb-hzwfuLnGvyTOBeR-kpBmDEyg/exec" target="pepperstone_lead_iframe" accept-charset="UTF-8" novalidate>
-      <input type="hidden" name="landing" value="bootcamp_doberwhite">
-      <input type="hidden" name="source" value="web_bootcamp">
+      <input type="hidden" name="landing" value="mentorias_doberwhite">
+      <input type="hidden" name="source" value="web_mentorias">
       <input type="hidden" name="producto" value="Apertura de cuenta Pepperstone">
       <input type="hidden" name="estado" value="Lead registrado - pendiente de apertura">
       <input type="hidden" name="page_url" id="pepperstonePageUrl">
@@ -437,7 +413,7 @@
     });
   })();
 
-  /* ==== Lead modal Pepperstone (botón "Abrir cuenta" del nav) ==== */
+  /* ==== Lead modal Pepperstone ==== */
   (() => {
     const PEPPERSTONE_URL = 'https://trk.pepperstonepartners.com/aff_c?offer_id=367&aff_id=38141';
     const modal = document.getElementById('pepperstoneLeadModal');
@@ -449,7 +425,6 @@
     const nameInput = document.getElementById('pepperstoneNombre');
     const phoneInput = document.getElementById('pepperstoneTelefono');
     const emailInput = document.getElementById('pepperstoneEmail');
-    const inputs = [nameInput, phoneInput, emailInput];
     const params = new URLSearchParams(location.search);
     let submitted = false, redirected = false, fallbackTimer = null, lastFocus = null;
 
@@ -458,7 +433,7 @@
       document.getElementById('pepperstoneCreatedAt').value = new Date().toISOString();
       document.getElementById('pepperstoneUtmSource').value = params.get('utm_source') || 'direct';
       document.getElementById('pepperstoneUtmMedium').value = params.get('utm_medium') || 'website';
-      document.getElementById('pepperstoneUtmCampaign').value = params.get('utm_campaign') || 'bootcamp_open_account';
+      document.getElementById('pepperstoneUtmCampaign').value = params.get('utm_campaign') || 'mentorias_open_account';
       document.getElementById('pepperstoneUtmContent').value = params.get('utm_content') || 'pepperstone_cta';
     };
     const openModal = (event) => { event?.preventDefault(); lastFocus = document.activeElement; setTracking(); modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('lead-modal-open'); dialog.scrollTop = 0; setTimeout(()=>nameInput.focus({preventScroll:true}), 90); };
