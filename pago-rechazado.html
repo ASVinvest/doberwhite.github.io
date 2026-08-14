@@ -1,0 +1,82 @@
+<!--
+  DOBERWHITE TRADING · PAGO NO REALIZADO (pago-rechazado.html)
+  Página de retorno para Flow (pago rechazado / no completado). Compartida por Bootcamp y Mentoría.
+  Configúrala como URL de fracaso en el panel de flow.cl (o a donde vuelve el cliente si no paga).
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pago no realizado — DOBERWHITE TRADING</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#05070B; --border:rgba(180,192,210,0.14);
+    --silver:#8FA4BB; --silver-lt:#B8CCD8; --silver-dm:rgba(143,164,187,0.45);
+    --white:#EDF0F4; --gold:#C6A664; --gold-d:#A9854A; --wt-orange:#F5821F;
+    --line-soft:rgba(180,192,210,0.07);
+    --font-display:"Cormorant Garamond",Georgia,serif;
+    --font-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    --maxw:1200px; --pad:clamp(20px,5vw,64px);
+  }
+  *{ box-sizing:border-box; } html{ scroll-behavior:smooth; }
+  body{ margin:0; background:var(--black); color:var(--white); font-family:var(--font-body); font-weight:300; -webkit-font-smoothing:antialiased; line-height:1.6; min-height:100svh; display:flex; flex-direction:column; }
+  a{ color:inherit; text-decoration:none; }
+  .em{ font-family:var(--font-display); font-style:italic; font-weight:500; color:var(--silver-lt); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding-inline:var(--pad); width:100%; }
+  header.nav{ border-bottom:1px solid var(--line-soft); }
+  .nav-in{ display:flex; align-items:center; justify-content:space-between; padding-block:16px; }
+  .brand{ font-size:18px; letter-spacing:.30em; font-weight:500; text-transform:uppercase; }
+  nav.links{ display:flex; gap:24px; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--silver); }
+  nav.links a:hover{ color:var(--white); }
+  @media (max-width:760px){ nav.links{ display:none; } }
+  .result{ flex:1; display:flex; align-items:center; justify-content:center; text-align:center; padding-block:clamp(60px,10vw,120px); position:relative; overflow:hidden; isolation:isolate; }
+  .result::before{ content:""; position:absolute; inset:0; z-index:-1; opacity:.5; background:radial-gradient(circle at 50% 28%, rgba(245,130,31,.12), transparent 42%); }
+  .badge{ width:96px; height:96px; margin:0 auto 30px; border-radius:50%; border:1px solid rgba(245,130,31,.4); display:grid; place-items:center; background:rgba(245,130,31,.06); box-shadow:0 0 60px rgba(245,130,31,.16); }
+  .badge svg{ width:42px; height:42px; }
+  .eyebrow{ font-size:11px; letter-spacing:.28em; text-transform:uppercase; color:var(--wt-orange); font-weight:500; margin:0 0 16px; }
+  h1{ font-family:var(--font-display); font-weight:500; text-transform:uppercase; font-size:clamp(38px,7vw,66px); line-height:.98; letter-spacing:-.02em; margin:0 0 20px; }
+  h1 .em{ text-transform:none; display:block; font-size:.52em; margin-top:.12em; }
+  .msg{ color:var(--silver); font-size:clamp(15px,1.6vw,18px); max-width:58ch; margin:0 auto 34px; }
+  .ctas{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .btn{ display:inline-flex; align-items:center; gap:7px; font-size:12px; letter-spacing:.16em; text-transform:uppercase; padding:12px 24px; border:1px solid var(--gold); color:var(--gold); transition:.25s ease; font-weight:500; }
+  .btn:hover{ background:var(--gold); color:var(--black); }
+  .btn-solid{ background:var(--gold); border-color:var(--gold); color:#1A1408; }
+  .btn-solid:hover{ background:var(--gold-d); border-color:var(--gold-d); }
+  .btn-ghost{ border-color:var(--border); color:var(--white); } .btn-ghost:hover{ border-color:var(--white); }
+  .note{ margin-top:28px; font-size:12px; color:var(--silver-dm); max-width:62ch; margin-inline:auto; }
+  footer{ border-top:1px solid var(--line-soft); padding-block:30px; }
+  .foot{ display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; color:var(--silver-dm); font-size:11.5px; }
+  a:focus-visible, .btn:focus-visible{ outline:2px solid var(--gold); outline-offset:3px; }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }
+</style>
+
+<header class="nav"><div class="wrap nav-in">
+  <a class="brand" href="index.html">DOBERWHITE TRADING</a>
+  <nav class="links">
+    <a href="index.html#brokers">Brokers Top</a>
+    <a href="doberwhite-bootcamp.html">Bootcamp</a>
+    <a href="doberwhite-mentorias.html">Mentorias</a>
+    <a href="doberwhite-copytrading.html">Copy trading</a>
+  </nav>
+</div></header>
+
+<main class="result"><div class="wrap">
+  <div class="badge" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 7l10 10M17 7L7 17" stroke="#F5821F" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </div>
+  <p class="eyebrow">Pago no realizado</p>
+  <h1>El pago no se completó <span class="em">No te preocupes.</span></h1>
+  <p class="msg">No se realizó ningún cobro. Puede que la operación se cancelara o el medio de pago la rechazara. Puedes intentarlo de nuevo cuando quieras o usar otro medio de pago.</p>
+  <div class="ctas">
+    <a class="btn btn-solid" href="doberwhite-bootcamp.html">Reintentar Bootcamp</a>
+    <a class="btn btn-solid" href="doberwhite-mentorias.html">Reintentar Mentoría</a>
+    <a class="btn btn-ghost" href="index.html">Volver al inicio</a>
+  </div>
+  <p class="note">Contenido educativo y de análisis. No gestionamos fondos de clientes. El trading con productos apalancados implica riesgo de pérdida de capital.</p>
+</div></main>
+
+<footer><div class="wrap foot">
+  <span>© 2025 Doberwhite Trading · Santiago de Chile</span>
+  <a href="index.html#legal">Advertencias de riesgo</a>
+</div></footer>
