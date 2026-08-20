@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabinete de Operaciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0c0e;
+            --card-bg: #111317;
+            --card-border: #1e2229;
+            --accent-orange: #d94814;
+            --text-primary: #ffffff;
+            --text-secondary: #9da5b4;
+            --text-muted: #5c6370;
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* Encabezado */
+        .header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 30px;
+        }
+
+        .header .category {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header h1 {
+            font-family: var(--font-title);
+            font-size: 36px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-family: var(--font-title);
+            font-style: italic;
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.6;
+            max-width: 650px;
+            margin: 0;
+        }
+
+        /* Grilla de Equipos */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        /* Tarjeta de Miembro */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-image-container {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            background-color: #000;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 15%;
+            display: block;
+        }
+
+        .image-overlay-title {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            z-index: 2;
+        }
+
+        .card-content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .badge {
+            align-self: flex-start;
+            background-color: rgba(217, 72, 20, 0.15);
+            color: var(--accent-orange);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .card-name {
+            font-family: var(--font-title);
+            font-size: 24px;
+            margin: 0 0 6px 0;
+            font-weight: 600;
+        }
+
+        .card-role {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .card-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        /* Footer de la tarjeta con Métricas */
+        .card-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .metric-box {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 9px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="category">Institucional &bull; Nuestro Equipo</div>
+        <h1>GABINETE DE OPERACIONES</h1>
+        <div class="subtitle">Liderazgo analítico, gestión cuantitativa y control de riesgo.</div>
+        <p>Detrás de nuestra estrategia de Copytrading opera un equipo enfocado en el análisis sistemático y la rigurosa preservación de capital. Nos especializamos en la ejecución algorítmica de ventajas estadísticas en el mercado global.</p>
+    </header>
+
+    <div class="team-grid">
+        <!-- Tarjeta Ariel Salazar Valenzuela -->
+        <article class="card">
+            <div class="card-image-container">
+                <span class="image-overlay-title">Head Trader & Quant Strategist</span>
+                <img src="images/Ariel salazar.png" alt="Ariel Salazar Valenzuela" class="card-image">
+            </div>
+            <div class="card-content">
+                <span class="badge">Founder & Head Trader</span>
+                <h2 class="card-name">Ariel Salazar V.</h2>
+                <div class="card-role">Diseño Estratégico & Modelos Cuantitativos</div>
+                <p class="card-description">Ingeniero Civil Industrial y autor de "El Trader Eutímico". Arquitecto del sistema operativo y de la estrategia cuantitativa aplicada al Copytrading. Especialista en análisis estocástico, Python y modelos de alta precisión orientados a la consistencia del capital.</p>
+                
+                <div class="card-metrics">
+                    <div class="metric-box">
+                        <span class="metric-label">Enfoque</span>
+                        <span class="metric-value">Cuantitativo / Forex</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-label">Experiencia</span>
+                        <span class="metric-value">+7 Años Mercados</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Tarjeta Diego Fernández -->
+        <article class="card">
+            <div class="card-image-container">
+                <span class="image-overlay-title">Trader & Investor Relations LATAM</span>
+                <img src="images/diego fernandez.jpg" alt="Diego Fernández" class="card-image">
+            </div>
+            <div class="card-content">
+                <span class="badge">Co-Founder & PBA Trader</span>
+                <h2 class="card-name">Diego Fernández</h2>
+                <div class="card-role">Relaciones e Inversionistas LATAM & Ejecución</div>
+                <p class="card-description">Encargado de la relación con inversionistas para Latinoamérica (LATAM) y de la ejecución operativa de posiciones. Lidera el desarrollo de alianzas estratégicas y la atención a cuentas VIP, asegurando una comunicación fluida y transparente.</p>
+                
+                <div class="card-metrics">
+                    <div class="metric-box">
+                        <span class="metric-label">Enfoque</span>
+                        <span class="metric-value">Trading / Captación</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-label">Cobertura</span>
+                        <span class="metric-value">Inversionistas LATAM</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+</body>
+</html>
