@@ -185,16 +185,23 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
 .hm-hdr{text-align:center;font-size:9px;color:var(--dim2);padding:2px 0;font-weight:500;}
 .hm-day{
   border-radius:3px;
-  padding:4px 3px 3px;
-  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
-  min-height:48px;
-  position:relative;cursor:default;
+  padding:5px 4px 4px;
+  display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:space-between;
+  height:54px;
+  position:relative;cursor:default;overflow:hidden;
+  transition:filter .15s;
 }
-.hm-day:hover{filter:brightness(1.2);}
-.hm-num{font-size:9px;font-weight:600;line-height:1;align-self:flex-start;padding-left:2px;}
-.hm-pnl{font-size:9px;font-weight:700;line-height:1;margin-top:4px;text-align:center;word-break:break-all;}
-.hm-empty{border-radius:3px;min-height:48px;background:transparent;}
-.hm-nodata{border-radius:3px;min-height:48px;background:var(--border);opacity:.4;}
+.hm-day:hover{filter:brightness(1.25);}
+.hm-num{font-size:8px;font-weight:500;line-height:1;color:rgba(255,255,255,0.5);flex-shrink:0;}
+.hm-pnl{
+  font-size:11px;font-weight:700;line-height:1;
+  width:100%;text-align:center;
+  margin-bottom:4px;
+}
+.hm-empty{height:54px;border-radius:3px;}
+.hm-nodata{height:54px;border-radius:3px;background:var(--border);opacity:.35;display:flex;align-items:flex-start;padding:5px 4px;}
+.hm-nodata span{font-size:8px;color:var(--dim2);}
 </style>
 </head>
 <body>
@@ -296,9 +303,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
         <div class="period-sep"></div>
         <span class="period-bar-label" style="margin-left:2px;">MES:</span>
         <div id="month-btns" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
-        <div class="period-sep"></div>
-        <span class="period-bar-label">SEMANA:</span>
-        <div id="week-btns" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
       </div>
 
       <div class="kpi-strip k4" id="ov-kpi1"></div>
@@ -835,7 +839,7 @@ function setPeriod(filter, btn) {
 }
 
 function buildPeriodButtons(trades) {
-  // Months
+  // Months only
   const months = [...new Set(trades.map(t => t.open.slice(0,7)))].sort();
   const monthNames = {
     '01':'Ene','02':'Feb','03':'Mar','04':'Abr','05':'May','06':'Jun',
@@ -845,17 +849,6 @@ function buildPeriodButtons(trades) {
     const [y,mo] = m.split('.');
     const label = `${monthNames[mo]||mo} ${y}`;
     return `<button class="pbtn" onclick="setPeriod('${m}',this)">${label}</button>`;
-  }).join('');
-
-  // Weeks
-  const weeks = [...new Set(trades.map(t => {
-    const d = tradeDate(t);
-    const {year, week} = getISOWeek(d);
-    return `week:${year}:${week}`;
-  }))].sort();
-  document.getElementById('week-btns').innerHTML = weeks.map(wk => {
-    const [,y,w] = wk.split(':');
-    return `<button class="pbtn" onclick="setPeriod('${wk}',this)">Sem ${w}</button>`;
   }).join('');
 }
 
@@ -1130,18 +1123,18 @@ function buildHeatmap(daily, T){
       if(pnl !== undefined){
         const intensity = Math.min(Math.abs(pnl)/15, 1);
         const bg = pnl>=0
-          ? `rgba(61,${Math.round(100+intensity*84)},122,${0.2+intensity*0.7})`
-          : `rgba(${Math.round(140+intensity*84)},84,84,${0.2+intensity*0.7})`;
-        const tc = pnl>=0?'var(--green)':'var(--red)';
-        const pnlStr = (pnl>=0?'+':'')+pnl.toFixed(2);
-        html+=`<div class="hm-day" style="background:${bg};" title="${key}: ${pnlStr}">
-          <span class="hm-num" style="color:${tc};opacity:.7;">${d}</span>
-          <span class="hm-pnl" style="color:${tc};">${pnlStr}</span>
+          ? `rgba(61,${Math.round(100+intensity*84)},122,${0.25+intensity*0.7})`
+          : `rgba(${Math.round(140+intensity*84)},84,84,${0.25+intensity*0.7})`;
+        const tc = pnl>=0 ? '#3DB87A' : '#E05454';
+        const sign = pnl>=0 ? '+' : '';
+        html+=`<div class="hm-day" style="background:${bg};" title="${key}: ${sign}${pnl.toFixed(2)}">
+          <span class="hm-num">${d}</span>
+          <span class="hm-pnl" style="color:${tc};">${sign}${pnl.toFixed(2)}</span>
         </div>`;
       } else if(isWeekend){
-        html+=`<div class="hm-empty" style="opacity:.15;background:var(--border2);border-radius:3px;min-height:48px;"></div>`;
+        html+=`<div class="hm-empty"></div>`;
       } else {
-        html+=`<div class="hm-nodata" title="${key}: Sin operación"><span style="display:flex;align-items:center;justify-content:center;height:100%;font-size:9px;color:var(--dim2);">${d}</span></div>`;
+        html+=`<div class="hm-nodata"><span>${d}</span></div>`;
       }
     }
     html += `</div></div>`;
