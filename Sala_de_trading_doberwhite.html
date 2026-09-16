@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doberwhite Trading - Live Stream Privado</title>
-    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -14,6 +15,8 @@
             --texto-blanco: #ffffff;
             --texto-gris: #9ca3af;
         }
+
+        *, *::before, *::after { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -35,46 +38,122 @@
             align-items: center;
             border-bottom: 2px solid var(--dorado-accent);
             z-index: 5;
+            flex-shrink: 0;
         }
 
         .logo-area h1 { margin: 0; font-size: 1.4rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
         .logo-area h1 span { color: var(--dorado-accent); }
-        .badge-live { background-color: #e53e3e; color: white; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+        .badge-live { background-color: #e53e3e; color: white; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; animation: pulse 2s infinite; }
 
-        .workspace { display: flex; flex: 1; width: 100vw; position: relative; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .workspace { display: flex; flex: 1; width: 100vw; overflow: hidden; }
         .video-container { flex: 3; background-color: #000; position: relative; }
         .video-container iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* Disclaimer */
-        .disclaimer-box { background-color: rgba(31, 40, 51, 0.4); border-top: 1px solid rgba(197, 160, 89, 0.3); padding: 15px; border-radius: 6px; text-align: justify; max-height: 140px; overflow-y: auto; margin-top: 15px; }
-        .disclaimer-box h3 { margin-top: 0; font-size: 0.8rem; color: var(--dorado-accent); text-transform: uppercase; margin-bottom: 5px; }
-        .disclaimer-box p { margin: 0; font-size: 0.7rem; color: var(--texto-gris); line-height: 1.4; }
-
         /* MODAL DE ACCESO */
-        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.98); display: flex; justify-content: center; align-items: center; z-index: 20; padding: 20px; box-sizing: border-box; }
-        .modal-card { background-color: #121821; border: 2px solid var(--dorado-accent); border-radius: 8px; padding: 30px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0px 10px 30px rgba(0,0,0,0.7); }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(5, 5, 5, 0.98);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background-color: #121821;
+            border: 2px solid var(--dorado-accent);
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.7);
+        }
+
         .modal-card h2 { margin-top: 0; font-size: 1.5rem; margin-bottom: 5px; }
         .modal-card h2 span { color: var(--dorado-accent); }
         .modal-card p.intro { font-size: 0.85rem; color: var(--texto-gris); margin-bottom: 20px; }
 
         .form-group { text-align: left; margin-bottom: 15px; }
         .form-group label { display: block; font-size: 0.8rem; color: var(--dorado-accent); text-transform: uppercase; margin-bottom: 5px; font-weight: 600; }
-        .form-group input { width: 100%; background-color: #0b0c10; border: 1px solid rgba(197, 160, 89, 0.4); padding: 12px; border-radius: 4px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; box-sizing: border-box; }
+        .form-group input {
+            width: 100%;
+            background-color: #0b0c10;
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            padding: 12px;
+            border-radius: 4px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus { outline: none; border-color: var(--dorado-accent); }
 
-        .btn-accept { background-color: var(--dorado-accent); color: #000000; border: none; width: 100%; padding: 14px; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; margin-top: 15px; }
+        .disclaimer-box {
+            background-color: rgba(31, 40, 51, 0.6);
+            border-top: 1px solid rgba(197, 160, 89, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: justify;
+            max-height: 130px;
+            overflow-y: auto;
+            margin-bottom: 5px;
+        }
+        .disclaimer-box h3 { margin-top: 0; font-size: 0.75rem; color: var(--dorado-accent); text-transform: uppercase; margin-bottom: 6px; }
+        .disclaimer-box p { margin: 0; font-size: 0.7rem; color: var(--texto-gris); line-height: 1.5; }
+
+        .btn-accept {
+            background-color: var(--dorado-accent);
+            color: #000000;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
         .btn-accept:hover { background-color: #b38f4b; }
 
-        .chat-container { flex: 1; background-color: var(--bg-paneles); display: flex; flex-direction: column; border-left: 1px solid rgba(197, 160, 89, 0.2); }
-        .chat-header { padding: 15px; background-color: #121821; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; color: var(--dorado-accent); }
+        .chat-container {
+            flex: 1;
+            background-color: var(--bg-paneles);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(197, 160, 89, 0.2);
+            min-width: 300px;
+        }
+        .chat-header {
+            padding: 14px 16px;
+            background-color: #121821;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--dorado-accent);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            flex-shrink: 0;
+        }
         .chat-container iframe { flex: 1; width: 100%; border: none; }
-        
+
         .hidden { display: none !important; }
 
         @media (max-width: 900px) {
             body { overflow: auto; }
             .workspace { flex-direction: column; height: auto; }
-            .video-container { height: 56.25vw; }
-            .chat-container { height: 450px; border-left: none; border-top: 2px solid var(--dorado-accent); }
+            .video-container { height: 56.25vw; min-height: 200px; }
+            .chat-container { min-width: unset; height: 450px; border-left: none; border-top: 2px solid var(--dorado-accent); }
         }
     </style>
 </head>
@@ -88,23 +167,17 @@
     </header>
 
     <div class="workspace">
-        
+
         <!-- MODAL DE ACCESO PRIVADO -->
         <div id="disclaimer-modal" class="modal-overlay">
             <div class="modal-card">
                 <h2>Sala Privada <span>Doberwhite</span></h2>
                 <p class="intro">Por motivos de cumplimiento normativo, valide su sesión para ingresar.</p>
-                
-                <!-- 1. MODIFICA EL CORREO: Pon tu email real aquí para capturar los leads -->
-                <form id="registro-form" action="https://formsubmit.co" method="POST" onsubmit="validarYAcceder(event)">
-                    
-                    <input type="hidden" name="_subject" value="¡Nuevo Acceso a Doberwhite Trading Live!">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_template" value="table">
 
+                <div id="registro-form">
                     <div class="form-group">
                         <label for="email">Correo Electrónico</label>
-                        <input type="email" id="email" name="Email_Espectador" required placeholder="ejemplo@correo.com">
+                        <input type="email" id="email" required placeholder="ejemplo@correo.com">
                     </div>
 
                     <div class="disclaimer-box">
@@ -114,75 +187,101 @@
                         </p>
                     </div>
 
-                    <button type="submit" class="btn-accept">Declarar Conformidad y Entrar</button>
-                </form>
+                    <button type="button" class="btn-accept" onclick="validarYAcceder()">Declarar Conformidad y Entrar</button>
+                </div>
             </div>
         </div>
 
         <!-- REPRODUCTOR DE VIDEO -->
         <div class="video-container">
-            <iframe id="video-player" class="hidden" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe
+                id="video-player"
+                class="hidden"
+                src=""
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
         </div>
 
         <!-- CHAT LATERAL -->
         <div class="chat-container">
-            <div class="chat-header">💬 Sala de Análisis & Comentarios</div>
-            <iframe id="chat-player" src=""></iframe>
+            <div class="chat-header">💬 Sala de Análisis &amp; Comentarios</div>
+            <iframe id="chat-player" src="" class="hidden"></iframe>
         </div>
 
     </div>
 
     <script>
         // =====================================================================
-        // 2. CONFIGURACIÓN: REEMPLAZA EL TEXTO ABAJO CON EL ID REAL DE TU DIRECTO
+        // CONFIGURACIÓN — Solo necesitas pegar el ID del video de YouTube aquí.
+        // Ejemplo: si tu URL es https://www.youtube.com/watch?v=dQw4w9WgXcQ
+        //          entonces el ID es: dQw4w9WgXcQ
+        // Para un directo usa el mismo ID que aparece en la URL del live.
         // =====================================================================
-        const ID_DE_TU_VIDEO = "ESCRIBE_AQUI_SOLO_EL_ID_DE_TU_VIDEO"; 
+        const ID_VIDEO = "ESCRIBE_AQUI_SOLO_EL_ID";
+
+        // Tu email para recibir los registros de acceso (requiere FormSubmit.co)
+        const EMAIL_DESTINO = "tu@correo.com";
         // =====================================================================
 
-        const disclaimerModal = document.getElementById('disclaimer-modal');
-        const videoPlayer = document.getElementById('video-player');
-        const chatPlayer = document.getElementById('chat-player');
-        const registroForm = document.getElementById('registro-form');
+        const modal        = document.getElementById('disclaimer-modal');
+        const videoPlayer  = document.getElementById('video-player');
+        const chatPlayer   = document.getElementById('chat-player');
 
         function verificarAccesoPrevio() {
             if (localStorage.getItem('dw_mail_verificado') === 'true') {
-                disclaimerModal.classList.add('hidden');
+                modal.classList.add('hidden');
                 cargarStreaming();
             }
         }
 
-        function validarYAcceder(event) {
-            event.preventDefault();
-            const emailUsuario = document.getElementById('email').value;
+        function validarYAcceder() {
+            const emailInput = document.getElementById('email');
+            if (!emailInput.checkValidity() || emailInput.value.trim() === '') {
+                emailInput.reportValidity();
+                return;
+            }
+            const emailUsuario = emailInput.value.trim();
 
             localStorage.setItem('dw_mail_verificado', 'true');
             localStorage.setItem('dw_user_email', emailUsuario);
 
-            disclaimerModal.classList.add('hidden');
+            modal.classList.add('hidden');
             cargarStreaming();
 
-            // Enviar datos por AJAX en segundo plano
-            const formData = new FormData(registroForm);
-            fetch(registroForm.action, {
+            // Enviar lead a FormSubmit en segundo plano
+            const formData = new FormData();
+            formData.append('Email_Espectador', emailUsuario);
+            formData.append('_subject', '¡Nuevo Acceso a Doberwhite Trading Live!');
+            formData.append('_captcha', 'false');
+            formData.append('_template', 'table');
+
+            fetch('https://formsubmit.co/' + EMAIL_DESTINO, {
                 method: 'POST',
                 body: formData,
                 headers: { 'Accept': 'application/json' }
-            }).then(response => {
-                console.log("Acceso registrado con éxito.");
-            }).catch(error => {
-                console.error("Error al enviar registro de correo:", error);
+            }).then(() => {
+                console.log("Lead registrado.");
+            }).catch(err => {
+                console.warn("No se pudo enviar el lead:", err);
             });
         }
 
         function cargarStreaming() {
-            // El script extrae dinámicamente tu URL pública de GitHub Pages
-            const dominioActual = window.location.hostname;
+            // URL correcta para el embed del video/live
+            const urlVideo = "https://www.youtube.com/embed/" + ID_VIDEO
+                           + "?autoplay=1&modestbranding=1&rel=0";
 
+            // URL correcta para el chat en vivo de YouTube
+            const dominioActual = window.location.hostname || "localhost";
+            const urlChat = "https://www.youtube.com/live_chat?v=" + ID_VIDEO
+                          + "&embed_domain=" + dominioActual;
+
+            videoPlayer.src = urlVideo;
             videoPlayer.classList.remove('hidden');
-            
-            // Inyección limpia y sin errores de caracteres especiales en la URL
-            videoPlayer.src = "https://youtube.com" + ID_DE_TU_VIDEO + "?autoplay=1&modestbranding=1&rel=0";
-            chatPlayer.src = "https://youtube.com" + ID_DE_TU_VIDEO + "&embed_domain=" + dominioActual;
+
+            chatPlayer.src = urlChat;
+            chatPlayer.classList.remove('hidden');
         }
 
         verificarAccesoPrevio();
