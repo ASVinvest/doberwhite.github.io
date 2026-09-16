@@ -40,7 +40,6 @@
         .logo-area h1 { margin: 0; font-size: 1.4rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
         .logo-area h1 span { color: var(--dorado-accent); }
         .badge-live { background-color: #e53e3e; color: white; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
-        .badge-live.offline { background-color: #4b5563; }
 
         .workspace { display: flex; flex: 1; width: 100vw; position: relative; }
         .video-container { flex: 3; background-color: #000; position: relative; }
@@ -85,18 +84,18 @@
         <div class="logo-area">
             <h1>DOBER<span>WHITE</span> TRADING</h1>
         </div>
-        <div id="live-badge" class="badge-live">• EN VIVO PRIVADO</div>
+        <div class="badge-live">• EN VIVO PRIVADO</div>
     </header>
 
     <div class="workspace">
         
-        <!-- MODAL DE ACCESO NOTIFICADO -->
+        <!-- MODAL DE ACCESO RESPALDADO -->
         <div id="disclaimer-modal" class="modal-overlay">
             <div class="modal-card">
                 <h2>Sala Privada <span>Doberwhite</span></h2>
-                <p class="intro">Por motivos de cumplimiento normativo, valide su sesión para ingresar al análisis técnico en vivo.</p>
+                <p class="intro">Por motivos de cumplimiento normativo, valide su sesión para ingresar.</p>
                 
-                <!-- IMPORTANTE: Escribe tu correo real abajo para recibir alertas instantáneas -->
+                <!-- 1. CAMBIA ESTE CORREO POR EL TUYO REAL PARA RECIBIR LOS LEADS -->
                 <form id="registro-form" action="https://formsubmit.co" method="POST" onsubmit="validarYAcceder(event)">
                     
                     <input type="hidden" name="_subject" value="¡Nuevo Acceso a Doberwhite Trading Live!">
@@ -104,14 +103,14 @@
                     <input type="hidden" name="_template" value="table">
 
                     <div class="form-group">
-                        <label for="email">Correo Electrónico para el Registro</label>
+                        <label for="email">Correo Electrónico</label>
                         <input type="email" id="email" name="Email_Espectador" required placeholder="ejemplo@correo.com">
                     </div>
 
                     <div class="disclaimer-box">
                         <h3>Aviso Legal de Riesgo (Disclaimer Obligatorio)</h3>
                         <p>
-                            El contenido transmitido en este espacio es de carácter estrictamente educativo e informativo y no constituye, bajo ninguna circunstancia, una oferta, recomendación, solicitud o asesoramiento financiero para comprar o vender activos, divisas o instrumentos derivados. El trading y las inversiones conllevan un riesgo de pérdida de capital significativo. Al presionar ingresar, usted acepta que es el único responsable de sus decisiones y exime a Doberwhite Trading de toda responsabilidad legal por variaciones operativas en sus cuentas.
+                            El contenido transmitido en este espacio es de carácter estrictamente educativo e informativo y no constituye, bajo ninguna circunstancia, una oferta, recomendación, solicitud o asesoramiento financiero para comprar o vender activos, divisas o instrumentos derivados. El trading y las inversiones conllevan un riesgo de pérdida de capital significativo. Al presionar ingresar, usted acepta que es el único responsable de sus decisiones y exime a Doberwhite Trading de toda responsabilidad legal.
                         </p>
                     </div>
 
@@ -135,10 +134,9 @@
 
     <script>
         // ==========================================================
-        // CONFIGURACIÓN: PEGA EL ID DE TU TRANSMISIÓN AQUÍ
+        // 2. CONFIGURACIÓN: COLOCA EL ID DE TU TRANSMISIÓN ACTIVA
         // ==========================================================
-        const ID_DE_TU_VIDEO = "ESCRIBE_AQUI_EL_ID_DE_TU_VIDEO"; 
-        const TU_DOMINIO = "localhost"; // Mantenlo como 'localhost' para tu prueba de PC actual
+        const ID_DE_TU_VIDEO = "PEGA_AQUI_EL_ID_DE_TU_VIDEO"; 
         // ==========================================================
 
         const disclaimerModal = document.getElementById('disclaimer-modal');
@@ -147,7 +145,6 @@
         const registroForm = document.getElementById('registro-form');
 
         function verificarAccesoPrevio() {
-            // Si ya hiciste la prueba y te registraste en este navegador, pasa directo
             if (localStorage.getItem('dw_mail_verificado') === 'true') {
                 disclaimerModal.classList.add('hidden');
                 cargarStreaming();
@@ -158,33 +155,36 @@
             event.preventDefault();
             const emailUsuario = document.getElementById('email').value;
 
-            // Almacenar el registro para saltarse el formulario la próxima vez
             localStorage.setItem('dw_mail_verificado', 'true');
             localStorage.setItem('dw_user_email', emailUsuario);
 
             disclaimerModal.classList.add('hidden');
             cargarStreaming();
 
-            // Enviar datos por correo de fondo discretamente
+            // Despacho de datos por AJAX nativo en segundo plano
             const formData = new FormData(registroForm);
             fetch(registroForm.action, {
                 method: 'POST',
                 body: formData,
                 headers: { 'Accept': 'application/json' }
             }).then(response => {
-                console.log("Notificación de acceso enviada al Administrador.");
+                console.log("Acceso registrado en el servidor de correo.");
             }).catch(error => {
-                console.error("Error de despacho automatizado:", error);
+                console.error("Fallo en el despacho de datos:", error);
             });
         }
 
         function cargarStreaming() {
+            // El script detecta el dominio actual de tu GitHub Pages automáticamente
+            const dominioActual = window.location.hostname;
+
             videoPlayer.classList.remove('hidden');
             videoPlayer.src = `https://youtube.com{ID_DE_TU_VIDEO}?autoplay=1&modestbranding=1&rel=0`;
-            chatPlayer.src = `https://youtube.com{ID_DE_TU_VIDEO}&embed_domain=${TU_DOMINIO}`;
+            
+            // Inyección dinâmica con el dominio real verificado para evadir el bloqueo de iframe
+            chatPlayer.src = `https://youtube.com{ID_DE_TU_VIDEO}&embed_domain=${dominioActual}`;
         }
 
-        // Ejecutar revisión al abrir la pestaña
         verificarAccesoPrevio();
     </script>
 </body>
