@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doberwhite Trading - Live Stream Privado</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-principal: #0b0c10;
+            --bg-paneles: #1f2833;
+            --dorado-accent: #c5a059;
+            --texto-blanco: #ffffff;
+            --texto-gris: #9ca3af;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-principal);
+            font-family: 'Inter', sans-serif;
+            color: var(--texto-blanco);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #000000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--dorado-accent);
+            z-index: 5;
+        }
+
+        .logo-area h1 { margin: 0; font-size: 1.4rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+        .logo-area h1 span { color: var(--dorado-accent); }
+        .badge-live { background-color: #e53e3e; color: white; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+        .badge-live.offline { background-color: #4b5563; }
+
+        .workspace { display: flex; flex: 1; width: 100vw; position: relative; }
+        .video-container { flex: 3; background-color: #000; position: relative; }
+        .video-container iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* Disclaimer */
+        .disclaimer-box { background-color: rgba(31, 40, 51, 0.4); border-top: 1px solid rgba(197, 160, 89, 0.3); padding: 15px; border-radius: 6px; text-align: justify; max-height: 140px; overflow-y: auto; margin-top: 15px; }
+        .disclaimer-box h3 { margin-top: 0; font-size: 0.8rem; color: var(--dorado-accent); text-transform: uppercase; margin-bottom: 5px; }
+        .disclaimer-box p { margin: 0; font-size: 0.7rem; color: var(--texto-gris); line-height: 1.4; }
+
+        /* MODAL DE ACCESO */
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.98); display: flex; justify-content: center; align-items: center; z-index: 20; padding: 20px; box-sizing: border-box; }
+        .modal-card { background-color: #121821; border: 2px solid var(--dorado-accent); border-radius: 8px; padding: 30px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0px 10px 30px rgba(0,0,0,0.7); }
+        .modal-card h2 { margin-top: 0; font-size: 1.5rem; margin-bottom: 5px; }
+        .modal-card h2 span { color: var(--dorado-accent); }
+        .modal-card p.intro { font-size: 0.85rem; color: var(--texto-gris); margin-bottom: 20px; }
+
+        .form-group { text-align: left; margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.8rem; color: var(--dorado-accent); text-transform: uppercase; margin-bottom: 5px; font-weight: 600; }
+        .form-group input { width: 100%; background-color: #0b0c10; border: 1px solid rgba(197, 160, 89, 0.4); padding: 12px; border-radius: 4px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; box-sizing: border-box; }
+
+        .btn-accept { background-color: var(--dorado-accent); color: #000000; border: none; width: 100%; padding: 14px; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; margin-top: 15px; }
+        .btn-accept:hover { background-color: #b38f4b; }
+
+        .chat-container { flex: 1; background-color: var(--bg-paneles); display: flex; flex-direction: column; border-left: 1px solid rgba(197, 160, 89, 0.2); }
+        .chat-header { padding: 15px; background-color: #121821; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; color: var(--dorado-accent); }
+        .chat-container iframe { flex: 1; width: 100%; border: none; }
+        
+        .hidden { display: none !important; }
+
+        @media (max-width: 900px) {
+            body { overflow: auto; }
+            .workspace { flex-direction: column; height: auto; }
+            .video-container { height: 56.25vw; }
+            .chat-container { height: 450px; border-left: none; border-top: 2px solid var(--dorado-accent); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>DOBER<span>WHITE</span> TRADING</h1>
+        </div>
+        <div id="live-badge" class="badge-live">• EN VIVO PRIVADO</div>
+    </header>
+
+    <div class="workspace">
+        
+        <!-- MODAL DE ACCESO NOTIFICADO -->
+        <div id="disclaimer-modal" class="modal-overlay">
+            <div class="modal-card">
+                <h2>Sala Privada <span>Doberwhite</span></h2>
+                <p class="intro">Por motivos de cumplimiento normativo, valide su sesión para ingresar al análisis técnico en vivo.</p>
+                
+                <!-- IMPORTANTE: Escribe tu correo real abajo para recibir alertas instantáneas -->
+                <form id="registro-form" action="https://formsubmit.co" method="POST" onsubmit="validarYAcceder(event)">
+                    
+                    <input type="hidden" name="_subject" value="¡Nuevo Acceso a Doberwhite Trading Live!">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico para el Registro</label>
+                        <input type="email" id="email" name="Email_Espectador" required placeholder="ejemplo@correo.com">
+                    </div>
+
+                    <div class="disclaimer-box">
+                        <h3>Aviso Legal de Riesgo (Disclaimer Obligatorio)</h3>
+                        <p>
+                            El contenido transmitido en este espacio es de carácter estrictamente educativo e informativo y no constituye, bajo ninguna circunstancia, una oferta, recomendación, solicitud o asesoramiento financiero para comprar o vender activos, divisas o instrumentos derivados. El trading y las inversiones conllevan un riesgo de pérdida de capital significativo. Al presionar ingresar, usted acepta que es el único responsable de sus decisiones y exime a Doberwhite Trading de toda responsabilidad legal por variaciones operativas en sus cuentas.
+                        </p>
+                    </div>
+
+                    <button type="submit" class="btn-accept">Declarar Conformidad y Entrar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- REPRODUCTOR DE VIDEO -->
+        <div class="video-container">
+            <iframe id="video-player" class="hidden" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <!-- CHAT LATERAL -->
+        <div class="chat-container">
+            <div class="chat-header">💬 Sala de Análisis & Comentarios</div>
+            <iframe id="chat-player" src=""></iframe>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================================
+        // CONFIGURACIÓN: PEGA EL ID DE TU TRANSMISIÓN AQUÍ
+        // ==========================================================
+        const ID_DE_TU_VIDEO = "ESCRIBE_AQUI_EL_ID_DE_TU_VIDEO"; 
+        const TU_DOMINIO = "localhost"; // Mantenlo como 'localhost' para tu prueba de PC actual
+        // ==========================================================
+
+        const disclaimerModal = document.getElementById('disclaimer-modal');
+        const videoPlayer = document.getElementById('video-player');
+        const chatPlayer = document.getElementById('chat-player');
+        const registroForm = document.getElementById('registro-form');
+
+        function verificarAccesoPrevio() {
+            // Si ya hiciste la prueba y te registraste en este navegador, pasa directo
+            if (localStorage.getItem('dw_mail_verificado') === 'true') {
+                disclaimerModal.classList.add('hidden');
+                cargarStreaming();
+            }
+        }
+
+        function validarYAcceder(event) {
+            event.preventDefault();
+            const emailUsuario = document.getElementById('email').value;
+
+            // Almacenar el registro para saltarse el formulario la próxima vez
+            localStorage.setItem('dw_mail_verificado', 'true');
+            localStorage.setItem('dw_user_email', emailUsuario);
+
+            disclaimerModal.classList.add('hidden');
+            cargarStreaming();
+
+            // Enviar datos por correo de fondo discretamente
+            const formData = new FormData(registroForm);
+            fetch(registroForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                console.log("Notificación de acceso enviada al Administrador.");
+            }).catch(error => {
+                console.error("Error de despacho automatizado:", error);
+            });
+        }
+
+        function cargarStreaming() {
+            videoPlayer.classList.remove('hidden');
+            videoPlayer.src = `https://youtube.com{ID_DE_TU_VIDEO}?autoplay=1&modestbranding=1&rel=0`;
+            chatPlayer.src = `https://youtube.com{ID_DE_TU_VIDEO}&embed_domain=${TU_DOMINIO}`;
+        }
+
+        // Ejecutar revisión al abrir la pestaña
+        verificarAccesoPrevio();
+    </script>
+</body>
+</html>
