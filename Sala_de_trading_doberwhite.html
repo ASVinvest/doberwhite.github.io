@@ -89,13 +89,13 @@
 
     <div class="workspace">
         
-        <!-- MODAL DE ACCESO RESPALDADO -->
+        <!-- MODAL DE ACCESO PRIVADO -->
         <div id="disclaimer-modal" class="modal-overlay">
             <div class="modal-card">
                 <h2>Sala Privada <span>Doberwhite</span></h2>
                 <p class="intro">Por motivos de cumplimiento normativo, valide su sesión para ingresar.</p>
                 
-                <!-- 1. CAMBIA ESTE CORREO POR EL TUYO REAL PARA RECIBIR LOS LEADS -->
+                <!-- 1. MODIFICA EL CORREO: Pon tu email real aquí para capturar los leads -->
                 <form id="registro-form" action="https://formsubmit.co" method="POST" onsubmit="validarYAcceder(event)">
                     
                     <input type="hidden" name="_subject" value="¡Nuevo Acceso a Doberwhite Trading Live!">
@@ -133,11 +133,11 @@
     </div>
 
     <script>
-        // ==========================================================
-        // 2. CONFIGURACIÓN: COLOCA EL ID DE TU TRANSMISIÓN ACTIVA
-        // ==========================================================
-        const ID_DE_TU_VIDEO = "PEGA_AQUI_EL_ID_DE_TU_VIDEO"; 
-        // ==========================================================
+        // =====================================================================
+        // 2. CONFIGURACIÓN: REEMPLAZA EL TEXTO ABAJO CON EL ID REAL DE TU DIRECTO
+        // =====================================================================
+        const ID_DE_TU_VIDEO = "ESCRIBE_AQUI_SOLO_EL_ID_DE_TU_VIDEO"; 
+        // =====================================================================
 
         const disclaimerModal = document.getElementById('disclaimer-modal');
         const videoPlayer = document.getElementById('video-player');
@@ -161,28 +161,28 @@
             disclaimerModal.classList.add('hidden');
             cargarStreaming();
 
-            // Despacho de datos por AJAX nativo en segundo plano
+            // Enviar datos por AJAX en segundo plano
             const formData = new FormData(registroForm);
             fetch(registroForm.action, {
                 method: 'POST',
                 body: formData,
                 headers: { 'Accept': 'application/json' }
             }).then(response => {
-                console.log("Acceso registrado en el servidor de correo.");
+                console.log("Acceso registrado con éxito.");
             }).catch(error => {
-                console.error("Fallo en el despacho de datos:", error);
+                console.error("Error al enviar registro de correo:", error);
             });
         }
 
         function cargarStreaming() {
-            // El script detecta el dominio actual de tu GitHub Pages automáticamente
+            // El script extrae dinámicamente tu URL pública de GitHub Pages
             const dominioActual = window.location.hostname;
 
             videoPlayer.classList.remove('hidden');
-            videoPlayer.src = `https://youtube.com{ID_DE_TU_VIDEO}?autoplay=1&modestbranding=1&rel=0`;
             
-            // Inyección dinâmica con el dominio real verificado para evadir el bloqueo de iframe
-            chatPlayer.src = `https://youtube.com{ID_DE_TU_VIDEO}&embed_domain=${dominioActual}`;
+            // Inyección limpia y sin errores de caracteres especiales en la URL
+            videoPlayer.src = "https://youtube.com" + ID_DE_TU_VIDEO + "?autoplay=1&modestbranding=1&rel=0";
+            chatPlayer.src = "https://youtube.com" + ID_DE_TU_VIDEO + "&embed_domain=" + dominioActual;
         }
 
         verificarAccesoPrevio();
