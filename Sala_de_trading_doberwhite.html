@@ -270,12 +270,12 @@
         function cargarStreaming() {
             // URL correcta para el embed del video/live
             const urlVideo = "https://www.youtube.com/embed/" + ID_VIDEO
-                           + "?autoplay=1&modestbranding=1&rel=0";
+                           + "rtmp://a.rtmp.youtube.com/live2";
 
             // URL correcta para el chat en vivo de YouTube
             const dominioActual = window.location.hostname || "localhost";
             const urlChat = "https://www.youtube.com/live_chat?v=" + ID_VIDEO
-                          + "&embed_domain=" + dominioActual;
+                          + "&embed_domain=rtmp://a.rtmp.youtube.com/live2" + dominioActual;
 
             videoPlayer.src = urlVideo;
             videoPlayer.classList.remove('hidden');
