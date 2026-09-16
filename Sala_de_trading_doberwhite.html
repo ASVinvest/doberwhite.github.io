@@ -218,7 +218,7 @@
         //          entonces el ID es: dQw4w9WgXcQ
         // Para un directo usa el mismo ID que aparece en la URL del live.
         // =====================================================================
-        const ID_VIDEO = "ESCRIBE_AQUI_SOLO_EL_ID";
+        const ID_VIDEO = "SSptPHDu_qI";
 
         // Tu email para recibir los registros de acceso (requiere FormSubmit.co)
         const EMAIL_DESTINO = "tu@correo.com";
@@ -270,12 +270,12 @@
         function cargarStreaming() {
             // URL correcta para el embed del video/live
             const urlVideo = "https://www.youtube.com/embed/" + ID_VIDEO
-                           + "SSptPHDu_qI";
+                           + "?autoplay=1&modestbranding=1&rel=0";
 
             // URL correcta para el chat en vivo de YouTube
             const dominioActual = window.location.hostname || "localhost";
             const urlChat = "https://www.youtube.com/live_chat?v=" + ID_VIDEO
-                          + "SSptPHDu_qI" + dominioActual;
+                          + "&embed_domain=" + dominioActual;
 
             videoPlayer.src = urlVideo;
             videoPlayer.classList.remove('hidden');
