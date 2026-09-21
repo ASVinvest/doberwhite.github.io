@@ -168,6 +168,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
 .grade-item .gv{font-size:20px;font-weight:700;font-family:'Space Grotesk';}
 .grade-item .gs{font-size:10px;color:var(--dim);margin-top:2px;}
 
+/* Costs breakdown inline */
+.cost-row{display:flex;justify-content:space-between;font-size:10px;padding:2px 0;color:var(--dim);}
+.cost-row span:last-child{color:var(--red);}
+.cost-divider{height:1px;background:var(--border2);margin:4px 0;}
+
 .footer{border-top:1px solid var(--border);padding:12px 28px;font-size:10px;color:var(--dim2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 .footer a{color:var(--gold);text-decoration:none;}
 
@@ -179,6 +184,47 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
 .pbtn.on{background:var(--gold-bg);border-color:rgba(200,168,75,.4);color:var(--gold2);font-weight:600;}
 .pbtn.total{border-style:dashed;}
 .period-sep{width:1px;height:14px;background:var(--border2);margin:0 2px;}
+
+/* ── ASSET ANALYSIS ── */
+.aa-tabs{display:flex;gap:3px;margin-bottom:14px;flex-wrap:wrap;}
+.aa-tab{padding:5px 14px;font-size:11px;font-weight:500;border:1px solid var(--border2);background:transparent;color:var(--dim);border-radius:2px;cursor:pointer;transition:all .15s;letter-spacing:.02em;}
+.aa-tab:hover{color:var(--white);border-color:var(--border2);}
+.aa-tab.on{background:var(--gold-bg);border-color:rgba(200,168,75,.4);color:var(--gold2);font-weight:600;}
+.aa-tab.compare.on{background:rgba(91,138,240,0.1);border-color:rgba(91,138,240,.4);color:#5B8AF0;}
+.aa-sym-toggle{display:flex;gap:3px;flex-wrap:wrap;}
+.aa-sym-btn{padding:4px 10px;font-size:10px;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--dim);border-radius:2px;cursor:pointer;transition:all .15s;letter-spacing:.04em;font-family:'Space Grotesk',sans-serif;}
+.aa-sym-btn:hover{color:var(--white);}
+.aa-sym-btn.on{border-color:var(--gold);color:var(--gold);background:var(--gold-bg);}
+
+/* Cards de activo individual */
+.aa-sym-cards{display:grid;gap:14px;}
+.aa-sym-card{background:var(--s2);border:1px solid var(--border2);border-radius:4px;padding:16px;}
+.aa-sym-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.aa-sym-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;letter-spacing:.06em;}
+.aa-sym-pnl{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;}
+.aa-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;margin-bottom:12px;overflow:hidden;}
+.aa-mini-kc{background:var(--surface);padding:10px 12px;}
+.aa-mini-lbl{font-size:9px;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px;}
+.aa-mini-val{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;}
+.aa-dir-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.aa-dir-block{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 12px;}
+.aa-dir-lbl{font-size:10px;color:var(--dim);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.aa-dir-lbl span{font-size:10px;font-weight:600;}
+.aa-dir-lbl .buy-tag{color:var(--green);} .aa-dir-lbl .sell-tag{color:var(--red);}
+.aa-best-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:2px;font-size:10px;font-weight:600;letter-spacing:.04em;margin-top:8px;}
+.aa-best-badge.buy{background:var(--green-bg);color:var(--green);border:1px solid rgba(61,184,122,.2);}
+.aa-best-badge.sell{background:var(--red-bg);color:var(--red);border:1px solid rgba(224,84,84,.2);}
+.aa-best-badge.neutral{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(200,168,75,.2);}
+
+/* Compare mode */
+.aa-compare-grid{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:14px;}
+.aa-compare-hdr{background:var(--s2);padding:10px 14px;font-size:10px;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;font-weight:500;}
+.aa-compare-row{display:flex;align-items:center;background:var(--surface);padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px;}
+.aa-compare-row:last-child{border-bottom:none;}
+.aa-compare-lbl{width:150px;color:var(--dim);font-size:11px;flex-shrink:0;}
+.aa-compare-vals{flex:1;display:flex;gap:0;}
+.aa-compare-val{flex:1;text-align:center;font-weight:500;font-size:12px;}
+.aa-compare-val.best{font-weight:700;}
 
 /* Heatmap compacto */
 .hm-compact{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:6px;}
@@ -321,6 +367,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
         <div class="card"><div class="card-title">P&L por operación</div><div class="card-sub">Resultado individual en USD</div><div class="ch ch180"><canvas id="c-pnlbar"></canvas></div></div>
         <div class="card"><div class="card-title">P&L acumulado diario</div><div class="card-sub">Ganancia/pérdida neta por sesión</div><div class="ch ch180"><canvas id="c-daily"></canvas></div></div>
       </div>
+
+      <!-- ── ASSET ANALYSIS ── -->
+      <div class="card" style="margin-bottom:0;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <div>
+            <div class="card-title">Rendimiento por activo</div>
+            <div class="card-sub" style="margin-bottom:0;">¿Qué instrumento operar y hacia qué dirección?</div>
+          </div>
+          <!-- Tabs: Todos / Individual / Comparativo -->
+          <div class="aa-tabs" id="aa-tabs">
+            <button class="aa-tab on"    onclick="setAAView('all',this)">Resumen</button>
+            <button class="aa-tab"       onclick="setAAView('single',this)">Individual</button>
+            <button class="aa-tab compare" onclick="setAAView('compare',this)">Comparativo</button>
+          </div>
+        </div>
+        <!-- Selector de símbolo (solo en vista Individual) -->
+        <div id="aa-sym-bar" style="display:none;margin-bottom:14px;">
+          <div class="aa-sym-toggle" id="aa-sym-toggle"></div>
+        </div>
+        <!-- Contenido dinámico -->
+        <div id="aa-body"></div>
+      </div>
     </section>
 
     <!-- RETURN -->
@@ -378,14 +446,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
       <div class="g3">
         <div class="card"><div class="card-title">Duración promedio</div><div class="card-sub">Por símbolo</div><div id="tr-dur"></div></div>
         <div class="card"><div class="card-title">Volumen promedio (lotes)</div><div class="card-sub">Por instrumento</div><div id="tr-vol"></div></div>
-        <div class="card"><div class="card-title">Comisiones totales</div><div class="card-sub">Costo de ejecución</div><div id="tr-comm"></div></div>
+        <div class="card"><div class="card-title">Comisiones + Swap</div><div class="card-sub">Costo operacional total</div><div id="tr-comm"></div></div>
       </div>
       <div class="card" style="padding:0;">
         <div class="filter-bar" id="tr-filters"></div>
         <div class="tbl-wrap"><table class="tbl"><thead><tr>
           <th>#</th><th>Apertura</th><th>Cierre</th><th>Símbolo</th><th>Tipo</th>
           <th class="r">Lotes</th><th class="r">Entrada</th><th class="r">Salida</th>
-          <th class="r">Duración</th><th class="r">Comisión</th><th class="r">P&L</th>
+          <th class="r">Duración</th><th class="r">Comisión</th><th class="r">Swap</th><th class="r">P&L Neto</th>
         </tr></thead><tbody id="tbl-body"></tbody></table></div>
       </div>
     </section>
@@ -511,21 +579,17 @@ function hideLoading() {
 
 /* ══════════════════════════════════════════
    MT5 XLSX PARSER
-   Handles both Spanish & English column names
 ══════════════════════════════════════════ */
 function parseMT5(rows) {
   const meta = { name:'', account:'', broker:'', platform:'', balance:0, date:'' };
   const trades = [];
 
-  // ── 1. Extraer metadatos de las primeras filas ──
   for(let i=0; i<15; i++){
     const r = rows[i]; if(!r) continue;
     const joined = r.filter(Boolean).join('|');
-    // El valor real está en col índice 3 (formato WeTrade MT5)
     const val3 = r[3] ? String(r[3]).trim() : '';
     if(/Nombre/i.test(joined) && val3)            meta.name    = val3;
     if(/Cuenta de trading|Trading account/i.test(joined) && val3) {
-      // "9015702 (USD, WeTrade-MT5, real, Hedge)" → extraer número y plataforma
       meta.account  = val3.split(' ')[0];
       meta.platform = val3.replace(meta.account,'').trim();
     }
@@ -533,8 +597,6 @@ function parseMT5(rows) {
     if(/^Fecha|^Date/i.test(joined) && val3)      meta.date    = val3;
   }
 
-  // ── 2. Encontrar la sección "Posiciones" ──
-  // Buscar la fila que dice exactamente "Posiciones" o "Positions"
   let posSecRow = -1;
   for(let i=0; i<rows.length; i++){
     const r=rows[i]; if(!r) continue;
@@ -545,15 +607,9 @@ function parseMT5(rows) {
   }
   if(posSecRow < 0) throw new Error('No se encontró la sección "Posiciones" en el archivo.');
 
-  // La fila de encabezados de columnas está justo después
   const colRow = posSecRow + 1;
   const hdr = rows[colRow].map(c => c ? String(c).trim() : '');
 
-  // ── 3. Mapear columnas por nombre exacto ──
-  // Estructura WeTrade MT5 ES:
-  // [0]Fecha/Hora [1]Posición [2]Símbolo [3]Tipo [4]Volumen
-  // [5]Precio(entrada) [6]S/L [7]T/P [8]Fecha/Hora(cierre) [9]Precio(salida)
-  // [10]Comisión [11]Swap [12]Beneficio
   const findCol = (terms, startFrom=0) => {
     for(const term of terms){
       for(let i=startFrom; i<hdr.length; i++){
@@ -569,7 +625,6 @@ function parseMT5(rows) {
   const iEntry    = findCol(['precio','price']);
   const iSL       = findCol(['s / l','sl','stop']);
   const iTP       = findCol(['t / p','tp','take']);
-  // Fecha/Hora cierre y Precio salida son la SEGUNDA ocurrencia de los mismos headers
   const iCloseTime = (() => {
     for(let i=iOpenTime+1; i<hdr.length; i++){
       if(hdr[i].toLowerCase().includes('fecha') || hdr[i].toLowerCase().includes('time')) return i;
@@ -586,30 +641,24 @@ function parseMT5(rows) {
   const iSwap = findCol(['swap']);
   const iPnl  = findCol(['beneficio','profit']);
 
-  // ── 4. Leer filas de posiciones ──
-  // Parar al encontrar "Órdenes", "Orders", fila vacía de sección, o fin
   for(let i=colRow+1; i<rows.length; i++){
     const r = rows[i]; if(!r) continue;
     const firstVal = r.find(Boolean);
     if(!firstVal) continue;
-    // Parar si llegamos a otra sección (Órdenes, Transacciones, Resultados, Balance)
     if(typeof firstVal==='string' && /^(Órdenes|Orders|Transacciones|Transactions|Resultados|Results|Balance)/i.test(firstVal.trim())){
       break;
     }
-    // Solo procesar si col[iType] es buy/sell
     const typeRaw = r[iType] ? String(r[iType]).trim().toLowerCase() : '';
     if(!/^(buy|sell|compra|venta)$/i.test(typeRaw)) continue;
 
     const fmtDate = v => {
       if(!v) return '';
       if(typeof v === 'number'){
-        // Número serial de Excel → fecha
         const ms = Math.round((v - 25569) * 86400 * 1000);
         const d = new Date(ms);
         const pad = n => String(n).padStart(2,'0');
         return `${d.getUTCFullYear()}.${pad(d.getUTCMonth()+1)}.${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
       }
-      // Ya es string como "2026.08.04 15:24:37" → truncar a minutos
       return String(v).trim().slice(0,16);
     };
 
@@ -631,20 +680,17 @@ function parseMT5(rows) {
 
   if(!trades.length) throw new Error('No se encontraron operaciones en la sección "Posiciones".');
 
-  // ── 5. Extraer balance final de la sección "Resultados" o fila "Balance:" ──
   for(let i=rows.length-40; i<rows.length; i++){
     const r = rows[i]; if(!r) continue;
     const first = String(r.find(Boolean)||'');
     if(/^Balance:/i.test(first.trim())){
-      // En WeTrade: Balance: [null,null,null, 498.14, ...]
       const nums = r.filter(c=>c!==null&&c!==''&&!isNaN(parseFloat(c)));
       if(nums.length) { meta.balance = parseFloat(nums[0]); break; }
     }
   }
-  // Fallback: reconstruir desde transacciones
   if(!meta.balance){
     let b = 501;
-    trades.forEach(t => b += t.pnl);
+    trades.forEach(t => b += t.pnl + t.comm + t.swap);
     meta.balance = +b.toFixed(2);
   }
 
@@ -709,71 +755,116 @@ const redBg=ctx=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,220);g.addCol
 
 /* ══════════════════════════════════════════
    COMPUTE METRICS
+   ─────────────────────────────────────────
+   CORRECCIONES APLICADAS:
+   1. netPnl = grossPnl + commTotal + swapTotal  (deduce costos reales)
+   2. grossPnl  = suma de t.pnl sin costos
+   3. profitFactor calcula sobre netPnl por trade (pnl + comm + swap)
+   4. wins/losses se evalúan sobre netPnl por trade
+   5. Win Rate por dirección usa el mismo criterio neto
 ══════════════════════════════════════════ */
 function computeMetrics(T, bal) {
-  const wins = T.filter(t=>t.pnl>0);
-  const losses = T.filter(t=>t.pnl<0);
-  const grossWin = wins.reduce((s,t)=>s+t.pnl,0);
-  const grossLoss = losses.reduce((s,t)=>s+t.pnl,0);
-  const netPnl = T.reduce((s,t)=>s+t.pnl,0);
-  const commTotal = T.reduce((s,t)=>s+t.comm,0);
-  const pf = grossLoss!==0 ? Math.abs(grossWin/grossLoss) : Infinity;
-  const winRate = T.length ? wins.length/T.length*100 : 0;
-  const avgWin = wins.length ? grossWin/wins.length : 0;
-  const avgLoss = losses.length ? grossLoss/losses.length : 0;
-  const bestTrade = Math.max(...T.map(t=>t.pnl));
-  const worstTrade = Math.min(...T.map(t=>t.pnl));
-  const initBal = bal - netPnl;
 
-  // Equity curve
+  /* ── Calcular P&L neto por operación individual ─────────────── */
+  // El campo t.pnl es el resultado BRUTO (solo pips/precio).
+  // El costo real = t.comm + t.swap (ambos ya negativos en el dataset).
+  // netPnlPerTrade = t.pnl + t.comm + t.swap
+  const withNet = T.map(t => ({
+    ...t,
+    netPnlTrade: +(t.pnl + t.comm + t.swap).toFixed(2)
+  }));
+
+  /* ── Ganancia/pérdida BRUTA (solo mercado, sin costos) ──────── */
+  const grossWinTrades  = withNet.filter(t => t.pnl > 0);
+  const grossLossTrades = withNet.filter(t => t.pnl < 0);
+  const grossWin  = +grossWinTrades.reduce((s,t)=>s+t.pnl,0).toFixed(2);
+  const grossLoss = +grossLossTrades.reduce((s,t)=>s+t.pnl,0).toFixed(2);
+  const grossPnl  = +(grossWin + grossLoss).toFixed(2);
+
+  /* ── Costos operacionales totales ───────────────────────────── */
+  const commTotal = +T.reduce((s,t)=>s+t.comm,0).toFixed(2);
+  const swapTotal = +T.reduce((s,t)=>s+(t.swap||0),0).toFixed(2);
+  const totalCosts = +(commTotal + swapTotal).toFixed(2);
+
+  /* ── P&L NETO (bruto menos costos) ─────────────────────────── */
+  const netPnl = +(grossPnl + totalCosts).toFixed(2);
+
+  /* ── Ganadoras / Perdedoras sobre P&L NETO por trade ──────── */
+  // FIX #3: wins/losses se basan en netPnlTrade, no solo en t.pnl
+  const wins   = withNet.filter(t => t.netPnlTrade > 0);
+  const losses = withNet.filter(t => t.netPnlTrade < 0);
+  const winRate = T.length ? +(wins.length / T.length * 100).toFixed(2) : 0;
+
+  /* ── Profit Factor NETO ──────────────────────────────────────── */
+  // FIX #1 & #2: PF calculado sobre resultado neto por operación
+  const netWinSum  = +wins.reduce((s,t)=>s+t.netPnlTrade,0).toFixed(2);
+  const netLossSum = +losses.reduce((s,t)=>s+t.netPnlTrade,0).toFixed(2);
+  const pf = netLossSum !== 0 ? +(Math.abs(netWinSum / netLossSum)).toFixed(3) : Infinity;
+
+  /* ── Win Rate por DIRECCIÓN (FIX #3) ─────────────────────────── */
+  // Se filtra primero por tipo, luego se evalúa sobre netPnlTrade
+  const longs  = withNet.filter(t => t.type === 'buy');
+  const shorts = withNet.filter(t => t.type === 'sell');
+  const longsWins  = longs.filter(t => t.netPnlTrade > 0);
+  const shortsWins = shorts.filter(t => t.netPnlTrade > 0);
+
+  const avgWin  = wins.length   ? +(netWinSum  / wins.length).toFixed(2) : 0;
+  const avgLoss = losses.length ? +(netLossSum / losses.length).toFixed(2) : 0;
+  const bestTrade  = wins.length   ? +Math.max(...wins.map(t=>t.netPnlTrade)).toFixed(2)   : 0;
+  const worstTrade = losses.length ? +Math.min(...losses.map(t=>t.netPnlTrade)).toFixed(2) : 0;
+
+  const initBal = +(bal - netPnl).toFixed(2);
+
+  /* ── Equity curve (sobre netPnlTrade) ───────────────────────── */
   let b = initBal;
-  const equity = T.map(t=>{ b+=t.pnl; return +b.toFixed(2); });
+  const equity = withNet.map(t=>{ b = +(b + t.netPnlTrade).toFixed(2); return b; });
 
-  // Drawdown
+  /* ── Drawdown ─────────────────────────────────────────────────── */
   let peak = initBal;
   const dd = equity.map(v=>{ if(v>peak) peak=v; return +(((v-peak)/peak)*100).toFixed(2); });
-  const maxDD = Math.min(...dd);
-  const maxDDabs = Math.max(...equity.map((v,i)=>{
+  const maxDD = +Math.min(...dd).toFixed(2);
+  const maxDDabs = +Math.max(...equity.map((v,i)=>{
     let pk=initBal; for(let j=0;j<=i;j++) if(equity[j]>pk) pk=equity[j]; return pk-v;
-  }));
-  const absDD = initBal - Math.min(...equity);
+  })).toFixed(2);
+  const absDD = +(initBal - Math.min(...equity)).toFixed(2);
 
-  // Consecutive wins/losses
+  /* ── Rachas ──────────────────────────────────────────────────── */
   let maxWinStreak=0,maxLossStreak=0,curW=0,curL=0;
   let maxWinStreakPnl=0,maxLossStreakPnl=0,curWpnl=0,curLpnl=0;
-  T.forEach(t=>{
-    if(t.pnl>0){ curW++;curWpnl+=t.pnl;curL=0;curLpnl=0;if(curW>maxWinStreak){maxWinStreak=curW;maxWinStreakPnl=curWpnl;} }
-    else if(t.pnl<0){ curL++;curLpnl+=t.pnl;curW=0;curWpnl=0;if(curL>maxLossStreak){maxLossStreak=curL;maxLossStreakPnl=curLpnl;} }
+  withNet.forEach(t=>{
+    if(t.netPnlTrade>0){ curW++;curWpnl+=t.netPnlTrade;curL=0;curLpnl=0;if(curW>maxWinStreak){maxWinStreak=curW;maxWinStreakPnl=+curWpnl.toFixed(2);} }
+    else if(t.netPnlTrade<0){ curL++;curLpnl+=t.netPnlTrade;curW=0;curWpnl=0;if(curL>maxLossStreak){maxLossStreak=curL;maxLossStreakPnl=+curLpnl.toFixed(2);} }
     else{curW=0;curL=0;}
   });
+
+  /* ── Sharpe (sobre netPnlTrade) ─────────────────────────────── */
   const sharpe = (() => {
     if(T.length<2) return 0;
-    const pnls = T.map(t=>t.pnl);
+    const pnls = withNet.map(t=>t.netPnlTrade);
     const avg = netPnl/T.length;
     const std = Math.sqrt(pnls.reduce((s,p)=>s+(p-avg)**2,0)/(T.length-1));
     return std>0 ? +(avg/std*Math.sqrt(252)).toFixed(3) : 0;
   })();
-  const expected = T.length ? +(netPnl/T.length).toFixed(4) : 0;
-  const recovery = maxDDabs>0 ? +(netPnl/maxDDabs).toFixed(3) : 0;
 
-  // Daily PnL
+  const expected  = T.length ? +(netPnl/T.length).toFixed(4) : 0;
+  const recovery  = maxDDabs>0 ? +(netPnl/maxDDabs).toFixed(3) : 0;
+  const retPct    = initBal>0 ? +((netPnl/initBal)*100).toFixed(2) : 0;
+  const grossRetPct = initBal>0 ? +((grossPnl/initBal)*100).toFixed(2) : 0;
+
+  /* ── Daily PnL (sobre netPnlTrade) ──────────────────────────── */
   const daily = {};
-  T.forEach(t=>{ const d=t.open.split(' ')[0]; daily[d]=(daily[d]||0)+t.pnl; });
-  Object.keys(daily).forEach(k=>daily[k]=+daily[k].toFixed(2));
+  withNet.forEach(t=>{ const d=t.open.split(' ')[0]; daily[d]=+((daily[d]||0)+t.netPnlTrade).toFixed(2); });
 
-  // By symbol
+  /* ── Por símbolo ─────────────────────────────────────────────── */
   const syms = {};
-  T.forEach(t=>{
-    if(!syms[t.sym]) syms[t.sym]={pnl:0,count:0,wins:0};
-    syms[t.sym].pnl+=t.pnl; syms[t.sym].count++;
-    if(t.pnl>0) syms[t.sym].wins++;
+  withNet.forEach(t=>{
+    if(!syms[t.sym]) syms[t.sym]={pnl:0,grossPnl:0,count:0,wins:0};
+    syms[t.sym].pnl      = +(syms[t.sym].pnl + t.netPnlTrade).toFixed(2);
+    syms[t.sym].grossPnl = +(syms[t.sym].grossPnl + t.pnl).toFixed(2);
+    syms[t.sym].count++;
+    if(t.netPnlTrade>0) syms[t.sym].wins++;
   });
 
-  // Longs/Shorts
-  const longs = T.filter(t=>t.type==='buy');
-  const shorts = T.filter(t=>t.type==='sell');
-
-  // Duration
   const durMin = t => {
     try {
       const a=new Date(t.open.replace(/\./g,'-').replace(' ','T'));
@@ -783,18 +874,19 @@ function computeMetrics(T, bal) {
   };
 
   return {
-    wins:wins.length, losses:losses.length, total:T.length,
-    grossWin:+grossWin.toFixed(2), grossLoss:+grossLoss.toFixed(2),
-    netPnl:+netPnl.toFixed(2), commTotal:+commTotal.toFixed(2),
-    pf:+pf.toFixed(3), winRate:+winRate.toFixed(2),
-    avgWin:+avgWin.toFixed(2), avgLoss:+avgLoss.toFixed(2),
-    bestTrade, worstTrade, initBal:+initBal.toFixed(2),
-    equity, dd, maxDD:+maxDD.toFixed(2), maxDDabs:+maxDDabs.toFixed(2),
-    absDD:+absDD.toFixed(2),
-    maxWinStreak, maxLossStreak, maxWinStreakPnl:+maxWinStreakPnl.toFixed(2),
-    maxLossStreakPnl:+maxLossStreakPnl.toFixed(2),
-    sharpe, expected, recovery, daily, syms, longs, shorts, durMin,
-    retPct: +((netPnl/initBal)*100).toFixed(2)
+    wins: wins.length, losses: losses.length, total: T.length,
+    grossWin, grossLoss, grossPnl,
+    commTotal, swapTotal, totalCosts,
+    netPnl, netWinSum, netLossSum,
+    pf, winRate, avgWin, avgLoss,
+    bestTrade, worstTrade, initBal,
+    equity, dd, maxDD, maxDDabs, absDD,
+    maxWinStreak, maxLossStreak,
+    maxWinStreakPnl, maxLossStreakPnl,
+    sharpe, expected, recovery, daily, syms,
+    longs, shorts, longsWins, shortsWins,
+    durMin, retPct, grossRetPct,
+    withNet
   };
 }
 
@@ -803,9 +895,8 @@ function computeMetrics(T, bal) {
 ══════════════════════════════════════════ */
 let CURRENT_TRADES = [];
 let CURRENT_META   = {};
-let CURRENT_FILTER = 'all'; // 'all' | 'YYYY.MM' | 'YYYY-WNN'
+let CURRENT_FILTER = 'all';
 
-/* ── Filtrado de trades por período ── */
 function filterTradesByPeriod(trades, filter) {
   if(filter === 'all') return trades;
   if(filter.startsWith('week:')) {
@@ -815,7 +906,6 @@ function filterTradesByPeriod(trades, filter) {
       return getISOWeek(d).year === +y && getISOWeek(d).week === +w;
     });
   }
-  // month filter: 'YYYY.MM'
   return trades.filter(t => t.open.startsWith(filter));
 }
 
@@ -839,7 +929,6 @@ function setPeriod(filter, btn) {
 }
 
 function buildPeriodButtons(trades) {
-  // Months only
   const months = [...new Set(trades.map(t => t.open.slice(0,7)))].sort();
   const monthNames = {
     '01':'Ene','02':'Feb','03':'Mar','04':'Abr','05':'May','06':'Jun',
@@ -856,45 +945,37 @@ function refreshDashboard() {
   const filtered = filterTradesByPeriod(CURRENT_TRADES, CURRENT_FILTER);
   if(!filtered.length) return;
 
-  // Balance de referencia para el período filtrado
-  // Si es acumulado total usamos meta.balance; si es subperíodo, usamos balance al inicio de ese período
   let refBalance;
   if(CURRENT_FILTER === 'all') {
     refBalance = CURRENT_META.balance;
   } else {
-    // Reconstruir equity hasta el inicio del período filtrado
-    const allPnl = CURRENT_TRADES.reduce((s,t) => s + t.pnl, 0);
-    const initBal = CURRENT_META.balance - allPnl;
+    const allNet = CURRENT_TRADES.reduce((s,t) => s + t.pnl + t.comm + (t.swap||0), 0);
+    const initBal = CURRENT_META.balance - allNet;
     const firstIdx = CURRENT_TRADES.indexOf(filtered[0]);
     let bal = initBal;
-    for(let i=0; i<firstIdx; i++) bal += CURRENT_TRADES[i].pnl;
-    const periodPnl = filtered.reduce((s,t) => s + t.pnl, 0);
-    refBalance = +(bal + periodPnl).toFixed(2);
+    for(let i=0; i<firstIdx; i++) bal += CURRENT_TRADES[i].pnl + CURRENT_TRADES[i].comm + (CURRENT_TRADES[i].swap||0);
+    const periodNet = filtered.reduce((s,t) => s + t.pnl + t.comm + (t.swap||0), 0);
+    refBalance = +(bal + periodNet).toFixed(2);
   }
 
   const m = computeMetrics(filtered, refBalance);
   const startDate = filtered[0].open.slice(0,10);
   const endDate   = filtered[filtered.length-1].close?.slice(0,10) || filtered[filtered.length-1].open.slice(0,10);
 
-  // Update sidebar chg label
-  const periodPnl = filtered.reduce((s,t)=>s+t.pnl,0);
-  const initBal2  = refBalance - periodPnl;
-  const retPct2   = initBal2 > 0 ? +((periodPnl/initBal2)*100).toFixed(2) : 0;
   const periodLabel = CURRENT_FILTER === 'all'
     ? 'acumulado total'
     : CURRENT_FILTER.startsWith('week:') ? `semana ${CURRENT_FILTER.split(':')[2]}`
     : (() => {
         const [y,mo] = CURRENT_FILTER.split('.');
-        const mn = {Jan:'Ene',Feb:'Feb',Mar:'Mar',Apr:'Abr',May:'May',Jun:'Jun',Jul:'Jul',Aug:'Ago',Sep:'Sep',Oct:'Oct',Nov:'Nov',Dec:'Dic'};
         const names = {'01':'Ene','02':'Feb','03':'Mar','04':'Abr','05':'May','06':'Jun','07':'Jul','08':'Ago','09':'Sep','10':'Oct','11':'Nov','12':'Dic'};
         return `${names[mo]||mo} ${y}`;
       })();
-  document.getElementById('sb-chg').textContent =
-    (periodPnl>=0?'+$':'−$')+Math.abs(periodPnl).toFixed(2)+
-    ` ${periodLabel} (${retPct2>=0?'+':''}${retPct2}%)`;
-  document.getElementById('sb-chg').style.color = periodPnl>=0?'var(--green)':'var(--red)';
 
-  // Update period badges
+  document.getElementById('sb-chg').textContent =
+    (m.netPnl>=0?'+$':'−$')+Math.abs(m.netPnl).toFixed(2)+
+    ` ${periodLabel} (${m.retPct>=0?'+':''}${m.retPct}%)`;
+  document.getElementById('sb-chg').style.color = m.netPnl>=0?'var(--green)':'var(--red)';
+
   const pBadge = `${startDate} → ${endDate}`;
   const subTxt = `${startDate} → ${endDate} · ${filtered.length} operaciones`;
   ['ov-sub','tr-sub'].forEach(id=>document.getElementById(id).textContent=subTxt);
@@ -913,7 +994,6 @@ function renderDashboard(meta, trades) {
   CURRENT_META   = meta;
   CURRENT_FILTER = 'all';
 
-  // Nav pills
   const initDate = trades[0]?.open?.slice(0,7)||'';
   const endDate  = trades[trades.length-1]?.open?.slice(0,7)||'';
   const periodStr = initDate===endDate ? initDate : initDate+' – '+endDate;
@@ -921,7 +1001,6 @@ function renderDashboard(meta, trades) {
   document.getElementById('nav-period').textContent = periodStr;
   document.getElementById('nav-broker').textContent = meta.broker||'MT5';
 
-  // Sidebar static info
   const initials = (meta.name||'—').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
   document.getElementById('sb-avatar').textContent = initials;
   document.getElementById('sb-name').textContent = meta.name||'—';
@@ -929,15 +1008,12 @@ function renderDashboard(meta, trades) {
   document.getElementById('sb-bal').textContent = '$'+meta.balance.toFixed(2);
   document.getElementById('sb-bal').style.color = 'var(--white)';
 
-  // Build period filter buttons
   buildPeriodButtons(trades);
 
-  // Reset filter button state
   document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('on'));
   const allBtn = document.querySelector('.pbtn.total');
   if(allBtn) allBtn.classList.add('on');
 
-  // Render all pages
   refreshDashboard();
 
   hideLoading();
@@ -946,7 +1022,8 @@ function renderDashboard(meta, trades) {
 
 /* ── helpers ── */
 function kc(lbl,val,hint,cls=''){
-  return `<div class="kc ${cls}"><div class="kl">${lbl}</div><div class="kv ${cls.includes('rk')?'r':cls.includes('gk')?'g':''}">${val}</div><div class="kh">${hint}</div></div>`;
+  const valCls = cls.includes('rk')?'r':cls.includes('gk')?'g':'';
+  return `<div class="kc ${cls}"><div class="kl">${lbl}</div><div class="kv ${valCls}">${val}</div><div class="kh">${hint}</div></div>`;
 }
 function sr(lbl,val,cls=''){
   return `<div class="sr"><span class="sl-l">${lbl}</span><span class="sl-v ${cls}">${val}</span></div>`;
@@ -956,46 +1033,62 @@ const fmtP=v=>(v>=0?'+':'')+ v.toFixed(2)+'%';
 
 /* ── OVERVIEW ── */
 function buildOverview(m, T, meta){
+
+  /* ─────────────────────────────────────────────────────────────
+     KPI FILA 1:
+     · Balance Final
+     · P&L BRUTO  (solo resultado de mercado, sin costos)
+     · P&L NETO   (bruto − comisiones − swap) ← CORRECCIÓN #1
+     · Win Rate
+     · Operaciones
+  ───────────────────────────────────────────────────────────── */
   document.getElementById('ov-kpi1').innerHTML =
     kc('Balance Final','$'+meta.balance.toFixed(2),'Patrimonio neto disponible','ak')+
-    kc('P&L Neto',fmt(m.netPnl),`Bruto ${fmt(m.grossWin)} / Pérd. ${fmt(m.grossLoss)}`, m.netPnl>=0?'gk':'rk')+
-    kc('Win Rate',m.winRate.toFixed(1)+'%',`${m.wins} ganadoras · ${m.losses} perdedoras`, m.winRate>=50?'gk':'rk')+
-    kc('Operaciones',m.total,Object.keys(m.syms).map(s=>`${s}×${m.syms[s].count}`).join(' · '));
+    kc('P&L Bruto',fmt(m.grossPnl),
+       `Gan. bruta ${fmt(m.grossWin)} / Perd. bruta ${fmt(m.grossLoss)}`,
+       m.grossPnl>=0?'gk':'rk')+
+    kc('P&L Neto',fmt(m.netPnl),
+       `Costos: Comis. ${fmt(m.commTotal)} / Swap ${fmt(m.swapTotal)}`,
+       m.netPnl>=0?'gk':'rk')+
+    kc('Win Rate',m.winRate.toFixed(1)+'%',
+       `${m.wins} ganadoras · ${m.losses} perdedoras (sobre P&L neto)`,
+       m.winRate>=50?'gk':'rk');
 
   document.getElementById('ov-kpi2').innerHTML =
-    kc('Profit Factor',isFinite(m.pf)?m.pf.toFixed(3):'∞','Objetivo: ≥ 1.30', m.pf>=1.3?'gk':m.pf>=1?'':'rk')+
+    kc('Operaciones',m.total,Object.keys(m.syms).map(s=>`${s}×${m.syms[s].count}`).join(' · '))+
+    kc('Profit Factor',isFinite(m.pf)?m.pf.toFixed(3):'∞','Neto (incl. comis. + swap)', m.pf>=1.3?'gk':m.pf>=1?'':'rk')+
     kc('Sharpe Ratio',m.sharpe.toFixed(3),'Anualizado')+
     kc('Max Drawdown',Math.abs(m.maxDD).toFixed(2)+'%',`$${m.maxDDabs.toFixed(2)} desde el pico`,'rk')+
-    kc('Mejor op.',fmt(m.bestTrade),'Individual','gk')+
-    kc('Peor op.',fmt(m.worstTrade),'Individual','rk');
+    kc('Mejor op.',fmt(m.bestTrade),'Neto individual','gk');
 
-  // Win rate bars
-  const longsW = m.longs.filter(t=>t.pnl>0).length;
-  const shortsW = m.shorts.filter(t=>t.pnl>0).length;
-  const lwr = m.longs.length ? (longsW/m.longs.length*100) : 0;
-  const swr = m.shorts.length ? (shortsW/m.shorts.length*100) : 0;
+  /* ── Win Rate por dirección — FIX #3 ──────────────────────── */
+  // longsWins y shortsWins ya vienen calculados sobre netPnlTrade en computeMetrics
+  const lwr = m.longs.length ? +(m.longsWins.length  / m.longs.length  * 100).toFixed(1) : 0;
+  const swr = m.shorts.length? +(m.shortsWins.length / m.shorts.length * 100).toFixed(1) : 0;
+  const longsL  = m.longs.length  - m.longsWins.length;
+  const shortsL = m.shorts.length - m.shortsWins.length;
+
   document.getElementById('ov-wr').innerHTML = `
     <div style="margin-bottom:12px;">
       <div style="font-size:11px;color:var(--dim);margin-bottom:5px;">Longs (Buy) — ${m.longs.length} ops</div>
       <div class="wb-track"><div class="wb-fill" style="width:${lwr}%;background:var(--green);"></div></div>
-      <div class="wb-lbl"><span style="color:var(--green)">${lwr.toFixed(1)}% ganadoras</span><span class="txt-dim">${longsW}W · ${m.longs.length-longsW}L</span></div>
+      <div class="wb-lbl"><span style="color:var(--green)">${lwr}% ganadoras</span><span class="txt-dim">${m.longsWins.length}W · ${longsL}L</span></div>
     </div>
     <div>
       <div style="font-size:11px;color:var(--dim);margin-bottom:5px;">Shorts (Sell) — ${m.shorts.length} ops</div>
       <div class="wb-track"><div class="wb-fill" style="width:${swr}%;background:var(--green);"></div></div>
-      <div class="wb-lbl"><span style="color:var(--green)">${swr.toFixed(1)}% ganadoras</span><span class="txt-dim">${shortsW}W · ${m.shorts.length-shortsW}L</span></div>
+      <div class="wb-lbl"><span style="color:var(--green)">${swr}% ganadoras</span><span class="txt-dim">${m.shortsWins.length}W · ${shortsL}L</span></div>
     </div>`;
 
   // Equity chart
   const eqLabels = T.map((_,i)=>i%Math.ceil(T.length/8)===0?T[i].open.slice(5,10):'');
-  const eqData = {
+  mkChart('c-equity','line',{
     labels:eqLabels,
     datasets:[
       {data:m.equity,borderColor:GOLD,borderWidth:2,pointRadius:0,pointHoverRadius:4,pointHoverBackgroundColor:GOLD,fill:true,backgroundColor:goldBg,tension:0.35},
       {data:T.map(()=>m.initBal),borderColor:'rgba(107,104,100,0.3)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false}
     ]
-  };
-  mkChart('c-equity','line',eqData,{scales:{y:{ticks:{callback:v=>'$'+v.toFixed(0)}}}});
+  },{scales:{y:{ticks:{callback:v=>'$'+v.toFixed(0)}}}});
 
   // Symbol doughnut
   const symKeys = Object.keys(m.syms);
@@ -1005,35 +1098,474 @@ function buildOverview(m, T, meta){
     datasets:[{data:symKeys.map(s=>m.syms[s].count),backgroundColor:symColors.slice(0,symKeys.length).map(c=>c+'BB'),borderColor:symColors.slice(0,symKeys.length),borderWidth:1}]
   },{plugins:{legend:{display:true,position:'bottom',labels:{color:'#6B6864',font:{size:10},padding:10,usePointStyle:true}},tooltip:BASE_OPTS.plugins.tooltip},cutout:'65%',scales:{x:{display:false},y:{display:false}}});
 
-  // PnL bar
+  // PnL bar (sobre netPnlTrade)
   mkChart('c-pnlbar','bar',{
-    labels:T.map((_,i)=>i+1),
-    datasets:[{data:T.map(t=>+t.pnl.toFixed(2)),backgroundColor:T.map(t=>t.pnl>=0?GREEN+'BB':RED+'BB'),borderColor:T.map(t=>t.pnl>=0?GREEN:RED),borderWidth:1,borderRadius:2}]
+    labels:m.withNet.map((_,i)=>i+1),
+    datasets:[{data:m.withNet.map(t=>t.netPnlTrade),backgroundColor:m.withNet.map(t=>t.netPnlTrade>=0?GREEN+'BB':RED+'BB'),borderColor:m.withNet.map(t=>t.netPnlTrade>=0?GREEN:RED),borderWidth:1,borderRadius:2}]
   },{scales:{y:{ticks:{callback:v=>'$'+v.toFixed(1)}},x:{ticks:{maxTicksLimit:10}}}});
 
-  // Daily
+  // Daily (sobre netPnlTrade por día)
   const dKeys=Object.keys(m.daily), dVals=Object.values(m.daily);
   mkChart('c-daily','bar',{
     labels:dKeys.map(d=>d.slice(5)),
     datasets:[{data:dVals,backgroundColor:dVals.map(v=>v>=0?GREEN+'BB':RED+'BB'),borderColor:dVals.map(v=>v>=0?GREEN:RED),borderWidth:1,borderRadius:2}]
   },{scales:{y:{ticks:{callback:v=>'$'+v.toFixed(1)}},x:{ticks:{maxRotation:45,font:{size:9}}}}});
+
+  // Asset Analysis
+  buildAssetAnalysis(m, T);
+}
+
+/* ══════════════════════════════════════════
+   ASSET ANALYSIS
+   Vista de rendimiento por activo con modos:
+   · Resumen (todos los activos, scorecards)
+   · Individual (selector por símbolo, detalle completo)
+   · Comparativo (tabla side-by-side)
+══════════════════════════════════════════ */
+let AA_VIEW   = 'all';    // 'all' | 'single' | 'compare'
+let AA_SYM    = null;     // símbolo activo en vista single
+let AA_M_CACHE = null;    // último m para re-render sin recalcular
+let AA_T_CACHE = null;
+
+function setAAView(view, btn) {
+  AA_VIEW = view;
+  document.querySelectorAll('.aa-tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderAABody();
+}
+
+function setAASym(sym, btn) {
+  AA_SYM = sym;
+  document.querySelectorAll('.aa-sym-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderAABody();
+}
+
+function buildAssetAnalysis(m, T) {
+  AA_M_CACHE = m;
+  AA_T_CACHE = T;
+  // Resetear vista a 'all' y tabs al cambiar período
+  AA_VIEW = 'all';
+  document.querySelectorAll('.aa-tab').forEach((b,i)=>b.classList.toggle('on', i===0));
+  renderAABody();
+}
+
+/* ─── Datos por símbolo y dirección ──────────────────── */
+function symStats(T, sym) {
+  const trades = sym ? T.filter(t=>t.sym===sym) : T;
+  const withNet = trades.map(t=>({...t, netPnlTrade:+(t.pnl+t.comm+(t.swap||0)).toFixed(2)}));
+
+  const buys  = withNet.filter(t=>t.type==='buy');
+  const sells = withNet.filter(t=>t.type==='sell');
+
+  function dirMetrics(arr) {
+    const wins   = arr.filter(t=>t.netPnlTrade>0);
+    const losses = arr.filter(t=>t.netPnlTrade<0);
+    const grossWin  = +wins.reduce((s,t)=>s+t.pnl,0).toFixed(2);
+    const grossLoss = +losses.reduce((s,t)=>s+t.pnl,0).toFixed(2);
+    const netWin    = +wins.reduce((s,t)=>s+t.netPnlTrade,0).toFixed(2);
+    const netLoss   = +losses.reduce((s,t)=>s+t.netPnlTrade,0).toFixed(2);
+    const netTotal  = +(netWin+netLoss).toFixed(2);
+    const pf        = netLoss!==0 ? +Math.abs(netWin/netLoss).toFixed(3) : (wins.length?Infinity:0);
+    const wr        = arr.length ? +(wins.length/arr.length*100).toFixed(1) : 0;
+    const avgWin    = wins.length   ? +(netWin/wins.length).toFixed(2) : 0;
+    const avgLoss   = losses.length ? +(netLoss/losses.length).toFixed(2) : 0;
+    const rr        = avgLoss!==0 ? +Math.abs(avgWin/avgLoss).toFixed(2) : 0;
+    const comm      = +arr.reduce((s,t)=>s+t.comm,0).toFixed(2);
+    const swap      = +arr.reduce((s,t)=>s+(t.swap||0),0).toFixed(2);
+    return {count:arr.length,wins:wins.length,losses:losses.length,netTotal,grossWin,grossLoss,netWin,netLoss,pf,wr,avgWin,avgLoss,rr,comm,swap};
+  }
+
+  const buyM  = dirMetrics(buys);
+  const sellM = dirMetrics(sells);
+
+  const allWins   = withNet.filter(t=>t.netPnlTrade>0);
+  const allLosses = withNet.filter(t=>t.netPnlTrade<0);
+  const netTotal  = +withNet.reduce((s,t)=>s+t.netPnlTrade,0).toFixed(2);
+  const netWinSum = +allWins.reduce((s,t)=>s+t.netPnlTrade,0).toFixed(2);
+  const netLossSum= +allLosses.reduce((s,t)=>s+t.netPnlTrade,0).toFixed(2);
+  const pf        = netLossSum!==0 ? +Math.abs(netWinSum/netLossSum).toFixed(3) : (allWins.length?Infinity:0);
+  const wr        = withNet.length ? +(allWins.length/withNet.length*100).toFixed(1) : 0;
+  const avgWin    = allWins.length   ? +(netWinSum/allWins.length).toFixed(2)   : 0;
+  const avgLoss   = allLosses.length ? +(netLossSum/allLosses.length).toFixed(2): 0;
+  const rr        = avgLoss!==0 ? +Math.abs(avgWin/avgLoss).toFixed(2) : 0;
+  const comm      = +withNet.reduce((s,t)=>s+t.comm,0).toFixed(2);
+  const swap      = +withNet.reduce((s,t)=>s+(t.swap||0),0).toFixed(2);
+
+  // Mejor dirección (mayor netTotal absoluto con resultado positivo, sino la menos mala)
+  let bestDir = 'neutral';
+  if(buyM.netTotal > 0 && buyM.netTotal >= sellM.netTotal) bestDir = 'buy';
+  else if(sellM.netTotal > 0) bestDir = 'sell';
+  else if(buyM.netTotal > sellM.netTotal) bestDir = 'buy';
+  else if(sellM.netTotal > buyM.netTotal) bestDir = 'sell';
+
+  return {sym, count:withNet.length, wins:allWins.length, losses:allLosses.length,
+          netTotal, pf, wr, avgWin, avgLoss, rr, comm, swap,
+          buy:buyM, sell:sellM, bestDir};
+}
+
+/* ─── Render principal ───────────────────────────────── */
+function renderAABody() {
+  const m = AA_M_CACHE;
+  const T = AA_T_CACHE;
+  if(!m||!T) return;
+
+  const syms = Object.keys(m.syms);
+  const symColorMap = {};
+  const sCols = [GOLD, BLUE, '#A78BFA', '#F59E0B', '#10B981'];
+  syms.forEach((s,i)=>symColorMap[s]=sCols[i%sCols.length]);
+
+  const bar = document.getElementById('aa-sym-bar');
+  const body = document.getElementById('aa-body');
+
+  if(AA_VIEW === 'all') {
+    bar.style.display = 'none';
+    body.innerHTML = renderAAAll(syms, T, symColorMap);
+
+  } else if(AA_VIEW === 'single') {
+    bar.style.display = 'block';
+    if(!AA_SYM || !syms.includes(AA_SYM)) AA_SYM = syms[0];
+    // Build sym toggle
+    document.getElementById('aa-sym-toggle').innerHTML = syms.map(s=>
+      `<button class="aa-sym-btn ${s===AA_SYM?'on':''}" style="${s===AA_SYM?`border-color:${symColorMap[s]};color:${symColorMap[s]};background:${symColorMap[s]}18;`:''}" onclick="setAASym('${s}',this)">${s}</button>`
+    ).join('');
+    body.innerHTML = renderAASingle(AA_SYM, T, symColorMap);
+
+  } else {
+    bar.style.display = 'none';
+    body.innerHTML = renderAACompare(syms, T, symColorMap);
+  }
+
+  // Render mini charts después del HTML
+  if(AA_VIEW === 'all') renderAAAllCharts(syms, T, symColorMap);
+  if(AA_VIEW === 'single') renderAASingleChart(AA_SYM, T, symColorMap);
+  if(AA_VIEW === 'compare') renderAACompareChart(syms, T, symColorMap);
+}
+
+/* ─── Vista RESUMEN ──────────────────────────────────── */
+function renderAAAll(syms, T, colorMap) {
+  const cols = syms.length === 1 ? '1fr' : syms.length === 2 ? '1fr 1fr' : `repeat(${syms.length},1fr)`;
+  let html = `<div style="display:grid;grid-template-columns:${cols};gap:14px;margin-bottom:14px;">`;
+
+  syms.forEach(sym => {
+    const s = symStats(T, sym);
+    const col = colorMap[sym];
+    const pnlColor = s.netTotal>=0?'var(--green)':'var(--red)';
+    const bestLabel = s.bestDir==='buy'?'↑ LONG favorece':'↓ SHORT favorece';
+    const bestCls   = s.bestDir==='buy'?'buy':s.bestDir==='sell'?'sell':'neutral';
+
+    html += `
+    <div class="aa-sym-card" style="border-top:2px solid ${col};">
+      <div class="aa-sym-header">
+        <span class="aa-sym-name" style="color:${col};">${sym}</span>
+        <span class="aa-sym-pnl" style="color:${pnlColor};">${s.netTotal>=0?'+$':'-$'}${Math.abs(s.netTotal).toFixed(2)}</span>
+      </div>
+      <div class="aa-mini-grid">
+        <div class="aa-mini-kc"><div class="aa-mini-lbl">OPS</div><div class="aa-mini-val">${s.count}</div></div>
+        <div class="aa-mini-kc"><div class="aa-mini-lbl">WIN RATE</div><div class="aa-mini-val" style="color:${s.wr>=50?'var(--green)':'var(--red)'}">${s.wr}%</div></div>
+        <div class="aa-mini-kc"><div class="aa-mini-lbl">PROF. FACTOR</div><div class="aa-mini-val" style="color:${s.pf>=1?'var(--green)':'var(--red)'}">${isFinite(s.pf)?s.pf.toFixed(2):'∞'}</div></div>
+        <div class="aa-mini-kc"><div class="aa-mini-lbl">R:R</div><div class="aa-mini-val" style="color:${s.rr>=1?'var(--green)':'var(--dim)'}">${s.rr.toFixed(2)}</div></div>
+      </div>
+      <div class="aa-dir-row">
+        <div class="aa-dir-block">
+          <div class="aa-dir-lbl"><span class="buy-tag">▲ BUY</span> · ${s.buy.count} ops</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:${s.buy.netTotal>=0?'var(--green)':'var(--red)'};">${s.buy.netTotal>=0?'+$':'-$'}${Math.abs(s.buy.netTotal).toFixed(2)}</div>
+          <div style="font-size:10px;color:var(--dim);margin-top:3px;">WR ${s.buy.wr}% · PF ${isFinite(s.buy.pf)?s.buy.pf.toFixed(2):'∞'}</div>
+          <div class="wb-track" style="margin-top:6px;"><div class="wb-fill" style="width:${s.buy.wr}%;background:var(--green);"></div></div>
+        </div>
+        <div class="aa-dir-block">
+          <div class="aa-dir-lbl"><span class="sell-tag">▼ SELL</span> · ${s.sell.count} ops</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:${s.sell.netTotal>=0?'var(--green)':'var(--red)'};">${s.sell.netTotal>=0?'+$':'-$'}${Math.abs(s.sell.netTotal).toFixed(2)}</div>
+          <div style="font-size:10px;color:var(--dim);margin-top:3px;">WR ${s.sell.wr}% · PF ${isFinite(s.sell.pf)?s.sell.pf.toFixed(2):'∞'}</div>
+          <div class="wb-track" style="margin-top:6px;"><div class="wb-fill" style="width:${s.sell.wr}%;background:var(--red);"></div></div>
+        </div>
+      </div>
+      <!-- Costos desglosados en resumen -->
+      <div style="background:var(--border);height:1px;margin:10px 0;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+        <div style="display:flex;gap:12px;font-size:10px;flex-wrap:wrap;">
+          <span style="color:var(--dim);">Comis. <span style="color:var(--red);font-weight:600;">-$${Math.abs(s.comm).toFixed(2)}</span></span>
+          <span style="color:var(--dim);">Swap <span style="color:${s.swap<0?'var(--red)':'var(--dim)'};font-weight:600;">${s.swap<0?'-$':'$'}${Math.abs(s.swap).toFixed(2)}</span></span>
+          <span style="color:var(--dim);">Total costos <span style="color:var(--red);font-weight:600;">-$${Math.abs(s.comm+s.swap).toFixed(2)}</span></span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+        <span class="aa-best-badge ${bestCls}">${s.bestDir==='neutral'?'⟷':s.bestDir==='buy'?'▲':' ▼'} ${bestLabel}</span>
+      </div>
+      <div class="ch" style="height:80px;margin-top:10px;"><canvas id="c-aa-all-${sym}"></canvas></div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function renderAAAllCharts(syms, T, colorMap) {
+  syms.forEach(sym => {
+    const trades = T.filter(t=>t.sym===sym)
+      .map(t=>({...t, netPnlTrade:+(t.pnl+t.comm+(t.swap||0)).toFixed(2)}));
+    const labels = trades.map((_,i)=>i+1);
+    const data   = trades.map(t=>t.netPnlTrade);
+    mkChart(`c-aa-all-${sym}`,'bar',{
+      labels,
+      datasets:[{data,backgroundColor:data.map(v=>v>=0?colorMap[sym]+'99':RED+'77'),borderColor:data.map(v=>v>=0?colorMap[sym]:RED),borderWidth:1,borderRadius:2}]
+    },{scales:{x:{display:false},y:{display:false,grid:{display:false}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`$${ctx.raw.toFixed(2)}`}}}});
+  });
+}
+
+/* ─── Vista INDIVIDUAL ───────────────────────────────── */
+function renderAASingle(sym, T, colorMap) {
+  const s = symStats(T, sym);
+  const col = colorMap[sym];
+
+  const bestDir   = s.bestDir;
+  const bestLabel = bestDir==='buy'?'LONG (Buy) — dirección recomendada'
+                  : bestDir==='sell'?'SHORT (Sell) — dirección recomendada'
+                  : 'Sin dirección dominante clara';
+  const bestCls   = bestDir==='buy'?'buy':bestDir==='sell'?'sell':'neutral';
+
+  return `
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:${col};letter-spacing:.06em;">${sym}</span>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:${s.netTotal>=0?'var(--green)':'var(--red)'};">${s.netTotal>=0?'+$':'-$'}${Math.abs(s.netTotal).toFixed(2)}</span>
+    <span class="aa-best-badge ${bestCls}" style="margin-left:auto;">${bestDir==='buy'?'▲':bestDir==='sell'?'▼':'⟷'} ${bestLabel}</span>
+  </div>
+
+  <!-- KPI strip activo -->
+  <div class="kpi-strip k4" style="margin-bottom:14px;">
+    <div class="kc"><div class="kl">OPERACIONES</div><div class="kv">${s.count}</div><div class="kh">${s.wins}W · ${s.losses}L</div></div>
+    <div class="kc ${s.wr>=50?'gk':'rk'}"><div class="kl">WIN RATE NETO</div><div class="kv ${s.wr>=50?'g':'r'}">${s.wr}%</div><div class="kh">${s.wins} ganadoras netas</div></div>
+    <div class="kc ${s.pf>=1.3?'gk':s.pf>=1?'':'rk'}"><div class="kl">PROFIT FACTOR</div><div class="kv">${isFinite(s.pf)?s.pf.toFixed(3):'∞'}</div><div class="kh">Objetivo ≥ 1.30</div></div>
+    <div class="kc ${s.rr>=1?'gk':'rk'}"><div class="kl">RATIO R:R</div><div class="kv ${s.rr>=1?'g':'r'}">${s.rr.toFixed(2)}</div><div class="kh">Avg W $${s.avgWin.toFixed(2)} / L $${Math.abs(s.avgLoss).toFixed(2)}</div></div>
+  </div>
+
+  <!-- Desglose Buy vs Sell detallado -->
+  <div class="g2" style="margin-bottom:14px;">
+    <div class="aa-dir-block" style="padding:14px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:12px;font-weight:600;color:var(--green);">▲ BUY — ${s.buy.count} operaciones</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:${s.buy.netTotal>=0?'var(--green)':'var(--red)'};">${s.buy.netTotal>=0?'+$':'-$'}${Math.abs(s.buy.netTotal).toFixed(2)}</div>
+      </div>
+      ${dirDetailRows(s.buy)}
+      ${bestDir==='buy'?`<div class="aa-best-badge buy" style="margin-top:10px;">▲ Dirección con mejor resultado</div>`:''}
+    </div>
+    <div class="aa-dir-block" style="padding:14px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:12px;font-weight:600;color:var(--red);">▼ SELL — ${s.sell.count} operaciones</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:${s.sell.netTotal>=0?'var(--green)':'var(--red)'};">${s.sell.netTotal>=0?'+$':'-$'}${Math.abs(s.sell.netTotal).toFixed(2)}</div>
+      </div>
+      ${dirDetailRows(s.sell)}
+      ${bestDir==='sell'?`<div class="aa-best-badge sell" style="margin-top:10px;">▼ Dirección con mejor resultado</div>`:''}
+    </div>
+  </div>
+
+  <!-- Equity curve del activo -->
+  <div style="margin-bottom:14px;">
+    <div style="font-size:11px;color:var(--dim);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase;">Curva de equity — ${sym}</div>
+    <div class="ch" style="height:160px;"><canvas id="c-aa-single-eq"></canvas></div>
+  </div>
+
+  <!-- P&L por dirección (barras superpuestas) -->
+  <div>
+    <div style="font-size:11px;color:var(--dim);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase;">P&L individual por operación — Buy vs Sell</div>
+    <div class="ch" style="height:140px;"><canvas id="c-aa-single-dir"></canvas></div>
+  </div>`;
+}
+
+function dirDetailRows(d) {
+  const pf = isFinite(d.pf)?d.pf.toFixed(3):'∞';
+  return `
+  <div class="sl">
+    ${sr('Win Rate',d.wr+'%',d.wr>=50?'g':'r')}
+    ${sr('Profit Factor',pf,d.pf>=1?'g':'r')}
+    ${sr('R:R ratio',d.rr.toFixed(2),d.rr>=1?'g':'r')}
+    ${sr('Avg. ganadora','+$'+d.avgWin.toFixed(2),'g')}
+    ${sr('Avg. perdedora','-$'+Math.abs(d.avgLoss).toFixed(2),'r')}
+    ${sr('Comisiones','-$'+Math.abs(d.comm).toFixed(2),'r')}
+    ${sr('Swap / Interés',(d.swap<0?'-$':'$')+Math.abs(d.swap).toFixed(2),d.swap<0?'r':'')}
+    ${sr('Costo total dir.','-$'+Math.abs(d.comm+d.swap).toFixed(2),'r')}
+  </div>`;
+}
+
+function renderAASingleChart(sym, T, colorMap) {
+  const col = colorMap[sym];
+  const trades = T.filter(t=>t.sym===sym)
+    .map(t=>({...t, netPnlTrade:+(t.pnl+t.comm+(t.swap||0)).toFixed(2)}));
+
+  // Equity curve
+  let eq=[]; let b=0;
+  trades.forEach(t=>{b=+(b+t.netPnlTrade).toFixed(2);eq.push(b);});
+  mkChart('c-aa-single-eq','line',{
+    labels:trades.map((_,i)=>i+1),
+    datasets:[
+      {data:eq,borderColor:col,borderWidth:2,pointRadius:0,fill:true,
+       backgroundColor:(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,160);g.addColorStop(0,col+'33');g.addColorStop(1,col+'00');return g;},tension:0.35},
+      {data:trades.map(()=>0),borderColor:'rgba(107,104,100,0.25)',borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false}
+    ]
+  },{scales:{y:{ticks:{callback:v=>'$'+v.toFixed(1)}}}});
+
+  // Buy vs Sell bars
+  const buyData  = trades.map(t=>t.type==='buy'  ? t.netPnlTrade : null);
+  const sellData = trades.map(t=>t.type==='sell' ? t.netPnlTrade : null);
+  mkChart('c-aa-single-dir','bar',{
+    labels:trades.map((_,i)=>i+1),
+    datasets:[
+      {label:'Buy', data:buyData, backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1,borderRadius:2},
+      {label:'Sell',data:sellData,backgroundColor:RED+'77',  borderColor:RED,  borderWidth:1,borderRadius:2},
+    ]
+  },{plugins:{legend:{display:true,position:'top',align:'end',labels:{color:'#6B6864',font:{size:10},usePointStyle:true,padding:12}}},
+     scales:{y:{ticks:{callback:v=>'$'+v.toFixed(1)}},x:{ticks:{maxTicksLimit:10}}}});
+}
+
+/* ─── Vista COMPARATIVA ──────────────────────────────── */
+function renderAACompare(syms, T, colorMap) {
+  const stats = syms.map(s=>symStats(T,s));
+
+  // Helper: resaltar la columna con el mejor valor
+  const best = (arr, higherIsBetter=true) => {
+    const vals = arr.map(v=>isFinite(v)?v:-Infinity);
+    const b = higherIsBetter ? Math.max(...vals) : Math.min(...vals);
+    return arr.map(v=>v===b);
+  };
+
+  const row = (lbl, vals, higherIsBetter=true, fmtFn=v=>v) => {
+    const bests = best(vals.map(v=>isFinite(v)?v:-Infinity), higherIsBetter);
+    const cells = vals.map((v,i)=>`<div class="aa-compare-val ${bests[i]?'best':''}" style="color:${bests[i]?colorMap[syms[i]]:'var(--white)'}">${fmtFn(v,i)}</div>`).join('');
+    return `<div class="aa-compare-row"><span class="aa-compare-lbl">${lbl}</span><div class="aa-compare-vals">${cells}</div></div>`;
+  };
+
+  // Encabezados de columnas
+  const hdrs = syms.map((s,i)=>`<div class="aa-compare-val" style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:${colorMap[s]};font-size:13px;">${s}</div>`).join('');
+
+  let html = `
+  <!-- Encabezados -->
+  <div class="aa-compare-row" style="border-bottom:1px solid var(--border);">
+    <div class="aa-compare-lbl" style="color:var(--dim2);font-size:10px;letter-spacing:.04em;">ACTIVO</div>
+    <div class="aa-compare-vals">${hdrs}</div>
+  </div>
+
+  <!-- Bloque: General -->
+  <div class="aa-compare-hdr">📊 General</div>
+  ${row('Operaciones totales', stats.map(s=>s.count), true, v=>`${v}`)}
+  ${row('P&L Neto', stats.map(s=>s.netTotal), true, v=>`${v>=0?'+$':'-$'}${Math.abs(v).toFixed(2)}`)}
+  ${row('Win Rate', stats.map(s=>s.wr), true, v=>`${v}%`)}
+  ${row('Profit Factor', stats.map(s=>isFinite(s.pf)?s.pf:99), true, (v,i)=>`${isFinite(stats[i].pf)?stats[i].pf.toFixed(3):'∞'}`)}
+  ${row('Ratio R:R', stats.map(s=>s.rr), true, v=>`${v.toFixed(2)}`)}
+  ${row('Avg. Ganadora', stats.map(s=>s.avgWin), true, v=>`+$${v.toFixed(2)}`)}
+  ${row('Avg. Perdedora', stats.map(s=>s.avgLoss), false, v=>`-$${Math.abs(v).toFixed(2)}`)}
+
+  <!-- Bloque: Buy -->
+  <div class="aa-compare-hdr">▲ Dirección Buy (Long)</div>
+  ${row('Operaciones Buy', stats.map(s=>s.buy.count), true, v=>`${v}`)}
+  ${row('P&L Buy', stats.map(s=>s.buy.netTotal), true, v=>`${v>=0?'+$':'-$'}${Math.abs(v).toFixed(2)}`)}
+  ${row('Win Rate Buy', stats.map(s=>s.buy.wr), true, v=>`${v}%`)}
+  ${row('PF Buy', stats.map(s=>isFinite(s.buy.pf)?s.buy.pf:99), true, (v,i)=>`${isFinite(stats[i].buy.pf)?stats[i].buy.pf.toFixed(2):'∞'}`)}
+  ${row('R:R Buy', stats.map(s=>s.buy.rr), true, v=>`${v.toFixed(2)}`)}
+  ${row('Comisiones Buy', stats.map(s=>s.buy.comm), false, v=>`-$${Math.abs(v).toFixed(2)}`)}
+
+  <!-- Bloque: Sell -->
+  <div class="aa-compare-hdr">▼ Dirección Sell (Short)</div>
+  ${row('Operaciones Sell', stats.map(s=>s.sell.count), true, v=>`${v}`)}
+  ${row('P&L Sell', stats.map(s=>s.sell.netTotal), true, v=>`${v>=0?'+$':'-$'}${Math.abs(v).toFixed(2)}`)}
+  ${row('Win Rate Sell', stats.map(s=>s.sell.wr), true, v=>`${v}%`)}
+  ${row('PF Sell', stats.map(s=>isFinite(s.sell.pf)?s.sell.pf:99), true, (v,i)=>`${isFinite(stats[i].sell.pf)?stats[i].sell.pf.toFixed(2):'∞'}`)}
+  ${row('R:R Sell', stats.map(s=>s.sell.rr), true, v=>`${v.toFixed(2)}`)}
+  ${row('Comisiones Sell', stats.map(s=>s.sell.comm), false, v=>`-$${Math.abs(v).toFixed(2)}`)}
+
+  <!-- Bloque: Costos -->
+  <div class="aa-compare-hdr">💸 Costos Operacionales</div>
+  ${row('Comisiones', stats.map(s=>s.comm), false, v=>`-$${Math.abs(v).toFixed(2)}`)}
+  ${row('Swap', stats.map(s=>s.swap), false, v=>`${v<0?'-$':'$'}${Math.abs(v).toFixed(2)}`)}
+  ${row('Costo total', stats.map(s=>s.comm+s.swap), false, v=>`-$${Math.abs(v).toFixed(2)}`)}
+
+  <!-- Veredicto -->
+  <div class="aa-compare-hdr">🏆 Veredicto</div>
+  <div class="aa-compare-row">
+    <div class="aa-compare-lbl">Mejor dirección</div>
+    <div class="aa-compare-vals">
+      ${stats.map(s=>{
+        const cls = s.bestDir==='buy'?'buy':s.bestDir==='sell'?'sell':'neutral';
+        const lbl = s.bestDir==='buy'?'▲ BUY':s.bestDir==='sell'?'▼ SELL':'⟷ Sin def.';
+        return `<div class="aa-compare-val"><span class="aa-best-badge ${cls}" style="font-size:10px;">${lbl}</span></div>`;
+      }).join('')}
+    </div>
+  </div>
+
+  <!-- Chart comparativo de equity por activo -->
+  <div style="margin-top:18px;">
+    <div style="font-size:11px;color:var(--dim);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase;">Equity acumulado por activo</div>
+    <div class="ch" style="height:180px;"><canvas id="c-aa-compare-eq"></canvas></div>
+  </div>`;
+
+  return `<div class="aa-compare-grid" style="border-radius:4px;overflow:hidden;">${html}</div>`;
+}
+
+function renderAACompareChart(syms, T, colorMap) {
+  // Equity curve separada por símbolo (acumulado en el tiempo)
+  // Ordenar todos los trades por fecha
+  const allDates = [...new Set(T.map(t=>t.open.slice(0,10)))].sort();
+
+  const datasets = syms.map(sym => {
+    const symTrades = T.filter(t=>t.sym===sym)
+      .sort((a,b)=>a.open.localeCompare(b.open))
+      .map(t=>({...t, netPnlTrade:+(t.pnl+t.comm+(t.swap||0)).toFixed(2)}));
+
+    // Acumulado por fecha
+    const cumByDate = {};
+    let running = 0;
+    symTrades.forEach(t=>{
+      const d = t.open.slice(0,10);
+      running = +(running + t.netPnlTrade).toFixed(2);
+      cumByDate[d] = running;
+    });
+
+    // Llenar fechas vacías con último valor conocido
+    let last = 0;
+    const data = allDates.map(d=>{
+      if(cumByDate[d]!==undefined) last = cumByDate[d];
+      return last;
+    });
+
+    return {
+      label:sym,
+      data,
+      borderColor:colorMap[sym],
+      borderWidth:2,
+      pointRadius:0,
+      pointHoverRadius:4,
+      fill:false,
+      tension:0.3
+    };
+  });
+
+  mkChart('c-aa-compare-eq','line',{
+    labels:allDates.map(d=>d.slice(5)),
+    datasets
+  },{
+    plugins:{legend:{display:true,position:'top',align:'end',labels:{color:'#6B6864',font:{size:10},usePointStyle:true,padding:14}}},
+    scales:{
+      y:{ticks:{callback:v=>'$'+v.toFixed(1)},grid:{color:'rgba(34,34,34,0.8)'},ticks:{color:'#4A4846',font:{size:10}}},
+      x:{ticks:{maxTicksLimit:8,color:'#4A4846',font:{size:10}},grid:{color:'rgba(34,34,34,0.8)'}}
+    }
+  });
 }
 
 /* ── RETURN ── */
 function buildReturn(m, T){
   document.getElementById('ret-kpi').innerHTML=
     kc('Retorno Neto',fmtP(m.retPct),`${fmt(m.netPnl)} sobre $${m.initBal.toFixed(2)}`,m.retPct>=0?'gk':'rk')+
-    kc('Ganancia Bruta',fmt(m.grossWin),`${m.wins} operaciones ganadoras`,'gk')+
-    kc('Pérdida Bruta',fmt(m.grossLoss),`${m.losses} operaciones perdedoras`,'rk');
+    kc('P&L Bruto (mercado)',fmt(m.grossPnl),`Gan. ${fmt(m.grossWin)} / Perd. ${fmt(m.grossLoss)}`,m.grossPnl>=0?'gk':'rk')+
+    kc('Costos Operacionales',fmt(m.totalCosts),`Comis. ${fmt(m.commTotal)} · Swap ${fmt(m.swapTotal)}`,'rk');
 
   document.getElementById('ret-stats').innerHTML=
-    sr('Beneficio Neto',fmt(m.netPnl),m.netPnl>=0?'g':'r')+
-    sr('Profit Factor',isFinite(m.pf)?m.pf.toFixed(3):'∞')+
-    sr('Expected Payoff',fmt(m.expected),m.expected>=0?'g':'r')+
+    sr('P&L Bruto (mercado)',fmt(m.grossPnl),m.grossPnl>=0?'g':'r')+
+    sr('Costos totales',fmt(m.totalCosts),'r')+
+    sr('P&L Neto',fmt(m.netPnl),m.netPnl>=0?'g':'r')+
+    sr('Profit Factor (neto)',isFinite(m.pf)?m.pf.toFixed(3):'∞')+
+    sr('Expected Payoff (neto)',fmt(m.expected),m.expected>=0?'g':'r')+
     sr('Sharpe Ratio',m.sharpe.toFixed(3))+
     sr('Recovery Factor',m.recovery.toFixed(3),m.recovery>=0?'g':'r')+
-    sr('Avg. Ganadora',fmt(m.avgWin),'g')+
-    sr('Avg. Perdedora',fmt(m.avgLoss),'r')+
+    sr('Avg. Ganadora (neta)',fmt(m.avgWin),'g')+
+    sr('Avg. Perdedora (neta)',fmt(m.avgLoss),'r')+
     sr('Ratio R:R',(m.avgLoss!==0?Math.abs(m.avgWin/m.avgLoss):0).toFixed(2));
 
   // Equity 2
@@ -1046,33 +1578,31 @@ function buildReturn(m, T){
     ]
   },{scales:{y:{ticks:{callback:v=>'$'+v.toFixed(0)}}}});
 
-  // Weekday
+  // Weekday (sobre daily neto)
   const wdMap={Mon:0,Tue:0,Wed:0,Thu:0,Fri:0,Sat:0,Sun:0};
   const wdN={Mon:0,Tue:0,Wed:0,Thu:0,Fri:0,Sat:0,Sun:0};
   const wdNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  T.forEach(t=>{
+  m.withNet.forEach(t=>{
     try{
       const d=new Date(t.open.replace(/\./g,'-').replace(' ','T'));
       const wd=wdNames[d.getDay()];
-      wdMap[wd]+=t.pnl; wdN[wd]++;
+      wdMap[wd]=+(wdMap[wd]+t.netPnlTrade).toFixed(2); wdN[wd]++;
     }catch(e){}
   });
   const wdK=Object.keys(wdMap).filter(k=>wdN[k]>0);
-  const wdV=wdK.map(k=>+wdMap[k].toFixed(2));
+  const wdV=wdK.map(k=>wdMap[k]);
   mkChart('c-weekday','bar',{
     labels:wdK.map(k=>`${k} (${wdN[k]})`),
     datasets:[{data:wdV,backgroundColor:wdV.map(v=>v>=0?GREEN+'BB':RED+'BB'),borderColor:wdV.map(v=>v>=0?GREEN:RED),borderWidth:1,borderRadius:2}]
   },{scales:{y:{ticks:{callback:v=>'$'+v.toFixed(1)}}}});
 
-  // Sym PnL
-  const sKeys=Object.keys(m.syms),sPnl=sKeys.map(s=>+m.syms[s].pnl.toFixed(2));
-  const symColors=[GOLD,BLUE,'#A78BFA','#F59E0B'];
+  // Sym PnL (neto)
+  const sKeys=Object.keys(m.syms),sPnl=sKeys.map(s=>m.syms[s].pnl);
   mkChart('c-sympnl','bar',{
     labels:sKeys,
     datasets:[{data:sPnl,backgroundColor:sPnl.map(v=>v>=0?GREEN+'BB':RED+'BB'),borderColor:sPnl.map(v=>v>=0?GREEN:RED),borderWidth:1,borderRadius:2,barPercentage:.5}]
   },{scales:{y:{ticks:{callback:v=>'$'+v.toFixed(2)}}}});
 
-  // Heatmap
   buildHeatmap(m.daily, T);
 }
 
@@ -1080,7 +1610,6 @@ function buildHeatmap(daily, T){
   const wrap=document.getElementById('heatmap');
   if(!wrap||!T.length) return;
 
-  // Agrupar por mes para mostrar cada mes en su propio bloque
   const dates = T.map(t=>t.open.slice(0,7));
   const months = [...new Set(dates)].sort();
 
@@ -1101,16 +1630,14 @@ function buildHeatmap(daily, T){
     html += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
       <span style="font-size:11px;font-weight:600;color:var(--white);">${monthNames[mo]||mo} ${y}</span>
       <span style="font-size:11px;font-weight:700;color:${mpColor};">${mpStr}</span>
-      <span style="font-size:10px;color:var(--dim);">total del mes</span>
+      <span style="font-size:10px;color:var(--dim);">P&L neto del mes</span>
     </div>`;
 
     html += `<div class="hm-compact">`;
-    // Cabecera días
     dayHdrs.forEach(d => html+=`<div class="hm-hdr">${d}</div>`);
 
-    // Calcular 1er día del mes
     const firstOfMonth = new Date(Date.UTC(+y, +mo-1, 1));
-    const firstDow = (firstOfMonth.getUTCDay()+6)%7; // 0=Lun
+    const firstDow = (firstOfMonth.getUTCDay()+6)%7;
     for(let i=0;i<firstDow;i++) html+=`<div class="hm-empty"></div>`;
 
     const daysInMonth = new Date(Date.UTC(+y, +mo, 0)).getUTCDate();
@@ -1127,7 +1654,7 @@ function buildHeatmap(daily, T){
           : `rgba(${Math.round(140+intensity*84)},84,84,${0.25+intensity*0.7})`;
         const tc = pnl>=0 ? '#3DB87A' : '#E05454';
         const sign = pnl>=0 ? '+' : '';
-        html+=`<div class="hm-day" style="background:${bg};" title="${key}: ${sign}${pnl.toFixed(2)}">
+        html+=`<div class="hm-day" style="background:${bg};" title="${key} (neto): ${sign}${pnl.toFixed(2)}">
           <span class="hm-num">${d}</span>
           <span class="hm-pnl" style="color:${tc};">${sign}${pnl.toFixed(2)}</span>
         </div>`;
@@ -1157,7 +1684,7 @@ function buildRisk(m, T){
     sr('Pérd. máx. consecutivas',`${m.maxLossStreak} ops ($${m.maxLossStreakPnl.toFixed(2)})`,'r')+
     sr('Gan. máx. consecutivas',`${m.maxWinStreak} ops (+$${m.maxWinStreakPnl.toFixed(2)})`,'g')+
     sr('Mayor pérdida individual',fmt(m.worstTrade),'r')+
-    sr('Promedio pérdida',fmt(m.avgLoss),'r')+
+    sr('Promedio pérdida (neta)',fmt(m.avgLoss),'r')+
     sr('Recovery Factor',m.recovery.toFixed(3),m.recovery>=0?'g':'r')+
     sr('Sharpe Ratio',m.sharpe.toFixed(3));
 
@@ -1168,11 +1695,11 @@ function buildRisk(m, T){
     datasets:[{data:m.dd,borderColor:RED,borderWidth:1.5,fill:true,backgroundColor:redBg,pointRadius:0,pointHoverRadius:3,tension:0.2}]
   },{scales:{y:{ticks:{callback:v=>v.toFixed(1)+'%'},max:0}}});
 
-  // Distribution
+  // Distribution (sobre netPnlTrade)
   const bucketLabels=['>+10','+5–10','+1–5','0–1','-1–0','-5–-1','<-5'];
   const buckets=bucketLabels.map(()=>0);
-  T.forEach(t=>{
-    const p=t.pnl;
+  m.withNet.forEach(t=>{
+    const p=t.netPnlTrade;
     if(p>10)buckets[0]++;else if(p>5)buckets[1]++;else if(p>1)buckets[2]++;
     else if(p>=0)buckets[3]++;else if(p>=-1)buckets[4]++;else if(p>=-5)buckets[5]++;else buckets[6]++;
   });
@@ -1194,7 +1721,6 @@ function buildRisk(m, T){
 
 /* ── TRADES ── */
 function buildTrades(T, m){
-  // Duration per symbol
   const symDur={};
   T.forEach(t=>{
     const d=m.durMin(t);
@@ -1212,7 +1738,6 @@ function buildTrades(T, m){
     return `<div class="prog-row"><span class="prog-lbl">${s}</span><div class="prog-track"><div class="prog-fill" style="width:${avg/maxDur*100}%;background:${symColors[s]};"></div></div><span class="prog-val" style="color:${symColors[s]}">${label}</span></div>`;
   }).join('');
 
-  // Vol per symbol
   const symVol={};
   T.forEach(t=>{ if(!symVol[t.sym])symVol[t.sym]={sum:0,n:0}; symVol[t.sym].sum+=t.vol;symVol[t.sym].n++; });
   const maxVol=Math.max(...Object.values(symVol).map(v=>v.sum/v.n),0.01);
@@ -1221,39 +1746,51 @@ function buildTrades(T, m){
     return `<div class="prog-row"><span class="prog-lbl">${s}</span><div class="prog-track"><div class="prog-fill" style="width:${avg/maxVol*100}%;background:${symColors[s]};"></div></div><span class="prog-val" style="color:${symColors[s]}">${avg}</span></div>`;
   }).join('');
 
-  // Commissions
+  // Costos desglosados
   document.getElementById('tr-comm').innerHTML=`
-    <div class="kv r" style="font-size:26px;margin:10px 0 4px;">${fmt(m.commTotal)}</div>
-    <div class="kh">Promedio: ${fmt(m.commTotal/m.total)} / operación</div>`;
+    <div style="margin-top:6px;">
+      <div class="cost-row"><span>Comisiones</span><span>${fmt(m.commTotal)}</span></div>
+      <div class="cost-row"><span>Swap / Interés</span><span>${fmt(m.swapTotal)}</span></div>
+      <div class="cost-divider"></div>
+      <div class="cost-row" style="font-weight:600;"><span style="color:var(--white);">Total costos</span><span style="color:var(--red);font-size:13px;">${fmt(m.totalCosts)}</span></div>
+      <div style="margin-top:8px;font-size:10px;color:var(--dim);">Promedio / op: ${fmt(m.totalCosts/m.total)}</div>
+    </div>`;
 
-  // Filters
+  // Filters (usa ganadora/perdedora sobre neto)
   const syms=Object.keys(m.syms);
   document.getElementById('tr-filters').innerHTML=
     `<button class="flt on" onclick="flt('all',this)">Todas (${T.length})</button>`+
     syms.map(s=>`<button class="flt" onclick="flt('${s}',this)">${s} (${m.syms[s].count})</button>`).join('')+
     `<button class="flt" onclick="flt('buy',this)">Buy (${m.longs.length})</button>`+
     `<button class="flt" onclick="flt('sell',this)">Sell (${m.shorts.length})</button>`+
-    `<button class="flt" onclick="flt('win',this)">Ganadoras (${m.wins})</button>`+
-    `<button class="flt" onclick="flt('loss',this)">Perdedoras (${m.losses})</button>`;
+    `<button class="flt" onclick="flt('win',this)">Ganadoras netas (${m.wins})</button>`+
+    `<button class="flt" onclick="flt('loss',this)">Perdedoras netas (${m.losses})</button>`;
 
   renderTbl('all', T, m);
 }
 
 function renderTbl(filter, T, m){
-  T=T||CURRENT_TRADES;
-  m=m||computeMetrics(T,parseFloat(document.getElementById('sb-bal').textContent.replace('$','')));
-  const rows=T.filter(t=>{
-    if(filter==='all') return true;
-    if(filter==='buy') return t.type==='buy';
+  T = T || CURRENT_TRADES;
+  if(!m){
+    const bal = parseFloat(document.getElementById('sb-bal').textContent.replace('$',''));
+    m = computeMetrics(T, bal);
+  }
+  // Usamos withNet para el filtro win/loss neto
+  const withNet = m.withNet || T.map(t=>({...t, netPnlTrade:+(t.pnl+t.comm+(t.swap||0)).toFixed(2)}));
+
+  const rows = withNet.filter(t=>{
+    if(filter==='all')  return true;
+    if(filter==='buy')  return t.type==='buy';
     if(filter==='sell') return t.type==='sell';
-    if(filter==='win') return t.pnl>0;
-    if(filter==='loss') return t.pnl<0;
+    if(filter==='win')  return t.netPnlTrade > 0;
+    if(filter==='loss') return t.netPnlTrade < 0;
     return t.sym===filter;
   });
+
   document.getElementById('tbl-body').innerHTML=rows.map((t,i)=>{
     const dur=m.durMin(t);
     const durStr=dur>=60?`${Math.floor(dur/60)}h${dur%60}m`:`${dur}m`;
-    const pStr=t.pnl>=0?`+$${t.pnl.toFixed(2)}`:`-$${Math.abs(t.pnl).toFixed(2)}`;
+    const netStr=t.netPnlTrade>=0?`+$${t.netPnlTrade.toFixed(2)}`:`-$${Math.abs(t.netPnlTrade).toFixed(2)}`;
     return `<tr>
       <td class="txt-dim">${i+1}</td>
       <td class="txt-dim">${t.open}</td>
@@ -1265,7 +1802,8 @@ function renderTbl(filter, T, m){
       <td class="r">${t.exit||'—'}</td>
       <td class="r txt-dim">${durStr}</td>
       <td class="r" style="color:var(--red)">${t.comm.toFixed(2)}</td>
-      <td class="r ${t.pnl>=0?'pnl-g':'pnl-r'}">${pStr}</td>
+      <td class="r" style="color:var(--dim)">${(t.swap||0).toFixed(2)}</td>
+      <td class="r ${t.netPnlTrade>=0?'pnl-g':'pnl-r'}">${netStr}</td>
     </tr>`;
   }).join('');
 }
@@ -1280,9 +1818,9 @@ function flt(f,btn){
 function buildAudit(m, T){
   const rr = m.avgLoss!==0 ? Math.abs(m.avgWin/m.avgLoss) : 0;
   const withSL = T.filter(t=>t.sl).length;
-  const slPct = T.length ? (withSL/T.length*100) : 0;
+  const slPct  = T.length ? (withSL/T.length*100) : 0;
 
-  // Score
+  // Score basado en métricas netas
   let score=0;
   if(m.winRate>=60) score+=25; else if(m.winRate>=50) score+=15; else score+=5;
   if(m.pf>=1.5) score+=25; else if(m.pf>=1.2) score+=15; else if(m.pf>=1.0) score+=8;
@@ -1298,9 +1836,8 @@ function buildAudit(m, T){
   document.getElementById('score-num').style.color=score>=70?GREEN:score>=50?'#F0B43C':RED;
   document.getElementById('score-title').textContent=score>=80?'Excelente — Sistema sólido':score>=65?'Bueno — Con margen de mejora':score>=50?'Regular — Requiere ajuste':'Bajo — Revisar estrategia';
   document.getElementById('score-title').style.color=score>=70?GREEN:score>=50?'#F0B43C':RED;
-  document.getElementById('score-desc').textContent=`Win rate ${m.winRate.toFixed(1)}% · PF ${m.pf.toFixed(2)} · DD ${Math.abs(m.maxDD).toFixed(2)}% · R:R ${rr.toFixed(2)} · SL ${slPct.toFixed(0)}% de ops.`;
+  document.getElementById('score-desc').textContent=`Win rate ${m.winRate.toFixed(1)}% · PF neto ${m.pf.toFixed(2)} · DD ${Math.abs(m.maxDD).toFixed(2)}% · R:R ${rr.toFixed(2)} · SL ${slPct.toFixed(0)}% de ops.`;
 
-  // Grades
   const wGrade=m.winRate>=65?'A':m.winRate>=55?'B+':m.winRate>=50?'B':'C';
   const pfGrade=m.pf>=1.5?'A':m.pf>=1.2?'B+':m.pf>=1?'C':'D';
   const ddGrade=Math.abs(m.maxDD)<=5?'A':Math.abs(m.maxDD)<=10?'B':'C';
@@ -1309,20 +1846,20 @@ function buildAudit(m, T){
   const gColor=g=>g.startsWith('A')?GREEN:g.startsWith('B')?'#F0B43C':RED;
   document.getElementById('grade-grid').innerHTML=[
     {l:'WIN RATE',v:wGrade,s:m.winRate.toFixed(1)+'%'},
-    {l:'PROFIT FACTOR',v:pfGrade,s:m.pf.toFixed(2)},
+    {l:'PROFIT FACTOR',v:pfGrade,s:isFinite(m.pf)?m.pf.toFixed(2):'∞'},
     {l:'DRAWDOWN',v:ddGrade,s:Math.abs(m.maxDD).toFixed(2)+'%'},
     {l:'R:R RATIO',v:rrGrade,s:rr.toFixed(2)},
     {l:'STOP LOSS',v:slGrade,s:slPct.toFixed(0)+'% ops'},
   ].map(g=>`<div class="grade-item"><div class="gl">${g.l}</div><div class="gv" style="color:${gColor(g.v)}">${g.v}</div><div class="gs">${g.s}</div></div>`).join('');
 
-  // Checklist
+  // Checklist sobre métricas netas
   const checks=[
-    {pass:m.winRate>=50,warn:false,title:'Win Rate ≥ 50%',desc:`${m.winRate.toFixed(1)}% de operaciones cerradas en positivo.`,val:m.winRate.toFixed(1)+'%',vcls:m.winRate>=50?'g':'r'},
-    {pass:m.pf>=1.0,warn:m.pf>=1&&m.pf<1.3,title:'Profit Factor',desc:m.pf>=1.3?'PF saludable, las ganancias superan claramente a las pérdidas.':m.pf>=1?'PF sobre 1.0 pero por debajo del objetivo 1.3. Mejorable.':'PF menor a 1.0: las pérdidas superan a las ganancias en valor.',val:isFinite(m.pf)?m.pf.toFixed(3):'∞',vcls:m.pf>=1.3?'g':m.pf>=1?'w':'r'},
-    {pass:rr>=1,warn:rr>=0.8&&rr<1,title:'Ratio Reward/Risk ≥ 1.0',desc:`Promedio ganadora $${m.avgWin.toFixed(2)} vs promedio perdedora $${Math.abs(m.avgLoss).toFixed(2)}. ${rr>=1?'Favorable.':'Ajustar TPs o SLs para mejorar.'}`,val:rr.toFixed(2),vcls:rr>=1?'g':rr>=0.8?'w':'r'},
-    {pass:Math.abs(m.maxDD)<=10,warn:Math.abs(m.maxDD)<=15,title:'Drawdown ≤ 10%',desc:`Drawdown máximo ${Math.abs(m.maxDD).toFixed(2)}%. ${Math.abs(m.maxDD)<=10?'Dentro de parámetros aceptables para prop trading.':'Por encima del umbral recomendado. Revisar sizing.'}`,val:Math.abs(m.maxDD).toFixed(2)+'%',vcls:Math.abs(m.maxDD)<=10?'g':Math.abs(m.maxDD)<=15?'w':'r'},
-    {pass:slPct>=70,warn:slPct>=50,title:'Uso de Stop Loss',desc:`${slPct.toFixed(0)}% de operaciones con SL definido. ${slPct>=70?'Buena disciplina de riesgo.':'Aumentar cobertura de SL para proteger el capital.'}`,val:withSL+'/'+T.length,vcls:slPct>=70?'g':slPct>=50?'w':'r'},
-    {pass:m.expected>=0,warn:false,title:'Expected Payoff ≥ 0',desc:`Esperanza matemática: ${fmt(m.expected)} / operación. ${m.expected>=0?'Sistema con expectativa positiva.':'Expectativa negativa: revisar estrategia.'}`,val:fmt(m.expected),vcls:m.expected>=0?'g':'r'},
+    {pass:m.winRate>=50,warn:false,title:'Win Rate ≥ 50% (sobre P&L neto)',desc:`${m.winRate.toFixed(1)}% de operaciones con resultado neto positivo (incluye comisiones y swap).`,val:m.winRate.toFixed(1)+'%',vcls:m.winRate>=50?'g':'r'},
+    {pass:m.pf>=1.0,warn:m.pf>=1&&m.pf<1.3,title:'Profit Factor neto',desc:m.pf>=1.3?'PF neto saludable, las ganancias netas superan claramente a las pérdidas netas.':m.pf>=1?'PF neto sobre 1.0 pero bajo el objetivo 1.3. Los costos impactan el resultado.':m.pf<1?'PF neto menor a 1.0: incluyendo costos, la estrategia es deficitaria. Revisar urgente.':'',val:isFinite(m.pf)?m.pf.toFixed(3):'∞',vcls:m.pf>=1.3?'g':m.pf>=1?'w':'r'},
+    {pass:rr>=1,warn:rr>=0.8&&rr<1,title:'Ratio R:R ≥ 1.0 (neto)',desc:`Promedio ganadora neta $${m.avgWin.toFixed(2)} vs promedio perdedora neta $${Math.abs(m.avgLoss).toFixed(2)}. ${rr>=1?'Favorable.':'Ajustar TPs o SLs.'}`,val:rr.toFixed(2),vcls:rr>=1?'g':rr>=0.8?'w':'r'},
+    {pass:Math.abs(m.maxDD)<=10,warn:Math.abs(m.maxDD)<=15,title:'Drawdown ≤ 10%',desc:`Drawdown máximo neto ${Math.abs(m.maxDD).toFixed(2)}%. ${Math.abs(m.maxDD)<=10?'Dentro de parámetros aceptables.':'Por encima del umbral recomendado. Revisar sizing.'}`,val:Math.abs(m.maxDD).toFixed(2)+'%',vcls:Math.abs(m.maxDD)<=10?'g':Math.abs(m.maxDD)<=15?'w':'r'},
+    {pass:slPct>=70,warn:slPct>=50,title:'Uso de Stop Loss',desc:`${slPct.toFixed(0)}% de operaciones con SL definido. ${slPct>=70?'Buena disciplina de riesgo.':'Aumentar cobertura de SL.'}`,val:withSL+'/'+T.length,vcls:slPct>=70?'g':slPct>=50?'w':'r'},
+    {pass:m.expected>=0,warn:false,title:'Expected Payoff neto ≥ 0',desc:`Esperanza matemática neta: ${fmt(m.expected)} / operación. ${m.expected>=0?'Sistema con expectativa positiva.':'Expectativa negativa: revisar estrategia.'}`,val:fmt(m.expected),vcls:m.expected>=0?'g':'r'},
   ];
   document.getElementById('audit-list').innerHTML=checks.map(c=>{
     const icon=c.vcls==='g'?'✓':c.vcls==='w'?'⚠':'✗';
@@ -1330,12 +1867,13 @@ function buildAudit(m, T){
     return `<div class="audit-item"><div class="audit-icon ${icls}">${icon}</div><div class="audit-body"><div class="audit-title">${c.title}</div><div class="audit-desc">${c.desc}</div></div><div class="audit-val ${c.vcls}">${c.val}</div></div>`;
   }).join('');
 
-  // Recs
+  // Recs basadas en métricas netas
   const recs=[];
-  if(rr<1) recs.push({t:'Mejorar ratio R:R',d:'Ampliar Take Profit mínimo a 1.5× el Stop Loss. Un R:R favorable permite rentabilidad incluso con win rate moderado.'});
+  if(rr<1)    recs.push({t:'Mejorar ratio R:R',d:'Ampliar Take Profit mínimo a 1.5× el Stop Loss. Un R:R favorable permite rentabilidad incluso con win rate moderado.'});
   if(slPct<70) recs.push({t:'Aumentar uso de Stop Loss',d:`Solo el ${slPct.toFixed(0)}% de las posiciones tiene SL definido. Operar sin SL expone la cuenta a pérdidas no controladas.`});
-  if(m.pf<1.3) recs.push({t:'Mejorar Profit Factor',d:'Objetivo: PF ≥ 1.3. Filtrar setups de menor calidad y ser más selectivo en las entradas puede mejorar este indicador.'});
-  if(m.expected<0) recs.push({t:'Revisar expectativa matemática',d:'La estrategia actual tiene esperanza negativa. Combinando mejor R:R y selectividad en entradas se puede revertir.'});
+  if(m.pf<1.3) recs.push({t:'Mejorar Profit Factor neto',d:'El PF incluye comisiones y swap. Filtrar setups de menor calidad y optimizar tamaño de posición puede mejorar este indicador.'});
+  if(m.expected<0) recs.push({t:'Revisar expectativa matemática neta',d:'La estrategia tiene esperanza negativa al incluir costos. El impacto de comisiones en cuentas pequeñas es significativo.'});
+  if(m.totalCosts < -5) recs.push({t:'Optimizar costos operacionales',d:`Costos totales: ${fmt(m.totalCosts)}. Con cuentas pequeñas, reducir el número de operaciones de bajo volumen puede mejorar el ratio neto.`});
   if(!recs.length) recs.push({t:'Mantener la consistencia',d:'Los indicadores clave están en niveles positivos. Foco en replicar el proceso operativo con disciplina.'});
   document.getElementById('audit-recs').innerHTML=recs.map(r=>`<div class="sr" style="flex-direction:column;align-items:flex-start;gap:4px;"><span style="color:var(--gold);font-size:11px;font-weight:600;">→ ${r.t}</span><span class="sl-l" style="font-size:11px;line-height:1.5;">${r.d}</span></div>`).join('');
 
