@@ -283,29 +283,6 @@
   .disclaimer{ margin-top:34px; padding-top:26px; border-top:1px solid var(--dbw-line-soft); color:var(--dbw-faint); font-size:11.5px; line-height:1.7; max-width:95ch; }
   .disclaimer strong{ color:var(--dbw-muted); font-weight:500; }
 
-  /* ── SALA EN VIVO (nav) ── */
-  .nav-live{
-    display:inline-flex; align-items:center; gap:7px;
-    color:var(--dbw-up); position:relative;
-  }
-  .nav-live:hover{ color:#5eefc0; }
-  .live-dot{
-    width:7px; height:7px; border-radius:50%;
-    background:var(--dbw-up);
-    box-shadow:0 0 0 0 rgba(40,198,138,.6);
-    animation:livePulse 1.8s ease-in-out infinite;
-    flex-shrink:0;
-  }
-  @keyframes livePulse{
-    0%  { box-shadow:0 0 0 0 rgba(40,198,138,.6); }
-    60% { box-shadow:0 0 0 6px rgba(40,198,138,0); }
-    100%{ box-shadow:0 0 0 0 rgba(40,198,138,0); }
-  }
-  /* versión móvil: mismo dot pero inline con el texto */
-  .mobile-menu-panel .nav-live{ font-size:11px; letter-spacing:.16em; padding:13px 14px; display:flex; border-bottom:1px solid var(--dbw-line-soft); color:var(--dbw-up); }
-  .mobile-menu-panel .nav-live:last-child{ border-bottom:none; }
-  .mobile-menu-panel .nav-live:hover{ background:rgba(255,255,255,.035); }
-
   /* ── REVEAL ── */
   .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
   .reveal.in{ opacity:1; transform:none; }
@@ -431,7 +408,6 @@
   <nav class="links" aria-label="Navegación principal">
     <a href="#porque">El ecosistema</a>
     <a href="#broker">Pepperstone</a>
-    <a href="Sala_de_trading_doberwhite.html" class="nav-live"><span class="live-dot" aria-hidden="true"></span>Sala en vivo</a>
     <a href="doberwhite-bootcamp.html">Bootcamp</a>
     <a href="doberwhite-mentorias.html">Mentorías</a>
     <a href="doberwhite-copytrading.html">Copy trading</a>
@@ -444,7 +420,6 @@
         <a href="index.html">Inicio</a>
         <a href="#porque">El ecosistema</a>
         <a href="#broker">Pepperstone</a>
-        <a href="Sala_de_trading_doberwhite.html" class="nav-live"><span class="live-dot" aria-hidden="true"></span>Sala en vivo</a>
         <a href="doberwhite-bootcamp.html">Bootcamp</a>
         <a href="doberwhite-mentorias.html">Mentorías</a>
         <a href="doberwhite-copytrading.html">Copy trading</a>
@@ -768,7 +743,6 @@
     </div>
     <nav aria-label="Footer" style="display:flex;flex-wrap:wrap;gap:22px;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dbw-muted);">
       <a href="#broker">Pepperstone</a>
-      <a href="Sala_de_trading_doberwhite.html">Sala en vivo</a>
       <a href="doberwhite-bootcamp.html">Bootcamp</a>
       <a href="doberwhite-mentorias.html">Mentorías</a>
       <a href="doberwhite-copytrading.html">Copy trading</a>
