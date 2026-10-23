@@ -69,6 +69,42 @@ td small{color:var(--faint);font-size:11px}
 
 .aviso{border-left:2px solid var(--gold);background:rgba(198,166,100,.07);padding:12px 16px;font-size:12.5px;line-height:1.55;color:var(--silver-lt);max-width:72ch;margin:0}
 .tag{display:inline-block;align-self:flex-start;font-size:9.5px;letter-spacing:.2em;font-weight:600;color:var(--gold);border:1px solid rgba(198,166,100,.45);padding:3px 7px;font-style:normal}
+.btn{box-sizing:border-box}
+nav.top{position:sticky;top:0;z-index:50;background:rgba(5,7,11,.94);backdrop-filter:blur(12px)}
+nav.top .wrap{flex-wrap:nowrap}
+nav.top .links a.hl{color:var(--gold)}
+.mm{display:none;position:relative}
+.mm summary{list-style:none;width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);color:var(--white);cursor:pointer;font-size:18px;line-height:1}
+.mm summary::-webkit-details-marker{display:none}
+.mm[open] summary{border-color:var(--gold);color:var(--gold)}
+.mm-panel{position:absolute;right:0;top:calc(100% + 10px);min-width:min(80vw,270px);background:rgba(5,7,11,.98);border:1px solid var(--line);box-shadow:0 22px 70px rgba(0,0,0,.55);padding:6px;z-index:60}
+.mm-panel a{display:block;padding:14px;border-bottom:1px solid var(--line-soft);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver)}
+.mm-panel a:last-child{border-bottom:0}
+.mm-panel a[aria-current]{color:var(--white)}
+.mm-panel a.hl{color:var(--gold)}
+@media (max-width:760px){nav.top .links{display:none}.mm{display:block}nav.top .wrap{padding-block:12px}}
+@media (max-width:640px){
+ .tbl{border:0;overflow:visible}
+ .tbl table{min-width:0;display:block}
+ .tbl tr:first-child{display:none}
+ .tbl tbody{display:grid;gap:10px}
+ .tbl tr{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;border:1px solid var(--line-soft);background:var(--card);padding:4px 16px 12px}
+ .tbl td{display:grid;gap:2px;align-content:start;padding:9px 0 0;font-size:15px;white-space:normal;text-align:left;border:0}
+ .tbl td::before{content:attr(data-l);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);line-height:1.35}
+ .tbl td:first-child{grid-column:1/-1;font-family:var(--display);font-size:22px;font-weight:500;color:var(--white);padding:10px 0 6px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:baseline}
+ .tbl td:first-child::before{content:none}
+ .tbl tr.tot{border-color:rgba(198,166,100,.45)}
+ .tbl tr.tot td{background:none;border-top:0}
+ .ctl{padding:18px;gap:18px}
+ .ctl label{width:100%}
+ .ctl input,.ctl select{width:100%}
+ .chips button{flex:1 1 calc(33% - 6px);padding:12px 6px}
+ .stat{padding:20px 16px}
+ .stat b{font-size:clamp(24px,7.2vw,34px)}
+ .stat span{font-size:9.5px;letter-spacing:.1em}
+ .btn{justify-content:center}
+ .cta-row .btn{width:100%}
+}
 
 .head{padding-block:clamp(40px,6vw,72px) 28px;display:grid;gap:16px}
 .head h1{font-size:clamp(36px,5.4vw,64px);line-height:.98;letter-spacing:-.02em}
@@ -79,11 +115,13 @@ h2.s{font-size:clamp(26px,3.4vw,38px)}
 
 .phrase{font-family:var(--display);font-size:clamp(20px,2.3vw,27px);line-height:1.35;margin:0;max-width:62ch}
 .phrase em{font-style:italic;color:var(--gold)}
-.chart{border:1px solid var(--line-soft);background:var(--deep);padding:22px;overflow-x:auto}
+.chart{border:1px solid var(--line-soft);background:var(--deep);padding:22px}
+@media (max-width:640px){.chart{padding:12px}}
 .legend{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--silver);margin-top:10px}
 .legend i{display:inline-block;width:14px;height:3px;margin-right:8px;vertical-align:3px}
+@media (max-width:640px){.chips button{flex:1 1 0}}
 </style></head><body>
-<nav class="top"><div class="wrap"><a class="mark" href="https://www.doberwhite.com">DOBERWHITE <span>TRADING</span></a><div class="links"><a href="copytrading_PRIME.html">Prime</a><a href="simulador.html">Simulación histórica</a><a href="ahorro.html">Ejemplo con aportes</a><a href="https://www.doberwhite.com">doberwhite.com</a></div></div></nav>
+<nav class="top"><div class="wrap"><a class="mark" href="https://www.doberwhite.com">DOBERWHITE <span>TRADING</span></a><div class="links"><a href="copytrading_PRIME.html">Prime</a><a href="simulador.html" class="hl">Simulación Prime</a><a href="ahorro.html" aria-current="page">Modo ahorro</a><a href="https://www.doberwhite.com">doberwhite.com</a></div><details class="mm"><summary aria-label="Abrir menú">☰</summary><div class="mm-panel"><a href="copytrading_PRIME.html">Prime</a><a href="simulador.html" class="hl">Simulación Prime</a><a href="ahorro.html" aria-current="page">Modo ahorro</a><a href="https://www.doberwhite.com">doberwhite.com</a></div></details></div></nav>
 <div class="wrap head"><p class="eyebrow">Ejemplo ilustrativo · Estrategia Prime</p>
 <h1>Simulación histórica <span class="em">con aportes mensuales</span></h1>
 <p class="aviso">Resultados simulados con datos históricos (backtest). No son resultados reales de clientes. Rentabilidades pasadas no garantizan resultados futuros. Los CFD son productos complejos con alto riesgo de pérdida.</p>
@@ -148,7 +186,7 @@ function sim(ini,desde,apo,fee){
     y.neta=y.fin-y.ini-y.ap; y.bruta=y.neta+y.fee; y.rn=y.neta/(y.ini+y.ap/2); y.rb=y.bruta/(y.ini+y.ap/2);});
   return {b:Math.round(b),dd,anos,M,curva,aport,fee:anos.reduce((s,y)=>s+y.fee,0),gc:anos.reduce((s,y)=>s+y.gc,0)};
 }
-
+function etiquetas(t){const h=[...t.rows[0].cells].map(c=>c.textContent);[...t.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>c.dataset.l=h[i]))}
 const sel=document.getElementById('desde');
 [['2020-01','feb 2020'],['2021-01','ene 2021'],['2022-01','ene 2022'],['2023-01','ene 2023'],['2024-01','ene 2024'],['2025-01','ene 2025']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o)});
 const I=document.getElementById('ini'),A=document.getElementById('apo');
@@ -162,7 +200,7 @@ function draw(){
   [usd(S.b),'Valor final simulado'],[usd(dep),'Total aportado en el ejemplo'],[usd(gan),'Variación simulada sobre lo aportado'],['−'+nf(S.dd*100,0)+' %','Mayor caída desde un máximo']
  ].map(s=>`<div class="stat"><span class="tag">Backtest</span><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
  document.getElementById('frase').innerHTML=`Ejemplo: con <em>${usd(ini)}</em> iniciales y <em>${usd(apo)}</em> al mes durante ${nf(anos,1)} años (${usd(dep)} aportados), el resultado simulado sería de ${usd(S.b)}. Sin aportes mensuales, el mismo backtest daría ${usd(S0.b)}.`;
- const W=900,H=340,L=70,Rr=14,T=14,B=30,c=S.curva,c0=S0.curva,mx=Math.max(...c.map(x=>x[1]),...c0.map(x=>x[1]))*1.05;
+ const el=document.getElementById('ch'),W=Math.round(Math.min(900,Math.max(300,el.clientWidth||900))),H=W<560?260:340,L=W<560?40:70,Rr=10,T=14,B=30,c=S.curva,c0=S0.curva,mx=Math.max(...c.map(x=>x[1]),...c0.map(x=>x[1]))*1.05;
  const x=i=>L+i*(W-L-Rr)/(c.length-1),y=v=>T+(1-v/mx)*(H-T-B);
  const st=[1,2,2.5,5,10].map(m=>m*Math.pow(10,Math.floor(Math.log10(mx/4)))).find(s=>mx/s<=6)||mx/4;
  let s='';
@@ -170,12 +208,13 @@ function draw(){
  const line=(arr,k,col,w)=>`<polyline points="${arr.map((q,i)=>x(i).toFixed(1)+','+y(q[k]).toFixed(1)).join(' ')}" fill="none" stroke="${col}" stroke-width="${w}"/>`;
  s+=line(c,2,'rgba(184,204,216,.35)',2)+line(c0,1,'#B8CCD8',1.6)+line(c,1,'#C6A664',2.6);
  s+=`<circle cx="${x(c.length-1)}" cy="${y(S.b)}" r="4" fill="#C6A664"/>`;
- c.forEach((q,i)=>{if(q[0].endsWith('-01'))s+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${q[0].slice(0,4)}</text>`});
- document.getElementById('ch').innerHTML=s;
+ c.forEach((q,i)=>{if(q[0].endsWith('-01'))s+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${W<560?"'"+q[0].slice(2,4):q[0].slice(0,4)}</text>`});
+ el.setAttribute('viewBox',`0 0 ${W} ${H}`);el.innerHTML=s;
  let h='<tr><th>Año</th><th>Aportado en el año</th><th>Total aportado</th><th>Resultado simulado del año</th><th>Valor simulado a fin de año</th><th>Meses + / −</th></tr>';
  S.anos.forEach(a=>{const dy=a.ap+(a===S.anos[0]?ini:0);
   h+=`<tr><td>${a.y}${a.y==='2026'?' <small>hasta 21-oct</small>':''}</td><td>${usd(dy)}</td><td>${usd(a.apAcum)}</td><td class="${a.neta>=0?'pos':'neg'}">${usd(a.neta)}</td><td><b style="font-weight:500">${usd(a.fin)}</b></td><td>${a.mp} / ${a.mn}</td></tr>`});
- document.getElementById('tabla').innerHTML=h;
+ document.getElementById('tabla').innerHTML=h;etiquetas(document.getElementById('tabla'));
 }
 draw();
+addEventListener('resize',()=>{clearTimeout(window._r);window._r=setTimeout(draw,200)});
 </script></body></html>

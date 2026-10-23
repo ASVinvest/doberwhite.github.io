@@ -69,6 +69,42 @@ td small{color:var(--faint);font-size:11px}
 
 .aviso{border-left:2px solid var(--gold);background:rgba(198,166,100,.07);padding:12px 16px;font-size:12.5px;line-height:1.55;color:var(--silver-lt);max-width:72ch;margin:0}
 .tag{display:inline-block;align-self:flex-start;font-size:9.5px;letter-spacing:.2em;font-weight:600;color:var(--gold);border:1px solid rgba(198,166,100,.45);padding:3px 7px;font-style:normal}
+.btn{box-sizing:border-box}
+nav.top{position:sticky;top:0;z-index:50;background:rgba(5,7,11,.94);backdrop-filter:blur(12px)}
+nav.top .wrap{flex-wrap:nowrap}
+nav.top .links a.hl{color:var(--gold)}
+.mm{display:none;position:relative}
+.mm summary{list-style:none;width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);color:var(--white);cursor:pointer;font-size:18px;line-height:1}
+.mm summary::-webkit-details-marker{display:none}
+.mm[open] summary{border-color:var(--gold);color:var(--gold)}
+.mm-panel{position:absolute;right:0;top:calc(100% + 10px);min-width:min(80vw,270px);background:rgba(5,7,11,.98);border:1px solid var(--line);box-shadow:0 22px 70px rgba(0,0,0,.55);padding:6px;z-index:60}
+.mm-panel a{display:block;padding:14px;border-bottom:1px solid var(--line-soft);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver)}
+.mm-panel a:last-child{border-bottom:0}
+.mm-panel a[aria-current]{color:var(--white)}
+.mm-panel a.hl{color:var(--gold)}
+@media (max-width:760px){nav.top .links{display:none}.mm{display:block}nav.top .wrap{padding-block:12px}}
+@media (max-width:640px){
+ .tbl{border:0;overflow:visible}
+ .tbl table{min-width:0;display:block}
+ .tbl tr:first-child{display:none}
+ .tbl tbody{display:grid;gap:10px}
+ .tbl tr{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;border:1px solid var(--line-soft);background:var(--card);padding:4px 16px 12px}
+ .tbl td{display:grid;gap:2px;align-content:start;padding:9px 0 0;font-size:15px;white-space:normal;text-align:left;border:0}
+ .tbl td::before{content:attr(data-l);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);line-height:1.35}
+ .tbl td:first-child{grid-column:1/-1;font-family:var(--display);font-size:22px;font-weight:500;color:var(--white);padding:10px 0 6px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:baseline}
+ .tbl td:first-child::before{content:none}
+ .tbl tr.tot{border-color:rgba(198,166,100,.45)}
+ .tbl tr.tot td{background:none;border-top:0}
+ .ctl{padding:18px;gap:18px}
+ .ctl label{width:100%}
+ .ctl input,.ctl select{width:100%}
+ .chips button{flex:1 1 calc(33% - 6px);padding:12px 6px}
+ .stat{padding:20px 16px}
+ .stat b{font-size:clamp(24px,7.2vw,34px)}
+ .stat span{font-size:9.5px;letter-spacing:.1em}
+ .btn{justify-content:center}
+ .cta-row .btn{width:100%}
+}
 
 .head{padding-block:clamp(40px,6vw,72px) 28px;display:grid;gap:16px}
 .head h1{font-size:clamp(36px,5.4vw,64px);line-height:.98;letter-spacing:-.02em}
@@ -83,8 +119,9 @@ h2.s{font-size:clamp(26px,3.4vw,38px)}
 .peor b{font-family:var(--display);font-weight:500;font-size:24px;display:block;margin-bottom:6px}
 .peor p{margin:0;color:var(--silver);font-size:14px;max-width:80ch}
 .peor .tag{flex:none}
+@media (max-width:640px){.peor{flex-direction:column;gap:12px;padding:18px}}
 </style></head><body>
-<nav class="top"><div class="wrap"><a class="mark" href="https://www.doberwhite.com">DOBERWHITE <span>TRADING</span></a><div class="links"><a href="copytrading_PRIME.html">Prime</a><a href="simulador.html">Simulación histórica</a><a href="ahorro.html">Ejemplo con aportes</a><a href="https://www.doberwhite.com">doberwhite.com</a></div></div></nav>
+<nav class="top"><div class="wrap"><a class="mark" href="https://www.doberwhite.com">DOBERWHITE <span>TRADING</span></a><div class="links"><a href="copytrading_PRIME.html">Prime</a><a href="simulador.html" aria-current="page">Simulación Prime</a><a href="ahorro.html">Modo ahorro</a><a href="https://www.doberwhite.com">doberwhite.com</a></div><details class="mm"><summary aria-label="Abrir menú">☰</summary><div class="mm-panel"><a href="copytrading_PRIME.html">Prime</a><a href="simulador.html" aria-current="page">Simulación Prime</a><a href="ahorro.html">Modo ahorro</a><a href="https://www.doberwhite.com">doberwhite.com</a></div></details></div></nav>
 <div class="wrap head"><p class="eyebrow">Simulación histórica · Estrategia Prime</p>
 <h1>Simulación histórica <span class="em">de Prime</span></h1>
 <p class="aviso">Resultados simulados con datos históricos (backtest). No son resultados reales de clientes. Rentabilidades pasadas no garantizan resultados futuros. Los CFD son productos complejos con alto riesgo de pérdida.</p>
@@ -148,7 +185,7 @@ function sim(ini,desde,apo,fee){
     y.neta=y.fin-y.ini-y.ap; y.bruta=y.neta+y.fee; y.rn=y.neta/(y.ini+y.ap/2); y.rb=y.bruta/(y.ini+y.ap/2);});
   return {b:Math.round(b),dd,anos,M,curva,aport,fee:anos.reduce((s,y)=>s+y.fee,0),gc:anos.reduce((s,y)=>s+y.gc,0)};
 }
-
+function etiquetas(t){const h=[...t.rows[0].cells].map(c=>c.textContent);[...t.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>c.dataset.l=h[i]))}
 const sel=document.getElementById('desde');
 [['2020-01','feb 2020'],['2021-01','ene 2021'],['2022-01','ene 2022'],['2023-01','ene 2023'],['2024-01','ene 2024'],['2025-01','ene 2025'],['2026-01','ene 2026']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o)});
 const inp=document.getElementById('monto');
@@ -168,7 +205,7 @@ function draw(){
   const ac=a.fin/ini-1, lab=a.y+(a.y==='2020'&&sel.value==='2020-01'?' <small>desde feb</small>':a.y==='2026'?' <small>hasta 21-oct</small>':'');
   h+=`<tr><td>${lab}</td><td>${usd(a.ini)}</td><td class="${a.neta>=0?'pos':'neg'}">${usd(a.neta)}</td><td class="${a.rn>=0?'pos':'neg'}">${pct(a.rn)}</td><td>${pct(ac,0)}</td><td>${a.mp} / ${a.mn}</td><td class="neg">−${nf(a.dd*100,1)} %</td></tr>`;});
  h+=`<tr class="tot"><td>Total</td><td>${usd(ini)}</td><td class="pos">${usd(S.b-ini)}</td><td>${pct(cagr,1)} <small>prom. anual</small></td><td>${pct(tot,0)}</td><td>${mp} / ${mn}</td><td class="neg">−${nf(S.dd*100,1)} %</td></tr>`;
- document.getElementById('tabla').innerHTML=h;
+ document.getElementById('tabla').innerHTML=h;etiquetas(document.getElementById('tabla'));
 }
 draw();
 </script></body></html>

@@ -68,6 +68,42 @@ td small{color:var(--faint);font-size:11px}
 
 .aviso{border-left:2px solid var(--gold);background:rgba(198,166,100,.07);padding:12px 16px;font-size:12.5px;line-height:1.55;color:var(--silver-lt);max-width:72ch;margin:0}
 .tag{display:inline-block;align-self:flex-start;font-size:9.5px;letter-spacing:.2em;font-weight:600;color:var(--gold);border:1px solid rgba(198,166,100,.45);padding:3px 7px;font-style:normal}
+.btn{box-sizing:border-box}
+nav.top{position:sticky;top:0;z-index:50;background:rgba(5,7,11,.94);backdrop-filter:blur(12px)}
+nav.top .wrap{flex-wrap:nowrap}
+nav.top .links a.hl{color:var(--gold)}
+.mm{display:none;position:relative}
+.mm summary{list-style:none;width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);color:var(--white);cursor:pointer;font-size:18px;line-height:1}
+.mm summary::-webkit-details-marker{display:none}
+.mm[open] summary{border-color:var(--gold);color:var(--gold)}
+.mm-panel{position:absolute;right:0;top:calc(100% + 10px);min-width:min(80vw,270px);background:rgba(5,7,11,.98);border:1px solid var(--line);box-shadow:0 22px 70px rgba(0,0,0,.55);padding:6px;z-index:60}
+.mm-panel a{display:block;padding:14px;border-bottom:1px solid var(--line-soft);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver)}
+.mm-panel a:last-child{border-bottom:0}
+.mm-panel a[aria-current]{color:var(--white)}
+.mm-panel a.hl{color:var(--gold)}
+@media (max-width:760px){nav.top .links{display:none}.mm{display:block}nav.top .wrap{padding-block:12px}}
+@media (max-width:640px){
+ .tbl{border:0;overflow:visible}
+ .tbl table{min-width:0;display:block}
+ .tbl tr:first-child{display:none}
+ .tbl tbody{display:grid;gap:10px}
+ .tbl tr{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;border:1px solid var(--line-soft);background:var(--card);padding:4px 16px 12px}
+ .tbl td{display:grid;gap:2px;align-content:start;padding:9px 0 0;font-size:15px;white-space:normal;text-align:left;border:0}
+ .tbl td::before{content:attr(data-l);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);line-height:1.35}
+ .tbl td:first-child{grid-column:1/-1;font-family:var(--display);font-size:22px;font-weight:500;color:var(--white);padding:10px 0 6px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:baseline}
+ .tbl td:first-child::before{content:none}
+ .tbl tr.tot{border-color:rgba(198,166,100,.45)}
+ .tbl tr.tot td{background:none;border-top:0}
+ .ctl{padding:18px;gap:18px}
+ .ctl label{width:100%}
+ .ctl input,.ctl select{width:100%}
+ .chips button{flex:1 1 calc(33% - 6px);padding:12px 6px}
+ .stat{padding:20px 16px}
+ .stat b{font-size:clamp(24px,7.2vw,34px)}
+ .stat span{font-size:9.5px;letter-spacing:.1em}
+ .btn{justify-content:center}
+ .cta-row .btn{width:100%}
+}
 
 .hero{position:relative;overflow:hidden;isolation:isolate;padding-block:clamp(48px,7vw,96px);
  background:radial-gradient(circle at 78% 36%,rgba(198,166,100,.13),transparent 30%),radial-gradient(circle at 84% 80%,rgba(184,204,216,.07),transparent 30%),linear-gradient(135deg,#05070B 0%,#080B10 54%,#05070B 100%)}
@@ -99,17 +135,45 @@ td small{color:var(--faint);font-size:11px}
 .dual b{font-family:var(--display);font-style:italic;font-weight:500;font-size:32px;line-height:1.1}
 .dual p{margin:0;color:var(--silver);font-size:14px}
 .dual .tag{justify-self:start}
-@media (max-width:900px){.hero-in,.two-col{grid-template-columns:1fr}.rules{grid-template-columns:repeat(2,minmax(0,1fr))}.dual{grid-template-columns:1fr}}
+.simbox{border:1px solid rgba(198,166,100,.45);background:linear-gradient(135deg,rgba(198,166,100,.09),rgba(15,17,22,.9) 60%);padding:clamp(22px,4vw,40px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(22px,4vw,48px);align-items:center}
+.simbox h2{font-size:clamp(30px,4.4vw,48px)}
+.simbox .q{display:grid;gap:14px}
+.simbox .lbl{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--silver);font-weight:500}
+.simbox .chips button[aria-pressed="true"]{border-color:var(--gold);color:var(--ink);background:var(--gold)}
+.simbox select{font:400 20px var(--display);background:var(--black);color:var(--white);border:1px solid var(--line);padding:8px 12px;border-radius:0;width:100%;max-width:220px}
+.simres{border:1px solid var(--line-soft);background:var(--black);padding:22px;display:grid;gap:6px;justify-items:start}
+.simres .big{font-family:var(--display);font-style:italic;font-weight:500;font-size:clamp(40px,6vw,64px);line-height:1;color:var(--gold)}
+.simres .sub{font-size:14px;color:var(--silver-lt)}
+.simres .dd{font-size:12.5px;color:var(--faint)}
+.ybars{display:none}
+.ybar{display:grid;grid-template-columns:58px 1fr 84px;gap:10px;align-items:center;font-size:13px;padding:7px 0;border-bottom:1px solid var(--line-soft)}
+.ybar:last-child{border-bottom:0}
+.ybar i{display:block;height:14px;background:var(--gold)}
+.ybar b{font-weight:500;text-align:right;color:var(--white);white-space:nowrap}
+.ybar.tot{margin-top:6px;border-top:1px solid rgba(198,166,100,.45);padding-top:12px;color:var(--gold)}
+.ybar.tot b{color:var(--gold);font-family:var(--display);font-style:italic;font-size:22px}
+.stick{display:none}
+@media (max-width:900px){.hero-in,.two-col,.simbox{grid-template-columns:1fr}.rules{grid-template-columns:repeat(2,minmax(0,1fr))}.dual{grid-template-columns:1fr}}
+@media (max-width:640px){
+ .bars-box svg{display:none}.ybars{display:block}.bars-box{padding:16px;overflow:visible}
+ .simbox select{max-width:none}
+ .dual .btn{justify-self:stretch!important;letter-spacing:.12em}
+ .stick{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(5,7,11,.95);border-top:1px solid var(--line);backdrop-filter:blur(12px);transform:translateY(110%);transition:transform .25s}
+ .stick.on{transform:none}
+ .stick a{flex:1;justify-content:center}
+ footer{padding-bottom:96px}
+ .hero h1{font-size:clamp(36px,10vw,48px)}
+}
 @media (max-width:560px){.rules{grid-template-columns:1fr}}
 </style></head><body>
-<nav class="top"><div class="wrap"><a class="mark" href="https://www.doberwhite.com">DOBERWHITE <span>TRADING</span></a><div class="links"><a href="copytrading_PRIME.html">Prime</a><a href="simulador.html">Simulación histórica</a><a href="ahorro.html">Ejemplo con aportes</a><a href="https://www.doberwhite.com">doberwhite.com</a></div></div></nav>
+<nav class="top"><div class="wrap"><a class="mark" href="https://www.doberwhite.com">DOBERWHITE <span>TRADING</span></a><div class="links"><a href="copytrading_PRIME.html" aria-current="page">Prime</a><a href="simulador.html" class="hl">Simulación Prime</a><a href="ahorro.html">Modo ahorro</a><a href="https://www.doberwhite.com">doberwhite.com</a></div><details class="mm"><summary aria-label="Abrir menú">☰</summary><div class="mm-panel"><a href="copytrading_PRIME.html" aria-current="page">Prime</a><a href="simulador.html" class="hl">Simulación Prime</a><a href="ahorro.html">Modo ahorro</a><a href="https://www.doberwhite.com">doberwhite.com</a></div></details></div></nav>
 <header class="hero"><div class="wrap hero-in">
  <div class="hero-copy">
   <p class="eyebrow">Estrategia Prime · Nasdaq 100</p>
   <h1>Prime: una estrategia <span class="em">con reglas, no con corazonadas</span></h1>
   <p class="aviso">Resultados simulados con datos históricos (backtest). No son resultados reales de clientes. Rentabilidades pasadas no garantizan resultados futuros. Los CFD son productos complejos con alto riesgo de pérdida.</p>
   <p class="lead">Prime opera el Nasdaq 100 de forma automática, con stop loss en cada operación y cierre diario. Aquí mostramos cómo funciona y sus resultados históricos simulados.</p>
-  <div class="cta-row"><a class="btn btn-solid" href="#resultados">Ver resultados año a año ↓</a><a class="btn btn-ghost" href="#reglas">Ver reglas del sistema</a></div>
+  <div class="cta-row"><a class="btn btn-solid" href="#simula">Simula con un capital de ejemplo ↓</a><a class="btn btn-ghost" href="#resultados">Ver resultados año a año</a></div>
  </div>
  <figure class="curve" style="margin:0"><div class="k"><div><span>Backtest 2020–2026 · resultado simulado</span><br><b id="h-fin">—</b></div><span class="tag">Backtest</span></div>
  <svg id="h-svg" viewBox="0 0 560 250" role="img" aria-label="Resultado acumulado simulado de Prime en porcentaje, 2020 a 2026"></svg>
@@ -118,6 +182,23 @@ td small{color:var(--faint);font-size:11px}
 
 <section class="section" style="border-top:0;padding-top:0"><div class="wrap">
  <div class="stats" id="stats"></div>
+</div></section>
+
+<section class="section" id="simula" style="padding-top:0;border-top:0"><div class="wrap">
+ <div class="simbox">
+  <div class="q">
+   <p class="eyebrow" style="color:var(--gold)">Simulación histórica</p>
+   <h2>¿Cómo habría ido <span class="em">con tu capital?</span></h2>
+   <span class="lbl">Capital inicial de ejemplo (USD)</span>
+   <div class="chips" id="q-m" role="group" aria-label="Capital de ejemplo"><button data-v="500">500</button><button data-v="1000">1.000</button><button data-v="5000" aria-pressed="true">5.000</button><button data-v="10000">10.000</button><button data-v="25000">25.000</button></div>
+   <label class="lbl" for="q-d">Desde</label>
+   <select id="q-d"><option value="2020-01">feb 2020</option><option value="2021-01">ene 2021</option><option value="2022-01">ene 2022</option><option value="2023-01">ene 2023</option><option value="2024-01">ene 2024</option><option value="2025-01">ene 2025</option></select>
+  </div>
+  <div style="display:grid;gap:14px">
+   <div class="simres" aria-live="polite"><span class="tag">Backtest</span><span class="big" id="q-b">—</span><span class="sub" id="q-s"></span><span class="dd" id="q-dd"></span></div>
+   <div class="cta-row"><a class="btn btn-solid" href="simulador.html">Abrir simulación completa →</a><a class="btn btn-ghost" href="ahorro.html">Modo ahorro: con aportes mensuales →</a></div>
+  </div>
+ </div>
 </div></section>
 
 <section class="section"><div class="wrap two-col">
@@ -130,11 +211,12 @@ td small{color:var(--faint);font-size:11px}
  <div class="sec-head"><p class="eyebrow">Año a año</p><h2>Siete años <span class="em">de backtest</span></h2>
  <p class="lead">Resultado simulado de cada año. No todos los años son iguales: hay años de 11 % y años de más de 80 %. También hay meses negativos: 2 de cada 3 meses terminaron en positivo, y el peor mes fue −11,5 %.</p></div>
  <div class="bars-box"><svg id="bars" viewBox="0 0 1060 320" width="100%" style="min-width:680px" role="img" aria-label="Resultado anual simulado de Prime"></svg>
+ <div class="ybars" id="ybars"></div>
  <div class="legend"><span><i style="background:var(--gold)"></i>Resultado anual simulado</span><span>* 2020 desde febrero · 2026 hasta el 21 de octubre</span></div></div>
  <p class="note">Simulación con datos históricos de mercado. Los resultados reales comienzan el 21 de octubre de 2026.</p>
  <div class="dual" style="margin-top:28px">
-  <div><span class="tag">Backtest</span><b>Simulación histórica</b><p>El mismo backtest con un capital de ejemplo y el año de inicio que elijas: resultado año por año, meses positivos y negativos, y caídas.</p><a class="btn btn-ghost" style="justify-self:start;margin-top:8px" href="simulador.html">Ver simulación histórica →</a></div>
-  <div><span class="tag">Backtest</span><b>Ejemplo con aportes mensuales</b><p>Ejemplo educativo del efecto de sumar un aporte fijo cada mes sobre el mismo backtest.</p><a class="btn btn-ghost" style="justify-self:start;margin-top:8px" href="ahorro.html">Ver ejemplo con aportes →</a></div>
+  <div><span class="tag">Backtest</span><b>Simulación Prime</b><p>El mismo backtest con un capital de ejemplo y el año de inicio que elijas: resultado año por año, meses positivos y negativos, y caídas.</p><a class="btn btn-ghost" style="justify-self:start;margin-top:8px" href="simulador.html">Abrir simulación →</a></div>
+  <div><span class="tag">Backtest</span><b>Modo ahorro</b><p>Ejemplo educativo del efecto de sumar un aporte fijo cada mes sobre el mismo backtest.</p><a class="btn btn-ghost" style="justify-self:start;margin-top:8px" href="ahorro.html">Ver modo ahorro →</a></div>
  </div>
 </div></section>
 
@@ -143,7 +225,7 @@ td small{color:var(--faint);font-size:11px}
  <p class="lead">Un sistema programado que ejecuta siempre las mismas reglas, sin decisiones manuales.</p></div>
  <div class="rules">
   <div class="rule"><small>Activo</small><b>Nasdaq 100</b><p>Opera únicamente el índice Nasdaq 100 (NAS100), en compras y en ventas.</p></div>
-  <div class="rule"><small>Temporalidad</small><b>Velas de minutos intraday</b><p>Las señales se evalúan al cierre de cada vela de minutos intraday.</p></div>
+  <div class="rule"><small>Temporalidad</small><b>Velas en minutos</b><p>Las señales se evalúan al cierre de cada vela en minutos.</p></div>
   <div class="rule"><small>Horario de entradas</small><b>Sesión de Nueva York</b><p>Solo abre operaciones durante la sesión regular de Nueva York, en la mañana y primeras horas de la tarde. Los viernes, solo hasta mediodía.</p></div>
   <div class="rule"><small>Stop loss</small><b>En cada operación</b><p>Cada operación entra con su stop definido. El riesgo por operación es cercano a 2 % del capital; si el stop necesario es demasiado amplio, la operación no se toma.</p></div>
   <div class="rule"><small>Cierre diario</small><b>15:45 Nueva York</b><p>Todas las posiciones se cierran antes del final de la sesión. No quedan operaciones abiertas de un día para otro.</p></div>
@@ -158,6 +240,7 @@ td small{color:var(--faint);font-size:11px}
   <div><span class="tag">Real</span><b>Desde el 21 de octubre de 2026</b><p>Ejecución automática en una cuenta real. Estos resultados se informarán aparte y no se mezclan con el backtest.</p></div>
  </div>
 </div></section>
+<div class="stick" id="stick"><a class="btn btn-solid" href="simulador.html">Simular con mi capital →</a></div>
 <footer><div class="wrap">
 <p class="disc"><b>Resultados simulados (backtest).</b> Las cifras provienen de una simulación de la estrategia Prime con datos históricos reales de NAS100 (cTrader), de febrero de 2020 al 21 de octubre de 2026, aplicando sus reglas tal como operan hoy: 1.412 operaciones simuladas. Descuentan un costo de desempeño hipotético de 33 % sobre ganancias nuevas, como supuesto conservador. No incluyen deslizamientos ni comisiones. No son resultados reales de clientes. La ejecución automática en real comenzó el 21 de octubre de 2026; esos resultados se informan por separado. Rentabilidades pasadas, reales o simuladas, no garantizan resultados futuros.</p>
 <p class="disc">Los CFD son productos complejos y apalancados, con alto riesgo de perder dinero, incluida la totalidad del capital.</p>
@@ -220,16 +303,16 @@ document.getElementById('asim').innerHTML=[
 ].map(s=>`<div class="stat"><span class="tag">Backtest</span><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
 /* curva hero en % acumulado */
 (function(){
- const W=560,H=250,L=10,Rr=10,T=12,B=26,c=S.curva,mx=Math.max(...c.map(x=>x[1])),mn=Math.min(10000,...c.map(x=>x[1]));
+ const el=document.getElementById('h-svg'),W=Math.round(Math.min(560,Math.max(300,el.clientWidth||560))),H=W<480?200:250,L=10,Rr=10,T=12,B=26,c=S.curva,mx=Math.max(...c.map(x=>x[1])),mn=Math.min(10000,...c.map(x=>x[1]));
  const x=i=>L+i*(W-L-Rr)/(c.length-1),y=v=>T+(1-(Math.log(v)-Math.log(mn*0.9))/(Math.log(mx*1.05)-Math.log(mn*0.9)))*(H-T-B);
  let p=c.map((q,i)=>`${x(i).toFixed(1)},${y(q[1]).toFixed(1)}`).join(' ');
  let s=`<defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#C6A664" stop-opacity=".28"/><stop offset="1" stop-color="#C6A664" stop-opacity="0"/></linearGradient></defs>`;
  s+=`<line x1="${L}" x2="${W-Rr}" y1="${y(10000)}" y2="${y(10000)}" stroke="rgba(180,192,210,.18)" stroke-dasharray="3 4"/>`;
  s+=`<polygon points="${x(0)},${H-B} ${p} ${x(c.length-1)},${H-B}" fill="url(#g)"/><polyline points="${p}" fill="none" stroke="#C6A664" stroke-width="2.2"/>`;
  s+=`<circle cx="${x(c.length-1)}" cy="${y(c[c.length-1][1])}" r="4" fill="#C6A664"/>`;
- c.forEach((q,i)=>{if(q[0].endsWith('-01')||i===0)s+=`<text x="${x(i)}" y="${H-8}" text-anchor="${i===0?'start':'middle'}">${q[0].slice(0,4)}</text>`});
+ c.forEach((q,i)=>{if(q[0].endsWith('-01')||(i===0&&W>=480))s+=`<text x="${x(i)}" y="${H-8}" text-anchor="${i===0?'start':'middle'}">${q[0].slice(0,4)}</text>`});
  s+=`<text x="${W-Rr}" y="${y(10000)-6}" text-anchor="end">inicio: 0 %</text>`;
- document.getElementById('h-svg').innerHTML=s;
+ el.setAttribute('viewBox',`0 0 ${W} ${H}`);el.innerHTML=s;
 })();
 /* barras anuales + total del período (escala propia) */
 (function(){
@@ -249,6 +332,19 @@ document.getElementById('asim').innerHTML=[
  s+=`<text x="${c2}" y="${H-18}" text-anchor="middle" style="fill:#C6A664;font-weight:500;letter-spacing:.08em">TOTAL DEL BACKTEST</text>`;
  s+=`<text x="${c2}" y="${H-6}" text-anchor="middle" style="font-size:10px">feb-2020 a oct-2026 · otra escala</text>`;
  document.getElementById('bars').innerHTML=s;
+ const mxr=Math.max(...A.map(a=>a.rn));
+ document.getElementById('ybars').innerHTML=A.map(a=>`<div class="ybar"><span>${a.y}${a.y==='2026'||a.y==='2020'?' *':''}</span><i style="width:${Math.max(3,a.rn/mxr*100)}%"></i><b>${pct(a.rn,0)}</b></div>`).join('')+`<div class="ybar tot"><span>Total</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase">feb-2020 a oct-2026</span><b>${pct(tn,0)}</b></div>`;
+})();
+(function(){
+ let m=5000;const d=document.getElementById('q-d'),bs=[...document.querySelectorAll('#q-m button')];
+ function q(){const X=sim(m,d.value),t=X.b/m-1;
+  document.getElementById('q-b').textContent=usd(X.b);
+  document.getElementById('q-s').textContent=`${usd(m)} desde ${d.options[d.selectedIndex].text}: ${pct(t,0)} simulado`;
+  document.getElementById('q-dd').textContent=`Mayor caída en el camino: −${nf(X.dd*100,1)} %. Neto de costo de desempeño hipotético.`;}
+ bs.forEach(b=>b.onclick=()=>{m=+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',x===b));q()});
+ d.onchange=q;q();
+ const st=document.getElementById('stick'),sb=document.getElementById('simula');
+ addEventListener('scroll',()=>{const r=sb.getBoundingClientRect();st.classList.toggle('on',scrollY>500&&(r.bottom<0||r.top>innerHeight))},{passive:true});
 })();
 </script>
 </body></html>
