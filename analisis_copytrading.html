@@ -138,7 +138,7 @@ a.tab{text-decoration:none}
   <div class="cmdline"><span style="color:#fff">CUENTA MODELO DOBERWHITE</span><span>COPY</span><span class="sp"></span><span style="color:#fff">&lt;GO&gt;</span></div>
   <span class="sp"></span>
   <span class="ttl" style="padding:0 10px;color:var(--amb);display:none">CUENTA MODELO</span>
-  <a class="tg" id="back" href="backtest_copytrading.html" title="Siguiente paso" style="border-right:1px solid var(--line)"><span id="backT">SIGUIENTE: HISTÓRICO SIMULADO ▸</span></a>
+  <a class="tg" id="back" href="backtest_copytrading.html" title="Siguiente paso" style="border-right:1px solid var(--line)"><span id="backT">SIGUIENTE: Back Test Real ▸</span></a>
   <button hidden class="tg" id="uPct" aria-pressed="true" title="Tecla U">%</button><button hidden class="tg" id="uUsd" aria-pressed="false" title="Tecla U">USD</button>
   <button class="tg" id="fs" type="button" aria-pressed="false" aria-label="Pantalla completa" title="Tecla F"><span class="t">PANTALLA COMPLETA</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
 </header>
@@ -219,7 +219,7 @@ const COL={ctrader:'#3D8BFF',ftmo:'#B48CFF',asv:'#FFDA5D'};
 const SIDE={C:'Compra',V:'Venta'};
 
 let UNIT='pct', VISTA=null, PER='all', BK='hora';
-const PASOS=[["analisis_copytrading.html", "RESULTADOS REALES"], ["backtest_copytrading.html", "HISTÓRICO SIMULADO"], ["simulador_copytrading.html", "SIMULA TU INVERSIÓN"]], PASO=0;
+const PASOS=[["analisis_copytrading.html", "RESULTADOS REALES"], ["backtest_copytrading.html", "Back Test Real"], ["simulador_copytrading.html", "SIMULA TU INVERSIÓN"]], PASO=0;
 const setHash=h=>{try{history.replaceState(null,'',h)}catch(e){}};
 const PUB=null; /* solo en la copia de revisión: datos reales embebidos para abrir el archivo sin servidor */
 function flujo(){const h=location.hash;
@@ -430,7 +430,7 @@ function marcaFS(){const on=!!(document.fullscreenElement||document.webkitFullsc
   $('fs').querySelector('.t').textContent=on?'SALIR DE PANTALLA COMPLETA':'PANTALLA COMPLETA';if(APP)$('fs').hidden=true}
 document.addEventListener('fullscreenchange',()=>{marcaFS();setTimeout(render,120)}); document.addEventListener('webkitfullscreenchange',()=>{marcaFS();setTimeout(render,120)});
 $('fs').onclick=full; marcaFS();
-function backTxt(){$('backT').textContent=innerWidth<700?'SIGUIENTE ▸':'SIGUIENTE: HISTÓRICO SIMULADO ▸'}
+function backTxt(){$('backT').textContent=innerWidth<700?'SIGUIENTE ▸':'SIGUIENTE: Back Test Real ▸'}
 addEventListener('keydown',e=>{
   if(e.key==='Escape'){if(!$('fsHelp').hidden){$('fsHelp').hidden=true;return}return}
   if(e.key==='u'||e.key==='U')setUnit(UNIT==='pct'?'usd':'pct');

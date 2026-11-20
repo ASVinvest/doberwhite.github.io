@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Histórico simulado · Cuenta Modelo Doberwhite</title>
+<title>Back Test Real · Cuenta Modelo Doberwhite</title>
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -219,7 +219,7 @@ const COL={ctrader:'#3D8BFF',ftmo:'#B48CFF',asv:'#FFDA5D'};
 const SIDE={C:'Compra',V:'Venta'};
 
 let UNIT='pct', VISTA=null, PER='all', BK='hora';
-const PASOS=[["analisis_copytrading.html", "RESULTADOS REALES"], ["backtest_copytrading.html", "HISTÓRICO SIMULADO"], ["simulador_copytrading.html", "SIMULA TU INVERSIÓN"]], PASO=1;
+const PASOS=[["analisis_copytrading.html", "RESULTADOS REALES"], ["backtest_copytrading.html", "Back Test Real"], ["simulador_copytrading.html", "SIMULA TU INVERSIÓN"]], PASO=1;
 const setHash=h=>{try{history.replaceState(null,'',h)}catch(e){}};
 const PUB=null; /* solo en la copia de revisión: datos reales embebidos para abrir el archivo sin servidor */
 function flujo(){const h=location.hash;
@@ -282,7 +282,7 @@ function metricas(ops,comp,meses){
 
 function render(){if(!BT)return;
   const A=cuenta(), comp=A.modo==='comp', O=A._ops;
-  $('banner').innerHTML=`<span>HISTÓRICO SIMULADO · RESULTADOS SIMULADOS SOBRE VELAS REALES DE PEPPERSTONE</span><span class="v">NAS100 · capital inicial USD 1.000 · riesgo 2 % del saldo · ${mesL(A.desde).toLowerCase()} – ${mesL(A.hasta).toLowerCase()}${A.id==='neto'?' · copiador neto de fee 33 % (cobro mensual sobre ganancias nuevas)':''}</span>`+($('banner').querySelector('.prev')?'<span class="prev">VISTA PREVIA LOCAL</span>':'');
+  $('banner').innerHTML=`<span>Back Test Real · RESULTADOS SIMULADOS SOBRE VELAS REALES DE PEPPERSTONE</span><span class="v">NAS100 · capital inicial USD 1.000 · riesgo 2 % del saldo · ${mesL(A.desde).toLowerCase()} – ${mesL(A.hasta).toLowerCase()}${A.id==='neto'?' · copiador neto de fee 33 % (cobro mensual sobre ganancias nuevas)':''}</span>`+($('banner').querySelector('.prev')?'<span class="prev">VISTA PREVIA LOCAL</span>':'');
   flujo(); vistas();
   const anios=[...new Set(mesesRango(A.desde,A.hasta).map(m=>m.slice(0,4)))];
   if(PER!=='all'&&!anios.includes(PER))PER='all';

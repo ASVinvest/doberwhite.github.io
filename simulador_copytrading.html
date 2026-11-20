@@ -391,7 +391,7 @@ async function iniciar(){
   $('cap').value=CFG.cap;$('fee').value=CFG.f;$('ap').value=CFG.ap;$('rt').value=CFG.rt;marcaPer();ajustaIni();
   const curso=SER.find(x=>x.t==='curso');
   $('banner').innerHTML=`<span>SIMULA TU INVERSIÓN · CUENTA MODELO DOBERWHITE</span><span class="v">simulado ${mesL(a).toLowerCase()} – ${mesL(BTMES_FIN).toLowerCase()} · real desde ${mesL(R.desde).toLowerCase()}${curso?' · '+mesL(curso.k).toLowerCase()+' en curso':''}</span>`+($('banner').querySelector('.prev')||PUB&&!R.d&&location.protocol==='file:'?'<span class="prev">VISTA PREVIA LOCAL</span>':'');
-  $('src').innerHTML=`Meses de ${mesL(a).toLowerCase()} a ${mesL(BTMES_FIN).toLowerCase()}: histórico simulado. Desde ${mesL(R.desde).toLowerCase()}: resultados reales de la cuenta modelo, que se agregan solos cada mes.${curso?` El mes en curso (${mesL(curso.k).toLowerCase()}) se muestra con su resultado a la fecha.`:''}`;
+  $('src').innerHTML=`Meses de ${mesL(a).toLowerCase()} a ${mesL(BTMES_FIN).toLowerCase()}: Back Test Real. Desde ${mesL(R.desde).toLowerCase()}: resultados reales de la cuenta modelo, que se agregan solos cada mes.${curso?` El mes en curso (${mesL(curso.k).toLowerCase()}) se muestra con su resultado a la fecha.`:''}`;
   render()}
 const BTMES_FIN=Object.keys(BTMES).slice(-1)[0];
 ['cap','fee','ap','rt'].forEach(id=>$(id).addEventListener('input',()=>{clearTimeout(window._t);window._t=setTimeout(leer,150)}));
@@ -399,7 +399,7 @@ const BTMES_FIN=Object.keys(BTMES).slice(-1)[0];
 [['apF','apf'],['rtF','rtf']].forEach(([g,k])=>$(g).querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{CFG[k]=+b.dataset.v;marcaPer();render()}));
 $('link').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('linkT').textContent='LINK COPIADO'}catch(e){$('linkT').textContent='COPIA LA URL'}setTimeout(()=>$('linkT').textContent='COPIAR LINK',1800)};
 
-const PASOS=[["analisis_copytrading.html", "RESULTADOS REALES"], ["backtest_copytrading.html", "HISTÓRICO SIMULADO"], ["simulador_copytrading.html", "SIMULA TU INVERSIÓN"]], PASO=2;
+const PASOS=[["analisis_copytrading.html", "RESULTADOS REALES"], ["backtest_copytrading.html", "Back Test Real"], ["simulador_copytrading.html", "SIMULA TU INVERSIÓN"]], PASO=2;
 const setHash=h=>{try{history.replaceState(null,'',h)}catch(e){}};
 const PUB=null; /* solo en la copia de revisión: datos reales embebidos para abrir el archivo sin servidor */
 function flujo(){const h=location.hash;
