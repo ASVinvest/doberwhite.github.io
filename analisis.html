@@ -239,7 +239,10 @@ function vista(){
   const OP=opciones();
   let C=cuentasOk(); if(VISTA!=='all')C=C.filter(c=>c.id===VISTA); else C=C.filter(c=>OP.sumar_paper||c.tipo!=='paper');
   const cap=C.reduce((a,c)=>a+c.capital,0)||1, metaU=C.reduce((a,c)=>a+c.capital*c.meta_mes/100,0);
-  const mk=(o,c)=>{const tt=o.cierre||o.t;return {d:tt.slice(0,10),h:+(o.t.slice(11,13)||0),sym:o.sym,lado:o.lado,u:o.usd||0,p:(o.usd||0)/cap*100,c}};
+  /* en la vista de una cuenta, el % de cada operación se calcula sobre el saldo real antes de ella (como cTrader);
+     si el dato no viene, sobre el capital de la configuración */
+  const baseDe=o=>{const u=o.usd||0;return (VISTA!=='all'&&o.saldo!=null&&o.saldo-u>0)?o.saldo-u:cap};
+  const mk=(o,c)=>{const tt=o.cierre||o.t;return {d:tt.slice(0,10),h:+(o.t.slice(11,13)||0),sym:o.sym,lado:o.lado,u:o.usd||0,p:(o.usd||0)/baseDe(o)*100,c}};
   const ops=C.flatMap(c=>c.operaciones.filter(o=>!o.abierta&&(SIM||!o.sim)).map(o=>mk(o,c))).sort((a,b)=>a.d<b.d?-1:1);
   const simOps=SIM?[]:C.flatMap(c=>c.operaciones.filter(o=>!o.abierta&&o.sim).map(o=>mk(o,c)));
   return {C,cap,meta:metaU/cap*100,metaU,ops,simOps};
