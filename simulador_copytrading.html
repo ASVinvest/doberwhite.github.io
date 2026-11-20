@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simula tu inversión · Cuenta Modelo Doberwhite</title>
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DOBERWHITE">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap">
+<style>
+/* Misma paleta que la MESA y el análisis */
+:root{--bg:#000000;--line:#333;--line2:#262626;--hdr:#141414;--th:#0000FF;--amb:#FFA028;--yel:#FFDA5D;--grn:#4DB250;--red:#F05143;--wht:#fff;--mut:#A3A3A3;--faint:#6B6B6B}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--wht);font-family:'Roboto Mono',Consolas,monospace;font-size:13px;font-variant-numeric:tabular-nums}
+body{padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
+button{font:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid var(--yel);outline-offset:1px}
+h2{margin:0;font-size:13px;font-weight:700}
+.up{color:var(--grn)}.down{color:var(--red)}.flat{color:var(--mut)}
+.root{display:grid;grid-template-rows:30px 26px 34px 96px minmax(0,1.15fr) minmax(0,1fr) 16px;gap:4px;height:100vh;height:100dvh;min-height:880px;padding:0 4px 4px}
+
+.cmd{display:flex;align-items:center;margin:0 -4px;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden}
+.logo{display:flex;align-items:center;height:30px;padding:0 10px;background:var(--amb);color:#000;font-weight:700;flex:none}
+.cmdline{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;min-width:220px;color:var(--amb);border-right:1px solid var(--line)}
+.sp{flex:1}
+.tg{height:30px;min-width:44px;padding:0 10px;font-weight:700;border:0;border-left:1px solid var(--line);background:#000;color:var(--amb);display:flex;align-items:center;justify-content:center;gap:6px;flex:none}
+.tg[aria-pressed="true"]{background:var(--amb);color:#000}
+.tg svg{display:none;width:18px;height:18px}
+
+.banner{display:flex;align-items:center;gap:14px;padding:0 10px;background:var(--amb);color:#000;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner .v{font-weight:500}
+
+.tabs{display:flex;align-items:stretch;border:1px solid var(--line);min-width:0}
+.tabs .acc{display:flex;overflow-x:auto;min-width:0}
+.tab{display:flex;align-items:center;gap:8px;padding:0 16px;height:32px;border:0;border-right:1px solid var(--line);background:#000;color:var(--mut);white-space:nowrap;font-weight:700}
+.tab i{width:9px;height:9px;display:inline-block}
+.tab b{color:var(--red);font-weight:400}
+.tab[aria-selected="true"]{background:var(--hdr);color:#fff;box-shadow:inset 0 -2px 0 var(--amb)}
+.per{display:flex;margin-left:auto;flex:none}
+.per button{height:32px;min-width:52px;padding:0 10px;border:0;border-left:1px solid var(--line);background:#000;color:var(--amb);font-weight:700}
+.per button[aria-pressed="true"]{background:var(--amb);color:#000}
+
+.kpis{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.kpi{display:flex;flex-direction:column;justify-content:center;gap:4px;padding:8px 12px;border:1px solid var(--line);border-top:3px solid var(--wht);min-width:0}
+.kpi .l{color:var(--amb);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .v{font-size:28px;font-weight:700;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .s{color:var(--mut);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.row{display:grid;gap:4px;min-height:0}
+.r1{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+.r2{grid-template-columns:minmax(0,1.35fr) minmax(0,.6fr) minmax(0,.7fr)}
+.panel{border:1px solid var(--line);display:flex;flex-direction:column;min-height:0;min-width:0}
+.ph{display:flex;align-items:center;gap:12px;height:24px;padding:0 8px;background:var(--hdr);color:var(--amb);flex:none;white-space:nowrap;overflow:hidden}
+.ph .x{color:var(--mut);font-weight:400;overflow:hidden;text-overflow:ellipsis}
+.ph .sw{display:flex;margin-left:auto}
+.ph .sw button{height:24px;padding:0 8px;border:0;border-left:1px solid var(--line);background:transparent;color:var(--amb);font-size:11px;font-weight:700}
+.ph .sw button[aria-pressed="true"]{background:var(--amb);color:#000}
+.body{flex:1;min-height:0;overflow:auto}
+svg.ch{width:100%;height:100%;display:block}
+svg.ch text{font-family:'Roboto Mono',monospace}
+
+table{width:100%;border-collapse:collapse}
+thead th{position:sticky;top:0;background:var(--th);font-size:11px;font-weight:500;padding:5px 8px;text-align:right;white-space:nowrap}
+th.l,td.l{text-align:left}
+td{padding:5px 8px;border-top:1px solid var(--line2);text-align:right;white-space:nowrap}
+tbody tr:nth-child(even){background:#0A0A0A}
+tr.tot td{background:var(--hdr);font-weight:700;border-top:1px solid var(--line)}
+td.hm{font-weight:700;text-align:center}
+td.na{color:var(--faint);text-align:center}
+#yr td,#yr thead th{padding:4px 6px}
+.minib{display:inline-block;width:60px;height:6px;background:var(--line2);vertical-align:middle;margin-left:8px;position:relative}
+.minib i{position:absolute;left:0;top:0;bottom:0}
+.empty{padding:16px;color:var(--mut)}
+.foot{color:#A3A3A3;font-size:11px;text-align:right;padding:0 6px}
+
+#fsHelp{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:16px}
+#fsHelp[hidden]{display:none!important}
+#fsHelp .box{border:1px solid var(--amb);background:#000;padding:20px;display:grid;gap:10px;width:min(380px,100%);line-height:1.5}
+
+@media (max-width:1280px){
+  .root{display:flex;flex-direction:column;height:auto;min-height:0;gap:6px}
+  .kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .r1,.r2{grid-template-columns:minmax(0,1fr)}
+  .r1>.panel:first-child .body{height:320px;flex:none}
+  .r1>.panel:nth-child(2) .body{max-height:520px}
+  .r2>.panel:first-child .body{max-height:520px}
+  .r2>.panel:nth-child(2) .body{height:220px;flex:none}
+  .body{overflow-x:auto}
+  .cmdline{display:none}
+  .banner{white-space:normal;padding:6px 10px;flex-wrap:wrap;gap:4px 14px}
+}
+@media (max-width:700px){
+  html,body{font-size:12px}
+  .cmd .sp{display:none}
+  .cmd .t{display:none}.tg svg{display:block}
+  .cmd .tg{min-width:44px;padding:0}
+  .cmd .ttl{margin-left:auto;display:inline!important}
+  #back{padding:0 10px!important}
+  .tabs{flex-direction:column}
+  .per{margin-left:0;border-top:1px solid var(--line);overflow-x:auto}
+  .tab{padding:0 12px;height:40px}
+  .per button{height:40px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi .v{font-size:22px}
+  .r1>.panel:first-child .body{height:240px}
+}
+
+/* Flujo cliente */
+.cmdline{min-width:0}
+.tg[hidden]{display:none!important}
+.kpi .v{font-size:clamp(17px,1.5vw,28px)}.kpi .v.sm{font-size:clamp(15px,1.2vw,22px)!important}
+@media (max-width:1600px){.tab{padding:0 10px}.per button{min-width:44px;padding:0 8px}}
+@media (max-width:700px){.tabs>*{max-width:100%;min-width:0}#vw{margin-left:0;border-top:1px solid var(--line)}#vw button{flex:1;height:40px}#vw{display:flex}}
+.flow{display:flex;overflow-x:auto;min-width:0}
+a.tab{text-decoration:none}
+.tab[aria-current="page"]{background:var(--hdr);color:#fff;box-shadow:inset 0 -2px 0 var(--amb)}
+.tab .n{color:var(--faint);font-weight:400;margin-left:2px}
+#vw{margin-left:auto}#vw:empty{display:none}#vw:not(:empty)+#per{margin-left:0}
+.banner.real{background:var(--grn)}
+.prev{background:var(--yel);color:#000;padding:0 8px;font-weight:700;margin-left:auto}
+#lock{position:fixed;inset:0;z-index:70;background:#000;display:grid;place-items:center;padding:16px}
+#lock[hidden]{display:none!important}
+#lock .box{border:1px solid var(--amb);padding:24px;display:grid;gap:12px;width:min(400px,100%);line-height:1.5}
+#lock input{font:inherit;background:#000;color:#fff;border:1px solid var(--line);height:40px;padding:0 10px}
+#lock input:focus{outline:2px solid var(--yel)}
+
+.root.sim{grid-template-rows:30px 26px 34px minmax(0,1fr) 16px;min-height:760px}
+.simg{display:grid;grid-template-columns:300px minmax(0,1fr);gap:4px;min-height:0}
+.simr{display:grid;grid-template-rows:92px minmax(0,1.25fr) minmax(0,1fr);gap:4px;min-height:0;min-width:0}
+.sim .kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+.fld{display:grid;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line2)}
+.fld>label,.fld>.lb{color:var(--amb);font-size:12px;font-weight:700}
+.fld input,.fld select{font:inherit;background:#000;color:#fff;border:1px solid var(--line);height:34px;padding:0 8px;width:100%;border-radius:0}
+.fld input:focus,.fld select:focus{outline:2px solid var(--yel);outline-offset:-1px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg{display:flex}
+.seg button{flex:1;min-width:0;padding:0 4px;height:32px;border:1px solid var(--line);margin-left:-1px;background:#000;color:var(--amb);font-weight:700;font-size:12px}
+.seg button[aria-pressed="true"]{background:var(--amb);color:#000;border-color:var(--amb)}
+.hint{color:var(--mut);font-size:11px;line-height:1.45}
+.warn{border:1px solid var(--amb);color:var(--amb);padding:8px 10px;font-size:11px;line-height:1.45;margin:10px 12px 0}
+.warn[hidden]{display:none}
+.cmp{border:1px solid var(--yel);padding:8px 10px;font-size:11px;line-height:1.5;color:#fff}
+.cmp[hidden]{display:none}
+.cmp b{color:var(--yel)}
+.ct{width:100%;border-collapse:collapse}.ct td{padding:2px 0;border:0;text-align:right}.ct td:first-child{text-align:left;color:var(--mut)}
+.ct tr.sb td{border-top:1px solid var(--line);padding-top:4px;font-weight:700}.ct tr.sb+tr.sb td{border-top:0}.ct tr.y td{color:var(--yel)}
+#yt td .u{display:block;color:var(--mut);font-size:11px;font-weight:400}
+.lg{display:inline-flex;align-items:center;gap:6px;color:var(--mut);font-weight:400}
+.lg i{display:inline-block;width:14px;height:2px}
+.lg i.sq{width:10px;height:10px}
+.lg[hidden]{display:none}
+#yt td.tr{text-align:left;color:var(--mut)}
+#tip{position:fixed;z-index:50;pointer-events:none;background:#000;border:1px solid var(--amb);padding:6px 8px;font-size:11px;line-height:1.5;white-space:nowrap}
+#tip[hidden]{display:none}
+@media (max-width:1100px){
+  .root.sim{display:flex;flex-direction:column;height:auto;min-height:0;gap:6px}
+  .simg{grid-template-columns:minmax(0,1fr)}
+  .simr{display:flex;flex-direction:column;gap:6px}
+  .sim .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #cvB{height:300px;flex:none}
+  #ytB{max-height:460px}
+}
+@media (max-width:700px){.sim .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#cvB{height:240px}}
+</style>
+</head>
+<body>
+<div class="root sim">
+<header class="cmd">
+  <div class="logo">DOBW</div>
+  <div class="cmdline"><span style="color:#fff">CUENTA MODELO DOBERWHITE</span><span>SIM</span><span class="sp"></span><span style="color:#fff">&lt;GO&gt;</span></div>
+  <span class="sp"></span>
+  <span class="ttl" style="padding:0 10px;color:var(--amb);display:none">SIMULADOR</span>
+  <button class="tg" id="link" type="button" title="Copia un link con estos valores" style="border-right:1px solid var(--line)"><span id="linkT">COPIAR LINK</span></button>
+  <button class="tg" id="fs" type="button" aria-pressed="false" aria-label="Pantalla completa" title="Tecla F"><span class="t">PANTALLA COMPLETA</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</header>
+<div class="banner" role="note" id="banner"></div>
+<nav class="tabs" aria-label="Pasos"><div class="flow" id="flow"></div></nav>
+
+<div class="simg">
+  <section class="panel" aria-label="Parámetros de la simulación">
+    <div class="ph"><h2>TU INVERSIÓN</h2></div>
+    <form class="body" id="fm" onsubmit="return false">
+      <div class="fld"><label for="cap">CAPITAL INICIAL (USD)</label><input id="cap" type="number" inputmode="numeric" min="100" step="100" value="10000"></div>
+      <div class="fld"><span class="lb" id="iniL">INICIO DE LA INVERSIÓN</span><div class="two"><select id="iniM" aria-labelledby="iniL" aria-label="Mes de inicio"></select><select id="iniY" aria-labelledby="iniL" aria-label="Año de inicio"></select></div></div>
+      <div class="fld"><span class="lb" id="apL">APORTES ADICIONALES</span><div class="two"><input id="ap" type="number" inputmode="numeric" min="0" step="100" value="0" aria-labelledby="apL" aria-label="Monto del aporte en USD"><div class="seg" id="apF" role="group" aria-label="Frecuencia del aporte"><button type="button" data-v="1">MES</button><button type="button" data-v="3">TRIM</button><button type="button" data-v="12">AÑO</button></div></div>
+        <span class="hint">Monto en USD que agregas cada período. Déjalo en 0 si no aportas.</span></div>
+      <div class="fld"><span class="lb" id="rtL">RETIRO DE GANANCIAS</span><div class="two"><div style="position:relative"><input id="rt" type="number" inputmode="numeric" min="0" max="100" step="10" value="0" aria-labelledby="rtL" aria-label="Porcentaje de la ganancia neta que retiras" style="padding-right:28px"><span style="position:absolute;right:10px;top:8px;color:var(--mut)">%</span></div><div class="seg" id="rtF" role="group" aria-label="Frecuencia del retiro"><button type="button" data-v="1">MES</button><button type="button" data-v="3">TRIM</button><button type="button" data-v="12">AÑO</button></div></div>
+        <span class="hint">Parte de la ganancia neta de cada período que retiras. 0 % = todo se reinvierte y crece con interés compuesto.</span>
+        <div class="cmp" id="cmpW" hidden></div></div>
+      <div class="fld"><label for="fee">FEE DE DESEMPEÑO (%)</label><input id="fee" type="number" inputmode="decimal" min="0" max="80" step="1" value="33">
+        <span class="hint">Se descuenta mensualmente y solo sobre ganancias nuevas. Todos los resultados ya vienen netos.</span></div>
+      <div class="warn" id="minW" hidden></div>
+      <div class="fld" style="border:0"><span class="hint" id="src"></span></div>
+    </form>
+  </section>
+
+  <div class="simr">
+    <section class="kpis" id="kpis" aria-label="Resultado de la simulación"></section>
+    <section class="panel" aria-label="Evolución del saldo">
+      <div class="ph"><h2>EVOLUCIÓN DE TU SALDO</h2><span class="sp"></span>
+        <span class="lg"><i style="background:#FFA028"></i>SALDO NETO</span><span class="lg" id="lgW" hidden><i style="background:#FFDA5D"></i>SIN RETIROS</span><span class="lg" id="lgR" hidden><i class="sq" style="background:#4DB250;width:8px"></i>RETIROS</span><span class="lg"><i style="background:#A3A3A3"></i>CAPITAL APORTADO</span><span class="lg"><i class="sq" style="background:rgba(77,178,80,.25)"></i>REAL</span><span class="x" id="cvS"></span></div>
+      <div class="body" id="cvB" style="overflow:hidden"><svg class="ch" id="cv" role="img" aria-label="Saldo neto y saldo sin fee mes a mes"></svg></div>
+    </section>
+    <section class="panel" aria-label="Año a año">
+      <div class="ph"><h2>AÑO A AÑO</h2><span class="sp"></span><span class="x" id="ytS"></span></div>
+      <div class="body" id="ytB"><table id="yt"></table></div>
+    </section>
+  </div>
+</div>
+<div class="foot">Hasta ago 2026: resultados simulados sobre velas reales de Pepperstone, sin deslizamientos. Desde sep 2026: resultados reales de la cuenta modelo. Rentabilidades pasadas no garantizan resultados futuros.</div>
+</div>
+<div id="tip" hidden></div>
+
+<div id="lock" hidden role="dialog" aria-modal="true" aria-labelledby="lkT">
+  <form class="box" id="lkF">
+    <div style="display:flex;gap:10px;align-items:center"><span class="logo" style="height:26px">DOBW</span><b id="lkT" style="color:var(--amb)">CUENTA MODELO DOBERWHITE</b></div>
+    <span>Ingresa la clave de acceso que te entregó Doberwhite.</span>
+    <input id="lkI" type="password" autocomplete="current-password" aria-label="Clave de acceso" required>
+    <span id="lkE" class="down" role="alert"></span>
+    <button class="tg" type="submit" style="border:1px solid var(--amb);height:40px;background:var(--amb);color:#000">ENTRAR</button>
+  </form>
+</div>
+<div id="fsHelp" hidden role="dialog" aria-modal="true" aria-labelledby="fsHelpT">
+  <div class="box">
+    <b id="fsHelpT" style="color:var(--amb)">PANTALLA COMPLETA EN IPHONE</b>
+    <span>Safari en iPhone no permite pantalla completa dentro del navegador. Toca <b>Compartir</b> → <b>Agregar a pantalla de inicio</b> y abre el backtest desde ese ícono.</span>
+    <button class="tg" type="button" id="fsHelpX" style="border:1px solid var(--amb);height:44px">ENTENDIDO</button>
+  </div>
+</div>
+
+<script>
+const nf=(v,d=0)=>v.toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sg=v=>v>0.00001?'+':v<-0.00001?'−':'';
+const pct=(v,d=2)=>sg(v)+nf(Math.abs(v),d)+' %';
+const usd=(v,d=0)=>sg(v)+'USD '+nf(Math.abs(v),d);
+const usdA=(v,d=0)=>'USD '+nf(Math.abs(v),d);
+const cls=v=>v>0.0001?'up':v<-0.0001?'down':'flat';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MESES=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+const MESN=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const mesL=k=>MESES[+k.slice(5)-1]+' '+k.slice(2,4);
+function mesesRango(a0,a1){const out=[];let y=+a0.slice(0,4),m=+a0.slice(5,7);const Y=+a1.slice(0,4),M=+a1.slice(5,7);
+  while(y<Y||(y===Y&&m<=M)){out.push(y+'-'+String(m).padStart(2,'0'));m++;if(m>12){m=1;y++}}return out}
+const BTMES={"2020-02":11.16,"2020-03":-0.4426,"2020-04":18.2185,"2020-05":-1.7794,"2020-06":9.7384,"2020-07":11.944,"2020-08":-1.5748,"2020-09":-1.6637,"2020-10":30.4684,"2020-11":-10.4861,"2020-12":-2.8139,"2021-01":3.2765,"2021-02":-3.2217,"2021-03":5.2236,"2021-04":26.5679,"2021-05":7.864,"2021-06":-8.7337,"2021-07":1.7725,"2021-08":3.2442,"2021-09":-2.3985,"2021-10":10.6755,"2021-11":8.0248,"2021-12":17.3674,"2022-01":15.0293,"2022-02":12.5624,"2022-03":23.0481,"2022-04":14.7856,"2022-05":19.618,"2022-06":2.7738,"2022-07":33.7401,"2022-08":-5.2018,"2022-09":0.2405,"2022-10":20.2329,"2022-11":1.2135,"2022-12":-0.6915,"2023-01":0.7958,"2023-02":0.1895,"2023-03":17.2775,"2023-04":15.7615,"2023-05":35.7977,"2023-06":18.5834,"2023-07":7.2934,"2023-08":9.6096,"2023-09":-6.9,"2023-10":0.0752,"2023-11":18.3388,"2023-12":-0.2705,"2024-01":7.3013,"2024-02":14.8169,"2024-03":8.9322,"2024-04":19.8486,"2024-05":14.3771,"2024-06":8.5196,"2024-07":13.308,"2024-08":0.2164,"2024-09":-3.7663,"2024-10":1.1594,"2024-11":-6.7347,"2024-12":5.0939,"2025-01":11.8807,"2025-02":-0.2094,"2025-03":10.6632,"2025-04":2.3755,"2025-05":-6.6241,"2025-06":-2.7973,"2025-07":2.8065,"2025-08":2.7933,"2025-09":11.8994,"2025-10":2.5266,"2025-11":1.4462,"2025-12":-1.8914,"2026-01":7.7988,"2026-02":20.5507,"2026-03":19.0415,"2026-04":88.465,"2026-05":9.655,"2026-06":5.403,"2026-07":-1.2617,"2026-08":0.9076};
+const MIN_CAP=1000; /* capital mínimo de la estrategia en cTrader Copy: confirmar */
+const FREQN={1:'mensual',3:'trimestral',12:'anual'};
+let SER=[], REAL=null, CFG={cap:10000,ini:'2023-01',f:33,ap:0,apf:1,rt:0,rtf:1};
+
+function serie(R){const rm=mesesReales(R), hoyM=R.hoy.slice(0,7);
+  const out=Object.entries(BTMES).filter(([k])=>k<R.desde).map(([k,r])=>({k,r,t:'sim'}));
+  Object.entries(rm).forEach(([k,r])=>out.push({k,r,t:k===hoyM?'curso':'real'}));return out}
+
+function simular(c){
+  /* fee siempre mensual sobre ganancias nuevas (máximo anterior); aportes al inicio y retiros de ganancia al cierre de cada período, contados desde el mes de inicio */
+  const S=SER.filter(x=>x.k>=c.ini); let n=c.cap,hwm=c.cap,apT=0,rtT=0,idx=1,pk=1,dd=0,ini=n;const rows=[];
+  S.forEach((x,i)=>{let ap=0,w=0,fee=0;
+    if(i>0&&c.ap>0&&i%c.apf===0){ap=c.ap;n+=ap;hwm+=ap;apT+=ap}
+    if(i%c.rtf===0)ini=n;                          /* saldo al inicio del período de retiro */
+    const n0=n; n*=1+x.r/100;
+    if(x.t!=='curso'&&n>hwm){fee=(n-hwm)*c.f/100;n-=fee}
+    if(x.t!=='curso')hwm=Math.max(hwm,n);
+    const rn=n0>0?(n/n0-1)*100:0; idx*=1+rn/100; if(fee)pk=idx; pk=Math.max(pk,idx); dd=Math.min(dd,(idx/pk-1)*100);
+    if(c.rt>0&&x.t!=='curso'&&(i+1)%c.rtf===0){const g=n-ini;if(g>0){w=g*c.rt/100;hwm*=(n-w)/n;n-=w;rtT+=w}}
+    rows.push({k:x.k,t:x.t,r:x.r,rn,ap,w,n,n0,inv:c.cap+apT})});
+  const nm=rows.length, mens=nm?(Math.pow(idx,1/nm)-1)*100:0, cagr=nm?(Math.pow(idx,12/nm)-1)*100:0;
+  return {rows,n,apT,rtT,dd,cagr,mens,nm,idx,
+    nSim:rows.filter(r=>r.t==='sim').length,nReal:rows.filter(r=>r.t!=='sim').length,mPos:rows.filter(r=>r.rn>0).length}}
+
+function render(){
+  if(!SER.length)return;
+  const R=simular(CFG), inv=CFG.cap+R.apT, gan=R.n+R.rtT-inv;
+  const K=[
+    {l:'SALDO NETO HOY',v:usdA(R.n),c:R.n>=inv-R.rtT?1:-1,s:`aportaste ${usdA(inv)}${R.rtT?' · retiraste '+usdA(R.rtT):''}`},
+    {l:'GANANCIA NETA',v:usd(gan),c:gan,s:`${pct(inv?gan/inv*100:0,0)} sobre lo aportado${R.rtT?' · incluye retiros':''}`},
+    {l:'GANANCIA PROM. MES',v:usd(R.nm?gan/R.nm:0),c:gan,s:`promedio de ${R.nm} meses`},
+    {l:'RETORNO MENSUAL',v:pct(R.mens),c:R.mens,s:`neto · ${R.mPos} de ${R.nm} meses +`},
+    {l:'RETORNO ANUAL',v:pct(R.cagr,1),c:R.cagr,s:'neto, compuesto'},
+    {l:'PEOR CAÍDA',v:pct(R.dd,1),c:R.dd<0?-1:0,s:'neta, cierre a cierre de mes'}];
+  $('kpis').innerHTML=K.map(k=>{const col=k.c==null?'var(--wht)':(k.c>0.0001?'var(--grn)':k.c<-0.0001?'var(--red)':'var(--wht)');
+    return `<div class="kpi" style="border-top-color:${col}"><span class="l">${k.l}</span><span class="v" style="color:${col}">${k.v}</span><span class="s">${esc(k.s)}</span></div>`}).join('');
+  const R0=CFG.rt>0?simular(Object.assign({},CFG,{rt:0})):null;
+  curva(R,R0); anual(R);
+  const cw=$('cmpW'); cw.hidden=!R0;
+  if(R0){const tot=R.n+R.rtT, dif=R0.n-tot;
+    cw.innerHTML=`<table class="ct"><tr><td>Retirado</td><td>${usdA(R.rtT)}</td></tr><tr><td>Saldo hoy</td><td>${usdA(R.n)}</td></tr>
+      <tr class="sb"><td>Total con retiros</td><td>${usdA(tot)}</td></tr><tr class="sb y"><td>Total sin retirar</td><td>${usdA(R0.n)}</td></tr></table>
+      ${dif>0?`<div style="margin-top:6px">Reinvirtiendo todo tendrías <b>${usdA(dif)} más</b>.</div>`:''}`}
+  $('lgW').hidden=!R0; $('lgR').hidden=!R0;
+  const w=$('minW'); w.hidden=CFG.cap>=MIN_CAP;
+  w.textContent=`Con menos de ${usdA(MIN_CAP)} el copiador puede no replicar todas las operaciones por el tamaño mínimo de lote.`;
+  $('cvS').textContent=`${R.nSim} meses simulados · ${R.nReal} reales`;
+  guardar()}
+
+function nice(x){const p=Math.pow(10,Math.floor(Math.log10(x||1)));const f=x/p;return (f<=1?1:f<=2?2:f<=5?5:10)*p}
+function curva(R,R0){
+  const svg=$('cv'), box=svg.getBoundingClientRect(), W=Math.max(320,Math.round(box.width||900)), H=Math.max(180,Math.round(box.height||300));
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const rows=R.rows; if(!rows.length){svg.innerHTML='';return}
+  const pts=[{k:'',n:CFG.cap,g:CFG.cap,z:CFG.cap}].concat(rows.map((r,i)=>({k:r.k,n:r.n,g:r.inv,z:R0?R0.rows[i].n:r.n,t:r.t,r})));
+  const mx=Math.max(...pts.map(p=>Math.max(p.n,p.g,p.z))), mn=Math.max(1,Math.min(...pts.map(p=>Math.min(p.n,p.g))));
+  const lg=mx/mn>15, tf=v=>lg?Math.log10(Math.max(v,1)):v;
+  const X0=70,X1=W-90,Y0=H-22,Y1=12, YW=Y0-34;
+  const lo=lg?tf(mn):0, hi=tf(mx)*(lg?1.02:1.06);
+  const x=i=>X0+i/(pts.length-1||1)*(X1-X0), y=v=>Y0-(tf(v)-lo)/((hi-lo)||1)*(Y0-Y1);
+  const fmt=v=>v>=1e6?nf(v/1e6,1)+' M':v>=1e3?nf(v/1e3,0)+'k':nf(v,0);
+  let s='';
+  /* tramo real */
+  const iR=pts.findIndex(p=>p.t&&p.t!=='sim');
+  if(iR>0){s+=`<rect x="${x(iR-1)}" y="${Y1}" width="${X1-x(iR-1)}" height="${Y0-Y1}" fill="rgba(77,178,80,.12)"/><text x="${x(iR-1)+4}" y="${Y1+11}" fill="#4DB250" font-size="10" font-weight="700">REAL</text>`;
+    if(iR>2)s+=`<text x="${x(iR-1)-4}" y="${Y1+11}" text-anchor="end" fill="#A3A3A3" font-size="10">SIMULADO</text>`}
+  const ticks=[];if(lg){for(let e=Math.floor(Math.log10(mn));e<=Math.ceil(Math.log10(mx));e++)[1,2,5].forEach(f=>{const v=f*10**e;if(tf(v)>=lo&&tf(v)<=hi)ticks.push(v)})}
+  else{const st=nice(mx/4);for(let v=0;v<=mx*1.06;v+=st)ticks.push(v)}
+  ticks.forEach(v=>{s+=`<line x1="${X0}" y1="${y(v)}" x2="${X1}" y2="${y(v)}" stroke="#262626"/><text x="${X0-6}" y="${y(v)+4}" text-anchor="end" fill="#A3A3A3" font-size="10">${fmt(v)}</text>`});
+  let py='';pts.forEach((p,i)=>{if(!p.k)return;const yy=p.k.slice(0,4);if(yy!==py){py=yy;s+=`<line x1="${x(i)}" y1="${Y1}" x2="${x(i)}" y2="${Y0}" stroke="#1A1A1A"/><text x="${x(i)+3}" y="${H-6}" fill="#A3A3A3" font-size="10">${pts.length<30?MESES[+p.k.slice(5)-1]+' ':''}${yy}</text>`}});
+  const L=k=>pts.map((p,i)=>x(i).toFixed(1)+','+y(p[k]).toFixed(1)).join(' ');
+  s+=`<polyline points="${L('g')}" fill="none" stroke="#A3A3A3" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+  s+=`<polygon points="${x(0)},${Y0} ${L('n')} ${x(pts.length-1)},${Y0}" fill="rgba(255,160,40,.10)"/><polyline points="${L('n')}" fill="none" stroke="#FFA028" stroke-width="2"/>`;
+  if(R0){s+=`<polyline points="${L('z')}" fill="none" stroke="#FFDA5D" stroke-width="1.5" stroke-dasharray="6 3"/>`;
+    /* retiros: barras verdes al pie del gráfico */
+    const wm=Math.max(...rows.map(r=>r.w),1e-9), bw=Math.max(2,Math.min(10,(X1-X0)/(pts.length-1||1)*.6));
+    pts.forEach((p,i)=>{if(p.r&&p.r.w>0){const hh=4+p.r.w/wm*26;s+=`<rect x="${(x(i)-bw/2).toFixed(1)}" y="${(Y0-hh).toFixed(1)}" width="${bw.toFixed(1)}" height="${hh.toFixed(1)}" fill="#4DB250" opacity=".85"/>`}})}
+  const li=pts.length-1, last=pts[li];
+  if(last.t==='curso')s+=`<circle cx="${x(li)}" cy="${y(last.n)}" r="4" fill="#000" stroke="#FFA028" stroke-width="2"/>`;
+  else s+=`<circle cx="${x(li)}" cy="${y(last.n)}" r="3.5" fill="#FFA028"/>`;
+  const yn=y(last.n), yg=y(last.g), sep=Math.abs(yn-yg)<14;
+  s+=`<text x="${x(li)+8}" y="${yn+4}" fill="#fff" font-size="12" font-weight="700">${fmt(last.n)}</text>`;
+  s+=`<text x="${x(li)+8}" y="${sep?yn+18:yg+4}" fill="#A3A3A3" font-size="11">${fmt(last.g)}</text>`;
+  if(R0){const yz=y(last.z);s+=`<circle cx="${x(li)}" cy="${yz}" r="3" fill="#FFDA5D"/><text x="${x(li)+8}" y="${Math.abs(yz-yn)<14?yz-10:yz+4}" fill="#FFDA5D" font-size="12" font-weight="700">${fmt(last.z)}</text>`}
+  /* zonas de hover por mes */
+  const cw=(X1-X0)/(pts.length-1||1);
+  pts.forEach((p,i)=>{if(!p.k)return;s+=`<rect class="hz" data-i="${i}" x="${x(i)-cw/2}" y="${Y1}" width="${cw}" height="${Y0-Y1}" fill="transparent"/>`});
+  s+=`<line id="hl" x1="0" x2="0" y1="${Y1}" y2="${Y0}" stroke="#FFDA5D" stroke-width="1" visibility="hidden"/>`;
+  svg.innerHTML=s;
+  const tip=$('tip'), hl=svg.querySelector('#hl');
+  svg.querySelectorAll('.hz').forEach(z=>{z.onmouseenter=e=>{const p=pts[+z.dataset.i], r=p.r;
+      hl.setAttribute('x1',x(+z.dataset.i));hl.setAttribute('x2',x(+z.dataset.i));hl.setAttribute('visibility','visible');
+      tip.innerHTML=`<b style="color:var(--amb)">${MESN[+p.k.slice(5)-1]} ${p.k.slice(0,4)}</b> · ${r.t==='sim'?'simulado':r.t==='curso'?'real, en curso':'real'}<br>Retorno neto del mes: <span class="${cls(r.rn)}">${pct(r.rn)}</span><br>Saldo neto ${usdA(p.n)} · aportado ${usdA(p.g)}${R0?'<br><span style="color:var(--yel)">Sin retiros '+usdA(p.z)+'</span>':''}${r.w?'<br><span class="up">Retiro '+usdA(r.w)+'</span>':''}${r.ap?'<br>Aporte '+usdA(r.ap):''}`;
+      tip.hidden=false};
+    z.onmousemove=e=>{tip.style.left=Math.min(e.clientX+14,innerWidth-tip.offsetWidth-8)+'px';tip.style.top=(e.clientY+14)+'px'};
+    z.onmouseleave=()=>{tip.hidden=true;hl.setAttribute('visibility','hidden')}});
+}
+
+function anual(R){
+  /* % sobre el saldo de inicio del año más los aportes del año: así retorno − retiros = neto post retiro */
+  const by={};R.rows.forEach(r=>{(by[r.k.slice(0,4)]=by[r.k.slice(0,4)]||[]).push(r)});
+  const hayR=R.rtT>0;
+  const cel=(p,u,c)=>`<td class="${c||cls(p)}" style="font-weight:700">${pct(p,1)}<span class="u">${usd(u)}</span></td>`;
+  let h=`<thead><tr><th class="l">AÑO</th><th class="l">TRAMO</th><th>SALDO INICIO</th><th>APORTES</th><th>RETORNO NETO</th>${hayR?'<th>RETIROS</th><th>NETO POST RETIRO</th>':''}<th>SALDO FINAL</th></tr></thead><tbody>`;
+  let tB=CFG.cap;
+  Object.keys(by).forEach(y=>{const a=by[y], t=[...new Set(a.map(r=>r.t))];
+    const tr=t.includes('sim')&&t.length>1?'simulado + real':t.includes('sim')?'simulado':'real';
+    const curso=t.includes('curso'), ap=a.reduce((x,r)=>x+r.ap,0), w=a.reduce((x,r)=>x+r.w,0), ini=a[0].n0-a[0].ap, fin=a[a.length-1].n;
+    const B=ini+ap, gan=fin+w-B;
+    const m0=a[0].k.slice(5), m1=a[a.length-1].k.slice(5);
+    const rg=(m0!=='01'?'desde '+MESES[+m0-1].toLowerCase():'')+(m1!=='12'?(m0!=='01'?' ':'')+'al '+MESES[+m1-1].toLowerCase()+(curso?' (en curso)':''):'');
+    h+=`<tr><td class="l" style="color:var(--amb);font-weight:700">${y} <span style="color:var(--mut);font-weight:400">${rg}</span></td><td class="tr" style="${tr==='real'?'color:var(--grn)':''}">${tr}</td><td>${usdA(ini)}</td><td>${ap?usdA(ap):'—'}</td>`+
+      cel(gan/B*100,gan)+(hayR?(w?`<td style="color:var(--yel);font-weight:700">−${nf(w/B*100,1)} %<span class="u">−${usdA(w)}</span></td>`:'<td>—</td>')+cel((gan-w)/B*100,gan-w):'')+
+      `<td style="font-weight:700">${usdA(fin)}</td></tr>`});
+  const inv=CFG.cap+R.apT, gan=R.n+R.rtT-inv;
+  h+=`<tr class="tot"><td class="l">TOTAL</td><td class="tr">${R.nm} meses</td><td>${usdA(CFG.cap)}</td><td>${R.apT?usdA(R.apT):'—'}</td>`+
+    cel(gan/inv*100,gan)+(hayR?`<td style="color:var(--yel)">−${nf(R.rtT/inv*100,0)} %<span class="u">−${usdA(R.rtT)}</span></td>`+cel((gan-R.rtT)/inv*100,gan-R.rtT):'')+`<td>${usdA(R.n)}</td></tr>`;
+  $('yt').innerHTML=h+'</tbody>';
+  $('ytS').textContent=hayR?'% sobre el saldo de inicio del año + aportes · retorno neto − retiros = neto post retiro':'resultados netos · % sobre el saldo de inicio del año + aportes';
+}
+
+/* ---------- Formulario, link y arranque ---------- */
+function leer(){CFG.cap=Math.max(0,+$('cap').value||0);CFG.ini=$('iniY').value+'-'+$('iniM').value;CFG.f=Math.min(80,Math.max(0,+$('fee').value||0));
+  CFG.ap=Math.max(0,+$('ap').value||0);CFG.rt=Math.min(100,Math.max(0,+$('rt').value||0));ajustaIni();render()}
+function rango(){return [SER[0].k, SER.filter(x=>x.t!=='curso').slice(-1)[0].k]}
+function ajustaIni(){const [a,b]=rango();if(CFG.ini<a)CFG.ini=a;if(CFG.ini>b)CFG.ini=b;
+  const Y=CFG.ini.slice(0,4);$('iniY').value=Y;
+  $('iniM').innerHTML=MESN.map((m,i)=>{const k=Y+'-'+String(i+1).padStart(2,'0');return `<option value="${k.slice(5)}" ${k<a||k>b?'disabled':''}>${m}</option>`}).join('');
+  $('iniM').value=CFG.ini.slice(5)}
+function guardar(){const q=`c=${CFG.cap}&i=${CFG.ini}&f=${CFG.f}&a=${CFG.ap}&af=${CFG.apf}&r=${CFG.rt}&rf=${CFG.rtf}`;setHash('#'+q)}
+function cargarHash(){const h=new URLSearchParams(location.hash.slice(1));
+  if(h.get('c'))CFG.cap=+h.get('c')||CFG.cap; if(/^\d{4}-\d{2}$/.test(h.get('i')||''))CFG.ini=h.get('i');
+  if(h.get('f')!=null)CFG.f=+h.get('f'); if(h.get('a'))CFG.ap=+h.get('a'); if(h.get('r'))CFG.rt=+h.get('r'); if(FREQN[h.get('af')])CFG.apf=+h.get('af'); if(FREQN[h.get('rf')])CFG.rtf=+h.get('rf')}
+function marcaPer(){[['apF','apf'],['rtF','rtf']].forEach(([g,k])=>$(g).querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===CFG[k])))}
+
+async function iniciar(){
+  let R;try{R=await datosCliente()}catch(e){$('kpis').innerHTML='<div class="empty">No pude cargar los resultados. Intenta de nuevo en unos minutos.</div>';return}
+  REAL=R; SER=serie(R); cargarHash();
+  const [a,b]=rango(), ys=[];for(let y=+a.slice(0,4);y<=+b.slice(0,4);y++)ys.push(y);
+  $('iniY').innerHTML=ys.map(y=>`<option>${y}</option>`).join('');
+  $('cap').value=CFG.cap;$('fee').value=CFG.f;$('ap').value=CFG.ap;$('rt').value=CFG.rt;marcaPer();ajustaIni();
+  const curso=SER.find(x=>x.t==='curso');
+  $('banner').innerHTML=`<span>SIMULA TU INVERSIÓN · CUENTA MODELO DOBERWHITE</span><span class="v">simulado ${mesL(a).toLowerCase()} – ${mesL(BTMES_FIN).toLowerCase()} · real desde ${mesL(R.desde).toLowerCase()}${curso?' · '+mesL(curso.k).toLowerCase()+' en curso':''}</span>`+($('banner').querySelector('.prev')||PUB&&!R.d&&location.protocol==='file:'?'<span class="prev">VISTA PREVIA LOCAL</span>':'');
+  $('src').innerHTML=`Meses de ${mesL(a).toLowerCase()} a ${mesL(BTMES_FIN).toLowerCase()}: histórico simulado. Desde ${mesL(R.desde).toLowerCase()}: resultados reales de la cuenta modelo, que se agregan solos cada mes.${curso?` El mes en curso (${mesL(curso.k).toLowerCase()}) se muestra con su resultado a la fecha.`:''}`;
+  render()}
+const BTMES_FIN=Object.keys(BTMES).slice(-1)[0];
+['cap','fee','ap','rt'].forEach(id=>$(id).addEventListener('input',()=>{clearTimeout(window._t);window._t=setTimeout(leer,150)}));
+['iniY','iniM'].forEach(id=>$(id).addEventListener('change',leer));
+[['apF','apf'],['rtF','rtf']].forEach(([g,k])=>$(g).querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{CFG[k]=+b.dataset.v;marcaPer();render()}));
+$('link').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('linkT').textContent='LINK COPIADO'}catch(e){$('linkT').textContent='COPIA LA URL'}setTimeout(()=>$('linkT').textContent='COPIAR LINK',1800)};
+
+const PASOS=[["analisis_copytrading.html", "RESULTADOS REALES"], ["backtest_copytrading.html", "HISTÓRICO SIMULADO"], ["simulador_copytrading.html", "SIMULA TU INVERSIÓN"]], PASO=2;
+const setHash=h=>{try{history.replaceState(null,'',h)}catch(e){}};
+const PUB=null; /* solo en la copia de revisión: datos reales embebidos para abrir el archivo sin servidor */
+function flujo(){const h=location.hash;
+  $('flow').innerHTML=PASOS.map((p,i)=>`<a class="tab" href="${p[0]}" ${i===PASO?'aria-current="page"':''}><b>${i+1})</b>${p[1]}</a>`).join('')}
+async function datosCliente(){
+  let j=null;
+  try{const r=await fetch('copytrading_datos.json',{cache:'no-store'});if(r.ok)j=await r.json()}catch(e){}
+  if(!j){if(PUB){const b=$('banner');if(b&&!b.querySelector('.prev'))b.insertAdjacentHTML('beforeend','<span class="prev">VISTA PREVIA LOCAL</span>');return PUB}throw new Error('sin datos')}
+  if(!j.d)return j;
+  let k=null;try{k=localStorage.getItem('dw_cli_k')}catch(e){}
+  if(k){try{return await descifrar(j,k)}catch(e){}}
+  return pedirClave(j)}
+async function descifrar(j,clave){
+  const b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+  const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(clave),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b(j.s),iterations:j.n,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+  return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b(j.iv)},key,b(j.d))))}
+function pedirClave(j){return new Promise(res=>{$('lock').hidden=false;$('lkI').focus();
+  $('lkF').onsubmit=async e=>{e.preventDefault();const k=$('lkI').value;
+    try{const d=await descifrar(j,k);try{localStorage.setItem('dw_cli_k',k)}catch(_){};$('lock').hidden=true;res(d)}
+    catch(_){$('lkE').textContent='Clave incorrecta. Revisa la clave que te entregó Doberwhite.';$('lkI').select()}}})}
+function mesesReales(R){const m={};R.ops.forEach(o=>{const k=o[0].slice(0,7);m[k]=(m[k]||1)*(1+o[3]/(o[4]-o[3]))});
+  const out={};mesesRango(R.desde,R.hoy.slice(0,7)).forEach(k=>out[k]=((m[k]||1)-1)*100);return out}
+const fechaHora=s=>{const d=new Date(s);return isNaN(d)?'':d.toLocaleString('es-CL',{timeZone:'America/Santiago',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})};
+const APP=matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches||navigator.standalone===true;
+$('fsHelpX').onclick=()=>{$('fsHelp').hidden=true};
+function full(){const d=document.documentElement;
+  if(document.fullscreenElement||document.webkitFullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document);return}
+  const r=d.requestFullscreen||d.webkitRequestFullscreen;
+  if(!r){if(!APP){$('fsHelp').hidden=false;$('fsHelpX').focus()}return}
+  const x=r.call(d,{navigationUI:'hide'}); if(x&&x.catch)x.catch(()=>{if(!APP)$('fsHelp').hidden=false})}
+function marcaFS(){const on=!!(document.fullscreenElement||document.webkitFullscreenElement);$('fs').setAttribute('aria-pressed',on);
+  $('fs').querySelector('.t').textContent=on?'SALIR DE PANTALLA COMPLETA':'PANTALLA COMPLETA';if(APP)$('fs').hidden=true}
+document.addEventListener('fullscreenchange',()=>{marcaFS();setTimeout(render,120)}); document.addEventListener('webkitfullscreenchange',()=>{marcaFS();setTimeout(render,120)});
+$('fs').onclick=full; marcaFS();
+
+addEventListener('keydown',e=>{if(e.target.matches('input,select'))return;
+  if(e.key==='Escape'&&!$('fsHelp').hidden){$('fsHelp').hidden=true;return}
+  if(e.key==='f'||e.key==='F')full();
+  if(/^[1-3]$/.test(e.key))location.href=PASOS[+e.key-1][0]});
+addEventListener('resize',()=>{clearTimeout(window._r);window._r=setTimeout(render,200)});
+flujo(); iniciar();
+</script>
+</body>
+</html>
