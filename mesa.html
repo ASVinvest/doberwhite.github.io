@@ -174,7 +174,7 @@ td.empty{text-align:left;color:var(--mut)}
   <span class="cd"><span id="cdL" style="color:var(--amb);font-weight:400">CIERRE</span> <span id="cd">--:--:--</span></span>
   <button class="tg" id="uPct" aria-pressed="true" title="Tecla U">%</button><button class="tg" id="uUsd" aria-pressed="false" title="Tecla U">USD</button>
   <button class="tg" id="ref" type="button" aria-label="Refrescar" title="Pedir datos nuevos ahora (mínimo 5 minutos entre consultas)"><span class="t">REFRESCAR</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
-  <a class="tg" id="an" href="analisis.html" aria-label="Análisis" title="Análisis mes a mes y anual por cuenta" style="display:flex;align-items:center;text-decoration:none"><span class="t">ANÁLISIS</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></a>
+  <a class="tg" id="an" href="analisis.html#all" aria-label="Análisis global" title="Análisis global: todas las cuentas, mes a mes y anual" style="display:flex;align-items:center;text-decoration:none"><span class="t">ANÁLISIS</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></a>
   <button class="tg" id="fs" type="button" aria-pressed="false" aria-label="Pantalla completa" title="Tecla F"><span class="t">PANTALLA COMPLETA</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
 </header>
 
@@ -396,7 +396,7 @@ function render(){
   $('closedS').textContent=cerr.length?`ganadas ${gan} · perdidas ${cerr.length-gan}`:'';
   $('closed').innerHTML=cerr.length?cerr.map(o=>{const tt=(o.cierre||o.t);
     const v=o.usd==null?'—':(UNIT==='pct'?pct(o.usd/o.c.capital*100):usd(o.usd,2));
-    return `<tr><td class="l" style="color:var(--amb);width:52px">${tt.slice(11,16)}</td><td class="l">${esc(o.sym)} · ${o.lado==='Venta'?'C':'L'}${o.sim?' <span style="color:var(--amb)">sim</span>':''}</td><td class="l" style="color:${o.c._col}">${esc(o.c.nombre)}</td><td><b class="${cls(o.usd||0)}">${v}</b></td></tr>`}).join('')
+    return `<tr><td class="l" style="color:var(--amb);width:52px">${tt.slice(11,16)}</td><td class="l">${esc(o.sym)} · ${o.lado==='Venta'?'C':'L'}</td><td class="l" style="color:${o.c._col}">${esc(o.c.nombre)}</td><td><b class="${cls(o.usd||0)}">${v}</b></td></tr>`}).join('')
     :'<tr><td class="empty">Sin operaciones cerradas hoy.</td></tr>';
 
   curvaMeta(HAB,hasta,dv,metaUSD,mesN);
@@ -554,11 +554,15 @@ async function refrescar(){const b=$('ref');
   catch(e){bt.textContent='SIN CONEXIÓN'}
   setTimeout(()=>{bt.textContent='REFRESCAR';b.disabled=false},4000)}
 $('ref').onclick=refrescar;
+
+/* Mesa profesional: nunca se muestran operaciones simuladas */
+function soloReales(D){(D.cuentas||[]).forEach(c=>{if(Array.isArray(c.operaciones))c.operaciones=c.operaciones.filter(o=>!o.sim)});return D}
 async function cargar(){
   try{
     if(PUBLICA){DATA=await leerWeb()}
     else if(location.protocol==='file:'){DATA=await leerJS()}
     else{const r=await fetch('datos.json?'+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;DATA=await r.json()}
+    soloReales(DATA);
     if(DATA.hoy){HOY=DATA.hoy;fijarFechas()}}
   catch(e){if(!DATA){if(PUBLICA){const tg=$('srcTag');tg.hidden=false;tg.textContent='Sin datos publicados todavía';return}DATA=ejemplo();DATA._ej=true}}
   const tg=$('srcTag');
