@@ -128,7 +128,8 @@ td.empty{text-align:left;color:var(--mut)}
   .clk,.cmd .sp,#cdL,.ph .lg{display:none}
   #ref .t,#fs .t{display:none}
   .tg svg{display:block}
-  #ref,#fs{min-width:44px;padding:0;display:flex;align-items:center;justify-content:center}
+  #ref,#fs,#an{min-width:44px;padding:0;display:flex;align-items:center;justify-content:center}
+  #an .t{display:none}
   .cd{margin-left:auto;padding:0 6px;font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis}
   .tg,.logo,.sess{flex:none}
   .sess{padding:0 6px;font-size:11px}
@@ -173,6 +174,7 @@ td.empty{text-align:left;color:var(--mut)}
   <span class="cd"><span id="cdL" style="color:var(--amb);font-weight:400">CIERRE</span> <span id="cd">--:--:--</span></span>
   <button class="tg" id="uPct" aria-pressed="true" title="Tecla U">%</button><button class="tg" id="uUsd" aria-pressed="false" title="Tecla U">USD</button>
   <button class="tg" id="ref" type="button" aria-label="Refrescar" title="Pedir datos nuevos ahora (mínimo 5 minutos entre consultas)"><span class="t">REFRESCAR</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
+  <a class="tg" id="an" href="analisis.html" aria-label="Análisis" title="Análisis mes a mes y anual por cuenta" style="display:flex;align-items:center;text-decoration:none"><span class="t">ANÁLISIS</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></a>
   <button class="tg" id="fs" type="button" aria-pressed="false" aria-label="Pantalla completa" title="Tecla F"><span class="t">PANTALLA COMPLETA</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
 </header>
 
