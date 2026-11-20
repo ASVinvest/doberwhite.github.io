@@ -391,7 +391,7 @@ async function iniciar(){
   $('cap').value=CFG.cap;$('fee').value=CFG.f;$('ap').value=CFG.ap;$('rt').value=CFG.rt;marcaPer();ajustaIni();
   const curso=SER.find(x=>x.t==='curso');
   $('banner').innerHTML=`<span>SIMULA TU INVERSIÓN · CUENTA MODELO DOBERWHITE</span><span class="v">simulado ${mesL(a).toLowerCase()} – ${mesL(BTMES_FIN).toLowerCase()} · real desde ${mesL(R.desde).toLowerCase()}${curso?' · '+mesL(curso.k).toLowerCase()+' en curso':''}</span>`+($('banner').querySelector('.prev')||PUB&&!R.d&&location.protocol==='file:'?'<span class="prev">VISTA PREVIA LOCAL</span>':'');
-  $('src').innerHTML=`Meses de ${mesL(a).toLowerCase()} a ${mesL(BTMES_FIN).toLowerCase()}: histórico simulado. Desde ${mesL(R.desde).toLowerCase()}: resultados reales de la cuenta modelo, que se agregan solos cada mes.${curso?` El mes en curso (${mesL(curso.k).toLowerCase()}) se muestra con su resultado a la fecha.`:''}`;
+  $('src').innerHTML=`Meses de ${mesL(a).toLowerCase()} a ${mesL(BTMES_FIN).toLowerCase()}: Back Test Real. Desde ${mesL(R.desde).toLowerCase()}: resultados reales de la cuenta modelo, que se agregan solos cada mes.${curso?` El mes en curso (${mesL(curso.k).toLowerCase()}) se muestra con su resultado a la fecha.`:''}`;
   render()}
 const BTMES_FIN=Object.keys(BTMES).slice(-1)[0];
 ['cap','fee','ap','rt'].forEach(id=>$(id).addEventListener('input',()=>{clearTimeout(window._t);window._t=setTimeout(leer,150)}));
