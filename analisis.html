@@ -103,7 +103,6 @@ td.na{color:var(--faint);text-align:center}
   html,body{font-size:12px}
   .src,.cmd .sp{display:none}
   .cmd .t{display:none}.tg svg{display:block}
-  #sim .mo{display:inline!important}
   .cmd .tg{min-width:44px;padding:0}
   #back{padding:0 10px!important}
   .cmd .ttl{margin-left:auto;display:inline!important}
@@ -127,8 +126,8 @@ td.na{color:var(--faint);text-align:center}
   <span class="sp"></span>
   <span class="ttl" style="padding:0 10px;color:var(--amb);display:none">ANÁLISIS</span>
   <a class="tg" id="back" href="mesa.html" title="Volver a la mesa del día (Esc)" style="border-right:1px solid var(--line)"><span id="backT">◂ VOLVER A LA MESA</span></a>
+  <a class="tg" id="btL" href="backtest.html" title="Backtest de la última versión de cada bot (resultados simulados)" aria-label="Backtest"><span class="t">BACKTEST</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></a>
   <button class="tg" id="uPct" aria-pressed="true" title="Tecla U">%</button><button class="tg" id="uUsd" aria-pressed="false" title="Tecla U">USD</button>
-  <button class="tg" id="sim" aria-pressed="false" title="Incluir operaciones simuladas del retroactivo"><span class="t">SIMULADAS</span><span style="display:none" class="mo">SIM</span></button>
   <button class="tg" id="fs" type="button" aria-pressed="false" aria-label="Pantalla completa" title="Tecla F"><span class="t">PANTALLA COMPLETA</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
 </header>
 
@@ -311,7 +310,7 @@ function render(){
     return `<div class="kpi" style="border-top-color:${col}"><span class="l">${k.l}</span><span class="v" style="color:${col}">${k.v}</span><span class="s">${esc(k.s)}</span></div>`}).join('');
 
   curva(M,V); mapaMensual(V); tablaMeses(V,d0,d1); distribucion(P); desglose(P,V);
-  $('upd').textContent=`${V.C.length===1?V.C[0].detalle:V.C.length+' cuentas · capital '+usd(V.cap).replace('+','')} · solo operaciones cerradas${SIM?' · incluye simuladas':''} · actualizado ${new Date(DATA.actualizado).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})}`;
+  $('upd').textContent=`${V.C.length===1?V.C[0].detalle:V.C.length+' cuentas · capital '+usd(V.cap).replace('+','')} · solo operaciones reales y cerradas · actualizado ${new Date(DATA.actualizado).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})}`;
 }
 
 function nice(x){const p=Math.pow(10,Math.floor(Math.log10(x||1)));const f=x/p;return (f<=1?1:f<=2?2:f<=5?5:10)*p}
@@ -352,22 +351,22 @@ function mapaMensual(V){
   const anios=[...new Set(Object.keys(agg).concat(Object.keys(sAgg)).map(k=>k.slice(0,4)))].sort().reverse();
   if(!anios.length){$('hm').innerHTML='<tr><td class="empty">Sin operaciones.</td></tr>';$('yr').innerHTML='';return}
   const ref=Math.max(V.meta,0.5);
-  const cell=(a,sa)=>{ if(!a&&sa)return `<td class="hm" title="Mes simulado (${sa.n} ops): ${UNIT==='pct'?pct(sa.p):usd(sa.u,2)}. Activa SIMULADAS para incluirlo en las métricas." style="background:#262626;color:#A3A3A3;font-style:italic">S ${UNIT==='pct'?sg(sa.p)+nf(Math.abs(sa.p),1):sg(sa.u)+nf(Math.abs(sa.u),0)}</td>`;
+  const cell=(a)=>{
     if(!a)return '<td class="na">·</td>';
     const v=UNIT==='pct'?a.p:a.u, k=Math.min(1,Math.abs(a.p)/ref), al=(.25+k*.65).toFixed(2), rgb=a.p>=0?'77,178,80':'240,81,67';
     return `<td class="hm" title="${UNIT==='pct'?pct(a.p):usd(a.u,2)}" style="background:rgba(${rgb},${al});color:${k>.55?'#000':'#fff'}">${UNIT==='pct'?sg(a.p)+nf(Math.abs(a.p),1):sg(a.u)+nf(Math.abs(a.u),0)}</td>`};
   let h=`<thead><tr><th class="l">AÑO</th>${MESES.map(m=>`<th style="text-align:center">${m}</th>`).join('')}<th>AÑO</th><th>META ✓</th></tr></thead><tbody>`;
   anios.forEach(y=>{let tp=0,tu=0,ok=0,nm=0;
-    const cs=MESES.map((_,i)=>{const k=y+'-'+String(i+1).padStart(2,'0'),a=agg[k];if(a){tp+=a.p;tu+=a.u;nm++;if(a.p>=V.meta)ok++}return cell(a,sAgg[k])}).join('');
+    const cs=MESES.map((_,i)=>{const k=y+'-'+String(i+1).padStart(2,'0'),a=agg[k];if(a){tp+=a.p;tu+=a.u;nm++;if(a.p>=V.meta)ok++}return cell(a)}).join('');
     h+=`<tr><td class="l" style="color:var(--amb);font-weight:700">${y}</td>${cs}<td class="${cls(tp)}" style="font-weight:700">${UNIT==='pct'?pct(tp,1):usd(tu)}</td><td>${ok}/${nm}</td></tr>`});
   $('hm').innerHTML=h+'</tbody>';
   let t=`<thead><tr><th class="l">AÑO</th><th>RETORNO</th><th>OPS</th><th>ACIERTO</th><th>P. FACTOR</th><th>SHARPE</th><th>SORTINO</th><th>CAÍDA MÁX</th><th>CALMAR</th></tr></thead><tbody>`;
   anios.forEach(y=>{const o=V.ops.filter(x=>x.d.startsWith(y));
-    if(!o.length){t+=`<tr><td class="l" style="color:var(--amb);font-weight:700">${y}</td><td colspan="8" style="text-align:left;color:var(--mut);font-style:italic">solo operaciones simuladas · activa SIMULADAS para verlas</td></tr>`;return}
+    if(!o.length)return;
     const m=metricas(o,o.length?(y+'-01-01'<o[0].d?o[0].d:y+'-01-01'):y+'-01-01',y+'-12-31'>HOY?HOY:y+'-12-31');
     t+=`<tr><td class="l" style="color:var(--amb);font-weight:700">${y}</td><td class="${cls(m.ret)}" style="font-weight:700">${fv(m.ret,m.retU)}</td><td>${m.n}</td><td>${nf(m.wr*100,0)} %</td><td class="${m.pf>=1?'up':'down'}">${num(m.pf)}</td><td>${num(m.sharpe)}</td><td>${num(m.sortino)}</td><td class="down">${fv(m.dd,m.dd/100*V.cap)}</td><td>${num(m.calmar)}</td></tr>`});
   $('yr').innerHTML=t+'</tbody>';
-  $('hmS').textContent=`meta mensual ${UNIT==='pct'?nf(V.meta,1)+' %':usd(V.metaU).replace('+','')} · intensidad = cuánto de la meta`+(Object.keys(sAgg).length?' · S = simulado (fuera de las métricas)':'');
+  $('hmS').textContent=`meta mensual ${UNIT==='pct'?nf(V.meta,1)+' %':usd(V.metaU).replace('+','')} · intensidad = cuánto de la meta`;
 }
 
 function tablaMeses(V,d0,d1){
@@ -427,7 +426,6 @@ function desglose(P,V){
 /* ---------- Controles ---------- */
 function setUnit(u){UNIT=u;$('uPct').setAttribute('aria-pressed',u==='pct');$('uUsd').setAttribute('aria-pressed',u==='usd');render()}
 $('uPct').onclick=()=>setUnit('pct'); $('uUsd').onclick=()=>setUnit('usd');
-$('sim').onclick=()=>{SIM=!SIM;$('sim').setAttribute('aria-pressed',SIM);render()};
 const APP=matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches||navigator.standalone===true;
 $('fsHelpX').onclick=()=>{$('fsHelp').hidden=true};
 function full(){const d=document.documentElement;
@@ -468,11 +466,15 @@ async function leerWeb(){const r=await fetch('mesa_datos.json?'+Date.now(),{cach
       return JSON.parse(new TextDecoder().decode(pt))}
     catch(e){LLAVE=null;clave=null;try{localStorage.removeItem('dw_mesa_k')}catch(_){}}}
   throw 0}
+
+/* Mesa profesional: nunca se muestran operaciones simuladas */
+function soloReales(D){(D.cuentas||[]).forEach(c=>{if(Array.isArray(c.operaciones))c.operaciones=c.operaciones.filter(o=>!o.sim)});return D}
 async function cargar(){
   try{
     if(PUBLICA){DATA=await leerWeb()}
     else if(location.protocol==='file:'){DATA=await leerJS()}
     else{const r=await fetch('datos.json?'+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;DATA=await r.json()}
+    soloReales(DATA);
     if(DATA.hoy)HOY=DATA.hoy}
   catch(e){if(!DATA){if(PUBLICA){const tg=$('srcTag');tg.hidden=false;tg.textContent='Sin datos publicados todavía';return}DATA=ejemplo();DATA._ej=true}}
   const tg=$('srcTag'); tg.hidden=!DATA._ej; if(DATA._ej)tg.textContent='Datos de ejemplo';
