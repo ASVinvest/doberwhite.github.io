@@ -105,6 +105,7 @@ td.na{color:var(--faint);text-align:center}
   .cmd .t{display:none}.tg svg{display:block}
   #sim .mo{display:inline!important}
   .cmd .tg{min-width:44px;padding:0}
+  #back{padding:0 10px!important}
   .cmd .ttl{margin-left:auto;display:inline!important}
   .tabs{flex-direction:column}
   .per{margin-left:0;border-top:1px solid var(--line);overflow-x:auto}
@@ -125,7 +126,7 @@ td.na{color:var(--faint);text-align:center}
   <span class="src" id="srcTag" hidden>Datos de ejemplo</span>
   <span class="sp"></span>
   <span class="ttl" style="padding:0 10px;color:var(--amb);display:none">ANÁLISIS</span>
-  <a class="tg" href="mesa.html" title="Volver a la mesa del día" aria-label="Volver a la mesa"><span class="t">◂ MESA</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+  <a class="tg" id="back" href="mesa.html" title="Volver a la mesa del día (Esc)" style="border-right:1px solid var(--line)"><span id="backT">◂ VOLVER A LA MESA</span></a>
   <button class="tg" id="uPct" aria-pressed="true" title="Tecla U">%</button><button class="tg" id="uUsd" aria-pressed="false" title="Tecla U">USD</button>
   <button class="tg" id="sim" aria-pressed="false" title="Incluir operaciones simuladas del retroactivo"><span class="t">SIMULADAS</span><span style="display:none" class="mo">SIM</span></button>
   <button class="tg" id="fs" type="button" aria-pressed="false" aria-label="Pantalla completa" title="Tecla F"><span class="t">PANTALLA COMPLETA</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -239,10 +240,10 @@ function vista(){
   const OP=opciones();
   let C=cuentasOk(); if(VISTA!=='all')C=C.filter(c=>c.id===VISTA); else C=C.filter(c=>OP.sumar_paper||c.tipo!=='paper');
   const cap=C.reduce((a,c)=>a+c.capital,0)||1, metaU=C.reduce((a,c)=>a+c.capital*c.meta_mes/100,0);
-  const ops=C.flatMap(c=>c.operaciones.filter(o=>!o.abierta&&(SIM||!o.sim)).map(o=>{const tt=o.cierre||o.t;
-    return {d:tt.slice(0,10),h:+(o.t.slice(11,13)||0),sym:o.sym,lado:o.lado,u:o.usd||0,p:(o.usd||0)/cap*100,c}}))
-    .sort((a,b)=>a.d<b.d?-1:1);
-  return {C,cap,meta:metaU/cap*100,metaU,ops};
+  const mk=(o,c)=>{const tt=o.cierre||o.t;return {d:tt.slice(0,10),h:+(o.t.slice(11,13)||0),sym:o.sym,lado:o.lado,u:o.usd||0,p:(o.usd||0)/cap*100,c}};
+  const ops=C.flatMap(c=>c.operaciones.filter(o=>!o.abierta&&(SIM||!o.sim)).map(o=>mk(o,c))).sort((a,b)=>a.d<b.d?-1:1);
+  const simOps=SIM?[]:C.flatMap(c=>c.operaciones.filter(o=>!o.abierta&&o.sim).map(o=>mk(o,c)));
+  return {C,cap,meta:metaU/cap*100,metaU,ops,simOps};
 }
 function habiles(d0,d1){const out=[];for(let t=Date.parse(d0+'T12:00:00Z');t<=Date.parse(d1+'T12:00:00Z');t+=864e5){const dt=new Date(t),w=dt.getUTCDay();if(w>0&&w<6)out.push(dt.toISOString().slice(0,10))}return out}
 function metricas(ops,d0,d1){
@@ -276,6 +277,10 @@ function render(){
   if(!tabs.some(t=>t.id===VISTA))VISTA='all';
   $('tabs').innerHTML=tabs.map((t,i)=>`<button class="tab" role="tab" aria-selected="${t.id===VISTA}" data-v="${esc(t.id)}"><b>${i+1})</b><i style="background:${t.col}"></i>${esc(t.n)}</button>`).join('');
   $('tabs').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{VISTA=b.dataset.v;history.replaceState(null,'','#'+VISTA);render()});
+  const glob=VISTA==='all', mob=innerWidth<700;
+  $('back').href=glob?'mesa.html':'#all';
+  $('backT').textContent=glob?(mob?'◂ MESA':'◂ VOLVER A LA MESA'):(mob?'◂ GLOBAL':'◂ VOLVER AL GLOBAL');
+  $('back').title=glob?'Volver a la mesa del día (Esc)':'Volver al análisis de todas las cuentas (Esc)';
   /* períodos: años con operaciones + todo */
   const anios=[...new Set(V.ops.map(o=>o.d.slice(0,4)))].sort(); if(!anios.length)anios.push(HOY.slice(0,4));
   if(!PER||(PER!=='all'&&PER!=='12m'&&!anios.includes(PER)))PER=anios[anios.length-1];
@@ -343,22 +348,26 @@ function curva(M,V){
 
 function mapaMensual(V){
   const agg={}; V.ops.forEach(o=>{const k=o.d.slice(0,7);(agg[k]=agg[k]||{p:0,u:0});agg[k].p+=o.p;agg[k].u+=o.u});
-  const anios=[...new Set(Object.keys(agg).map(k=>k.slice(0,4)))].sort().reverse();
+  const sAgg={}; V.simOps.forEach(o=>{const k=o.d.slice(0,7);(sAgg[k]=sAgg[k]||{p:0,u:0,n:0});sAgg[k].p+=o.p;sAgg[k].u+=o.u;sAgg[k].n++});
+  const anios=[...new Set(Object.keys(agg).concat(Object.keys(sAgg)).map(k=>k.slice(0,4)))].sort().reverse();
   if(!anios.length){$('hm').innerHTML='<tr><td class="empty">Sin operaciones.</td></tr>';$('yr').innerHTML='';return}
   const ref=Math.max(V.meta,0.5);
-  const cell=(a)=>{ if(!a)return '<td class="na">·</td>';
+  const cell=(a,sa)=>{ if(!a&&sa)return `<td class="hm" title="Mes simulado (${sa.n} ops): ${UNIT==='pct'?pct(sa.p):usd(sa.u,2)}. Activa SIMULADAS para incluirlo en las métricas." style="background:#262626;color:#A3A3A3;font-style:italic">S ${UNIT==='pct'?sg(sa.p)+nf(Math.abs(sa.p),1):sg(sa.u)+nf(Math.abs(sa.u),0)}</td>`;
+    if(!a)return '<td class="na">·</td>';
     const v=UNIT==='pct'?a.p:a.u, k=Math.min(1,Math.abs(a.p)/ref), al=(.25+k*.65).toFixed(2), rgb=a.p>=0?'77,178,80':'240,81,67';
     return `<td class="hm" title="${UNIT==='pct'?pct(a.p):usd(a.u,2)}" style="background:rgba(${rgb},${al});color:${k>.55?'#000':'#fff'}">${UNIT==='pct'?sg(a.p)+nf(Math.abs(a.p),1):sg(a.u)+nf(Math.abs(a.u),0)}</td>`};
   let h=`<thead><tr><th class="l">AÑO</th>${MESES.map(m=>`<th style="text-align:center">${m}</th>`).join('')}<th>AÑO</th><th>META ✓</th></tr></thead><tbody>`;
   anios.forEach(y=>{let tp=0,tu=0,ok=0,nm=0;
-    const cs=MESES.map((_,i)=>{const k=y+'-'+String(i+1).padStart(2,'0'),a=agg[k];if(a){tp+=a.p;tu+=a.u;nm++;if(a.p>=V.meta)ok++}return cell(a)}).join('');
+    const cs=MESES.map((_,i)=>{const k=y+'-'+String(i+1).padStart(2,'0'),a=agg[k];if(a){tp+=a.p;tu+=a.u;nm++;if(a.p>=V.meta)ok++}return cell(a,sAgg[k])}).join('');
     h+=`<tr><td class="l" style="color:var(--amb);font-weight:700">${y}</td>${cs}<td class="${cls(tp)}" style="font-weight:700">${UNIT==='pct'?pct(tp,1):usd(tu)}</td><td>${ok}/${nm}</td></tr>`});
   $('hm').innerHTML=h+'</tbody>';
   let t=`<thead><tr><th class="l">AÑO</th><th>RETORNO</th><th>OPS</th><th>ACIERTO</th><th>P. FACTOR</th><th>SHARPE</th><th>SORTINO</th><th>CAÍDA MÁX</th><th>CALMAR</th></tr></thead><tbody>`;
-  anios.forEach(y=>{const o=V.ops.filter(x=>x.d.startsWith(y)), m=metricas(o,o.length?(y+'-01-01'<o[0].d?o[0].d:y+'-01-01'):y+'-01-01',y+'-12-31'>HOY?HOY:y+'-12-31');
+  anios.forEach(y=>{const o=V.ops.filter(x=>x.d.startsWith(y));
+    if(!o.length){t+=`<tr><td class="l" style="color:var(--amb);font-weight:700">${y}</td><td colspan="8" style="text-align:left;color:var(--mut);font-style:italic">solo operaciones simuladas · activa SIMULADAS para verlas</td></tr>`;return}
+    const m=metricas(o,o.length?(y+'-01-01'<o[0].d?o[0].d:y+'-01-01'):y+'-01-01',y+'-12-31'>HOY?HOY:y+'-12-31');
     t+=`<tr><td class="l" style="color:var(--amb);font-weight:700">${y}</td><td class="${cls(m.ret)}" style="font-weight:700">${fv(m.ret,m.retU)}</td><td>${m.n}</td><td>${nf(m.wr*100,0)} %</td><td class="${m.pf>=1?'up':'down'}">${num(m.pf)}</td><td>${num(m.sharpe)}</td><td>${num(m.sortino)}</td><td class="down">${fv(m.dd,m.dd/100*V.cap)}</td><td>${num(m.calmar)}</td></tr>`});
   $('yr').innerHTML=t+'</tbody>';
-  $('hmS').textContent=`meta mensual ${UNIT==='pct'?nf(V.meta,1)+' %':usd(V.metaU).replace('+','')} · intensidad = cuánto de la meta`;
+  $('hmS').textContent=`meta mensual ${UNIT==='pct'?nf(V.meta,1)+' %':usd(V.metaU).replace('+','')} · intensidad = cuánto de la meta`+(Object.keys(sAgg).length?' · S = simulado (fuera de las métricas)':'');
 }
 
 function tablaMeses(V,d0,d1){
@@ -430,7 +439,9 @@ function marcaFS(){const on=!!(document.fullscreenElement||document.webkitFullsc
   $('fs').querySelector('.t').textContent=on?'SALIR DE PANTALLA COMPLETA':'PANTALLA COMPLETA';if(APP)$('fs').hidden=true}
 document.addEventListener('fullscreenchange',()=>{marcaFS();setTimeout(render,120)}); document.addEventListener('webkitfullscreenchange',()=>{marcaFS();setTimeout(render,120)});
 $('fs').onclick=full; marcaFS();
+$('back').addEventListener('click',e=>{if(VISTA!=='all'){e.preventDefault();VISTA='all';history.replaceState(null,'','#all');render()}});
 addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+  if(e.key==='Escape'){if(!$('fsHelp').hidden){$('fsHelp').hidden=true;return}$('back').click();return}
   if(e.key==='u'||e.key==='U')setUnit(UNIT==='pct'?'usd':'pct');
   if(e.key==='f'||e.key==='F')full();
   if(/^[1-9]$/.test(e.key)&&DATA){const ids=['all'].concat(cuentasOk().map(c=>c.id)),v=ids[+e.key-1];if(v){VISTA=v;history.replaceState(null,'','#'+v);render()}}});
@@ -467,7 +478,7 @@ async function cargar(){
   const tg=$('srcTag'); tg.hidden=!DATA._ej; if(DATA._ej)tg.textContent='Datos de ejemplo';
   render();
 }
-if(location.hash.length>1)VISTA=decodeURIComponent(location.hash.slice(1));
+VISTA='all'; if(location.hash.length>1)VISTA=decodeURIComponent(location.hash.slice(1));
 cargar(); setInterval(cargar,300000);
 </script>
 </body>
