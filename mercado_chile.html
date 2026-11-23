@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Mercado Chile · Doberwhite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+
+:root{--bg:#000;--line:#333;--line2:#262626;--hdr:#141414;--th:#0000FF;--amb:#FFA028;--yel:#FFDA5D;--grn:#4DB250;--red:#F05143;--wht:#fff;--mut:#A3A3A3;--faint:#6B6B6B}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--wht);font-family:'Roboto Mono',Consolas,monospace;font-size:13px;font-variant-numeric:tabular-nums}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--yel);outline-offset:1px}
+.up{color:var(--grn)}.down{color:var(--red)}.flat{color:var(--mut)}
+.root{height:100vh;height:100dvh;display:grid;grid-template-rows:30px 26px 60px minmax(0,1fr) 16px;gap:4px;padding:0 4px 4px;overflow:hidden}
+.cmd{display:flex;align-items:center;margin:0 -4px;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden}
+.logo{display:flex;align-items:center;height:30px;padding:0 10px;background:var(--amb);color:#000;font-weight:700;flex:none}
+.cmdline{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;color:var(--amb);border-right:1px solid var(--line)}
+.sp{flex:1}
+.tg{height:30px;padding:0 10px;font-weight:700;border:0;border-left:1px solid var(--line);background:#000;color:var(--amb);display:flex;align-items:center;gap:6px;flex:none}
+.tg svg{width:16px;height:16px}
+.asof{padding:0 10px;color:var(--mut);font-size:12px}
+.banner{display:flex;align-items:center;gap:14px;padding:0 10px;background:var(--amb);color:#000;font-weight:700;white-space:nowrap;overflow:hidden}
+.banner .v{font-weight:400;overflow:hidden;text-overflow:ellipsis}
+.banner .r{margin-left:auto;font-weight:400}
+/* franja macro */
+.macro{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
+.mt{border:1px solid var(--line);padding:5px 8px;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0}
+.mt .k{color:var(--amb);font-size:11px;font-weight:700;display:flex;justify-content:space-between;gap:6px}
+.mt .v{font-size:17px;font-weight:700;white-space:nowrap}
+.mt .s{color:var(--mut);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* cuerpo */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);gap:4px;min-height:0}
+.col{display:grid;gap:4px;min-height:0;min-width:0}
+.c1{grid-template-rows:118px minmax(0,1fr) auto 158px}
+.c2{grid-template-rows:minmax(0,1fr) 236px}
+.c3{grid-template-rows:auto auto minmax(0,1fr)}
+.panel{border:1px solid var(--line);display:flex;flex-direction:column;min-height:0;min-width:0}
+.ph{display:flex;align-items:center;gap:10px;height:24px;padding:0 8px;background:var(--hdr);color:var(--amb);flex:none;white-space:nowrap;overflow:hidden}
+.ph h2{margin:0;font-size:13px;font-weight:700}
+.ph .x{color:var(--mut);font-weight:400;font-size:11.5px;overflow:hidden;text-overflow:ellipsis}
+.ph .sw{display:flex;margin-left:auto;flex:none}
+.ph .sw button{height:24px;padding:0 7px;border:0;border-left:1px solid var(--line);background:transparent;color:var(--amb);font-size:10.5px;font-weight:700}
+.ph .sw button[aria-pressed="true"]{background:var(--amb);color:#000}
+.body{flex:1;min-height:0;overflow:auto;position:relative}
+table{width:100%;border-collapse:collapse}
+thead th{position:sticky;top:0;background:var(--th);font-size:11px;font-weight:500;padding:4px 8px;text-align:right;white-space:nowrap}
+th.l,td.l{text-align:left}
+td{padding:3px 8px;border-top:1px solid var(--line2);text-align:right;white-space:nowrap;font-size:12px}
+td.w{white-space:normal;color:var(--mut);font-size:11px;text-align:left}
+tr.sec td{background:var(--hdr);color:var(--amb);font-weight:700;font-size:11px;padding:4px 8px}
+/* cotización */
+.q{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:8px 10px;align-content:center}
+.q .px{font-size:34px;font-weight:700;line-height:1}
+.q .px small{font-size:13px;color:var(--mut);font-weight:400;margin-left:4px}
+.q .ch{font-size:15px;font-weight:700}
+.q .st{display:grid;grid-template-columns:repeat(3,auto);gap:1px 14px;font-size:11.5px;color:var(--mut);align-content:center}
+.q .st b{color:#fff;font-weight:500}
+.q .rg{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--mut)}
+.bar{position:relative;flex:1;height:6px;background:var(--line2)}
+.bar i{position:absolute;top:-4px;width:2px;height:14px;background:var(--amb)}
+.chips{display:flex;gap:4px}
+.chip{border:1px solid var(--line);padding:1px 6px;font-size:11px}
+.chip b{color:var(--mut);font-weight:400;margin-right:4px}
+svg.ch{display:block;width:100%;height:100%}
+/* mapa */
+#mapB{overflow:hidden}
+.nd{cursor:pointer}
+.nd:focus{outline:none}
+.nd:focus-visible circle.o{stroke:var(--yel);stroke-width:2}
+/* detalle */
+.det{padding:8px 10px;display:grid;gap:6px;align-content:start;line-height:1.45}
+.det .t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.det .t b{font-size:15px}
+.tag{font-size:10.5px;font-weight:700;padding:1px 6px;border:1px solid currentColor}
+.det .d{color:var(--yel);font-size:12px}
+.det p{margin:0;font-size:12px}
+.det .src{color:var(--faint);font-size:10.5px}
+.bal{display:grid;grid-template-columns:1fr 1fr;gap:0;height:100%}
+.bal ul{margin:0;padding:6px 10px 6px 24px;font-size:11.5px;line-height:1.45}
+.bal li{margin-bottom:3px}
+.bal h3{margin:0;padding:4px 10px;font-size:11px}
+.bal>div+div{border-left:1px solid var(--line)}
+/* noticias */
+.nw{display:grid;grid-template-columns:52px 1fr;gap:2px 8px;padding:5px 8px;border-top:1px solid var(--line2);font-size:12px;line-height:1.4}
+.nw:first-child{border-top:0}
+.nw .f{color:var(--amb);font-weight:700}
+.nw .s{grid-column:2;color:var(--faint);font-size:10.5px}
+.dap{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;padding:4px 8px;font-size:11.5px}
+.dap div{display:flex;justify-content:space-between;gap:6px;padding:1px 0;border-bottom:1px solid var(--line2)}
+.dap div.top b{color:var(--grn)}
+.foot{color:var(--faint);font-size:10.5px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:1499px),(max-height:899px){
+  .root{height:auto;overflow:visible;grid-template-rows:30px 26px auto auto 16px}
+  .macro{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .main{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .c2{grid-column:1/-1;order:-1;grid-template-rows:640px 236px}
+  .c1{grid-template-rows:118px 280px auto 158px}
+  .c3{grid-template-rows:auto auto 560px}
+}
+@media (max-width:1100px){
+  .root{height:auto;display:flex;flex-direction:column;overflow:visible}
+  .main{display:flex;flex-direction:column}
+  .col{display:flex;flex-direction:column}
+  .c1>.panel:nth-child(2){height:260px}
+  .c2>.panel:first-child{height:640px}
+  .c2>div{display:flex!important;flex-direction:column}
+  .c3>.panel:last-child .body{max-height:420px}
+  .foot{white-space:normal;text-align:left}
+  .banner .r{display:none}
+}
+@media (max-width:700px){.macro{grid-template-columns:repeat(2,minmax(0,1fr))}.c2>.panel:first-child{height:480px}.bal{grid-template-columns:1fr}.bal>div+div{border-left:0;border-top:1px solid var(--line)}.cmdline span.h{display:none}.asof{display:none}.q{grid-template-columns:1fr}.chips{flex-wrap:wrap}.q .rg{flex-wrap:wrap}}
+
+/* navegación */
+.nav{display:flex;height:30px}
+.nav a{display:flex;align-items:center;gap:6px;padding:0 12px;color:var(--mut);text-decoration:none;font-weight:700;border-right:1px solid var(--line);white-space:nowrap}
+.nav a b{color:var(--red);font-weight:400}
+.nav a[aria-current="page"]{background:var(--hdr);color:#fff;box-shadow:inset 0 -2px 0 var(--amb)}
+.crumb{display:flex;gap:6px;align-items:center}
+.crumb a{color:#000;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.view[hidden]{display:none!important}
+.view{display:contents}
+.fc[hidden],.mk[hidden]{display:none!important}
+/* mercado */
+.mk{display:grid;grid-template-columns:minmax(0,1fr) 460px;gap:4px;min-height:0}
+.mkA{display:grid;grid-template-rows:minmax(0,1fr) 222px;gap:4px;min-height:0}
+.mkC{display:grid;grid-template-rows:minmax(0,.9fr) minmax(0,1fr) auto auto;gap:4px;min-height:0}
+#tm{position:relative}
+.tsec{position:absolute;border:1px solid #000;box-sizing:border-box}
+.tsec>h3{position:absolute;left:0;right:0;top:0;height:18px;margin:0;padding:2px 6px;font-size:10.5px;color:var(--amb);background:#000;display:flex;justify-content:space-between;white-space:nowrap;overflow:hidden}
+.tt{position:absolute;border:1px solid #000;box-sizing:border-box;color:#fff;padding:4px 6px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;justify-content:center;text-align:center;font:inherit}
+.tt:hover,.tt:focus-visible{outline:2px solid var(--yel);outline-offset:-2px;z-index:2}
+.tt b{line-height:1.1}.tt span{opacity:.92;line-height:1.3}
+.hm{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:6px;height:100%;align-content:stretch}
+.sec{display:flex;flex-direction:column;min-height:0;border:1px solid var(--line2)}
+.sec h3{margin:0;padding:3px 6px;font-size:11px;color:var(--amb);background:var(--hdr);display:flex;justify-content:space-between}
+.tiles{flex:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;padding:2px;min-height:0;grid-auto-rows:minmax(0,1fr)}
+.tile{border:0;color:#fff;text-align:left;padding:4px 6px;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow:hidden}
+.tile b{font-size:13px}
+.tile span{font-size:11px;opacity:.9}
+.tile.has{box-shadow:inset 0 0 0 2px var(--amb)}
+.tile:hover,.tile:focus-visible{outline:2px solid var(--yel);outline-offset:-2px}
+.tops{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;min-height:0}
+.grp{padding:7px 8px;border-top:1px solid var(--line2);cursor:pointer;display:grid;gap:4px}
+.grp:first-child{border-top:0}
+.grp:hover,.grp:focus-visible{background:#0d0d0d;outline:none}
+.grp:focus-visible{box-shadow:inset 2px 0 0 var(--yel)}
+.grp .h{display:flex;justify-content:space-between;gap:8px}
+.grp .h b{color:#fff}
+.grp .h span{color:var(--faint);font-size:11px}
+.grp .i{color:var(--mut);font-size:11px;line-height:1.35}
+.cs{display:flex;flex-wrap:wrap;gap:4px}
+.ck{border:1px solid var(--line);background:#000;color:#fff;font-size:11px;padding:1px 6px;cursor:pointer}
+.ck:hover{border-color:var(--amb)}
+.ag{display:grid;grid-template-columns:96px 1fr;gap:2px 8px;padding:5px 8px;font-size:12px}
+.ag span:nth-child(odd){color:var(--amb)}
+/* grupo */
+.gv{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.35fr) minmax(0,1fr);gap:4px;min-height:0}
+.gvR{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:4px;min-height:0}
+.txt{padding:8px 10px;line-height:1.5;font-size:12.5px}
+/* ficha */
+.fc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);gap:4px;min-height:0}
+.c3{grid-template-rows:auto minmax(0,1.15fr) minmax(0,.85fr)}
+.gauge{padding:8px 10px 4px}
+.gauge .lb{display:flex;justify-content:space-between;font-size:10.5px;color:var(--mut)}
+.gauge .tr{position:relative;height:10px;margin:4px 0;background:linear-gradient(90deg,#F05143 0%,#3a3a3a 50%,#4DB250 100%)}
+.gauge .tr i{position:absolute;top:-5px;width:3px;height:20px;background:#fff;box-shadow:0 0 0 1px #000}
+.gauge .vd{font-weight:700;font-size:13px}
+.ind{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:1px 6px;padding:2px 10px 6px;font-size:11.5px;align-items:baseline}
+.ind .s{grid-column:2/-1;color:var(--faint);font-size:10px;margin-bottom:3px}
+.empty{padding:14px;color:var(--mut);line-height:1.5}
+.basic{padding:14px;display:grid;gap:10px;align-content:start;line-height:1.5}
+@media (max-width:1499px),(max-height:899px){
+  .mk{grid-template-columns:minmax(0,1fr)}
+  .mk>.panel:first-child{height:640px}
+  .mkC{grid-template-rows:360px 420px auto auto}
+  .gv{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+  .gv>.panel:first-child{height:640px}
+  .gvR{grid-column:1/-1}
+  .fc{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .fc .c2{grid-column:1/-1;order:-1;grid-template-rows:640px 236px}
+  .fc .c1{grid-template-rows:118px 280px auto 158px}
+  .fc .c3{grid-template-rows:auto 520px 420px}
+}
+@media (max-width:1100px){
+  .mk,.gv,.fc{display:flex;flex-direction:column}
+  .mkA,.mkC,.gvR{display:flex;flex-direction:column}
+  .mk>.panel:first-child{height:560px}
+  .gv>.panel{height:auto}.gv>.panel:nth-child(2){height:520px}
+  .tops{grid-template-columns:1fr}
+  .hm{grid-template-columns:1fr 1fr}
+  .nav a{padding:0 8px}
+}
+@media (max-width:700px){.mk>.panel:first-child{height:640px}.nav a span{display:none}}
+#lock{position:fixed;inset:0;z-index:70;background:#000;display:grid;place-items:center;padding:16px}
+#lock[hidden]{display:none!important}
+#lock .box{border:1px solid var(--amb);padding:24px;display:grid;gap:12px;width:min(400px,100%);line-height:1.5}
+#lock input{font:inherit;background:#000;color:#fff;border:1px solid var(--line);height:40px;padding:0 10px}
+#lock input:focus{outline:2px solid var(--yel)}
+</style>
+</head>
+<body>
+<div class="root">
+<header class="cmd">
+  <div class="logo">DOBW</div>
+  <nav class="nav" aria-label="Vistas">
+    <a href="#mercado" id="nMk"><b>1)</b><span>PANORAMA</span></a>
+    <a href="#grupos" id="nGr"><b>2)</b><span>QUIÉN CONTROLA</span></a>
+    <a href="#accion/LTM" id="nAc"><b>3)</b><span id="nAcT">FICHA LTM</span></a>
+  </nav>
+  <span class="sp"></span>
+  <span class="asof" id="asof"></span>
+  <button class="tg" id="fs" type="button" aria-label="Pantalla completa" title="Tecla F"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</header>
+<div class="banner" id="banner"></div>
+<section class="macro" id="macro" aria-label="Indicadores del mercado chileno"></section>
+
+<!-- ============ 1) PANORAMA ============ -->
+<div class="view" id="vMk">
+<div class="mk">
+  <section class="panel" aria-label="Mapa del mercado por capitalización">
+    <div class="ph"><h2>MSCI IPSA · TAMAÑO = CAPITALIZACIÓN</h2><span class="x" id="tmS">color = variación · clic para abrir la ficha</span>
+      <div class="sw" id="hmP" role="group" aria-label="Período"><button data-p="d" aria-pressed="true">DÍA</button><button data-p="w" aria-pressed="false">SEMANA</button><button data-p="m" aria-pressed="false">MES</button><button data-p="y" aria-pressed="false">AÑO</button></div></div>
+    <div class="body" id="tm" style="overflow:hidden"></div>
+  </section>
+  <div class="mkC">
+    <section class="panel" aria-label="Movimientos del día">
+      <div class="ph"><div class="sw" id="mvT" role="tablist" style="margin-left:0"><button data-v="up" aria-pressed="true">ALZAS</button><button data-v="dn" aria-pressed="false">BAJAS</button><button data-v="vol" aria-pressed="false">MÁS TRANSADAS</button><button data-v="sec" aria-pressed="false">SECTORES</button></div><span class="x" id="mvS"></span></div>
+      <div class="body"><table id="mv"></table></div>
+    </section>
+    <section class="panel" aria-label="Noticias del mercado"><div class="ph"><h2>NOTICIAS DEL MES</h2><span class="x">mercado · macro · empresas</span></div><div class="body" id="nwM"></div></section>
+    <section class="panel" aria-label="Agenda"><div class="ph"><h2>AGENDA</h2></div><div class="ag" id="ag"></div></section>
+    <section class="panel" aria-label="Depósitos a plazo"><div class="ph"><h2>ALTERNATIVA SIN RIESGO · DAP 30 DÍAS</h2><span class="x" id="dapS"></span></div><div class="dap" id="dap"></div></section>
+  </div>
+</div>
+</div>
+
+<!-- ============ 2) GRUPOS ============ -->
+<div class="view" id="vGr" hidden>
+<div class="gv">
+  <section class="panel" aria-label="Grupos controladores">
+    <div class="ph"><h2>GRUPOS CONTROLADORES</h2><span class="x">elige un grupo</span></div>
+    <div class="body" id="grL"></div>
+  </section>
+  <section class="panel" aria-label="Conexiones del grupo">
+    <div class="ph"><h2 id="gT">GRUPO</h2><span class="x">clic en una empresa para abrir su ficha</span></div>
+    <div class="body" style="overflow:hidden"><svg class="ch" id="gmap" role="img" aria-label="Empresas del grupo"></svg></div>
+  </section>
+  <div class="gvR">
+    <section class="panel" aria-label="Intereses del grupo"><div class="ph"><h2>INTERESES</h2></div><div class="txt" id="gI"></div></section>
+    <section class="panel" aria-label="Empresas del grupo"><div class="ph"><h2>EMPRESAS EN BOLSA</h2><span class="x">participación aprox. · verificar en CMF</span></div><div class="body"><table id="gE"></table></div></section>
+    <section class="panel" aria-label="Cruces con otros grupos"><div class="ph"><h2>CRUCES CON OTROS GRUPOS</h2></div><div class="txt" id="gX"></div></section>
+  </div>
+</div>
+</div>
+
+<!-- ============ FICHA ============ -->
+<div class="view" id="vAc" hidden>
+<div class="fc" id="fcFull">
+  <div class="col c1">
+    <section class="panel" aria-label="Cotización"><div class="q" id="q"></div></section>
+    <section class="panel" aria-label="Precio 12 meses">
+      <div class="ph"><h2 id="pxT">PRECIO 12 MESES</h2><span class="x" id="pxS">CLP · cierre diario · media 50 días · resultados</span></div>
+      <div class="body" style="overflow:hidden"><svg class="ch" id="px" role="img" aria-label="Precio de cierre en los últimos 12 meses"></svg></div>
+    </section>
+    <section class="panel" aria-label="Resultados"><div class="ph"><h2 id="tqT">RESULTADOS</h2><span class="x" id="tqS"></span></div><div class="body"><table id="tq"></table></div></section>
+    <section class="panel" aria-label="Balance de hechos"><div class="ph"><h2>BALANCE DE HECHOS</h2><span class="x">no es recomendación</span></div><div class="body"><div class="bal" id="bal"></div></div></section>
+  </div>
+  <div class="col c2">
+    <section class="panel" aria-label="Mapa de relaciones">
+      <div class="ph"><h2>MAPA DE RELACIONES</h2><span class="x crumbx" id="crumb"></span>
+        <div class="sw" id="efF" role="group" aria-label="Filtrar por efecto"><button data-e="all" aria-pressed="true">TODO</button><button data-e="+" aria-pressed="false">FAVORECE</button><button data-e="-" aria-pressed="false">PRESIONA</button></div></div>
+      <div class="body" id="mapB" style="overflow:hidden"><svg class="ch" id="map" role="img" aria-label="Relaciones de la empresa"></svg></div>
+    </section>
+    <section class="panel" aria-label="Detalle"><div class="ph"><h2>DETALLE</h2><span class="x">los nodos con ▸ se pueden abrir</span></div><div class="body"><div class="det" id="det" aria-live="polite"></div></div></section>
+  </div>
+  <div class="col c3">
+    <section class="panel" aria-label="Presión de mercado">
+      <div class="ph"><h2>PRESIÓN DE MERCADO</h2><span class="x" id="prS"></span></div>
+      <div id="pr"></div>
+    </section>
+    <section class="panel" aria-label="Analistas, factores y pares">
+      <div class="ph"><div class="sw" id="tabR" role="tablist" style="margin-left:0"><button data-t="an" aria-pressed="true">ANALISTAS</button><button data-t="dr" aria-pressed="false">QUÉ LA MUEVE</button><button data-t="pa" aria-pressed="false">PARES</button></div><span class="x" id="tabS"></span></div>
+      <div class="body" id="tabB"></div>
+    </section>
+    <section class="panel" aria-label="Noticias"><div class="ph"><h2>NOTICIAS Y EVENTOS</h2></div><div class="body" id="nws"></div></section>
+  </div>
+</div>
+</div>
+
+<div class="foot" id="foot">Información de contexto para tu análisis; no es recomendación de compra o venta. Precios: TradingView. Empresas: memorias, CMF y prensa citada. Macro: INE, Banco Central. DAP: Chócale.</div>
+</div>
+
+<div id="lock" hidden role="dialog" aria-modal="true" aria-labelledby="lkT">
+  <form class="box" id="lkF">
+    <div style="display:flex;gap:10px;align-items:center"><span class="logo" style="height:26px">DOBW</span><b id="lkT" style="color:var(--amb)">MERCADO CHILE · DOBERWHITE</b></div>
+    <span>Ingresa la clave de acceso que te entregó Doberwhite.</span>
+    <input id="lkI" type="password" autocomplete="current-password" aria-label="Clave de acceso" required>
+    <span id="lkE" class="down" role="alert"></span>
+    <button class="tg" type="submit" style="border:1px solid var(--amb);height:40px;background:var(--amb);color:#000">ENTRAR</button>
+  </form>
+</div>
+<script>
+let P=null;const PUB=/*PUB*/null; /* solo en la copia de revisión */
+const $=id=>document.getElementById(id);
+const nf=(v,d=2)=>v.toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sg=v=>v>0.00001?'+':v<-0.00001?'−':'';
+const pct=(v,d=2)=>v==null?'—':sg(v)+nf(Math.abs(v),d)+' %';
+const cls=v=>v==null?'flat':v>0.0001?'up':v<-0.0001?'down':'flat';
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MES=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+const fch=s=>{const [y,m,d]=s.split('-');return `${+d}-${MES[+m-1].toLowerCase()}-${y}`};
+const EFC={'+':['FAVORECE','#4DB250'],'-':['PRESIONA','#F05143'],'0':['MIXTO','#A3A3A3']};
+let ACC={},GRP={},SEC={};
+const gruposDe=t=>P.grupos.filter(g=>g.emp.some(e=>e[0]===t));
+const heat=v=>{const a=Math.min(1,Math.abs(v)/3);return v>=0?`rgba(77,178,80,${.18+a*.62})`:`rgba(240,81,67,${.18+a*.62})`};
+const setHash=h=>{try{history.pushState(null,'',h)}catch(e){location.hash=h}};
+
+/* ---------- comunes ---------- */
+function macro(){
+  $('asof').textContent=(PREVIA?'VISTA PREVIA · ':'')+'DATOS AL CIERRE '+fch(P.asof).toUpperCase();
+  $('macro').innerHTML=P.macro.map(m=>`<div class="mt"><span class="k">${esc(m.k)}${m.var!=null?`<span class="${m.tasa?'flat':cls(m.var)}" style="font-weight:400">${pct(m.var)}</span>`:''}</span><span class="v"${m.malo?' style="color:var(--red)"':''}>${esc(m.v)}</span><span class="s">${esc(m.s)}</span></div>`).join('')}
+function dap(){const D=P.dap,mx=Math.max(...D.bancos.map(b=>b[1]));
+  $('dapS').textContent=`${D.fecha} · promedio ${nf(D.prom)} % mensual`;
+  $('dap').innerHTML=D.bancos.map(b=>`<div class="${b[1]===mx?'top':''}"><span>${esc(b[0])}</span><b>${nf(b[1])} %</b></div>`).join('')+`<div><span style="color:var(--amb)">TPM</span><b>4,50 % anual</b></div>`}
+const nwHtml=L=>L.map(n=>`<div class="nw"><span class="f">${esc(n[0])}</span><span>${esc(n[2])}</span><span class="s">${esc(n[1])} · ${esc(n[3])}</span></div>`).join('');
+
+/* ============ 1) PANORAMA ============ */
+let HP='d',MV='up';
+const HPN={d:'día',w:'semana',m:'mes',y:'año'};
+const capTxt=v=>v==null?'—':v>=1000?'$ '+nf(v/1000,1)+' bill.':'$ '+nf(v,0)+' mil M';
+function squarify(items,x,y,w,h){const out=[],tot=items.reduce((s,i)=>s+i.v,0);if(!tot)return out;const sc=w*h/tot;let rest=items.slice(),row=[];
+  const worst=(r,len)=>{const s=r.reduce((a,i)=>a+i.v*sc,0),mx=Math.max(...r.map(i=>i.v*sc)),mn=Math.min(...r.map(i=>i.v*sc));return Math.max(len*len*mx/(s*s),s*s/(len*len*mn))};
+  const place=r=>{const s=r.reduce((a,i)=>a+i.v*sc,0);if(w>=h){const rw=s/h;let yy=y;r.forEach(i=>{const rh=i.v*sc/rw;out.push(Object.assign({},i,{x,y:yy,w:rw,h:rh}));yy+=rh});x+=rw;w-=rw}else{const rh=s/w;let xx=x;r.forEach(i=>{const cw=i.v*sc/rh;out.push(Object.assign({},i,{x:xx,y,w:cw,h:rh}));xx+=cw});y+=rh;h-=rh}};
+  while(rest.length){const len=Math.min(w,h),it=rest[0];if(!row.length||worst([...row,it],len)<=worst(row,len)){row.push(it);rest.shift()}else{place(row);row=[]}}
+  if(row.length)place(row);return out}
+function treemap(){const box=$('tm'),W=box.clientWidth,H=box.clientHeight;if(!W||!H)return;
+  const secs=Object.entries(P.mercado.sec).filter(([s,ts])=>ts.length).map(([s,ts])=>({s,ts,v:ts.reduce((t,k)=>t+(ACC[k].cap||1),0)})).sort((a,b)=>b.v-a.v);
+  const capT=secs.reduce((t,s)=>t+s.v,0);let h='';
+  squarify(secs,0,0,W,H).forEach(sr=>{const av=sr.ts.reduce((t,k)=>t+ACC[k][HP]*ACC[k].cap,0)/sr.v;
+    h+=`<div class="tsec" style="left:${sr.x}px;top:${sr.y}px;width:${sr.w}px;height:${sr.h}px"><h3><span>${esc(sr.s.toUpperCase())} · ${nf(sr.v/capT*100,0)} %</span><span class="${cls(av)}">${pct(av,1)}</span></h3></div>`;
+    const it=sr.ts.map(t=>({t,v:ACC[t].cap||1})).sort((a,b)=>b.v-a.v);
+    squarify(it,sr.x+1,sr.y+19,sr.w-2,sr.h-20).forEach(r=>{const A=ACC[r.t],ar=r.w*r.h,fs=Math.max(10,Math.min(26,Math.sqrt(ar)/7)),k=HP==='d'?1:HP==='w'?2.5:HP==='m'?4:10;
+      const small=r.w<70||r.h<38;
+      h+=`<button class="tt" data-t="${r.t}" style="left:${r.x}px;top:${r.y}px;width:${r.w}px;height:${r.h}px;background:${heat(A[HP]/k)};font-size:${(fs*0.55).toFixed(0)}px" title="${esc(A.n)} · ${pct(A[HP])} (${HPN[HP]}) · cap. ≈ ${capTxt(A.cap)}">
+        <b style="font-size:${fs.toFixed(0)}px">${esc(r.t.replace('_','-'))}</b>${small?'':`<span>${pct(A[HP],1)}</span>${r.h>70&&r.w>90?`<span style="opacity:.7">${capTxt(A.cap)}</span>`:''}`}</button>`})});
+  box.innerHTML=h;box.querySelectorAll('.tt').forEach(b=>b.onclick=()=>ir('#accion/'+b.dataset.t));
+  $('tmS').textContent=`capitalización total ≈ $ ${nf(capT/1000,0)} billones · color = variación ${HPN[HP]} · clic para abrir la ficha`}
+function movers(){$('mvT').querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===MV));
+  const fila=(a,c3)=>`<tr class="lk" data-t="${a.t}" style="cursor:pointer" title="${esc(a.n)}"><td class="l"><b>${esc(a.t.replace('_','-'))}</b> <span style="color:var(--faint);font-size:10.5px">${esc(a.n)}</span></td><td>${nf(a.p,a.p<100?2:0)}</td><td class="${cls(a[HP])}">${pct(a[HP],1)}</td><td style="color:var(--mut)">${c3}</td></tr>`;
+  const L=[...P.mercado.acc];let h='',sub='';
+  if(MV==='up'){L.sort((a,b)=>b[HP]-a[HP]);h=L.slice(0,8).map(a=>fila(a,nf(a.vol/a.v30,1)+'x vol')).join('');sub=HPN[HP]+' · volumen vs promedio 30d'}
+  else if(MV==='dn'){L.sort((a,b)=>a[HP]-b[HP]);h=L.slice(0,8).map(a=>fila(a,nf(a.vol/a.v30,1)+'x vol')).join('');sub=HPN[HP]+' · volumen vs promedio 30d'}
+  else if(MV==='vol'){L.sort((a,b)=>b.monto-a.monto);h=L.slice(0,8).map(a=>fila(a,'$ '+nf(a.monto/1000,1)+' mil M')).join('');sub='monto transado del día'}
+  else{h=Object.entries(P.mercado.sec).map(([s,ts])=>{const c=ts.reduce((t,k)=>t+ACC[k].cap,0),av=ts.reduce((t,k)=>t+ACC[k][HP]*ACC[k].cap,0)/c;return [s,av,c]}).sort((a,b)=>b[1]-a[1]).map(([s,av,c])=>`<tr><td class="l"><b>${esc(s)}</b></td><td>${capTxt(c)}</td><td class="${cls(av)}">${pct(av,2)}</td><td></td></tr>`).join('');sub='ponderado por capitalización · '+HPN[HP]}
+  $('mv').innerHTML='<tbody>'+h+'</tbody>';$('mvS').textContent=sub;
+  document.querySelectorAll('#mv tr.lk').forEach(r=>r.onclick=()=>ir('#accion/'+r.dataset.t))}
+function mercado(){
+  $('banner').innerHTML=`<span>1) PANORAMA · ¿CÓMO ESTÁ EL MERCADO HOY?</span><span class="v">macro arriba · acciones por tamaño · noticias y tasas a la derecha · luego: quién controla y la ficha de cada acción</span><span class="r">generado ${esc(P.generado)}</span>`;
+  treemap();movers();
+  $('nwM').innerHTML=nwHtml(P.noticias_mercado);
+  $('ag').innerHTML=P.agenda.map(a=>`<span>${esc(a[0])}</span><span>${esc(a[1])}</span>`).join('');dap()}
+$('hmP').querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{HP=b.dataset.p;$('hmP').querySelectorAll('[data-p]').forEach(z=>z.setAttribute('aria-pressed',z===b));treemap();movers()});
+$('mvT').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{MV=b.dataset.v;movers()});
+
+/* ============ VISTA GRUPO ============ */
+function grupo(id){const g=GRP[id]||P.grupos[0];
+  $('banner').innerHTML=`<span class="crumb">2) QUIÉN CONTROLA · <a data-h="#mercado">PANORAMA</a> ▸ ${esc(g.n.toUpperCase())}</span><span class="v">${esc(g.via)}</span>`;
+  $('grL').innerHTML=P.grupos.map(o=>{const cap=o.emp.reduce((t,e)=>t+(ACC[e[0]]?ACC[e[0]].cap:0),0);return `<div class="grp" tabindex="0" role="link" data-g="${o.id}"${o.id===g.id?' style="background:#141414;box-shadow:inset 3px 0 0 var(--amb)"':''}><div class="h"><b>${esc(o.n)}</b><span>${capTxt(cap)}</span></div>
+    <div class="cs">${o.emp.map(e=>{const a=ACC[e[0]];return a?`<button class="ck" data-t="${e[0]}" title="${esc(a.n)} · ${esc(e[1])}">${esc(e[0].replace('_','-'))} <span class="${cls(a.d)}">${pct(a.d,1)}</span></button>`:''}).join('')}</div></div>`}).join('');
+  document.querySelectorAll('#grL .grp').forEach(x=>{x.onclick=e=>{const ck=e.target.closest('.ck');ir(ck?'#accion/'+ck.dataset.t:'#grupo/'+x.dataset.g)};x.onkeydown=e=>{if(e.key==='Enter')ir('#grupo/'+x.dataset.g)}});
+  $('gT').textContent=g.n.toUpperCase();
+  $('gI').innerHTML=`<p style="margin:0 0 6px">${esc(g.int)}.</p>${g.otras.length?`<div style="color:var(--mut)">Otras inversiones fuera del IPSA: ${g.otras.map(esc).join(' · ')}</div>`:''}`;
+  let h='<thead><tr><th class="l">EMPRESA</th><th>PARTICIP.</th><th>PRECIO</th><th>DÍA</th><th>MES</th><th>AÑO</th></tr></thead><tbody>';
+  g.emp.forEach(e=>{const a=ACC[e[0]];if(!a)return;h+=`<tr class="lk" data-t="${e[0]}" style="cursor:pointer"><td class="l"><b>${esc(a.n)}</b><div style="color:var(--faint);font-size:10.5px">${esc(e[2])}</div></td><td>${esc(e[1])}</td><td>${nf(a.p,a.p<100?2:0)}</td><td class="${cls(a.d)}">${pct(a.d,1)}</td><td class="${cls(a.m)}">${pct(a.m,1)}</td><td class="${cls(a.y)}">${pct(a.y,1)}</td></tr>`});
+  $('gE').innerHTML=h+'</tbody>';
+  document.querySelectorAll('#gE tr.lk').forEach(r=>r.onclick=()=>ir('#accion/'+r.dataset.t));
+  const cruces=[];g.emp.forEach(e=>P.grupos.forEach(o=>{if(o.id!==g.id&&o.emp.some(z=>z[0]===e[0]))cruces.push([e[0],o])}));
+  $('gX').innerHTML=cruces.length?cruces.map(([t,o])=>`<div><b>${esc(ACC[t]?ACC[t].n:t)}</b>: también <a href="#grupo/${o.id}" style="color:var(--amb)">${esc(o.n)}</a></div>`).join(''):'<span style="color:var(--mut)">Sin empresas compartidas con otros grupos del listado.</span>';
+  gmapa(g);crumbs()}
+function gmapa(g){
+  const svg=$('gmap'),b=svg.getBoundingClientRect(),W=Math.max(360,Math.round(b.width)),H=Math.max(300,Math.round(b.height));
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const cx=W/2,cy=H/2,items=[...g.emp.map(e=>({t:e[0],p:e[1],r:e[2]})),...g.otras.map(o=>({o}))];
+  let s='',n=items.length;
+  items.forEach((it,i)=>{const a=-Math.PI/2+i*2*Math.PI/n, rx=Math.min(W*0.33,W/2-150), ry=H/2-70, x=cx+Math.cos(a)*rx, y=cy+Math.sin(a)*ry;
+    const A=it.t?ACC[it.t]:null, col=A?(A.d>=0?'#4DB250':'#F05143'):'#555';
+    s+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${A?'#FFA028':'#444'}" stroke-width="${A?1.6:1}" ${A?'':'stroke-dasharray="3 3"'} opacity=".7"/>`;
+    if(A){s+=`<g class="nd" tabindex="0" role="link" data-t="${it.t}" aria-label="${esc(A.n)}"><rect x="${x-100}" y="${y-30}" width="200" height="60" fill="#000" stroke="${P.fichas[it.t]?'#FFA028':'#444'}" stroke-width="${P.fichas[it.t]?2:1}"/>
+      <text x="${x}" y="${y-12}" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">${esc(A.n)}</text>
+      <text x="${x}" y="${y+4}" text-anchor="middle" fill="#FFDA5D" font-size="10.5">${esc(it.p)}</text>
+      <text x="${x}" y="${y+20}" text-anchor="middle" fill="${col}" font-size="11">${nf(A.p,A.p<100?2:0)} · ${pct(A.d,1)} · año ${pct(A.y,0)}</text></g>`}
+    else s+=`<text x="${x}" y="${y+4}" text-anchor="middle" fill="#A3A3A3" font-size="11">${esc(it.o)}</text>`});
+  s+=`<circle cx="${cx}" cy="${cy}" r="58" fill="#FFA028"/><text x="${cx}" y="${cy-2}" text-anchor="middle" fill="#000" font-size="12" font-weight="700">${esc(g.n.split(' (')[0].split(':')[0].toUpperCase().slice(0,22))}</text><text x="${cx}" y="${cy+14}" text-anchor="middle" fill="#000" font-size="10">${esc(g.via.slice(0,24))}</text>`;
+  svg.innerHTML=s;
+  svg.querySelectorAll('.nd').forEach(n=>{n.style.cursor='pointer';n.onclick=()=>ir('#accion/'+n.dataset.t);n.onkeydown=e=>{if(e.key==='Enter')ir('#accion/'+n.dataset.t)}})}
+
+/* ============ VISTA FICHA ============ */
+let F=null,SEL='fuel',EF='all',DRILL=null,TAB='an',TICK='LTM';
+/* ficha automática para acciones sin ficha curada: mismo formato que LTM con los datos disponibles */
+const GCOL={costo:["COSTOS","#F05143"],flota:["PROVEEDORES","#3D8BFF"],socios:["CONTROLADORES Y GRUPO","#B48CFF"],comp:["COMPETENCIA Y PARES","#FFA028"],dem:["DEMANDA E INGRESOS","#4DB250"],fin:["MACRO Y FINANCIAMIENTO","#FFDA5D"]};
+function construir(t){const a=ACC[t],sec=SEC[t],gs=gruposDe(t),nod=[];let i=0;const id=()=>'n'+(i++);
+  gs.forEach(g=>{const e=g.emp.find(z=>z[0]===t);nod.push({id:id(),g:'socios',n:g.n.split(' (')[0],ef:'0',w:3,dato:e[1]+' · '+e[2],txt:g.int+'.',ir:'#grupo/'+g.id,ok:false,src:'participación aproximada: verificar en CMF'});
+    g.emp.filter(z=>z[0]!==t&&ACC[z[0]]).forEach(z=>{const b=ACC[z[0]];nod.push({id:id(),g:'socios',n:b.n,ef:b.d>=0?'+':'-',w:1,dato:'mismo grupo · '+pct(b.d,1)+' día',txt:'Empresa del mismo grupo controlador ('+z[1]+').',ir:'#accion/'+z[0],ok:true,src:'TradingView'})})});
+  P.mercado.sec[sec].filter(z=>z!==t).sort((x,y)=>ACC[y].cap-ACC[x].cap).slice(0,5).forEach(z=>{const b=ACC[z];nod.push({id:id(),g:'comp',n:b.n,ef:'0',w:Math.min(3,1+Math.round(b.cap/a.cap)),dato:pct(b.d,1)+' día · '+pct(b.y,0)+' año',txt:'Par del sector '+sec.toLowerCase()+'. Capitalización ≈ '+capTxt(b.cap)+'.',ir:'#accion/'+z,ok:true,src:'TradingView'})});
+  [...(P.dt[t]||[]),...(P.ds[sec]||[])].forEach(d=>nod.push({id:id(),g:d[0],n:d[1],ef:d[2],w:2,dato:d[3],txt:d[4],ok:true,src:'TradingView · INE · Banco Central'}));
+  const pos=(a.p-a.l52)/(a.h52-a.l52),vr=a.v30?a.vol/a.v30:1;
+  const PD=P.presion&&P.presion[t];
+  const ind=PD?PD.ind:[
+    {k:'Volumen vs promedio 30 días',v:nf(vr,2)+'x',ef:vr>1.2?(a.d<0?'-':'+'):'0',s:vr>1.2?(a.d<0?'baja con volumen alto: venta con convicción':'alza con volumen alto: compra con convicción'):'volumen normal'},
+    {k:'Tendencia semana',v:pct(a.w,1),ef:a.w>1?'+':a.w<-1?'-':'0',s:'variación de la semana'},
+    {k:'Tendencia mes',v:pct(a.m,1),ef:a.m>2?'+':a.m<-2?'-':'0',s:'variación del mes'},
+    {k:'Posición en rango 52 semanas',v:nf(pos*100,0)+' %',ef:pos>0.8?'+':pos<0.2?'-':'0',s:`${nf(a.l52,a.l52<100?2:0)} – ${nf(a.h52,a.h52<100?2:0)} · 0 % = mínimo del año`},
+    {k:'Vs su sector hoy',v:pct(a.d-secAvg(sec,'d'),1),ef:a.d-secAvg(sec,'d')>0.3?'+':a.d-secAvg(sec,'d')<-0.3?'-':'0',s:'diferencia con el promedio del sector'}];
+  const sc=PD?PD.nivel:ind.reduce((t,x)=>t+(x.ef==='+'?1:x.ef==='-'?-1:0),0)/ind.length;
+  const fav=[],con=[];
+  (a.y>=0?fav:con).push(`Año ${pct(a.y,1)}; mes ${pct(a.m,1)}`);
+  (pos>0.5?fav:con).push(`En el ${nf(pos*100,0)} % de su rango de 52 semanas`);
+  (a.y>=secAvg(sec,'y')?fav:con).push(`Año vs su sector: ${pct(a.y-secAvg(sec,'y'),1)}`);
+  nod.filter(n=>n.g!=='comp'&&n.g!=='socios').forEach(n=>{if(n.ef==='+')fav.push(n.n+': '+n.dato);if(n.ef==='-')con.push(n.n+': '+n.dato)});
+  return {auto:true,accion:{ticker:t.replace('_','-'),precio:a.p,nombre:a.n,bolsa:'Bolsa de Santiago',indice:'MSCI IPSA',sector:sec},a,nodos:nod,grupos:GCOL,
+    serie:P.series&&P.series[t],presion:{asof:fch(P.asof),veredicto:PD?PD.veredicto:sc>0.25?'COMPRADORA':sc<-0.25?'VENDEDORA':'NEUTRAL',nivel:sc,ind,nota:PD?'Calculado con las velas diarias al cierre. Posiciones cortas y analistas se agregan en las fichas curadas.':'Estimación con datos diarios: el flujo de dinero se calcula cuando llegan las velas del día.'},
+    favor:fav.slice(0,5),contra:con.slice(0,5),noticias:P.noticias_mercado.filter(n=>n[2].toUpperCase().includes(a.n.toUpperCase())||n[2].includes(t)),eventos:[]}}
+const secAvg=(s,k)=>{const ts=P.mercado.sec[s];return ts.reduce((t,x)=>t+ACC[x][k],0)/ts.length};
+function ficha(t){if(!ACC[t]&&!P.fichas[t])t='LTM';TICK=t;$('nAcT').textContent='FICHA '+t.replace('_','-');$('nAc').href='#accion/'+t;
+  const C=P.fichas[t],B=construir(t);F=C?Object.assign({},B,C,{auto:false,a:B.a,accion:B.accion,serie:B.serie}):B;
+  if(C&&C.presion_extra){const ind=[...B.presion.ind,...C.presion_extra],sc=ind.reduce((x,i)=>x+(i.ef==='+'?1:i.ef==='-'?-1:0),0)/ind.length;
+    F.presion=Object.assign({},B.presion,{ind,nivel:sc,veredicto:sc>0.3?'COMPRADORA':sc<-0.3?'VENDEDORA':sc<-0.1?'LEVEMENTE VENDEDORA':sc>0.1?'LEVEMENTE COMPRADORA':'NEUTRAL'})}
+  const gs=gruposDe(t),A=F.accion;
+  if(!F.nodos.some(n=>n.id===SEL))SEL=F.nodos[0].id;
+  $('banner').innerHTML=`<span class="crumb">3) LA ACCIÓN · <a data-h="#mercado">PANORAMA</a> ▸ ${gs.length?`<a data-h="#grupo/${gs[0].id}">${esc(gs[0].n.split(' (')[0].split(':')[0].toUpperCase())}</a> ▸ `:''}${esc(A.nombre.toUpperCase())} · ${esc(A.ticker)}</span><span class="v">${esc(A.sector)}${F.auto?' · ficha automática':' · ficha curada'}${F.serie?'':' · serie diaria pendiente'}</span>`;
+  cotiz();trimestre();balance();presion();tabR();$('nws').innerHTML=F.noticias.length?nwHtml(F.noticias):'<div class="empty">Sin noticias de esta empresa en el resumen del mes. Las noticias por empresa se agregan con la ficha curada.</div>';detalle();dibFicha();crumbs()}
+function cotiz(){return cotizAuto()}
+function cotizAuto(){const a=F.a,r=(a.p-a.l52)/(a.h52-a.l52)*100,d=a.p<100?2:0;
+  $('q').innerHTML=`<div><div class="px">${nf(a.p,d)}<small>CLP</small></div><div class="ch ${cls(a.d)}">${pct(a.d)}</div></div>
+   <div class="st"><span>Vol/prom 30d <b>${a.v30?nf(a.vol/a.v30,2):'—'}x</b></span><span>Monto <b>$ ${nf(a.monto/1000,1)} mil M</b></span><span>${a.rsi!=null?'RSI <b>'+nf(a.rsi,0)+'</b>':'&nbsp;'}</span>
+    ${a.sma50?`<span>MM50 <b>${nf(a.sma50,d)}</b></span><span>MM200 <b>${a.sma200?nf(a.sma200,d):'—'}</b></span><span>&nbsp;</span>`:''}
+    ${a.adr?`<span style="grid-column:1/-1">ADR ${esc(a.adr.sym)} <b>${nf(a.adr.p)} USD</b> <span class="${cls(a.adr.d)}">${pct(a.adr.d)}</span> · <span class="${cls(a.adr.prem)}">${pct(a.adr.prem,1)} vs local</span></span>`:''}
+    <span style="grid-column:1/-1">Cap. bursátil ≈ <b>${capTxt(a.cap)}</b>${a.acciones_mm?'':' <span style="color:var(--faint)">(acciones estimadas, verificar)</span>'}</span>
+    <span style="grid-column:1/-1">Sector <b>${esc(SEC[TICK])}</b> · promedio sector hoy <span class="${cls(secAvg(SEC[TICK],'d'))}">${pct(secAvg(SEC[TICK],'d'),1)}</span></span></div>
+   <div class="rg"><span>52 sem ${nf(a.l52,d)}</span><span class="bar"><i style="left:${r.toFixed(1)}%"></i></span><span>${nf(a.h52,d)}</span>
+    <span class="chips">${[['1S',a.w],['1M',a.m],['AÑO',a.y]].map(([k,v])=>`<span class="chip"><b>${k}</b><span class="${cls(v)}">${pct(v,1)}</span></span>`).join('')}</span></div>`}
+function precio(){if(!F.serie)return precioAuto();$('pxT').textContent='PRECIO 12 MESES';$('pxS').textContent='CLP · cierre diario · media 50 días · resultados';const svg=$('px'),b=svg.getBoundingClientRect(),W=Math.max(300,Math.round(b.width)),H=Math.max(120,Math.round(b.height));
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);const S=F.serie,c=S.c,n=c.length,X0=44,X1=W-52,Y0=H-18,Y1=10,mn=Math.min(...c)*0.98,mx=Math.max(...c)*1.02;
+  const x=i=>X0+i/(n-1)*(X1-X0),y=v=>Y0-(v-mn)/(mx-mn)*(Y0-Y1);let s='';const st=mx-mn>8?2:1;
+  for(let v=Math.ceil(mn/st)*st;v<=mx;v+=st)s+=`<line x1="${X0}" x2="${X1}" y1="${y(v)}" y2="${y(v)}" stroke="#1A1A1A"/><text x="${X0-6}" y="${y(v)+4}" text-anchor="end" fill="#A3A3A3" font-size="10">${v}</text>`;
+  let pm='';S.d.forEach((d,i)=>{const m=d.slice(0,7);if(m!==pm){pm=m;if(+d.slice(5,7)%2===1)s+=`<text x="${x(i)}" y="${H-4}" fill="#A3A3A3" font-size="10">${MES[+d.slice(5,7)-1]}${d.slice(5,7)==='01'?' '+d.slice(2,4):''}</text>`}});
+  F.eventos.forEach(([d,l])=>{const i=S.d.findIndex(z=>z>=d);if(i<0)return;s+=`<line x1="${x(i)}" x2="${x(i)}" y1="${Y1}" y2="${Y0}" stroke="#FFDA5D" stroke-dasharray="2 3" opacity=".6"/><text x="${x(i)-3}" y="${Y1+9}" text-anchor="end" fill="#FFDA5D" font-size="9.5">${esc(l)}</text>`});
+  const ma=[];for(let i=49;i<n;i++){let t=0;for(let k=i-49;k<=i;k++)t+=c[k];ma.push(x(i).toFixed(1)+','+y(t/50).toFixed(1))}
+  s+=`<polyline points="${ma.join(' ')}" fill="none" stroke="#A3A3A3" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+  const pts=c.map((v,i)=>x(i).toFixed(1)+','+y(v).toFixed(1)).join(' ');
+  s+=`<polygon points="${X0},${Y0} ${pts} ${X1},${Y0}" fill="rgba(255,160,40,.08)"/><polyline points="${pts}" fill="none" stroke="#FFA028" stroke-width="1.6"/><circle cx="${X1}" cy="${y(c[n-1])}" r="3" fill="#FFA028"/><text x="${X1+6}" y="${y(c[n-1])+4}" fill="#fff" font-size="11" font-weight="700">${nf(c[n-1])}</text>`;
+  svg.innerHTML=s}
+function precioAuto(){$('pxT').textContent='DESEMPEÑO';$('pxS').textContent='acción vs promedio de su sector';const svg=$('px'),b=svg.getBoundingClientRect(),W=Math.max(300,Math.round(b.width)),H=Math.max(120,Math.round(b.height));svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const a=F.a,sec=SEC[TICK],rows=[['Semana',a.w,secAvg(sec,'w')],['Mes',a.m,secAvg(sec,'m')],['Año',a.y,secAvg(sec,'y')]],mx=Math.max(5,...rows.flatMap(r=>[Math.abs(r[1]),Math.abs(r[2])]))*1.15,cx=W/2,bh=Math.min(22,(H-60)/7);let s='';
+  s+=`<line x1="${cx}" x2="${cx}" y1="20" y2="${H-20}" stroke="#444"/><text x="8" y="14" fill="#A3A3A3" font-size="10">DESEMPEÑO vs PROMEDIO DEL SECTOR · la serie diaria se carga con la ficha curada</text>`;
+  rows.forEach((r,i)=>{const y=30+i*(bh*2+14),w1=Math.abs(r[1])/mx*(W/2-70),w2=Math.abs(r[2])/mx*(W/2-70);
+    s+=`<text x="8" y="${y+bh}" fill="#fff" font-size="11">${r[0]}</text><rect x="${r[1]>=0?cx:cx-w1}" y="${y}" width="${w1}" height="${bh}" fill="${r[1]>=0?'#4DB250':'#F05143'}"/><text x="${r[1]>=0?cx+w1+4:cx-w1-4}" y="${y+bh-5}" text-anchor="${r[1]>=0?'start':'end'}" fill="#fff" font-size="11" font-weight="700">${esc(TICK.replace('_','-'))} ${pct(r[1],1)}</text>
+      <rect x="${r[2]>=0?cx:cx-w2}" y="${y+bh+2}" width="${w2}" height="${bh*0.6}" fill="#666"/><text x="${r[2]>=0?cx+w2+4:cx-w2-4}" y="${y+bh*1.6}" text-anchor="${r[2]>=0?'start':'end'}" fill="#A3A3A3" font-size="10">sector ${pct(r[2],1)}</text>`});
+  svg.innerHTML=s}
+function trimestre(){const T=F.trimestre;if(!T){$('tqT').textContent='RESULTADOS';$('tqS').textContent='';$('tq').innerHTML='<tbody><tr><td class="l" style="white-space:normal;color:var(--mut);padding:10px">Pendiente: los resultados trimestrales (ingresos, EBITDA, utilidad, deuda y guía) se cargan desde los estados financieros en la CMF cuando se arma la ficha curada, como en LTM.</td></tr></tbody>';return}$('tqT').textContent='RESULTADOS '+T.t;$('tqS').textContent='publicados '+T.fecha+' · var. a/a';
+  let h='<thead><tr><th class="l">INDICADOR</th><th>VALOR</th><th>VAR A/A</th></tr></thead><tbody>';
+  T.filas.forEach(f=>{const inv=f[0].startsWith('Gasto');h+=`<tr><td class="l">${esc(f[0])}</td><td>${esc(f[1])}</td><td class="${f[2]==null?'flat':cls(inv?-f[2]:f[2])}">${f[2]==null?esc(f[3]||'—'):pct(f[2],1)}</td></tr>`});
+  h+='<tr class="sec"><td class="l" colspan="3">GUÍA 2026 (ACTUALIZADA '+esc(T.fecha.toUpperCase())+')</td></tr>';
+  T.guidance.forEach(g=>{h+=`<tr><td class="l">${esc(g[0])}</td><td>${esc(g[1])}</td><td class="${g[3]>0?'up':g[3]<0?'down':'flat'}">${esc(g[2]||'—')}</td></tr>`});
+  h+=`<tr><td class="l">Clasificación</td><td colspan="2" class="w" style="text-align:right">${esc(T.rating)}</td></tr>`;$('tq').innerHTML=h+'</tbody>'}
+function balance(){$('bal').innerHTML=`<div><h3 class="up">A FAVOR</h3><ul>${F.favor.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div><div><h3 class="down">EN CONTRA</h3><ul>${F.contra.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`}
+function presion(){const R=F.presion,pos=(R.nivel+1)/2*100;
+  $('prS').textContent='al '+R.asof;
+  $('pr').innerHTML=`<div class="gauge"><div class="lb"><span>VENDEDORA</span><span class="vd" style="color:${R.nivel<-0.15?'var(--red)':R.nivel>0.15?'var(--grn)':'#fff'}">${esc(R.veredicto)}</span><span>COMPRADORA</span></div><div class="tr"><i style="left:calc(${pos.toFixed(0)}% - 1px)"></i></div></div>
+   <div class="ind">${R.ind.map(i=>`<span style="color:${EFC[i.ef][1]}">${i.ef==='+'?'▲':i.ef==='-'?'▼':'◆'}</span><span>${esc(i.k)}</span><b>${esc(i.v)}</b><span class="s">${esc(i.s)}</span>`).join('')}</div>
+   <div style="padding:0 10px 6px;color:var(--faint);font-size:10px;line-height:1.4">${esc(R.nota)}</div>`}
+function tabR(){$('tabR').querySelectorAll('[data-t]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===TAB));let h='';
+  if(TAB==='an'&&!F.analistas){$('tabS').textContent='';h='<div class="empty">Recomendaciones de corredoras pendientes para esta acción. En la ficha curada se registran con fecha, precio objetivo y, a 12 meses, su acierto.</div>'}
+  else if(TAB==='an'){const A=F.analistas;$('tabS').textContent=A.consenso;
+    h='<table><thead><tr><th class="l">FECHA</th><th class="l">CORREDORA</th><th class="l">RECOM.</th><th>OBJETIVO</th><th>POTENC.</th><th>ACIERTO</th></tr></thead><tbody>';
+    const adrHoy=F.a.adr?F.a.adr.p:A.precio_adr;A.filas.forEach(f=>{const base=f[2]==='ADR'?adrHoy:F.a.p,pot=(f[4]/base-1)*100;
+      h+=`<tr><td class="l" style="color:var(--mut)">${esc(f[0].replace('-2026','').replace('-20','-'))}</td><td class="l" style="white-space:normal"><b>${esc(f[1])}</b><div style="color:var(--faint);font-size:10px">${esc(f[5])}${f[6]?' · '+esc(f[6]):''}</div></td><td class="l ${/Compra|Sobre/.test(f[3])?'up':'flat'}">${esc(f[3])}</td><td>${f[2]==='ADR'?'USD ':'$ '}${nf(f[4],1)}</td><td class="${cls(pot)}">${pct(pot,0)}</td><td style="color:var(--faint)">registro</td></tr>`});
+    h+=`</tbody></table><div style="padding:6px 8px;color:var(--faint);font-size:10.5px;line-height:1.45">${F.a.adr?'Potencial contra el ADR de hoy (USD '+nf(F.a.adr.p)+'). ':A.adr_implicito?'ADR implícito hoy USD '+nf(A.precio_adr)+'. ':''}${esc(A.metodo)}<br>${F.a.adr&&A.adr_implicito?'':esc(A.cobertura)}</div>`}
+  else if(TAB==='dr'&&F.drivers2){$('tabS').textContent='dato del día · variación 1 mes · efecto';const X=P.extra||{};
+    h='<table><thead><tr><th class="l">FACTOR</th><th>HOY</th><th>1 MES</th><th class="l">EFECTO</th></tr></thead><tbody>'+F.drivers2.map(d=>{const e=EFC[d[2]],x=d[1]&&X[d[1]];return `<tr><td class="l">${esc(d[0])}</td><td>${x?nf(x.p,x.p<20?3:2):esc(d[4]||'—')}</td><td class="${x?cls(x.m):'flat'}">${x?pct(x.m,1):'—'}</td><td class="l" style="white-space:normal;font-size:11px"><span style="color:${e[1]};font-weight:700">${d[2]==='+'?'▲':d[2]==='-'?'▼':'◆'}</span> ${esc(d[3])}</td></tr>`}).join('')+'</tbody></table>'}
+  else if(TAB==='dr'&&!F.drivers){$('tabS').textContent='factores del sector y de la empresa';
+    h='<table><thead><tr><th class="l">FACTOR</th><th class="l">DATO HOY</th><th class="l">EFECTO</th></tr></thead><tbody>'+F.nodos.filter(n=>!['socios','comp'].includes(n.g)).map(n=>{const e=EFC[n.ef];return `<tr><td class="l">${esc(n.n)}</td><td class="l" style="white-space:normal">${esc(n.dato)}</td><td class="l" style="white-space:normal;font-size:11px"><span style="color:${e[1]};font-weight:700">${n.ef==='+'?'▲':n.ef==='-'?'▼':'◆'}</span> ${esc(n.txt)}</td></tr>`}).join('')+'</tbody></table>'}
+  else if(TAB==='dr'){$('tabS').textContent='variación 1 mes · efecto sobre la acción';
+    h='<table><thead><tr><th class="l">FACTOR</th><th>HOY</th><th>1 MES</th><th class="l">EFECTO</th></tr></thead><tbody>'+F.drivers.map(d=>{const e=EFC[d[3]];return `<tr><td class="l">${esc(d[0])}</td><td>${esc(d[1])}</td><td class="${cls(d[2])}">${pct(d[2],1)}</td><td class="l" style="white-space:normal;font-size:11px"><span style="color:${e[1]};font-weight:700">${d[3]==='+'?'▲':d[3]==='-'?'▼':'◆'}</span> ${esc(d[4])}</td></tr>`}).join('')+'</tbody></table>'}
+  else if(F.pares_sym){$('tabS').textContent='% día · semana · mes · año';const X=P.extra||{},a=F.a;
+    h='<table><thead><tr><th class="l">EMPRESA</th><th>DÍA</th><th>SEM</th><th>MES</th><th>AÑO</th></tr></thead><tbody>'+F.pares_sym.filter(p=>X[p[0]]).map(p=>{const x=X[p[0]];return `<tr><td class="l">${esc(p[1])} <span style="color:var(--faint);font-size:10.5px">${esc(p[0])}</span></td>${[x.d,x.w,x.m,x.y].map(v=>`<td class="${cls(v)}">${pct(v,1)}</td>`).join('')}</tr>`}).join('')+`<tr style="background:#141414"><td class="l" style="color:var(--amb);font-weight:700">${esc(a.n)} (Santiago)</td>${[a.d,a.w,a.m,a.y].map(v=>`<td class="${cls(v)}">${pct(v,1)}</td>`).join('')}</tr></tbody></table>`}
+  else if(!F.pares){$('tabS').textContent='pares del sector · % día · semana · mes · año';const sec=SEC[TICK];
+    h='<table><thead><tr><th class="l">EMPRESA</th><th>CAP.</th><th>DÍA</th><th>SEM</th><th>MES</th><th>AÑO</th></tr></thead><tbody>'+P.mercado.sec[sec].map(z=>ACC[z]).sort((x,y)=>y.cap-x.cap).map(b=>`<tr class="lk" data-t="${b.t}" style="cursor:pointer${b.t===TICK?';background:#141414':''}"><td class="l"${b.t===TICK?' style="color:var(--amb);font-weight:700"':''}>${esc(b.n)}</td><td>${capTxt(b.cap)}</td>${[b.d,b.w,b.m,b.y].map(v=>`<td class="${cls(v)}">${pct(v,1)}</td>`).join('')}</tr>`).join('')+'</tbody></table>'}
+  else{$('tabS').textContent='% día · semana · mes · año';
+    h='<table><thead><tr><th class="l">EMPRESA</th><th>DÍA</th><th>SEM</th><th>MES</th><th>AÑO</th></tr></thead><tbody>'+F.pares.map(p=>{const me=p[0].endsWith(':LTM');return `<tr${me?' style="background:#141414"':''}><td class="l"${me?' style="color:var(--amb);font-weight:700"':''}>${esc(p[1])} <span style="color:var(--faint);font-size:10.5px">${esc(p[0].split(':')[1])}</span></td>${p.slice(2).map(v=>`<td class="${cls(v)}">${pct(v,1)}</td>`).join('')}</tr>`}).join('')+'</tbody></table>'}
+  $('tabB').innerHTML=h;$('tabB').querySelectorAll('tr.lk').forEach(r=>r.onclick=()=>ir('#accion/'+r.dataset.t))}
+$('tabR').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{TAB=b.dataset.t;tabR()});
+
+/* mapa de relaciones con desglose */
+const LADO={izq:['costo','flota','socios'],der:['dem','comp','fin']};
+function nodoPorId(id){return F.nodos.find(n=>n.id===id)}
+function mapa(){const svg=$('map'),b=svg.getBoundingClientRect(),W=Math.max(360,Math.round(b.width)),H=Math.max(300,Math.round(b.height));
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const cx=W/2,cy=H/2,XL=Math.round(W*0.36),XR=Math.round(W*0.64);
+  let lines='',nodes='',labels='';
+  const pinta=(n,X,y,paso,izq,col,key,sel)=>{const r=4+(n.w||2)*2.2,e=EFC[n.ef],on=EF==='all'||EF===n.ef,mx=(cx+X)/2,tx=izq?X-r-8:X+r+8,an=izq?'end':'start',mas=(n.hijos&&n.hijos.length)||n.ir;
+    lines+=`<path d="M${cx},${cy} C${mx},${cy} ${mx},${y.toFixed(1)} ${X},${y.toFixed(1)}" fill="none" stroke="${e[1]}" stroke-width="${sel?2.6:.5+(n.w||2)*.55}" opacity="${on?(sel?1:.5):.07}"${n.ef==='0'?' stroke-dasharray="4 3"':''}/>`;
+    nodes+=`<g class="nd" tabindex="0" role="button" aria-label="${esc(n.n)}: ${e[0].toLowerCase()}${mas?', se puede abrir':''}" data-k="${key}" opacity="${on?1:.2}">
+      <rect x="${izq?8:X}" y="${(y-paso*0.48).toFixed(1)}" width="${(izq?X-8:W-8-X).toFixed(0)}" height="${(paso*0.96).toFixed(1)}" fill="${sel?'rgba(255,218,93,.08)':'transparent'}"/>
+      <circle class="o" cx="${X}" cy="${y.toFixed(1)}" r="${r+(sel?2:0)}" fill="#000" stroke="${col}" stroke-width="${sel?3:1.5}"/><circle cx="${X}" cy="${y.toFixed(1)}" r="${Math.max(2,r-3.5)}" fill="${e[1]}"/>
+      <text x="${tx}" y="${(y-1).toFixed(1)}" text-anchor="${an}" fill="${sel?'#FFDA5D':'#fff'}" font-size="12" font-weight="${sel?700:500}">${izq&&mas?'◂ ':''}${esc(n.n)}${n.ok===false?' *':''}${!izq&&mas?' ▸':''}</text>
+      <text x="${tx}" y="${(y+12).toFixed(1)}" text-anchor="${an}" fill="#A3A3A3" font-size="10">${esc(n.dato.length>40?n.dato.slice(0,39)+"…":n.dato)}</text></g>`};
+  let centro=F.accion.ticker, sub=`${nf(F.accion.precio)} CLP`;
+  if(!DRILL){
+    ['izq','der'].forEach(lado=>{const gs=LADO[lado].filter(g=>F.nodos.some(n=>n.g===g)),filas=gs.reduce((t,g)=>t+F.nodos.filter(n=>n.g===g).length,0)+gs.length*1.1,top=30,paso=(H-top-46)/filas,X=lado==='izq'?XL:XR,izq=lado==='izq';let yy=top;
+      gs.forEach(g=>{const col=F.grupos[g][1];
+        labels+=`<text x="${izq?X+4:X-4}" y="${(yy+paso*0.55).toFixed(0)}" text-anchor="${izq?'end':'start'}" fill="${col}" font-size="11" font-weight="700" letter-spacing=".5">${esc(F.grupos[g][0])}</text><line x1="${izq?8:X-4}" x2="${izq?X+4:W-8}" y1="${(yy+paso*0.75).toFixed(0)}" y2="${(yy+paso*0.75).toFixed(0)}" stroke="${col}" opacity=".35"/>`;
+        yy+=paso*1.1;
+        F.nodos.filter(n=>n.g===g).forEach(n=>{pinta(n,X,yy+paso*0.45,paso,izq,col,n.id,n.id===SEL);yy+=paso})})});
+    labels+=`<text x="${cx}" y="16" text-anchor="middle" fill="#A3A3A3" font-size="10.5">◂ PROVEEDORES Y DUEÑOS · CLIENTES, RIVALES Y ENTORNO ▸</text>`}
+  else{const p=nodoPorId(DRILL),hs=p.hijos||[],col=F.grupos[p.g][1],L=hs.filter((_,i)=>i%2===0),R=hs.filter((_,i)=>i%2===1);
+    centro=p.n.length>14?p.n.split(' ')[0]:p.n; sub='desglose';
+    [[L,true],[R,false]].forEach(([arr,izq])=>{const paso=Math.min(70,(H-80)/Math.max(arr.length,1)),top=cy-paso*arr.length/2;
+      arr.forEach((n,i)=>{const k=hs.indexOf(n);pinta(Object.assign({w:2},n),izq?XL:XR,top+paso*(i+0.5),paso,izq,col,DRILL+':'+k,SEL===DRILL+':'+k)})});
+    labels+=`<text x="${cx}" y="16" text-anchor="middle" fill="#A3A3A3" font-size="10.5">DESGLOSE DE ${esc(p.n.toUpperCase())} · Esc o clic en el centro para volver</text>`}
+  const core=`<g class="nd" tabindex="0" role="button" aria-label="${DRILL?'volver al mapa completo':'empresa'}" data-k="__core"><circle cx="${cx}" cy="${cy}" r="${DRILL?46:38}" fill="#FFA028"/><text x="${cx}" y="${cy+3}" text-anchor="middle" fill="#000" font-size="${DRILL?12:18}" font-weight="700">${esc(centro)}</text><text x="${cx}" y="${cy+18}" text-anchor="middle" fill="#000" font-size="9.5">${esc(sub)}</text></g>`;
+  const leg=`<g font-size="10" fill="#A3A3A3"><circle cx="${cx-190}" cy="${H-14}" r="4" fill="#4DB250"/><text x="${cx-182}" y="${H-10}">favorece hoy</text><circle cx="${cx-92}" cy="${H-14}" r="4" fill="#F05143"/><text x="${cx-84}" y="${H-10}">presiona hoy</text><circle cx="${cx+8}" cy="${H-14}" r="4" fill="#A3A3A3"/><text x="${cx+16}" y="${H-10}">mixto</text><text x="${cx+60}" y="${H-10}">▸ se abre · * por verificar</text></g>`;
+  svg.innerHTML=lines+labels+nodes+core+leg;
+  svg.querySelectorAll('.nd').forEach(g=>{const go=()=>clicNodo(g.dataset.k);g.onclick=go;g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}}});
+  crumbs()}
+function clicNodo(k){
+  if(k==='__core'){if(DRILL){SEL=DRILL;DRILL=null;detalle();mapa()}return}
+  if(k.includes(':')){SEL=k;detalle();mapa();return}
+  const n=nodoPorId(k);
+  if(SEL===k&&n.hijos){DRILL=k;SEL=k+':0';detalle();mapa();return}   /* segundo clic abre */
+  if(SEL===k&&n.ir){ir(n.ir);return}
+  SEL=k;detalle();mapa()}
+function detalle(){let n,g;
+  if(SEL.includes(':')){const [p,i]=SEL.split(':');const pa=nodoPorId(p);n=pa.hijos[+i];g=F.grupos[pa.g];n=Object.assign({},n,{padre:pa.n})}
+  else{n=nodoPorId(SEL);g=F.grupos[n.g]}
+  const e=EFC[n.ef];
+  $('det').innerHTML=`<div class="t"><b>${esc(n.n)}</b><span class="tag" style="color:${e[1]}">${e[0]}</span><span class="tag" style="color:${g[1]}">${esc(n.padre?n.padre.toUpperCase():g[0])}</span>${n.ok===false?'<span class="tag" style="color:var(--yel)">POR VERIFICAR</span>':''}</div>
+    <div class="d">${esc(n.dato)}</div><p>${esc(n.txt)}</p>${n.src?`<div class="src">Fuente: ${esc(n.src)}</div>`:''}
+    ${n.hijos?`<button class="ck" id="abrir" style="justify-self:start;color:var(--amb)">ABRIR DESGLOSE (${n.hijos.length}) ▸</button>`:''}${n.ir?`<button class="ck" id="irG" style="justify-self:start;color:var(--amb)">${n.ir.startsWith('#accion')?'ABRIR FICHA':'VER GRUPO CONTROLADOR'} ▸</button>`:''}`;
+  const ab=$('abrir');if(ab)ab.onclick=()=>{DRILL=SEL;SEL=SEL+':0';detalle();mapa()};
+  const ig=$('irG');if(ig)ig.onclick=()=>ir(n.ir)}
+$('efF').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{EF=b.dataset.e;$('efF').querySelectorAll('[data-e]').forEach(z=>z.setAttribute('aria-pressed',z===b));mapa()});
+function dibFicha(){if(!$('fcFull').hidden){precio();mapa()}}
+
+/* ---------- navegación ---------- */
+function crumbs(){document.querySelectorAll('.crumb a[data-h]').forEach(a=>a.onclick=()=>ir(a.dataset.h));
+  const c=$('crumb');if(c&&F)c.innerHTML=DRILL?`<a style="color:var(--amb);cursor:pointer" id="cbk">${esc(F.accion.ticker)}</a> ▸ ${esc(nodoPorId(DRILL).n)}`:'clic para ver el detalle · segundo clic abre el desglose';
+  const k=$('cbk');if(k)k.onclick=()=>clicNodo('__core')}
+function ir(h){setHash(h);ruta()}
+function ruta(){const h=location.hash||'#mercado',[v,arg]=h.slice(1).split('/');
+  const vista=v==='grupo'||v==='grupos'?'gr':v==='accion'?'ac':'mk';
+  $('vMk').hidden=vista!=='mk';$('vGr').hidden=vista!=='gr';$('vAc').hidden=vista!=='ac';
+  $('nMk').setAttribute('aria-current',vista==='mk'?'page':'false');$('nGr').setAttribute('aria-current',vista==='gr'?'page':'false');$('nAc').setAttribute('aria-current',vista==='ac'?'page':'false');
+  if(vista==='mk')mercado();
+  else if(vista==='gr')grupo(arg||'luksic');
+  else{const t=(arg||TICK).replace('-','_');if(t!==TICK){DRILL=null;SEL='fuel'}ficha(t)}
+  window.scrollTo(0,0)}
+addEventListener('popstate',ruta);addEventListener('hashchange',ruta);
+addEventListener('keydown',e=>{if(e.target.matches('input'))return;
+  if(e.key==='f'||e.key==='F')full();
+  if(e.key==='Escape'){if(DRILL&&!$('vAc').hidden){clicNodo('__core');return}if(!$('vAc').hidden||!$('vGr').hidden)ir('#mercado')}
+  if(e.key==='1')ir('#mercado');if(e.key==='2')ir('#grupos');if(e.key==='3')ir('#accion/'+TICK)});
+function full(){const d=document,el=d.documentElement;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d)}else if(el.requestFullscreen){el.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen()}
+$('fs').onclick=full;
+addEventListener('resize',()=>{clearTimeout(window._r);window._r=setTimeout(()=>{dibFicha();if(!$('vGr').hidden)ruta();if(!$('vMk').hidden)treemap()},150)});
+document.addEventListener('fullscreenchange',()=>setTimeout(()=>{dibFicha();if(!$('vGr').hidden)ruta()},120));
+async function datosCliente(){let j=null;
+  try{const q=await fetch('mercado_datos.json',{cache:'no-store'});if(q.ok)j=await q.json()}catch(e){}
+  if(!j){if(PUB){PREVIA=true;return PUB}throw new Error('sin datos')}
+  if(!j.d)return j;
+  let k=null;try{k=localStorage.getItem('dw_cli_k')}catch(e){}
+  if(k){try{return await descifrar(j,k)}catch(e){}}
+  return pedirClave(j)}
+async function descifrar(j,clave){const b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+  const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(clave),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b(j.s),iterations:j.n,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+  return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b(j.iv)},key,b(j.d))))}
+function pedirClave(j){return new Promise(res=>{$('lock').hidden=false;$('lkI').focus();
+  $('lkF').onsubmit=async e=>{e.preventDefault();const k=$('lkI').value;
+    try{const d=await descifrar(j,k);try{localStorage.setItem('dw_cli_k',k)}catch(_){};$('lock').hidden=true;res(d)}
+    catch(_){$('lkE').textContent='Clave incorrecta. Revisa la clave que te entregó Doberwhite.';$('lkI').select()}}})}
+let PREVIA=false;
+async function arrancar(){
+  try{P=await datosCliente()}catch(e){$('banner').innerHTML='<span>No pude cargar los datos del mercado. Intenta de nuevo en unos minutos.</span>';return}
+  ACC={};P.mercado.acc.forEach(a=>{if(a.cap==null)a.cap=0;ACC[a.t]=a});
+  Object.keys(P.mercado.sec).forEach(k=>P.mercado.sec[k]=P.mercado.sec[k].filter(t=>ACC[t]));   /* si una acción no llegó, se omite */
+  GRP={};P.grupos.forEach(g=>GRP[g.id]=g);SEC={};Object.entries(P.mercado.sec).forEach(([s,ts])=>ts.forEach(t=>SEC[t]=s));
+  macro();ruta()}
+arrancar();
+</script>
+</body>
+</html>
