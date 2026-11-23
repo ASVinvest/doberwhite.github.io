@@ -193,9 +193,6 @@ a.tab{text-decoration:none}
       <div class="fld"><span class="lb" id="rtL">RETIRO DE GANANCIAS</span><div class="two"><div style="position:relative"><input id="rt" type="number" inputmode="numeric" min="0" max="100" step="10" value="0" aria-labelledby="rtL" aria-label="Porcentaje de la ganancia neta que retiras" style="padding-right:28px"><span style="position:absolute;right:10px;top:8px;color:var(--mut)">%</span></div><div class="seg" id="rtF" role="group" aria-label="Frecuencia del retiro"><button type="button" data-v="1">MES</button><button type="button" data-v="3">TRIM</button><button type="button" data-v="12">AÑO</button></div></div>
         <span class="hint">Parte de la ganancia neta de cada período que retiras. 0 % = todo se reinvierte y crece con interés compuesto.</span>
         <div class="cmp" id="cmpW" hidden></div></div>
-      <div class="fld"><label for="fee">FEE DE DESEMPEÑO (%)</label><input id="fee" type="number" inputmode="decimal" min="0" max="80" step="1" value="33">
-        <span class="hint">Se descuenta mensualmente y solo sobre ganancias nuevas. Todos los resultados ya vienen netos.</span></div>
-      <div class="warn" id="minW" hidden></div>
       <div class="fld" style="border:0"><span class="hint" id="src"></span></div>
     </form>
   </section>
@@ -251,7 +248,7 @@ function mesesRango(a0,a1){const out=[];let y=+a0.slice(0,4),m=+a0.slice(5,7);co
 const BTMES={"2020-02":10.293,"2020-03":0.8369,"2020-04":17.8778,"2020-05":-1.7758,"2020-06":9.718,"2020-07":11.9213,"2020-08":-1.5721,"2020-09":-0.5795,"2020-10":30.8614,"2020-11":-10.3351,"2020-12":-2.9378,"2021-01":2.7537,"2021-02":-3.193,"2021-03":5.2594,"2021-04":26.2969,"2021-05":7.6225,"2021-06":-8.6702,"2021-07":1.7584,"2021-08":3.2004,"2021-09":-2.8655,"2021-10":10.6475,"2021-11":8.6857,"2021-12":17.5479,"2022-01":14.8796,"2022-02":11.4336,"2022-03":23.0798,"2022-04":14.802,"2022-05":19.8157,"2022-06":1.3652,"2022-07":33.8072,"2022-08":-4.6547,"2022-09":-4.4132,"2022-10":10.0114,"2022-11":-1.3448,"2022-12":-1.5732,"2023-01":1.2431,"2023-02":-1.0106,"2023-03":20.4691,"2023-04":15.3042,"2023-05":35.7853,"2023-06":22.1364,"2023-07":2.368,"2023-08":10.4956,"2023-09":-5.8153,"2023-10":-0.932,"2023-11":18.5971,"2023-12":-2.587,"2024-01":6.0257,"2024-02":15.2129,"2024-03":7.0799,"2024-04":19.8864,"2024-05":14.3679,"2024-06":8.4233,"2024-07":13.2616,"2024-08":-0.2543,"2024-09":-3.7665,"2024-10":1.1337,"2024-11":-6.6997,"2024-12":5.671,"2025-01":6.6795,"2025-02":-0.2716,"2025-03":10.6401,"2025-04":4.0159,"2025-05":-6.0873,"2025-06":-2.4866,"2025-07":1.7235,"2025-08":4.8102,"2025-09":11.7587,"2025-10":10.3519,"2025-11":6.6439,"2025-12":0.8416,"2026-01":11.9326,"2026-02":41.104,"2026-03":12.9734,"2026-04":89.9716,"2026-05":12.0644,"2026-06":-3.1115,"2026-07":-2.4965,"2026-08":3.6016,"2026-09":4.2081,"2026-10":5.2464,"2026-11":5.2754};
 const MIN_CAP=1000; /* capital mínimo de la estrategia en cTrader Copy: confirmar */
 const FREQN={1:'mensual',3:'trimestral',12:'anual'};
-let SER=[], REAL=null, CFG={cap:10000,ini:'2023-01',f:33,ap:0,apf:1,rt:0,rtf:1};
+let SER=[], REAL=null, CFG={cap:10000,ini:'2023-01',f:0,ap:0,apf:1,rt:0,rtf:1};
 
 function serie(R){const rm=mesesReales(R), hoyM=R.hoy.slice(0,7);
   const out=Object.entries(BTMES).filter(([k])=>k<R.desde).map(([k,r])=>({k,r,t:'sim'}));
@@ -293,8 +290,6 @@ function render(){
       <tr class="sb"><td>Total con retiros</td><td>${usdA(tot)}</td></tr><tr class="sb y"><td>Total sin retirar</td><td>${usdA(R0.n)}</td></tr></table>
       ${dif>0?`<div style="margin-top:6px">Reinvirtiendo todo tendrías <b>${usdA(dif)} más</b>.</div>`:''}`}
   $('lgW').hidden=!R0; $('lgR').hidden=!R0;
-  const w=$('minW'); w.hidden=CFG.cap>=MIN_CAP;
-  w.textContent=`Con menos de ${usdA(MIN_CAP)} el copiador puede no replicar todas las operaciones por el tamaño mínimo de lote.`;
   $('cvS').textContent=`${R.nSim} meses simulados · ${R.nReal} reales`;
   guardar()}
 
@@ -371,17 +366,17 @@ function anual(R){
 }
 
 /* ---------- Formulario, link y arranque ---------- */
-function leer(){CFG.cap=Math.max(0,+$('cap').value||0);CFG.ini=$('iniY').value+'-'+$('iniM').value;CFG.f=Math.min(80,Math.max(0,+$('fee').value||0));
+function leer(){CFG.cap=Math.max(0,+$('cap').value||0);CFG.ini=$('iniY').value+'-'+$('iniM').value;
   CFG.ap=Math.max(0,+$('ap').value||0);CFG.rt=Math.min(100,Math.max(0,+$('rt').value||0));ajustaIni();render()}
 function rango(){return [SER[0].k, SER.filter(x=>x.t!=='curso').slice(-1)[0].k]}
 function ajustaIni(){const [a,b]=rango();if(CFG.ini<a)CFG.ini=a;if(CFG.ini>b)CFG.ini=b;
   const Y=CFG.ini.slice(0,4);$('iniY').value=Y;
   $('iniM').innerHTML=MESN.map((m,i)=>{const k=Y+'-'+String(i+1).padStart(2,'0');return `<option value="${k.slice(5)}" ${k<a||k>b?'disabled':''}>${m}</option>`}).join('');
   $('iniM').value=CFG.ini.slice(5)}
-function guardar(){const q=`c=${CFG.cap}&i=${CFG.ini}&f=${CFG.f}&a=${CFG.ap}&af=${CFG.apf}&r=${CFG.rt}&rf=${CFG.rtf}`;setHash('#'+q)}
+function guardar(){const q=`c=${CFG.cap}&i=${CFG.ini}&a=${CFG.ap}&af=${CFG.apf}&r=${CFG.rt}&rf=${CFG.rtf}`;setHash('#'+q)}
 function cargarHash(){const h=new URLSearchParams(location.hash.slice(1));
   if(h.get('c'))CFG.cap=+h.get('c')||CFG.cap; if(/^\d{4}-\d{2}$/.test(h.get('i')||''))CFG.ini=h.get('i');
-  if(h.get('f')!=null)CFG.f=+h.get('f'); if(h.get('a'))CFG.ap=+h.get('a'); if(h.get('r'))CFG.rt=+h.get('r'); if(FREQN[h.get('af')])CFG.apf=+h.get('af'); if(FREQN[h.get('rf')])CFG.rtf=+h.get('rf')}
+   if(h.get('a'))CFG.ap=+h.get('a'); if(h.get('r'))CFG.rt=+h.get('r'); if(FREQN[h.get('af')])CFG.apf=+h.get('af'); if(FREQN[h.get('rf')])CFG.rtf=+h.get('rf')}
 function marcaPer(){[['apF','apf'],['rtF','rtf']].forEach(([g,k])=>$(g).querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===CFG[k])))}
 
 async function iniciar(){
@@ -389,13 +384,13 @@ async function iniciar(){
   REAL=R; SER=serie(R); cargarHash();
   const [a,b]=rango(), ys=[];for(let y=+a.slice(0,4);y<=+b.slice(0,4);y++)ys.push(y);
   $('iniY').innerHTML=ys.map(y=>`<option>${y}</option>`).join('');
-  $('cap').value=CFG.cap;$('fee').value=CFG.f;$('ap').value=CFG.ap;$('rt').value=CFG.rt;marcaPer();ajustaIni();
+  $('cap').value=CFG.cap;$('ap').value=CFG.ap;$('rt').value=CFG.rt;marcaPer();ajustaIni();
   const curso=SER.find(x=>x.t==='curso');
   $('banner').innerHTML=`<span>SIMULADOR · PRIME CTRADER</span><span class="v">simulado ${mesL(a).toLowerCase()} – ${mesL(BTMES_FIN).toLowerCase()} · real desde ${mesL(R.desde).toLowerCase()}${curso?' · '+mesL(curso.k).toLowerCase()+' en curso':''}</span>`+($('banner').querySelector('.prev')||PUB&&!R.d&&location.protocol==='file:'?'<span class="prev">VISTA PREVIA LOCAL</span>':'');
   $('src').innerHTML=`Meses de ${mesL(a).toLowerCase()} a ${mesL(BTMES_FIN).toLowerCase()}: histórico simulado. Desde ${mesL(R.desde).toLowerCase()}: resultados reales de la cuenta Prime cTrader, que se agregan solos con cada actualización de la mesa.${curso?` El mes en curso (${mesL(curso.k).toLowerCase()}) se muestra con su resultado a la fecha.`:''}`;
   render()}
 const BTMES_FIN=Object.keys(BTMES).slice(-1)[0];
-['cap','fee','ap','rt'].forEach(id=>$(id).addEventListener('input',()=>{clearTimeout(window._t);window._t=setTimeout(leer,150)}));
+['cap','ap','rt'].forEach(id=>$(id).addEventListener('input',()=>{clearTimeout(window._t);window._t=setTimeout(leer,150)}));
 ['iniY','iniM'].forEach(id=>$(id).addEventListener('change',leer));
 [['apF','apf'],['rtF','rtf']].forEach(([g,k])=>$(g).querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{CFG[k]=+b.dataset.v;marcaPer();render()}));
 $('link').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('linkT').textContent='LINK COPIADO'}catch(e){$('linkT').textContent='COPIA LA URL'}setTimeout(()=>$('linkT').textContent='COPIAR LINK',1800)};
