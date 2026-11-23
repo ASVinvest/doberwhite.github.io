@@ -277,7 +277,8 @@ function render(){
   const C=cuentasOk(); C.forEach((c,i)=>c._col=colorDe(c,DATA.cuentas.indexOf(c)));
   const tabs=[{id:'all',n:'TODAS LAS CUENTAS',col:'var(--amb)'}].concat(C.map(c=>({id:c.id,n:c.nombre.toUpperCase(),col:c._col})));
   if(!tabs.some(t=>t.id===VISTA))VISTA='all';
-  $('tabs').innerHTML=tabs.map((t,i)=>`<button class="tab" role="tab" aria-selected="${t.id===VISTA}" data-v="${esc(t.id)}"><b>${i+1})</b><i style="background:${t.col}"></i>${esc(t.n)}</button>`).join('');
+  $('tabs').innerHTML=tabs.map((t,i)=>`<button class="tab" role="tab" aria-selected="${t.id===VISTA}" data-v="${esc(t.id)}"><b>${i+1})</b><i style="background:${t.col}"></i>${esc(t.n)}</button>`).join('')
+    +`<a class="tab" href="simulador.html" title="Simulador de la cuenta Prime cTrader"><b>${tabs.length+1})</b><i style="background:var(--amb)"></i>SIMULADOR</a>`;
   $('tabs').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{VISTA=b.dataset.v;history.replaceState(null,'','#'+VISTA);render()});
   const glob=VISTA==='all', mob=innerWidth<700;
   $('back').href=glob?'mesa.html':'#all';
@@ -445,7 +446,7 @@ addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
   if(e.key==='Escape'){if(!$('fsHelp').hidden){$('fsHelp').hidden=true;return}$('back').click();return}
   if(e.key==='u'||e.key==='U')setUnit(UNIT==='pct'?'usd':'pct');
   if(e.key==='f'||e.key==='F')full();
-  if(/^[1-9]$/.test(e.key)&&DATA){const ids=['all'].concat(cuentasOk().map(c=>c.id)),v=ids[+e.key-1];if(v){VISTA=v;history.replaceState(null,'','#'+v);render()}}});
+  if(/^[1-9]$/.test(e.key)&&DATA){const ids=['all'].concat(cuentasOk().map(c=>c.id)),v=ids[+e.key-1];if(+e.key===ids.length+1){location.href='simulador.html';return}if(v){VISTA=v;history.replaceState(null,'','#'+v);render()}}});
 addEventListener('resize',()=>{clearTimeout(window._r);window._r=setTimeout(render,200)});
 try{navigator.wakeLock?.request('screen').catch(()=>{})}catch(e){}
 
