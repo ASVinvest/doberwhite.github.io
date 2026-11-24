@@ -260,7 +260,7 @@ function sim(ini,desde,apo,fee){
   const anio=y=>Y[y]||(Y[y]={y,ini:b,fee:0,gc:0,fin:b,pk:b,dd:0,ap:0,mp:0,mn:0,apAcum:aport});
   function cierre(m){
     const y=Y[m.slice(0,4)];
-    let f=0; if(b>hwm){y.gc+=b-hwm;f=(b-hwm)*fee;hwm=b;b-=f;}
+    let f=0; if(b>hwm){y.gc+=b-hwm;f=(b-hwm)*fee;b-=f;hwm=b;}
     y.fee+=f; y.fin=b; y.apAcum=aport;
     const r=(b-mb)/mb; M.push([m,r]); if(r>0)y.mp++; else y.mn++;
     curva.push([m,b,aport]);
@@ -346,7 +346,7 @@ document.getElementById('asim').innerHTML=[
  function q(){const X=sim(m,d.value),t=X.b/m-1;
   document.getElementById('q-b').textContent=usd(X.b);
   document.getElementById('q-s').textContent=`${usd(m)} desde ${d.options[d.selectedIndex].text}: ${pct(t,0)} neto`;
-  document.getElementById('q-dd').textContent=`Mayor caída en el camino: −${nf(X.dd*100,1)} %. Neto de costo de desempeño hipotético.`;}
+  document.getElementById('q-dd').textContent=`Mayor caída en el camino: −${nf(X.dd*100,1)} %. Neto de fee de 33 %, como un copiador.`;}
  bs.forEach(b=>b.onclick=()=>{m=+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',x===b));q()});
  d.onchange=q;q();
  const st=document.getElementById('stick'),sb=document.getElementById('simula');
